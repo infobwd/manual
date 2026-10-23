@@ -528,3 +528,8 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 
 - CAT-01 design PR #61 merged at `a0e65e8ce6fb050e864d76ce6e71bca3e20abd50`. While no computer is available, prepare read-only synthetic/current catalog contract gate and documented stable ID/offline policy: [WD_BOOKS_CAT01A_CONTENT_CONTRACT_2569.md](WD_BOOKS_CAT01A_CONTENT_CONTRACT_2569.md).
 - Adds `tests/cat01-contract.smoke.cjs` only; no production code/version/storage changes. Syntax parsed; Node execution and real-device QA pending. Explicit approval required before merge.
+
+## Content track — SAR information guide (23 ต.ค. 2569)
+
+- User requested a SAR-based guide under school information. PA central repo `infobwd/nopparut-pa` is private and currently references SAR review, not a verified full SAR source in inspected files.
+- Prepared source-verification/publication plan in [WD_BOOKS_SAR_INFORMATION_GUIDE_PLAN_2569.md](WD_BOOKS_SAR_INFORMATION_GUIDE_PLAN_2569.md). No SAR scores copied and no public runtime changes. Separate content PR after verifying approved SAR and disclosure scope.
