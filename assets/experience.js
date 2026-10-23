@@ -8,7 +8,10 @@
   const hasBook = (id) => window.WD_LIBRARY_DATA?.manuals?.some(
     (book) => book.id === id && book.status === "published" && book.pages?.length
   );
-  const defaultPrefs = () => ({ theme: "light", font: 100, recent: null, progress: {} });
+  const validBookIds = (items) => [...new Set(
+    (Array.isArray(items) ? items : []).filter((id) => typeof id === "string" && hasBook(id))
+  )].slice(0,30);
+  const defaultPrefs = () => ({ theme: "light", font: 100, recent: null, progress: {}, favorites: [], history: [] });
   function load() {
     try {
       const saved = JSON.parse(localStorage.getItem(key) || "{}");
@@ -17,12 +20,15 @@
         theme: themes.includes(saved.theme) ? saved.theme : "light",
         font: Number.isFinite(saved.font) ? Math.max(90, Math.min(160, Math.round(saved.font / 10) * 10)) : 100,
         recent: typeof saved.recent === "string" && hasBook(saved.recent) ? saved.recent : null,
-        progress: saved.progress && typeof saved.progress === "object" && !Array.isArray(saved.progress) ? saved.progress : {}
+        progress: saved.progress && typeof saved.progress === "object" && !Array.isArray(saved.progress) ? saved.progress : {},
+        favorites: validBookIds(saved.favorites),
+        history: validBookIds([saved.recent, ...(Array.isArray(saved.history) ? saved.history : [])])
       };
     } catch { return defaultPrefs(); }
   }
   let prefs = load();
   let onReaderScale = null;
+  let onBooksChanged = null;
   let deferredInstall = null;
   function save() {
     try { localStorage.setItem(key, JSON.stringify(prefs)); } catch { /* storage may be blocked; current session still works */ }
@@ -82,8 +88,22 @@
     const index = Number(pageIndex);
     prefs.progress[bookId] = Number.isInteger(index) ? Math.max(0, Math.min(book.pages.length - 1, index)) : 0;
     prefs.recent = bookId;
+    prefs.history = validBookIds([bookId, ...prefs.history]).slice(0,20);
     save();
     updateContinue();
+    onBooksChanged?.();
+  }
+  function isFavorite(bookId) { return prefs.favorites.includes(bookId); }
+  function getFavorites() { return [...prefs.favorites]; }
+  function getHistory() { return [...prefs.history]; }
+  function toggleFavorite(bookId) {
+    if (!hasBook(bookId)) return false;
+    prefs.favorites = isFavorite(bookId)
+      ? prefs.favorites.filter(id => id !== bookId)
+      : validBookIds([...prefs.favorites, bookId]);
+    save();
+    onBooksChanged?.();
+    return isFavorite(bookId);
   }
   let continueReader = null;
   function updateContinue() {
@@ -98,13 +118,78 @@
     if (dlg && !dlg.open) dlg.showModal();
   }
   function updateBottom(section) {
-    for (const [id, active] of [["navHome", section === "home"], ["navBooks", section === "books"], ["navSettings", section === "settings"], ["navContinue", section === "continue"]]) {
+    for (const [id, active] of [["navHome", section === "home"], ["navBooks", section === "books"], ["navMyBooks", section === "mybooks"], ["navSettings", section === "settings"], ["navContinue", section === "continue"]]) {
       const b = $(id); if (!b) continue;
       b.classList.toggle("active", active);
       if (active) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
     }
   }
+  function sectionFromHash() {
+    return location.hash === "#myBooks" ? "mybooks" : location.hash === "#library" ? "books" : "home";
+  }
+  function initSplash() {
+    const splash = $("appSplash");
+    if (!splash) return;
+    let shown = false;
+    try { shown = sessionStorage.getItem("wd-manual-splash-shown") === "1"; sessionStorage.setItem("wd-manual-splash-shown", "1"); } catch {}
+    const hide = () => {
+      splash.classList.add("splash-done");
+      splash.setAttribute("aria-hidden", "true");
+      window.setTimeout(() => { splash.hidden = true; }, 400);
+    };
+    if (shown || window.matchMedia("(prefers-reduced-motion: reduce)").matches) hide();
+    else window.setTimeout(hide, 630);
+  }
+  function initPullRefresh() {
+    const indicator = $("pullRefresh"), caption = $("pullRefreshText");
+    if (!indicator || !caption) return;
+    let startY = null, startX = 0, distance = 0, refreshing = false;
+    const canStart = (target) => window.matchMedia("(max-width: 1000px)").matches &&
+      !refreshing && window.scrollY <= 1 &&
+      !$("readerDialog")?.open && !$("settingsDialog")?.open &&
+      !target?.closest?.("input,textarea,select,[contenteditable],.reader-dialog,.settings-dialog");
+    const reset = () => {
+      startY = null;
+      distance = 0;
+      indicator.classList.remove("is-pulling", "is-ready");
+      indicator.setAttribute("aria-hidden", "true");
+    };
+    document.addEventListener("touchstart", (event) => {
+      if (event.touches.length !== 1 || !canStart(event.target)) { reset(); return; }
+      startY = event.touches[0].clientY;
+      startX = event.touches[0].clientX;
+      distance = 0;
+    }, { passive: true });
+    document.addEventListener("touchmove", (event) => {
+      if (startY === null || event.touches.length !== 1 || !canStart(event.target)) { reset(); return; }
+      const dy = event.touches[0].clientY - startY;
+      const dx = Math.abs(event.touches[0].clientX - startX);
+      if (dy < 12 || dy <= dx * 1.2) return;
+      // Prevent the browser's native pull refresh only after identifying this gesture.
+      if (event.cancelable) event.preventDefault();
+      distance = Math.min(150, dy);
+      indicator.classList.add("is-pulling");
+      indicator.classList.toggle("is-ready", distance >= 95);
+      indicator.setAttribute("aria-hidden", "false");
+      caption.textContent = distance >= 95 ? "ปล่อยเพื่อรีเฟรช" : "ดึงลงเพื่อรีเฟรช";
+    }, { passive: false });
+    document.addEventListener("touchend", () => {
+      if (startY === null) return;
+      const reload = distance >= 95;
+      reset();
+      if (reload) {
+        refreshing = true;
+        indicator.classList.add("is-pulling", "is-refreshing");
+        indicator.setAttribute("aria-hidden", "false");
+        caption.textContent = "กำลังอัปเดตชั้นหนังสือ…";
+        window.location.reload();
+      }
+    }, { passive: true });
+    document.addEventListener("touchcancel", reset, { passive: true });
+  }
   function initUI() {
+    initSplash();
+    initPullRefresh();
     syncTheme();
     syncFont();
     updateContinue();
@@ -115,7 +200,7 @@
       $(id)?.addEventListener("click", () => { openSettings(); updateBottom("settings"); });
     }
     $("closeSettings")?.addEventListener("click", () => $("settingsDialog")?.close());
-    $("settingsDialog")?.addEventListener("close", () => updateBottom(location.hash === "#library" ? "books" : "home"));
+    $("settingsDialog")?.addEventListener("close", () => updateBottom(sectionFromHash()));
     document.querySelectorAll('input[name="readerTheme"]').forEach((radio) => {
       radio.addEventListener("change", () => { if (radio.checked) setTheme(radio.value); });
     });
@@ -127,7 +212,9 @@
     });
     $("navHome")?.addEventListener("click", () => updateBottom("home"));
     $("navBooks")?.addEventListener("click", () => updateBottom("books"));
-    window.addEventListener("hashchange", () => updateBottom(location.hash === "#library" ? "books" : "home"));
+    $("navMyBooks")?.addEventListener("click", () => updateBottom("mybooks"));
+    window.addEventListener("hashchange", () => updateBottom(sectionFromHash()));
+    updateBottom(sectionFromHash());
     installUI();
     registerWorker();
   }
@@ -169,6 +256,11 @@
     bindReader: (onScale, onOpen) => { onReaderScale = onScale; continueReader = onOpen; syncFont(); updateContinue(); },
     getProgress,
     recordProgress,
+    getFavorites,
+    getHistory,
+    isFavorite,
+    toggleFavorite,
+    subscribeBooks: (callback) => { onBooksChanged = callback; },
     getTheme: () => prefs.theme,
     setTheme,
     openSettings
