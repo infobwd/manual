@@ -112,6 +112,7 @@
   function renderCatalog() {
     const filtered = data.manuals.filter(matches).sort((a, b) => (a.status === "published" ? 0 : 1) - (b.status === "published" ? 0 : 1));
     $("manualGrid").replaceChildren(...filtered.map(cardFor));
+    $("manualGrid").setAttribute("aria-busy","false");
     const readyCount = filtered.filter(book => book.status === "published" && book.pages?.length).length;
     $("resultsText").textContent = "พบคู่มือพร้อมอ่าน " + readyCount + " เล่ม · รายการทั้งหมด " + filtered.length + " จาก " + data.manuals.length + " รายการ";
     $("emptyResults").hidden = filtered.length > 0;
@@ -298,8 +299,10 @@
     $("bookSpread").style.setProperty("--readerScale", String(state.scale));
     $("readerTitle").textContent = book.title;
     $("readerCategory").textContent = (lookup[book.category]?.label || "คู่มือ") + " · " + book.edition;
+    $("bookSpread").classList.add("reader-loading");
     renderReader();
     syncBookmarks();
+    requestAnimationFrame(() => $("bookSpread").classList.remove("reader-loading"));
     if (!dialog.open) dialog.showModal();
     document.body.classList.add("reader-open");
     $("readerClose").focus();
@@ -333,6 +336,23 @@
   extraTools.addEventListener("click",event => {
     if (event.target.closest("[data-reader-theme]")) return;
     if (event.target.closest("button")) closeTools();
+  });
+  // Dismiss transient reader controls when tapping the book or unused dialog area.
+  // A tap inside the menu or an open panel is not an outside tap.
+  dialog.addEventListener("pointerdown", event => {
+    if (event.target.closest("#readerToolsToggle,#readerExtraTools,#readerAaPanel,#readerSearchPanel,#readerBookmarksPanel,#openMobileToc,#mobileTocSheet")) return;
+    if (window.matchMedia("(max-width:1100px)").matches) closeTools();
+    closeReaderSubpanels();
+  });
+  dialog.addEventListener("keydown", event => {
+    if (event.key !== "Escape") return;
+    const hasOpenPanel = ["readerAaPanel","readerSearchPanel","readerBookmarksPanel"].some(id => !$(id).hidden);
+    const hasOpenMenu = window.matchMedia("(max-width:1100px)").matches && !extraTools.hidden;
+    if (hasOpenPanel || hasOpenMenu) {
+      event.preventDefault(); event.stopPropagation();
+      if (window.matchMedia("(max-width:1100px)").matches) closeTools();
+      closeReaderSubpanels(); toolsToggle.focus();
+    }
   });
   const bookmarkToggle = $("readerBookmarkToggle"), bookmarkListToggle = $("readerBookmarksListToggle"), bookmarksPanel = $("readerBookmarksPanel");
   function closeReaderSubpanels(except) {
