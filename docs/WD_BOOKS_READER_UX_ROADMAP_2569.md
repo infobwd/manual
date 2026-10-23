@@ -58,6 +58,8 @@
 
 **เอกสารตรวจรับ UX-00:** [Baseline & Design Review](WD_BOOKS_UX00_BASELINE_AND_DESIGN_REVIEW_2569.md) และ [ตัวอย่างหน้าจอ HTML](previews/WD_BOOKS_UX00_READER_PREVIEW_2569.html) — ไม่มีการเปลี่ยนแอปใน UX-00 และรอภาพ baseline จริง/อนุมัติ D01–D05 ก่อนลงมือ UX-P0A.
 
+**การเริ่ม P0A:** เจ้าของงานสั่งให้ดำเนินการต่อหลัง Merge UX-00; จัดทำ implementation บน branch แยกสำหรับตรวจรับได้ โดย **ไม่ถือว่า Gate 0 ผ่านหรืออนุมัติ Merge production**. ดู [UX-P0A Acceptance & QA](WD_BOOKS_UX_P0A_ACCEPTANCE_2569.md).
+
 ## 3. รูปแบบ UX เป้าหมาย
 
 ### 3.1 หน้าแรก: “ไปถึงหนังสือเร็วที่สุด”
@@ -96,7 +98,7 @@
 | ID | ระยะ | งาน/ผลลัพธ์ | เงื่อนไขตรวจรับสำคัญ | สถานะ |
 |---|---|---|---|---|
 | UX-00 | Gate 0 | เก็บ baseline, ยืนยัน QA device matrix และสถาปัตยกรรม Reader | มีภาพ/บันทึก QA จากข้อมูลสาธารณะ, smoke tests เดิมผ่าน | IN PROGRESS — เอกสาร/Preview พร้อม; รอ QA จริง |
-| UX-P0A | P0 | ลด Hero/สถิติ, นำ “อ่านต่อ” ขึ้นบน, พร้อมอ่านก่อน draft, tab bar 3 รายการ | อ่านเล่มล่าสุดได้ใน 1 แตะจาก Home; ไม่มีเมนูเดิมเสีย | TODO |
+| UX-P0A | P0 | ลด Hero/สถิติ, นำ “อ่านต่อ” ขึ้นบน, พร้อมอ่านก่อน draft, tab bar 3 รายการ | อ่านเล่มล่าสุดได้ใน 1 แตะจาก Home; ไม่มีเมนูเดิมเสีย | IN REVIEW (branch / PR) — smoke จำลองผ่าน; รอตรวจรับอุปกรณ์จริง |
 | UX-P0B | P0 | Mobile TOC แบบ Bottom Sheet, ชี้ current section, คืน focus เมื่อปิด | มือถือเข้าบทที่เลือกได้ภายใน 2 แตะ; VoiceOver/keyboard ใช้ได้ | TODO |
 | UX-P0C | P0 | Swipe/แตะเปลี่ยนหน้า + reading chrome ที่แสดงเมื่อเรียกใช้ | ปัดแนวตั้งไม่เปลี่ยนหน้า; ปุ่มสำรอง/close ยังใช้งานได้; ไม่ปะทะ pull-refresh/OS edge | TODO |
 | UX-P0D | P0 | ปรับพฤติกรรมหน้าคู่ tablet และ regression ก่อนปล่อย | portrait/landscape, safe area, iPad Split View, 200% zoom ไม่ตัดเนื้อหา | TODO |
