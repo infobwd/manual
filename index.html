@@ -33,7 +33,7 @@
     <h1>WD Books</h1>
     <p>คลังคู่มือโรงเรียนบ้านวังด้ง</p>
     <div class="splash-track"><span></span></div>
-    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.2.0</small>
+    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.2.1</small>
   </div>
 </div>
 <div id="pullRefresh" class="pull-refresh" role="status" aria-live="polite" aria-hidden="true"><span class="pull-refresh-icon">↻</span><span id="pullRefreshText">ดึงลงเพื่อรีเฟรช</span></div>
@@ -186,14 +186,14 @@
         <button id="readerToolsToggle" class="icon-button reader-tools-toggle" type="button" aria-label="เครื่องมืออ่านเพิ่มเติม" aria-controls="readerExtraTools" aria-expanded="false">⋯</button>
         <div id="readerExtraTools" class="reader-extra-tools" hidden>
         <button id="readerFocusToggle" class="icon-button reader-focus-toggle" type="button" aria-label="เปิดโหมดอ่านเต็มตา" aria-pressed="false" title="โหมดอ่านเต็มตา">▣</button>
-        <button id="readerEyeMode" class="icon-button eye-button" type="button" aria-label="เปลี่ยนโหมดถนอมสายตา" title="โหมดถนอมสายตา">☼</button>
-        <button id="readerBookmarkToggle" class="icon-button" type="button" aria-label="คั่นหน้าตอนนี้" aria-pressed="false" title="คั่นหน้า">♧</button>
-        <button id="readerBookmarksListToggle" class="icon-button" type="button" aria-label="เปิดรายการคั่นหน้า" aria-expanded="false" aria-controls="readerBookmarksPanel">▤</button>
-        <button id="readerSearchToggle" class="icon-button" type="button" aria-label="ค้นหาในหนังสือ" aria-expanded="false" aria-controls="readerSearchPanel">⌕</button>
-        <button id="readerModeToggle" class="icon-button" type="button" aria-label="เปลี่ยนเป็นโหมดเลื่อนอ่านต่อเนื่อง" aria-pressed="false" title="เลื่อนอ่านต่อเนื่อง">⇵</button>
-        <button id="readerAaToggle" class="icon-button" type="button" aria-label="ตั้งค่าการอ่าน" aria-expanded="false" aria-controls="readerAaPanel">Aa</button>
-        <button id="fontDecrease" class="icon-button font-button" type="button" aria-label="ลดขนาดตัวอักษร">A−</button>
-        <button id="fontIncrease" class="icon-button font-button" type="button" aria-label="เพิ่มขนาดตัวอักษร">A+</button>
+        <div class="reader-theme-picker" role="group" aria-label="ธีมการอ่าน"><button type="button" class="reader-theme-choice" data-reader-theme="light" aria-pressed="false"><span aria-hidden="true">☀</span><span>สว่าง</span></button><button type="button" class="reader-theme-choice" data-reader-theme="night" aria-pressed="false"><span aria-hidden="true">☾</span><span>กลางคืน</span></button><button type="button" class="reader-theme-choice" data-reader-theme="sepia" aria-pressed="false"><span aria-hidden="true">◉</span><span>ถนอมตา</span></button></div>
+        <button id="readerBookmarkToggle" class="icon-button" type="button" aria-label="คั่นหน้าตอนนี้" aria-pressed="false" title="คั่นหน้า"><span class="tool-symbol" aria-hidden="true">♧</span><span class="tool-label">คั่นหน้า</span></button>
+        <button id="readerBookmarksListToggle" class="icon-button" type="button" aria-label="เปิดรายการคั่นหน้า" aria-expanded="false" aria-controls="readerBookmarksPanel"><span class="tool-symbol" aria-hidden="true">▤</span><span class="tool-label">ที่คั่นไว้</span></button>
+        <button id="readerSearchToggle" class="icon-button" type="button" aria-label="ค้นหาในหนังสือ" aria-expanded="false" aria-controls="readerSearchPanel"><span class="tool-symbol" aria-hidden="true">⌕</span><span class="tool-label">ค้นหา</span></button>
+        <button id="readerModeToggle" class="icon-button" type="button" aria-label="เปลี่ยนเป็นโหมดเลื่อนอ่านต่อเนื่อง" aria-pressed="false" title="เลื่อนอ่านต่อเนื่อง"><span class="tool-symbol" aria-hidden="true">⇵</span><span class="tool-label">เลื่อนอ่าน</span></button>
+        <button id="readerAaToggle" class="icon-button" type="button" aria-label="ตั้งค่าการอ่าน" aria-expanded="false" aria-controls="readerAaPanel"><span class="tool-symbol" aria-hidden="true">Aa</span><span class="tool-label">ตัวอักษร</span></button>
+        <button id="fontDecrease" class="icon-button font-button" type="button" aria-label="ลดขนาดตัวอักษร"><span class="tool-symbol" aria-hidden="true">A−</span><span class="tool-label">ลดขนาด</span></button>
+        <button id="fontIncrease" class="icon-button font-button" type="button" aria-label="เพิ่มขนาดตัวอักษร"><span class="tool-symbol" aria-hidden="true">A+</span><span class="tool-label">เพิ่มขนาด</span></button>
         </div>
       </div>
     </div>
