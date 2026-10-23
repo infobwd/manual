@@ -486,3 +486,10 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Owner confirms P3 (PR #53, v1.3.13) **ACCEPTED on tested device**; wider Android/iPad/offline/accessibility checks remain unverified.
 - Queue 5 UX-DISCOVERY P1–P3 delivered; next queue 6 **ARCH-01**. Start with non-runtime **ARCH-01A** baseline/contract and JS parser/offline-shell gate, then small separately approved module extraction PRs.
 - Detailed source of truth for extraction: [WD_BOOKS_ARCH01_BASELINE_2569.md](WD_BOOKS_ARCH01_BASELINE_2569.md). No version bump needed for docs/tests-only PR.
+
+## ARCH-01B — catalog core extraction candidate (23 ต.ค. 2569)
+
+- PR #54 ARCH-01A merged at `f59096281017add86ec9166f19db862bd658b36e`.
+- Candidate v1.3.14 extracts pure in-memory search/filter/sort into `assets/catalog-core.js`, loaded before `app.js`, added to SW app shell. `app.js` retains DOM and reader responsibilities. No localStorage schema changes.
+- Tests: parser/offline-shell gate, existing smoke harnesses updated to load new script, synthetic catalog filter/sort tests. **Execution of tests and real-device QA still to be confirmed**; merge only after verification and explicit approval.
+- Rollback: revert ARCH-01B only, restoring old app.js selection and script order; keep user storage intact.
