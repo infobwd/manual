@@ -312,3 +312,22 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
 .install-suggestion-actions button{min-height:44px;border:1px solid #c9d9cd;border-radius:10px;background:white;color:#285846;padding:8px 11px;font-weight:700;font-size:12px}
 .install-suggestion-actions #installSuggestionAction{background:#235a44;color:white}
 @media(max-width:850px){.install-suggestion{bottom:calc(76px + env(safe-area-inset-bottom));align-items:flex-start;flex-direction:column}.install-suggestion-actions{align-self:flex-end}}
+
+/* UX-P2B-R5 grouped bookmarks: one column on mobile, two on wide screens. */
+.personal-bookmarks-shelf{grid-column:1/-1}
+.bookmark-filter-label{display:block;font-size:12px;font-weight:700;margin:15px 0 6px;color:var(--personal-ink)}
+.bookmark-filter{width:100%;min-height:46px;padding:10px 13px;border:1px solid var(--personal-line);border-radius:12px;background:var(--personal-paper);color:var(--personal-ink);font:inherit;font-size:14px}
+#myBookmarksShelf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.bookmark-book-group{min-width:0;border:1px solid var(--personal-line);border-radius:14px;overflow:hidden}
+.bookmark-book-heading{display:flex;align-items:center;gap:12px;width:100%;min-height:66px;padding:13px;border:0;background:var(--personal-paper);color:var(--personal-ink);text-align:left}
+.bookmark-book-icon{font-size:23px;flex:none}
+.bookmark-book-info{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+.bookmark-book-info strong{font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+.bookmark-book-info small{font-size:12px;color:var(--personal-subtle)}
+.bookmark-book-chevron{font-size:22px;color:var(--personal-subtle)}
+.bookmark-book-body{display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--personal-line);padding:8px}
+.bookmark-chapter-open{display:flex;align-items:flex-start;gap:8px;width:100%;min-height:44px;padding:11px 9px;text-align:left;border:0;border-radius:9px;background:transparent;color:var(--personal-ink);font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.bookmark-chapter-open:hover,.bookmark-chapter-open:focus-visible{background:rgba(118,154,124,.13)}
+.bookmark-chapter-icon{flex:none}
+.bookmark-show-all{min-height:44px;border:1px solid var(--personal-line);border-radius:9px;background:transparent;color:var(--personal-ink);font-weight:700}
+@media(max-width:850px){#myBookmarksShelf{grid-template-columns:minmax(0,1fr)}}
