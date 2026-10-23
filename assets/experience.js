@@ -11,7 +11,7 @@
   const validBookIds = (items) => [...new Set(
     (Array.isArray(items) ? items : []).filter((id) => typeof id === "string" && hasBook(id))
   )].slice(0,30);
-  const defaultPrefs = () => ({ theme: "light", font: 100, recent: null, progress: {}, favorites: [], history: [] });
+  const defaultPrefs = () => ({ theme: "light", font: 100, recent: null, progress: {}, favorites: [], history: [], typography: { family: "system", line: "normal", margin: "normal" } });
   function load() {
     try {
       const saved = JSON.parse(localStorage.getItem(key) || "{}");
@@ -22,7 +22,12 @@
         recent: typeof saved.recent === "string" && hasBook(saved.recent) ? saved.recent : null,
         progress: saved.progress && typeof saved.progress === "object" && !Array.isArray(saved.progress) ? saved.progress : {},
         favorites: validBookIds(saved.favorites),
-        history: validBookIds([saved.recent, ...(Array.isArray(saved.history) ? saved.history : [])])
+        history: validBookIds([saved.recent, ...(Array.isArray(saved.history) ? saved.history : [])]),
+        typography: {
+          family: ["system","serif","sans"].includes(saved.typography?.family) ? saved.typography.family : "system",
+          line: ["normal","relaxed","wide"].includes(saved.typography?.line) ? saved.typography.line : "normal",
+          margin: ["normal","compact","wide"].includes(saved.typography?.margin) ? saved.typography.margin : "normal"
+        }
       };
     } catch { return defaultPrefs(); }
   }
@@ -82,6 +87,25 @@
     prefs.font = Math.max(90, Math.min(160, Math.round(n / 10) * 10));
     save();
     syncFont();
+  }
+  function syncTypography() {
+    const spread = $("bookSpread");
+    if (spread) {
+      spread.dataset.fontFamily = prefs.typography.family;
+      spread.dataset.lineSpacing = prefs.typography.line;
+      spread.dataset.pageMargin = prefs.typography.margin;
+    }
+    for (const [id, value] of [["readerFontFamily", prefs.typography.family], ["readerLineSpacing", prefs.typography.line], ["readerPageMargin", prefs.typography.margin]]) {
+      const input = $(id);
+      if (input) input.value = value;
+    }
+  }
+  function setTypography(field, value) {
+    const allowed = { family:["system","serif","sans"], line:["normal","relaxed","wide"], margin:["normal","compact","wide"] };
+    if (!allowed[field]?.includes(value)) return;
+    prefs.typography[field] = value;
+    save();
+    syncTypography();
   }
   function getProgress(bookId) {
     if (!hasBook(bookId)) return 0;
@@ -305,9 +329,12 @@
     isFavorite,
     toggleFavorite,
     subscribeBooks: (callback) => { onBooksChanged = callback; },
+    getTypography: () => ({...prefs.typography}),
+    setTypography,
     getTheme: () => prefs.theme,
     setTheme,
     openSettings
   };
   initUI();
+  syncTypography();
 })();
