@@ -493,3 +493,9 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Candidate v1.3.14 extracts pure in-memory search/filter/sort into `assets/catalog-core.js`, loaded before `app.js`, added to SW app shell. `app.js` retains DOM and reader responsibilities. No localStorage schema changes.
 - Tests: parser/offline-shell gate, existing smoke harnesses updated to load new script, synthetic catalog filter/sort tests. **Execution of tests and real-device QA still to be confirmed**; merge only after verification and explicit approval.
 - Rollback: revert ARCH-01B only, restoring old app.js selection and script order; keep user storage intact.
+
+## ARCH-01C — catalog UI extraction candidate (23 ต.ค. 2569)
+
+- Stacked on unmerged ARCH-01B PR #55, not main. Candidate v1.3.15: move catalog rendering and discovery event binding into `assets/catalog-ui.js`; app.js retains card creation, Reader, My Books, and app orchestration.
+- New script loaded after catalog-core.js and before app.js; SW app shell includes both; smoke harness script order updated.
+- JavaScript syntax parse checked for app.js and catalog-ui.js before PR. Full local Node tests and device regression **not yet executed/verified**. Do not merge stacked PR until ARCH-01B and tests PASS; preserve storage and rollback ability.
