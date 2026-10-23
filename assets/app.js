@@ -274,6 +274,22 @@
     if (!dialog.open) dialog.showModal();
     $("readerClose").focus();
   }
+  const toolsToggle = $("readerToolsToggle"), extraTools = $("readerExtraTools");
+  const closeTools = () => { extraTools.hidden = true; toolsToggle.setAttribute("aria-expanded","false"); };
+  toolsToggle.addEventListener("click", () => {
+    extraTools.hidden = !extraTools.hidden;
+    toolsToggle.setAttribute("aria-expanded",String(!extraTools.hidden));
+  });
+  const syncToolsViewport = () => {
+    if (window.matchMedia("(min-width:1101px)").matches) {
+      extraTools.hidden = false;
+      toolsToggle.setAttribute("aria-expanded","false");
+    } else closeTools();
+  };
+  syncToolsViewport();
+  window.matchMedia("(min-width:1101px)").addEventListener?.("change",syncToolsViewport);
+  dialog.addEventListener("close",() => { if (window.matchMedia("(max-width:1100px)").matches) closeTools(); });
+  extraTools.addEventListener("click",event => { if (event.target.closest("button")) closeTools(); });
   const bookmarkToggle = $("readerBookmarkToggle"), bookmarkListToggle = $("readerBookmarksListToggle"), bookmarksPanel = $("readerBookmarksPanel");
   function syncBookmarks() {
     if (!state.manual) return;
