@@ -306,6 +306,12 @@
   }
   const toolsToggle = $("readerToolsToggle"), extraTools = $("readerExtraTools");
   const closeTools = () => { extraTools.hidden = true; toolsToggle.setAttribute("aria-expanded","false"); };
+  // Avoid iOS interpreting two rapid taps on ⋯ as page zoom; preserve pinch zoom elsewhere.
+  toolsToggle.addEventListener("dblclick", event => event.preventDefault());
+  toolsToggle.addEventListener("touchend", event => {
+    if (event.cancelable) event.preventDefault();
+    toolsToggle.click();
+  }, {passive:false});
   toolsToggle.addEventListener("click", () => {
     extraTools.hidden = !extraTools.hidden;
     if (!extraTools.hidden) {
@@ -544,6 +550,9 @@
     $("readerModeToggle").title = continuous ? "พลิกทีละหน้า" : "เลื่อนอ่านต่อเนื่อง";
     $("prevPage").hidden = continuous;
     $("nextPage").hidden = continuous;
+    $("readerModeStatus").textContent = continuous ? "เลื่อนขึ้น–ลงเพื่ออ่านต่อ" : "พลิกทีละหน้า";
+    const modeLabel = $("readerModeToggle").querySelector(".tool-label");
+    if (modeLabel) modeLabel.textContent = continuous ? "พลิกหน้า" : "เลื่อนอ่าน";
     $("pageLeft").hidden = continuous;
     $("pageRight").hidden = continuous;
   }

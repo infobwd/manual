@@ -33,7 +33,7 @@
     <h1>WD Books</h1>
     <p>คลังคู่มือโรงเรียนบ้านวังด้ง</p>
     <div class="splash-track"><span></span></div>
-    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.2.2</small>
+    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.2.3</small>
   </div>
 </div>
 <div id="pullRefresh" class="pull-refresh" role="status" aria-live="polite" aria-hidden="true"><span class="pull-refresh-icon">↻</span><span id="pullRefreshText">ดึงลงเพื่อรีเฟรช</span></div>
@@ -226,9 +226,9 @@
           <article id="pageRight" class="book-page"></article>
           <div id="continuousPages" class="continuous-pages" aria-label="เนื้อหาหนังสือแบบเลื่อนต่อเนื่อง" hidden></div>
         </div>
-        <div class="reader-bottom">
+        <div class="reader-bottom" aria-label="การนำทางในหนังสือ">
           <button id="prevPage" class="page-control" type="button">← หน้าก่อน</button>
-          <div class="reader-progress"><span id="pageCounter">หน้า 1</span><div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div></div>
+          <div class="reader-progress"><span id="pageCounter">หน้า 1</span><span id="readerModeStatus" class="reader-mode-status" role="status" aria-live="polite">พลิกทีละหน้า</span><div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div></div>
           <button id="nextPage" class="page-control page-primary" type="button">หน้าถัดไป →</button>
           <button id="readerClose" class="page-control reader-close-bottom" type="button" aria-label="ปิดอ่านและกลับไปชั้นหนังสือ">✕</button>
         </div>
