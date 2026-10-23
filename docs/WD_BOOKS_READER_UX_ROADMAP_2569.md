@@ -270,3 +270,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Uses textContent-only DOM, no HTML injection, external search index, remote requests or localStorage of queries; resets on closing/changing book. Works with paged and continuous reader modes.
 - Current candidate finds matching *sections* and does not yet highlight the exact term within a page. Exact-term highlighting remains an acceptance gap to resolve before marking P2A complete.
 - QA pending: Thai spacing/diacritics, empty/no results, long queries, PWA offline, mobile keyboard, VoiceOver, continuous/paged jumps, and no draft/private exposure.
+
+
+## UX-P2B candidate — คั่นหน้าตามตอน
+
+- Bookmark current logical section via ◇/◆ and revisit bookmarked chapters from a per-book list; supports paged and continuous modes.
+- Saved as `bookmarks` in existing `wd-manual-reader-v2` localStorage. Book IDs and page indices are validated; older localStorage remains compatible. Favorites, progress, history and typography are untouched.
+- PWA cache v19. QA pending: iPhone/iPad tap targets, switching books, rotation, persisted bookmarks after restart, invalid legacy data, accessibility and offline updates.
+- Future refinement: allow removing a different bookmarked chapter directly from the list; current toggle removes the current chapter.
