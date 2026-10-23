@@ -63,20 +63,6 @@
     cover.append(create("span", "cover-eyebrow", book.coverTop || "MANUAL"));
     cover.append(create("strong", "", book.coverTitle || book.title));
     cover.append(create("span", "cover-subtitle", book.subtitle));
-    if (book.status === "published" && book.pages?.length) {
-      const eye = create("button", "cover-eye-mode", "☀");
-      eye.type = "button";
-      eye.setAttribute("aria-label", "เปลี่ยนโหมดถนอมสายตา");
-      eye.setAttribute("title", "โหมดถนอมสายตา");
-      eye.setAttribute("aria-pressed", String(window.WD_EXPERIENCE?.getTheme?.() === "sepia"));
-      eye.addEventListener("click", (event) => {
-        event.stopPropagation();
-        const experience = window.WD_EXPERIENCE;
-        experience?.setTheme?.(experience.getTheme?.() === "sepia" ? "light" : "sepia");
-      });
-      cover.append(eye);
-    }
-
     const body = create("div", "card-body");
     body.append(create("span", "card-category", lookup[book.category]?.label || "คู่มือ"));
     body.append(create("h3", "", book.title));
@@ -89,11 +75,12 @@
       open.setAttribute("aria-label", "เปิดหนังสือ " + book.title);
       open.addEventListener("click", () => openBook(book, open));
       foot.append(open);
-      const favorite = create("button", "favorite-book");
+      const favorite = create("button", "favorite-book cover-favorite");
       favorite.type = "button";
       const syncFavorite = () => {
         const saved = Boolean(window.WD_EXPERIENCE?.isFavorite?.(book.id));
-        favorite.textContent = saved ? "♥ บันทึกแล้ว" : "♡ เก็บไว้";
+        favorite.textContent = saved ? "♥" : "♡";
+        favorite.title = saved ? "นำออกจากหนังสือของฉัน" : "เก็บไว้ในหนังสือของฉัน";
         favorite.setAttribute("aria-pressed", String(saved));
         favorite.setAttribute("aria-label", (saved ? "นำออกจากหนังสือของฉัน " : "เพิ่มในหนังสือของฉัน ") + book.title);
       };
@@ -102,7 +89,8 @@
         window.WD_EXPERIENCE?.toggleFavorite?.(book.id);
         syncFavorite();
       });
-      foot.append(favorite);
+      cover.append(favorite);
+
     } else {
       foot.append(create("span", "pending-text", book.status === "review" ? "ยังไม่เผยแพร่เนื้อหา" : "ยังไม่มีเนื้อหา"));
     }
