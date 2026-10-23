@@ -7,7 +7,7 @@ const assert = require("node:assert/strict");
 const root = path.resolve(__dirname, "..");
 const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const sw = fs.readFileSync(path.join(root, "sw.js"), "utf8");
-const scripts = [...html.matchAll(/<script[^>]*\\bsrc="([^"]+\\.js)"[^>]*>/g)].map(m => m[1].replace(/^\\.\\//, ""));
+const scripts = [...html.matchAll(/<script[^>]*\bsrc="([^"]+\.js)"[^>]*>/g)].map(m => m[1].replace(/^\.\//, ""));
 assert.ok(scripts.includes("assets/app.js"), "Missing app.js entrypoint");
 const unique = new Set(scripts);
 assert.equal(unique.size, scripts.length, "Duplicate script tags");
