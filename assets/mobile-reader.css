@@ -381,3 +381,8 @@ body[data-theme="sepia"] .reader-topbar .reader-mobile-book-title{color:#473522}
 .book-cover .cover-favorite svg{display:block;width:19px;height:19px;flex:none;overflow:visible;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;pointer-events:none}
 .book-cover .cover-favorite[aria-pressed="true"] svg{fill:currentColor}
 @media(max-width:360px){.book-cover .cover-favorite svg{width:18px;height:18px}}
+
+/* UX-SEARCH-HIGHLIGHT: visible but readable matches, including night and sepia. */
+.book-page mark.reader-search-highlight{background:#ffe07b;color:#2b271b;border-radius:3px;padding:0 1px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+body[data-theme="night"] .book-page mark.reader-search-highlight{background:#e5b94b;color:#1b251d}
+body[data-theme="sepia"] .book-page mark.reader-search-highlight{background:#e8c16c;color:#4a321c}
