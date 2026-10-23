@@ -108,6 +108,7 @@
           <input id="searchInput" type="search" autocomplete="off" placeholder="ค้นหาคู่มือหรือคำสำคัญ…">
         </label>
       </div>
+      <div class="discovery-filters" role="group" aria-label="กรองสถานะคู่มือ"><button type="button" class="selected" data-discovery-filter="all" aria-pressed="true">ทั้งหมด</button><button type="button" data-discovery-filter="ready" aria-pressed="false">พร้อมอ่าน</button><button type="button" data-discovery-filter="upcoming" aria-pressed="false">เตรียมเผยแพร่</button></div>
       <div id="categoryChips" class="category-chips" aria-label="เลือกหมวดคู่มือ"><span class="wd-skeleton wd-skeleton-line" aria-hidden="true"></span></div>
       <div id="homeLoadRecovery" role="alert" hidden style="margin:12px 0;padding:14px;border:1px solid #9fbaa7;border-radius:12px;background:#f5faf5;color:#254d3d"><strong>รายการคู่มือยังโหลดไม่สำเร็จ</strong><p style="margin:8px 0">ลองโหลดใหม่ได้ โดยไม่ลบหนังสือที่บันทึกหรือประวัติการอ่าน</p><button id="homeRetry" type="button" style="min-height:44px;padding:8px 16px;border-radius:10px;background:#315f49;color:#fff;border:0">โหลดคู่มือใหม่</button></div><div id="manualGrid" class="manual-grid" aria-busy="true"><div class="wd-skeleton wd-skeleton-card" aria-hidden="true"></div><div class="wd-skeleton wd-skeleton-card" aria-hidden="true"></div></div>
       <p id="emptyResults" class="empty-state" hidden>ยังไม่พบคู่มือที่ตรงกับคำค้น ลองเปลี่ยนหมวดหมู่หรือใช้คำค้นอื่น</p>
