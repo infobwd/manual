@@ -189,6 +189,78 @@
     row.append(cover, detail);
     return row;
   }
+  const bookmarkShelfUI = { query: "", expanded: new Set(), showAll: new Set(), initialized: false };
+  function renderGroupedBookmarks() {
+    const shelf = $("myBookmarksShelf");
+    if (!shelf) return;
+    const experience = window.WD_EXPERIENCE;
+    const history = experience?.getHistory?.() || [];
+    const groups = data.manuals.filter(book => book.status === "published" && Array.isArray(book.pages) && book.pages.length).map(book => ({
+      book,
+      indices: (experience?.getBookmarks?.(book.id) || []).filter(index => Number.isInteger(index) && index >= 0 && index < book.pages.length)
+    })).filter(group => group.indices.length);
+    groups.sort((a,b) => {
+      const ai = history.indexOf(a.book.id), bi = history.indexOf(b.book.id);
+      return (ai < 0 ? Infinity : ai) - (bi < 0 ? Infinity : bi) || a.book.title.localeCompare(b.book.title, "th");
+    });
+    if (!bookmarkShelfUI.initialized && groups.length) {
+      bookmarkShelfUI.expanded.add(groups[0].book.id);
+      bookmarkShelfUI.initialized = true;
+    }
+    const total = groups.reduce((sum, group) => sum + group.indices.length, 0);
+    $("myBookmarksCount").textContent = total + " ตอน";
+    $("myBookmarksSummary").textContent = total ? total + " ตอน จาก " + groups.length + " คู่มือ · เก็บไว้เฉพาะในเครื่องนี้" : "แตะหัวข้อเพื่อเปิดอ่านตอนที่บันทึกไว้ในเครื่องนี้";
+    const query = normalized(bookmarkShelfUI.query);
+    const filtered = groups.map(group => ({
+      ...group,
+      visible: !query || normalized(group.book.title).includes(query)
+        ? group.indices
+        : group.indices.filter(index => normalized(group.book.pages[index].title).includes(query) || normalized("ตอน " + (index + 1)).includes(query))
+    })).filter(group => group.visible.length);
+    const nodes = filtered.map(group => {
+      const id = group.book.id;
+      const expanded = !!query || bookmarkShelfUI.expanded.has(id);
+      const wrapper = create("section", "bookmark-book-group");
+      const heading = create("button", "bookmark-book-heading");
+      heading.type = "button";
+      heading.setAttribute("aria-expanded", String(expanded));
+      heading.append(create("span", "bookmark-book-icon", "▤"));
+      const info = create("span", "bookmark-book-info");
+      info.append(create("strong", "", group.book.title), create("small", "", group.indices.length + " ตอนที่คั่นไว้"));
+      heading.append(info, create("span", "bookmark-book-chevron", expanded ? "⌃" : "⌄"));
+      heading.addEventListener("click", () => {
+        if (bookmarkShelfUI.expanded.has(id)) bookmarkShelfUI.expanded.delete(id);
+        else bookmarkShelfUI.expanded.add(id);
+        renderGroupedBookmarks();
+      });
+      wrapper.append(heading);
+      if (expanded) {
+        const body = create("div", "bookmark-book-body");
+        const limited = !query && !bookmarkShelfUI.showAll.has(id) && group.visible.length > 5;
+        (limited ? group.visible.slice(0, 5) : group.visible).forEach(index => {
+          const go = create("button", "bookmark-chapter-open");
+          go.type = "button";
+          go.append(create("span", "bookmark-chapter-icon", "🔖"), create("span", "", "ตอน " + (index + 1) + " · " + group.book.pages[index].title));
+          go.setAttribute("aria-label", "เปิด " + group.book.title + " ตอน " + (index + 1) + " " + group.book.pages[index].title);
+          go.addEventListener("click", () => { openBook(group.book, go); jumpTo(index); });
+          body.append(go);
+        });
+        if (limited) {
+          const more = create("button", "bookmark-show-all", "ดูทั้งหมด " + group.visible.length + " ตอน");
+          more.type = "button";
+          more.addEventListener("click", () => { bookmarkShelfUI.showAll.add(id); renderGroupedBookmarks(); });
+          body.append(more);
+        }
+        wrapper.append(body);
+      }
+      return wrapper;
+    });
+    shelf.replaceChildren(...(nodes.length ? nodes : [create("p", "personal-empty", query ? "ไม่พบคั่นหน้าที่ตรงกับคำค้น" : "ยังไม่มีตอนที่คั่นไว้ เปิดคู่มือแล้วแตะ ⋯ เพื่อคั่นหน้า")]));
+  }
+  $("myBookmarksFilter")?.addEventListener("input", event => {
+    bookmarkShelfUI.query = event.target.value;
+    renderGroupedBookmarks();
+  });
   function renderShelf() {
     const recentNode = $("recentShelf"), favoritesNode = $("favoritesShelf");
     if (!recentNode || !favoritesNode) return;
@@ -202,25 +274,8 @@
       ? favorites.map(book => shelfRow(book, true))
       : [create("p", "personal-empty", "ยังไม่มีหนังสือที่บันทึกไว้ กด ♡ เก็บไว้ บนเล่มที่สนใจ")]));
     if ($("favoritesCount")) $("favoritesCount").textContent = favorites.length + " เล่ม";
-    const bookmarksNode = $("myBookmarksShelf");
-    if (bookmarksNode) {
-      const rows = [];
-      data.manuals.filter(book => book.status === "published" && Array.isArray(book.pages) && book.pages.length).forEach(book => {
-        (experience?.getBookmarks?.(book.id) || []).forEach(index => {
-          if (!Number.isInteger(index) || index < 0 || index >= book.pages.length) return;
-          const row = create("div", "personal-bookmark-row");
-          const go = create("button", "personal-bookmark-open");
-          go.type = "button";
-          go.append(create("strong", "", book.title), create("small", "", "ตอน " + (index + 1) + " · " + book.pages[index].title));
-          go.setAttribute("aria-label", "เปิด " + book.title + " ตอน " + (index + 1) + " " + book.pages[index].title);
-          go.addEventListener("click", () => { openBook(book, go); jumpTo(index); });
-          row.append(go);
-          rows.push(row);
-        });
-      });
-      bookmarksNode.replaceChildren(...(rows.length ? rows : [create("p", "personal-empty", "ยังไม่มีตอนที่คั่นไว้ เปิดคู่มือแล้วแตะ ⋯ เพื่อคั่นหน้า")]));
-      if ($("myBookmarksCount")) $("myBookmarksCount").textContent = rows.length + " ตอน";
-    }
+    renderGroupedBookmarks();
+
   }
   const dialog = $("readerDialog");
   // UX-P0E: modal body lock is restored by the native dialog close lifecycle.
