@@ -1,0 +1,62 @@
+/* UX-P0C — gesture-friendly, accessible reading focus (mobile <=850px).
+ * Do not hide the right-thumb close action; book area does not get covered by
+ * the close button in focus mode. No remote fonts or new localStorage schema. */
+.reader-focus-toggle {display:none;}
+@media (max-width:850px) {
+  .reader-dialog .reader-focus-toggle {
+    display:inline-flex;align-self:flex-end;flex:none;align-items:center;
+    justify-content:center;gap:7px;min-height:44px;min-width:110px;
+    padding:8px 12px;margin:0 2px 7px 0;
+    border:1px solid #d7e5d8;border-radius:13px;
+    background:#f7fbf5;color:#295844;
+    font:750 12px system-ui,-apple-system,"Segoe UI",sans-serif;
+    touch-action:manipulation;
+  }
+  .reader-focus-toggle:focus-visible{outline:3px solid #ddad50;outline-offset:2px}
+  .reader-dialog.reader-focus .reader-topbar,
+  .reader-dialog.reader-focus .reader-bottom,
+  .reader-dialog.reader-focus .reader-hint { display:none; }
+  /* Page content keeps its own vertical scroll. Gesture recognition is passive. */
+  .reader-dialog .book-spread,
+  .reader-dialog .book-page {touch-action:pan-y pinch-zoom;}
+  /* A persistent, safe way to close the book even when chrome is hidden. */
+  .reader-dialog.reader-focus .reader-close-thumb {
+    position:static;
+    inset:auto;
+    right:auto;
+    bottom:auto;
+    margin:8px 3px 1px auto;
+    align-self:flex-end;
+    flex:none;
+    z-index:5;
+  }
+  .reader-dialog.reader-focus .reader-stage{padding-bottom:calc(10px + env(safe-area-inset-bottom));}
+  .reader-dialog.reader-focus .book-page {padding-bottom:35px;}
+  .reader-dialog.reader-focus .reader-focus-toggle {
+    color:#164e3d;background:#e2f1e6;border-color:#a7cfb6;
+  }
+}
+@media (max-width:600px) {
+  .reader-dialog .reader-focus-toggle{min-width:100px;}
+}
+body[data-theme="night"] .reader-focus-toggle {
+  background:#2b4636;color:#e6f2e5;border-color:#4b6752;
+}
+body[data-theme="night"] .reader-dialog.reader-focus .reader-focus-toggle {
+  background:#385c43;color:#fff;border-color:#6f9978;
+}
+body[data-theme="sepia"] .reader-focus-toggle {
+  background:#eee1c9;color:#655134;border-color:#d8c5a8;
+}
+body[data-theme="sepia"] .reader-dialog.reader-focus .reader-focus-toggle {
+  background:#e9d6b7;color:#5e4a2e;border-color:#d3b98d;
+}
+@media print {
+  .reader-focus-toggle {display:none!important;}
+  .reader-dialog.reader-focus .reader-topbar,
+  .reader-dialog.reader-focus .reader-bottom,
+  .reader-dialog.reader-focus .reader-hint {display:none!important;}
+}
+@media (prefers-reduced-motion:reduce) {
+  .reader-dialog .book-page {transition:none!important;}
+}
