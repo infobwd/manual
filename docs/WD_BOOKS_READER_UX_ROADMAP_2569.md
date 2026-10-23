@@ -505,3 +505,9 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Owner confirmed basic home/catalog/open-book behavior after ARCH-01C PR #57; not a complete offline/a11y/device QA pass.
 - Candidate 1.3.16 extracts **read-only selection** of recent books, favorites, resume and valid grouped bookmarks to `assets/mybooks-selectors.js`. Reader rendering, My Books DOM, event handlers and `wd-manual-reader-v2` remain unchanged.
 - Adds synthetic selector tests and registers new script in PWA offline shell and existing smoke harnesses. Full Node tests and real-device regression remain pending. Merge only after explicit approval; next step ARCH-01D2 reader coordination after acceptance.
+
+## ARCH-01D2 — Reader coordination candidate (23 ต.ค. 2569)
+
+- Owner confirmed ARCH-01D1 behavior after PR #58. Candidate v1.3.17 isolates My Books refresh subscription and published-only Reader opening adapter into `assets/reader-coordinator.js`.
+- No storage writes, schema migrations or Reader UI redesign; preserves existing `openBook` and renderers. Includes synthetic smoke test and PWA shell registration.
+- JavaScript syntax checked; complete Node suite and iPhone/iPad offline regression pending. PR remains unmerged until explicit approval.
