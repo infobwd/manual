@@ -259,6 +259,8 @@
     state.manual = book;
     searchInput.value = "";
     closeReaderSearch();
+    bookmarksPanel.hidden = true;
+    bookmarkListToggle.setAttribute("aria-expanded","false");
     const remembered = window.WD_EXPERIENCE?.getProgress?.(book.id) || 0;
     state.page = isMobile.matches ? remembered : Math.floor(remembered / 2) * 2;
     state.readingMode = window.WD_EXPERIENCE?.getReadingMode?.() || "paged";
@@ -586,6 +588,8 @@
   }
   dialog.addEventListener("close", () => {
     closeMobileToc(false);
+    bookmarksPanel.hidden = true;
+    bookmarkListToggle.setAttribute("aria-expanded","false");
     continuousObserver?.disconnect();
     state.manual = null;
     if (state.opener?.isConnected) state.opener.focus();
