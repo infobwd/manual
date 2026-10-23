@@ -231,3 +231,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Move the sun/eye-comfort toggle from the catalog header onto each published book cover; it toggles the same local reading theme setting, synchronized across visible covers.
 - Remove the floating bottom-right `ปิดอ่าน` button that obscured text on iPhone. Use the persistent top-right close control, minimum 44px touch target; maintain focus restoration and reading progress.
 - Pending acceptance: iPhone screenshot widths, thumb reach and reader toolbar crowding, iPad landscape, VoiceOver labels, update prompt v10→v11, saved favorites and progress.
+
+
+## UI refinement after iPhone feedback — 23 ต.ค. 2569
+
+- Restore global sun/eye-comfort button to the app header; retain the reader eye-comfort control.
+- Replace per-book cover sun with a heart button to add/remove from **หนังสือของฉัน**. No separate favorite button in card footer. Keep `aria-pressed`, clear accessible label, 46px touch target.
+- Move `ปิดอ่าน` to the bottom reader controls adjacent to `หน้าถัดไป` without overlapping book text. Distinguish close visually from the primary next-page button; preserve focus restoration and progress.
+- Offline cache v12. Pending iPhone/iPad layout and PWA upgrade verification.
