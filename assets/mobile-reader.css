@@ -231,3 +231,29 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
 @media(max-width:600px){
   .reader-mode-status{font-size:10px;max-width:115px}
 }
+
+/* UX-P0I: mobile controls respect the physical screen edge and home indicator. */
+@media(max-width:1100px){
+  .reader-dialog{box-sizing:border-box}
+  .reader-shell{min-width:0}
+  .reader-bottom{box-sizing:border-box;min-width:0;width:100%;max-width:100%;gap:clamp(4px,1.2vw,10px);padding:10px max(8px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));align-items:center}
+  .reader-bottom .page-control{box-sizing:border-box;min-width:0;flex:0 1 auto;padding:10px 8px;min-height:48px;white-space:nowrap}
+  .reader-bottom #prevPage,.reader-bottom #nextPage{flex:0 1 auto;font-size:clamp(10px,2.7vw,13px)}
+  .reader-bottom .reader-progress{flex:1 1 65px;min-width:54px;max-width:none;gap:3px}
+  .reader-bottom .reader-close-bottom{flex:0 0 44px;min-width:44px;min-height:48px}
+  .reader-bottom #pageCounter{font-size:clamp(10px,2.6vw,12px)}
+  .reader-mode-status{max-width:100%;font-size:10px;text-wrap:balance}
+}
+@media(max-width:380px){
+  .reader-bottom{gap:3px}
+  .reader-bottom .page-control{padding-inline:5px}
+  .reader-bottom .reader-close-bottom{flex-basis:42px;min-width:42px}
+}
+/* Loading placeholders only while content is being prepared. */
+.wd-skeleton{display:block;border-radius:10px;background:linear-gradient(100deg,#d8e4db 8%,#eef4ed 20%,#d8e4db 35%);background-size:220% 100%;animation:wd-skeleton-pulse 1.3s ease-in-out infinite}
+.wd-skeleton-line{height:15px;margin:12px 0;width:86%}
+.wd-skeleton-line.short{width:52%}
+.wd-skeleton-card{min-height:155px;border-radius:18px}
+.book-spread.reader-loading .book-page{opacity:.35}
+@keyframes wd-skeleton-pulse{to{background-position-x:-220%}}
+@media(prefers-reduced-motion:reduce){.wd-skeleton{animation:none}}
