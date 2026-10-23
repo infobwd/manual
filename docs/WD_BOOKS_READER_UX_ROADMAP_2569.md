@@ -400,3 +400,10 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Favorite button is an independent action and must never open the reader; review/draft cards are not clickable.
 - Card is keyboard-focusable (Enter/Space) with focus ring and descriptive label; reduced-motion respected.
 - Acceptance pending: Android/iPhone touch, keyboard and screen readers, favorite button, published/review state, reader focus return, PWA/offline regression. Mark Accepted only after evidence.
+
+## UX-READER-CONTRAST — candidate 1.3.3 (PR pending)
+
+- แก้ชื่อคู่มือบนแถบด้านบน Reader มือถือ/Android ให้สีตัดพื้นหลังชัดเจนใน light/night/sepia โดยไม่เปลี่ยนธีมส่วนอื่น
+- ป้องกันการถูกสีจางเดิม override; ชื่อยาวยัง ellipsis และไม่บังปุ่ม TOC/เมนู
+- ยืนยัน title จากคู่มือปัจจุบัน; ไม่แก้เนื้อหาหนังสือ, ขนาดหน้า หรือข้อมูลการอ่านเดิม
+- **QA pending:** Android Chrome/PWA ภาพก่อน-หลัง, iPhone/iPad, light/night/sepia, zoom 200%, TalkBack/VoiceOver, ชื่อยาว, ปุ่มข้างเคียง และ PWA offline
