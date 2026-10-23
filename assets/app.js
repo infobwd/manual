@@ -202,6 +202,25 @@
       ? favorites.map(book => shelfRow(book, true))
       : [create("p", "personal-empty", "ยังไม่มีหนังสือที่บันทึกไว้ กด ♡ เก็บไว้ บนเล่มที่สนใจ")]));
     if ($("favoritesCount")) $("favoritesCount").textContent = favorites.length + " เล่ม";
+    const bookmarksNode = $("myBookmarksShelf");
+    if (bookmarksNode) {
+      const rows = [];
+      data.manuals.filter(book => book.status === "published" && Array.isArray(book.pages) && book.pages.length).forEach(book => {
+        (experience?.getBookmarks?.(book.id) || []).forEach(index => {
+          if (!Number.isInteger(index) || index < 0 || index >= book.pages.length) return;
+          const row = create("div", "personal-bookmark-row");
+          const go = create("button", "personal-bookmark-open");
+          go.type = "button";
+          go.append(create("strong", "", book.title), create("small", "", "ตอน " + (index + 1) + " · " + book.pages[index].title));
+          go.setAttribute("aria-label", "เปิด " + book.title + " ตอน " + (index + 1) + " " + book.pages[index].title);
+          go.addEventListener("click", () => { openBook(book, go); jumpTo(index); });
+          row.append(go);
+          rows.push(row);
+        });
+      });
+      bookmarksNode.replaceChildren(...(rows.length ? rows : [create("p", "personal-empty", "ยังไม่มีตอนที่คั่นไว้ เปิดคู่มือแล้วแตะ ⋯ เพื่อคั่นหน้า")]));
+      if ($("myBookmarksCount")) $("myBookmarksCount").textContent = rows.length + " ตอน";
+    }
   }
   const dialog = $("readerDialog");
   // UX-P0E: modal body lock is restored by the native dialog close lifecycle.
