@@ -293,7 +293,7 @@
     const toc = $("tocItems");
     toc.replaceChildren(...state.manual.pages.map((page, i) => {
       const b = create("button", "", "");
-      const displayed = isMobile.matches ? state.page === i : state.page <= i && i < state.page + 2;
+      const displayed = state.readingMode === "continuous" || isMobile.matches ? state.page === i : state.page <= i && i < state.page + 2;
       b.classList.toggle("active", displayed);
       b.setAttribute("aria-current", displayed ? "page" : "false");
       b.append(create("span", "toc-number", String(i + 1).padStart(2, "0")));
@@ -311,7 +311,7 @@
     mobileItems.replaceChildren(...state.manual.pages.map((page, i) => {
       const b = create("button", "mobile-toc-item");
       b.type = "button";
-      const currentPage = isMobile.matches ? i === state.page : state.page <= i && i < state.page + 2;
+      const currentPage = state.readingMode === "continuous" || isMobile.matches ? i === state.page : state.page <= i && i < state.page + 2;
       b.setAttribute("aria-current", currentPage ? "page" : "false");
       b.setAttribute("aria-label", "หน้า " + (i + 1) + " " + page.title + (currentPage ? " กำลังอ่าน" : ""));
       b.append(create("span", "toc-number", String(i + 1).padStart(2, "0")));
@@ -361,7 +361,7 @@
     $("prevPage").hidden = true;
     $("nextPage").hidden = true;
     const current = Math.min(state.page, pages.length - 1);
-    updateContinuousPosition(current, false);
+    updateContinuousPosition(current, true);
     requestAnimationFrame(() => {
       container.children[current]?.scrollIntoView({block:"start",behavior:"instant"});
       continuousObserver = new IntersectionObserver(entries => {
