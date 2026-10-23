@@ -523,3 +523,8 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - ARCH-01E PR #60 merged, but local command execution and device performance measurements are pending.
 - Source inspection shows catalog and public guide scripts loaded before app.js and precached by SW; lazy loading must preserve this dependency and offline behavior.
 - Documented phased design and compatibility gates in [WD_BOOKS_CAT01_LOADING_DESIGN_2569.md](WD_BOOKS_CAT01_LOADING_DESIGN_2569.md). Documentation-only PR, no version bump, no runtime change; proceed to CAT-01A contract tests after approval.
+
+## CAT-01A — public catalog/content contract candidate (23 ต.ค. 2569)
+
+- CAT-01 design PR #61 merged at `a0e65e8ce6fb050e864d76ce6e71bca3e20abd50`. While no computer is available, prepare read-only synthetic/current catalog contract gate and documented stable ID/offline policy: [WD_BOOKS_CAT01A_CONTENT_CONTRACT_2569.md](WD_BOOKS_CAT01A_CONTENT_CONTRACT_2569.md).
+- Adds `tests/cat01-contract.smoke.cjs` only; no production code/version/storage changes. Syntax parsed; Node execution and real-device QA pending. Explicit approval required before merge.
