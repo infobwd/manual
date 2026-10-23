@@ -86,3 +86,6 @@ body[data-theme="sepia"] .pull-refresh{background:#f6eddc;color:#665238;border-c
 .book-cover .cover-favorite[aria-pressed="true"]{background:#fff0f1;color:#c3264c;border:2px solid #f3a1b2;box-shadow:0 3px 14px #32101830}
 body[data-theme="night"] .book-cover .cover-favorite:not([aria-pressed="true"]){background:#edf4ee;color:#31574a;border-color:#d5e4d9}
 body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{background:#fff0f1;color:#c3264c;border-color:#f3a1b2}
+
+/* Smaller visual heart, retain a comfortable 44px finger target. */
+.book-cover .cover-favorite{width:44px;height:44px;min-width:44px;min-height:44px;font-size:23px;border-radius:12px;right:10px;top:10px}
