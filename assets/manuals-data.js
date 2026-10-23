@@ -6,6 +6,7 @@ window.WD_LIBRARY_DATA = {
     { id: "academic", label: "งานวิชาการ", icon: "🎓" },
     { id: "teachers", label: "คู่มือสำหรับครู", icon: "📖" },
     { id: "systems", label: "ระบบสารสนเทศ", icon: "💻" },
+    { id: "school-information", label: "สารสนเทศสถานศึกษา", icon: "📊" },
     { id: "administration", label: "งานบริหาร", icon: "📋" },
     { id: "families", label: "ผู้ปกครอง", icon: "👨‍👩‍👧" },
     { id: "safety", label: "ความปลอดภัย", icon: "🛡" }
@@ -61,6 +62,15 @@ window.WD_LIBRARY_DATA = {
         ], bullets: ["ค้นหาจากชื่อหรือหมวดหมู่", "ตรวจสถานะฉบับก่อนนำไปใช้", "แจ้งผู้ดูแลหากพบคู่มือไม่ตรงกับระบบปัจจุบัน"],
         tip: "เล่มนี้เป็นเพียงต้นแบบสำหรับทดสอบการใช้งาน ยังไม่ใช่การเปิดใช้เว็บไซต์จริง" }
       ]
+    },
+    {
+      id:"sar-2568-basic-education",category:"school-information",status:"review",
+      title:"SAR 2568 — สารสนเทศคุณภาพการศึกษา โรงเรียนบ้านวังด้ง",
+      subtitle:"ระดับการศึกษาขั้นพื้นฐาน · สรุปผลการประเมินตนเอง",
+      description:"สรุปข้อมูลจริงจากรายงาน SAR ปีการศึกษา 2568 ทั้งผลมาตรฐาน จุดเด่น จุดควรพัฒนา และทิศทางพัฒนาคุณภาพ เพื่อให้ประชาชนเข้าใจง่าย",
+      audience:"ครู ผู้ปกครอง และประชาชน",updated:"23 ต.ค. 2569",edition:"รอตรวจรับฉบับ e-book",readTime:"—",color:"forest",
+      coverTitle:"SAR 2568\\nสารสนเทศสถานศึกษา",coverTop:"BAN WANG DONG · SAR",
+      tags:["SAR","ประกันคุณภาพ","สารสนเทศ","ผลการประเมิน","2568"],pages:[]
     },
     {
       id:"wd-growth-individual-plan",category:"teachers",status:"review",
