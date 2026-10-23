@@ -274,6 +274,14 @@
     if (!dialog.open) dialog.showModal();
     $("readerClose").focus();
   }
+  const toolsToggle = $("readerToolsToggle"), extraTools = $("readerExtraTools");
+  const closeTools = () => { extraTools.hidden = true; toolsToggle.setAttribute("aria-expanded","false"); };
+  toolsToggle.addEventListener("click", () => {
+    extraTools.hidden = !extraTools.hidden;
+    toolsToggle.setAttribute("aria-expanded",String(!extraTools.hidden));
+  });
+  dialog.addEventListener("close",closeTools);
+  extraTools.addEventListener("click",event => { if (event.target.closest("button")) closeTools(); });
   const bookmarkToggle = $("readerBookmarkToggle"), bookmarkListToggle = $("readerBookmarksListToggle"), bookmarksPanel = $("readerBookmarksPanel");
   function syncBookmarks() {
     if (!state.manual) return;
