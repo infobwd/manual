@@ -676,6 +676,14 @@
       });
       target.append(figure);
     }
+    if (page.insight && typeof page.insight.headline === "string") {
+      const summary = create("section", "sar-insight");
+      summary.setAttribute("aria-label", "สรุปสารสนเทศ");
+      summary.append(create("strong", "sar-insight-headline", page.insight.headline));
+      if (page.insight.primary) summary.append(create("p", "sar-insight-primary", page.insight.primary));
+      if (page.insight.detail) summary.append(create("p", "sar-insight-detail", page.insight.detail));
+      target.append(summary);
+    }
     if (page.bullets?.length) {
       const ul = create("ul", "page-list");
       page.bullets.forEach((text) => ul.append(create("li", "", text)));
