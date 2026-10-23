@@ -149,7 +149,9 @@
       button.classList.toggle("selected", active);
     });
     const readyCount = filtered.filter(book => book.status === "published" && book.pages?.length).length;
-    $("resultsText").textContent = "พบคู่มือพร้อมอ่าน " + readyCount + " เล่ม · รายการทั้งหมด " + filtered.length + " จาก " + data.manuals.length + " รายการ";
+    $("resultsText").textContent = filtered.length ? "พบคู่มือพร้อมอ่าน " + readyCount + " เล่ม · รายการทั้งหมด " + filtered.length + " จาก " + data.manuals.length + " รายการ" : "ไม่พบคู่มือที่ตรงกับคำค้นหาและตัวกรองที่เลือก";
+    $("resetDiscoveryFilters").hidden = filtered.length > 0;
+    $("emptyResults").textContent = "ลองล้างตัวกรองเพื่อดูคู่มือทั้งหมดอีกครั้ง";
     $("emptyResults").hidden = filtered.length > 0;
   }
 
@@ -930,6 +932,15 @@
   for (const id of ["searchInput", "homeSearchInput"]) {
     $(id)?.addEventListener("input", (event) => updateQuery(event.target.value, event.target));
   }
+  $("resetDiscoveryFilters").addEventListener("click", () => {
+    state.availability = "all";
+    state.category = "all";
+    state.query = "";
+    for (const id of ["searchInput", "homeSearchInput"]) { if ($(id)) $(id).value = ""; }
+    renderCategories();
+    renderCatalog();
+    $("resultsText").focus();
+  });
   document.querySelectorAll("[data-discovery-filter]").forEach(button => {
     button.addEventListener("click", () => {
       state.availability = button.dataset.discoveryFilter;
