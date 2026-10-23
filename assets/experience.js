@@ -59,6 +59,11 @@
     document.querySelectorAll('input[name="readerTheme"]').forEach((radio) => {
       radio.checked = radio.value === prefs.theme;
     });
+    document.querySelectorAll("[data-reader-theme]").forEach(button => {
+      const selected = button.dataset.readerTheme === prefs.theme;
+      button.setAttribute("aria-pressed", String(selected));
+      button.classList.toggle("is-selected", selected);
+    });
     for (const id of ["quickEyeMode", "readerEyeMode"]) {
       const b = $(id); if (!b) continue;
       b.setAttribute("aria-pressed", String(prefs.theme === "sepia"));
@@ -246,6 +251,9 @@
     syncTheme();
     syncFont();
     updateContinue();
+    document.querySelectorAll("[data-reader-theme]").forEach(button => {
+      button.addEventListener("click", () => setTheme(button.dataset.readerTheme));
+    });
     for (const id of ["readerEyeMode"]) {
       $(id)?.addEventListener("click", () => setTheme(prefs.theme === "sepia" ? "light" : "sepia"));
     }
