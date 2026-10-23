@@ -499,3 +499,9 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Stacked on unmerged ARCH-01B PR #55, not main. Candidate v1.3.15: move catalog rendering and discovery event binding into `assets/catalog-ui.js`; app.js retains card creation, Reader, My Books, and app orchestration.
 - New script loaded after catalog-core.js and before app.js; SW app shell includes both; smoke harness script order updated.
 - JavaScript syntax parse checked for app.js and catalog-ui.js before PR. Full local Node tests and device regression **not yet executed/verified**. Do not merge stacked PR until ARCH-01B and tests PASS; preserve storage and rollback ability.
+
+## ARCH-01D1 — read-only My Books selectors candidate (23 ต.ค. 2569)
+
+- Owner confirmed basic home/catalog/open-book behavior after ARCH-01C PR #57; not a complete offline/a11y/device QA pass.
+- Candidate 1.3.16 extracts **read-only selection** of recent books, favorites, resume and valid grouped bookmarks to `assets/mybooks-selectors.js`. Reader rendering, My Books DOM, event handlers and `wd-manual-reader-v2` remain unchanged.
+- Adds synthetic selector tests and registers new script in PWA offline shell and existing smoke harnesses. Full Node tests and real-device regression remain pending. Merge only after explicit approval; next step ARCH-01D2 reader coordination after acceptance.
