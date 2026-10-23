@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="./assets/styles.css">
   <link rel="stylesheet" href="./assets/app-experience.css">
   <link rel="stylesheet" href="./assets/mobile-reader.css">
+  <link rel="stylesheet" href="./assets/home-p0a.css">
   <script defer src="./assets/manuals-data.js"></script>
   <script defer src="./assets/wd-growth-individual-guide.js"></script>
   <script defer src="./assets/experience.js"></script>
@@ -66,6 +67,53 @@
   </aside>
 
   <main id="content" class="main">
+    <section class="quick-find" id="quickFind" aria-labelledby="quickFindTitle">
+      <div class="quick-find-label">
+        <p class="eyebrow">WD BOOKS · FIND A MANUAL</p>
+        <h2 id="quickFindTitle">วันนี้อยากอ่านคู่มืออะไร?</h2>
+      </div>
+      <label class="quick-search" for="homeSearchInput">
+        <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input id="homeSearchInput" type="search" autocomplete="off" placeholder="ค้นหาคู่มือหรือหัวข้อ…" aria-controls="manualGrid">
+      </label>
+      <a class="quick-search-results" href="#library" aria-label="เลื่อนไปยังรายการคู่มือที่ค้นหา">ดูรายการคู่มือ <span aria-hidden="true">↘</span></a>
+    </section>
+    <section id="continueFeature" class="continue-feature" aria-labelledby="continueFeatureTitle" hidden>
+      <div class="section-heading">
+        <div><p class="eyebrow">PICK UP WHERE YOU LEFT OFF</p><h2 id="continueFeatureTitle">อ่านต่อจากครั้งล่าสุด</h2></div>
+      </div>
+      <div id="continueFeatureCard" aria-live="polite"></div>
+    </section>
+    <section class="library" id="library" aria-labelledby="libraryTitle">
+      <p class="library-lead" id="readyBooksHint">เริ่มจากคู่มือที่เปิดอ่านได้ทันที แล้วเลือกดูรายการเตรียมเผยแพร่ด้านล่าง</p>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">THE BOOKSHELF</p>
+          <h2 id="libraryTitle">ชั้นหนังสือดิจิทัล</h2>
+          <p class="app-hint">เลือกเล่มที่พร้อมอ่าน แล้วเปิดต่อจากหน้าล่าสุดได้</p>
+          <p class="section-detail" id="resultsText" role="status" aria-live="polite">เลือกหมวดหมู่หรือค้นหาชื่อคู่มือ</p>
+        </div>
+        <label class="search-box" for="searchInput">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input id="searchInput" type="search" autocomplete="off" placeholder="ค้นหาคู่มือหรือคำสำคัญ…">
+        </label>
+      </div>
+      <div id="categoryChips" class="category-chips" aria-label="ตัวกรองหมวดหมู่"></div>
+      <div id="manualGrid" class="manual-grid"></div>
+      <p id="emptyResults" class="empty-state" hidden>ยังไม่พบคู่มือที่ตรงกับคำค้น ลองเปลี่ยนหมวดหมู่หรือใช้คำค้นอื่น</p>
+    </section>
+
+    <section class="my-books" id="myBooks" aria-labelledby="myBooksTitle">
+      <div class="section-heading"><div>
+        <p class="eyebrow">PERSONAL BOOKSHELF</p>
+        <h2 id="myBooksTitle">หนังสือของฉัน</h2>
+        <p class="section-detail">ชั้นหนังสือส่วนตัว จดจำเฉพาะในอุปกรณ์นี้</p>
+      </div></div>
+      <div class="personal-shelves">
+        <div class="personal-shelf"><h3>อ่านล่าสุด</h3><div id="recentShelf" aria-live="polite"></div></div>
+        <div class="personal-shelf"><h3>หนังสือที่บันทึกไว้ <span id="favoritesCount"></span></h3><div id="favoritesShelf" aria-live="polite"></div></div>
+      </div>
+    </section>
     <section class="hero" aria-labelledby="heroTitle">
       <div class="hero-copy">
         <span class="hero-overline"><span class="overline-dot"></span> DIGITAL KNOWLEDGE LIBRARY</span>
@@ -88,35 +136,6 @@
       <p class="summary-help">เผยแพร่เฉพาะเนื้อหาสาธารณะที่ผ่านการตรวจรับแล้วเท่านั้น</p>
     </section>
 
-    <section class="my-books" id="myBooks" aria-labelledby="myBooksTitle">
-      <div class="section-heading"><div>
-        <p class="eyebrow">PERSONAL BOOKSHELF</p>
-        <h2 id="myBooksTitle">หนังสือของฉัน</h2>
-        <p class="section-detail">ชั้นหนังสือส่วนตัว จดจำเฉพาะในอุปกรณ์นี้</p>
-      </div></div>
-      <div class="personal-shelves">
-        <div class="personal-shelf"><h3>อ่านล่าสุด</h3><div id="recentShelf" aria-live="polite"></div></div>
-        <div class="personal-shelf"><h3>หนังสือที่บันทึกไว้ <span id="favoritesCount"></span></h3><div id="favoritesShelf" aria-live="polite"></div></div>
-      </div>
-    </section>
-    <section class="library" id="library" aria-labelledby="libraryTitle">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">THE BOOKSHELF</p>
-          <h2 id="libraryTitle">ชั้นหนังสือดิจิทัล</h2>
-          <p class="app-hint">เลือกเล่มที่พร้อมอ่าน แล้วเปิดต่อจากหน้าล่าสุดได้</p>
-          <p class="section-detail" id="resultsText" role="status" aria-live="polite">เลือกหมวดหมู่หรือค้นหาชื่อคู่มือ</p>
-        </div>
-        <label class="search-box" for="searchInput">
-          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-          <input id="searchInput" type="search" autocomplete="off" placeholder="ค้นหาคู่มือหรือคำสำคัญ…">
-        </label>
-      </div>
-      <div id="categoryChips" class="category-chips" aria-label="ตัวกรองหมวดหมู่"></div>
-      <div id="manualGrid" class="manual-grid"></div>
-      <p id="emptyResults" class="empty-state" hidden>ยังไม่พบคู่มือที่ตรงกับคำค้น ลองเปลี่ยนหมวดหมู่หรือใช้คำค้นอื่น</p>
-    </section>
-
     <section class="about" id="about" aria-labelledby="aboutTitle">
       <div class="about-mark" aria-hidden="true">✳</div>
       <div><p class="eyebrow">ABOUT THIS LIBRARY</p><h2 id="aboutTitle">คู่มือถูกต้อง ค้นหาง่าย และอัปเดตได้</h2>
@@ -131,8 +150,6 @@
   <a id="navHome" href="#content" class="bottom-nav-item active" aria-label="หน้าหลัก"><span class="bottom-nav-icon" aria-hidden="true">⌂</span><span>หน้าหลัก</span></a>
   <a id="navBooks" href="#library" class="bottom-nav-item" aria-label="ชั้นหนังสือ"><span class="bottom-nav-icon" aria-hidden="true">▤</span><span>หนังสือ</span></a>
   <a id="navMyBooks" href="#myBooks" class="bottom-nav-item" aria-label="หนังสือของฉัน"><span class="bottom-nav-icon" aria-hidden="true">♡</span><span>ของฉัน</span></a>
-  <button id="navContinue" type="button" class="bottom-nav-item" disabled aria-label="อ่านเล่มล่าสุดต่อ"><span class="bottom-nav-icon" aria-hidden="true">▸</span><span>อ่านต่อ</span></button>
-  <button id="navSettings" type="button" class="bottom-nav-item" aria-label="ตั้งค่าการอ่าน"><span class="bottom-nav-icon" aria-hidden="true">☷</span><span>ตั้งค่า</span></button>
 </nav>
 
 <dialog id="settingsDialog" class="settings-dialog" aria-labelledby="settingsTitle">
