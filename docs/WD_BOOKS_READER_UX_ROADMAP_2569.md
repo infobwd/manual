@@ -206,3 +206,12 @@
 ## UX-P0C implementation candidate (PR pending)
 
 Swipe left/right is scoped to the active book page. It ignores multi-touch, vertical movement, interactive controls, TOC, and screen-edge gestures. Focus mode hides secondary reader hints and desktop TOC while retaining navigation and close controls. Device QA, accessibility, zoom regression, and offline cache update are required before merge. This is not a completed release gate.
+
+
+### UX-P0C QA checklist (release blocker)
+- [ ] iPhone Safari/PWA: horizontal swipe changes one page; vertical scroll does not; pinch zoom still works inside reader; OS edge back remains usable
+- [ ] iPad portrait/landscape: both visible pages accept swipe; orientation retains reading position
+- [ ] Mobile TOC and pull-to-refresh: no gesture collision; closing reader returns focus
+- [ ] Focus toggle: accessible name and pressed state; navigation/close always visible; screen reader and keyboard tested
+- [ ] Offline update: v8 to v9 service worker activation and all published books accessible; no localStorage loss
+- [ ] Windows: run Node smoke tests and inspect browser console before approval
