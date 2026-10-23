@@ -297,6 +297,9 @@
     state.opener = opener;
     $("bookSpread").style.setProperty("--readerScale", String(state.scale));
     $("readerTitle").textContent = book.title;
+    $("readerMobileBookTitle").textContent = book.title;
+    $("readerMobileBookTitle").title = book.title;
+    $("readerBookmarksBookTitle").textContent = book.title;
     $("readerCategory").textContent = (lookup[book.category]?.label || "คู่มือ") + " · " + book.edition;
     $("bookSpread").classList.add("reader-loading");
     renderReader();
