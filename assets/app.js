@@ -377,6 +377,21 @@
     }, { passive: true });
     dialog.addEventListener("close", reset);
   })();
+  // Focus mode keeps page navigation and close controls visible.
+  const focusToggle = $("readerFocusToggle");
+  const syncFocus = () => {
+    const active = dialog.classList.contains("reader-focus-mode");
+    focusToggle?.setAttribute("aria-pressed", String(active));
+    focusToggle?.setAttribute("aria-label", active ? "ปิดโหมดอ่านเต็มตา" : "เปิดโหมดอ่านเต็มตา");
+  };
+  focusToggle?.addEventListener("click", () => {
+    dialog.classList.toggle("reader-focus-mode");
+    syncFocus();
+  });
+  dialog.addEventListener("close", () => {
+    dialog.classList.remove("reader-focus-mode");
+    syncFocus();
+  });
   $("prevPage").addEventListener("click", () => movePage(-1));
   $("nextPage").addEventListener("click", () => movePage(1));
   $("readerClose").addEventListener("click", () => dialog.close());
