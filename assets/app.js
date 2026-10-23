@@ -408,6 +408,24 @@
   $("prevPage").addEventListener("click", () => movePage(-1));
   $("nextPage").addEventListener("click", () => movePage(1));
   $("readerClose").addEventListener("click", () => dialog.close());
+  // UX-P1A: accessible reader typography controls; no new storage key.
+  const aaToggle = $("readerAaToggle"), aaPanel = $("readerAaPanel");
+  aaToggle?.addEventListener("click", () => {
+    aaPanel.hidden = !aaPanel.hidden;
+    aaToggle.setAttribute("aria-expanded", String(!aaPanel.hidden));
+  });
+  for (const [id, field] of [["readerFontFamily","family"],["readerLineSpacing","line"],["readerPageMargin","margin"]]) {
+    $(id)?.addEventListener("change", event => window.WD_EXPERIENCE?.setTypography?.(field, event.target.value));
+  }
+  $("readerResetTypography")?.addEventListener("click", () => {
+    for (const [field,value] of [["family","system"],["line","normal"],["margin","normal"]]) {
+      window.WD_EXPERIENCE?.setTypography?.(field,value);
+    }
+  });
+  dialog.addEventListener("close", () => {
+    if (aaPanel) aaPanel.hidden = true;
+    aaToggle?.setAttribute("aria-expanded","false");
+  });
   $("fontDecrease").addEventListener("click", () => resize(-.1));
   $("fontIncrease").addEventListener("click", () => resize(.1));
   function resize(amount) {
