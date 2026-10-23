@@ -280,7 +280,15 @@
     extraTools.hidden = !extraTools.hidden;
     toolsToggle.setAttribute("aria-expanded",String(!extraTools.hidden));
   });
-  dialog.addEventListener("close",closeTools);
+  const syncToolsViewport = () => {
+    if (window.matchMedia("(min-width:1101px)").matches) {
+      extraTools.hidden = false;
+      toolsToggle.setAttribute("aria-expanded","false");
+    } else closeTools();
+  };
+  syncToolsViewport();
+  window.matchMedia("(min-width:1101px)").addEventListener?.("change",syncToolsViewport);
+  dialog.addEventListener("close",() => { if (window.matchMedia("(max-width:1100px)").matches) closeTools(); });
   extraTools.addEventListener("click",event => { if (event.target.closest("button")) closeTools(); });
   const bookmarkToggle = $("readerBookmarkToggle"), bookmarkListToggle = $("readerBookmarksListToggle"), bookmarksPanel = $("readerBookmarksPanel");
   function syncBookmarks() {
