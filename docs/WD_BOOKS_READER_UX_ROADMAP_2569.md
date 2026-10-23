@@ -443,3 +443,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - ค้นหายังเป็นระดับ **ตอน** (ไม่ใช่ทุก occurrence); ไม่อ้างว่าปุ่มก่อนหน้า/ถัดไปนำทางแต่ละคำภายในตอน; ไม่เปลี่ยน schema localStorage
 - **QA PENDING:** iPhone Safari/PWA, Android, iPad, แสดงผลหลังเลือกตอน, เลื่อนต่อเนื่อง, ค้นคำไทย, เปิด/ปิดแผง, ปุ่มนำทาง, ความคงอยู่ของไฮไลต์, การอ่านด้วย screen reader
 - หลังตรวจรับ R1 จึงกลับสู่ UX-DISCOVERY
+
+## HOME-LOAD-STALL-R1 — iPhone screenshot (23 ต.ค. 2569)
+
+- User screenshot: home catalog remains on two skeleton cards and category loading bar; this is **FAIL**, not UX-DISCOVERY readiness.
+- Root cause **not confirmed**: JavaScript bootstrap failure, partial deploy, or PWA cache version mismatch are hypotheses.
+- Candidate 1.3.9 adds a 6.5s stalled-skeleton detection, visible retry button, and cache-busted document navigation. Never clear localStorage, favorites, history or bookmarks; include guard in SW app shell.
+- QA pending: reproduce on iPhone Safari/PWA, test offline and online, confirm error recovery and that saved books survive; inspect browser console and deployed asset versions if stall persists.
+- Block UX-DISCOVERY until catalog reliably renders.
