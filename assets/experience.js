@@ -11,7 +11,7 @@
   const validBookIds = (items) => [...new Set(
     (Array.isArray(items) ? items : []).filter((id) => typeof id === "string" && hasBook(id))
   )].slice(0,30);
-  const defaultPrefs = () => ({ theme: "light", font: 100, recent: null, progress: {}, favorites: [], history: [], typography: { family: "system", line: "normal", margin: "normal" } });
+  const defaultPrefs = () => ({ theme: "light", font: 100, recent: null, progress: {}, favorites: [], history: [], readingMode: "paged", typography: { family: "system", line: "normal", margin: "normal" } });
   function load() {
     try {
       const saved = JSON.parse(localStorage.getItem(key) || "{}");
@@ -23,6 +23,7 @@
         progress: saved.progress && typeof saved.progress === "object" && !Array.isArray(saved.progress) ? saved.progress : {},
         favorites: validBookIds(saved.favorites),
         history: validBookIds([saved.recent, ...(Array.isArray(saved.history) ? saved.history : [])]),
+        readingMode: saved.readingMode === "continuous" ? "continuous" : "paged",
         typography: {
           family: ["system","serif","sans"].includes(saved.typography?.family) ? saved.typography.family : "system",
           line: ["normal","relaxed","wide"].includes(saved.typography?.line) ? saved.typography.line : "normal",
@@ -329,6 +330,8 @@
     isFavorite,
     toggleFavorite,
     subscribeBooks: (callback) => { onBooksChanged = callback; },
+    getReadingMode: () => prefs.readingMode,
+    setReadingMode: (mode) => { if (!["paged","continuous"].includes(mode)) return; prefs.readingMode = mode; save(); },
     getTypography: () => ({...prefs.typography}),
     setTypography,
     getTheme: () => prefs.theme,

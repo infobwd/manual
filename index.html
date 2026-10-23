@@ -184,6 +184,7 @@
       <div class="reader-actions">
         <button id="readerFocusToggle" class="icon-button reader-focus-toggle" type="button" aria-label="เปิดโหมดอ่านเต็มตา" aria-pressed="false" title="โหมดอ่านเต็มตา">▣</button>
         <button id="readerEyeMode" class="icon-button eye-button" type="button" aria-label="เปลี่ยนโหมดถนอมสายตา" title="โหมดถนอมสายตา">☼</button>
+        <button id="readerModeToggle" class="icon-button" type="button" aria-label="เปลี่ยนเป็นโหมดเลื่อนอ่านต่อเนื่อง" aria-pressed="false" title="เลื่อนอ่านต่อเนื่อง">⇵</button>
         <button id="readerAaToggle" class="icon-button" type="button" aria-label="ตั้งค่าการอ่าน" aria-expanded="false" aria-controls="readerAaPanel">Aa</button>
         <button id="fontDecrease" class="icon-button font-button" type="button" aria-label="ลดขนาดตัวอักษร">A−</button>
         <button id="fontIncrease" class="icon-button font-button" type="button" aria-label="เพิ่มขนาดตัวอักษร">A+</button>
@@ -205,6 +206,7 @@
         <div id="bookSpread" class="book-spread" aria-live="polite">
           <article id="pageLeft" class="book-page"></article>
           <article id="pageRight" class="book-page"></article>
+          <div id="continuousPages" class="continuous-pages" aria-label="เนื้อหาหนังสือแบบเลื่อนต่อเนื่อง" hidden></div>
         </div>
         <div class="reader-bottom">
           <button id="prevPage" class="page-control" type="button">← หน้าก่อน</button>

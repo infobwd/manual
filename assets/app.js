@@ -10,7 +10,7 @@
     if (value !== undefined) el.textContent = value;
     return el;
   };
-  const state = { category: "all", query: "", manual: null, page: 0, scale: 1, opener: null };
+  const state = { category: "all", query: "", manual: null, page: 0, scale: 1, opener: null, readingMode: "paged" };
   // Reader single-page threshold includes portrait tablets and narrow Split View.
   const isMobile = window.matchMedia("(max-width: 1100px)");
   const statuses = { published: "พร้อมอ่าน", review: "รอตรวจรับ", planned: "ตามแผน" };
@@ -259,6 +259,7 @@
     state.manual = book;
     const remembered = window.WD_EXPERIENCE?.getProgress?.(book.id) || 0;
     state.page = isMobile.matches ? remembered : Math.floor(remembered / 2) * 2;
+    state.readingMode = window.WD_EXPERIENCE?.getReadingMode?.() || "paged";
     state.scale = window.WD_EXPERIENCE?.getScale?.() || 1;
     state.opener = opener;
     $("bookSpread").style.setProperty("--readerScale", String(state.scale));
@@ -292,7 +293,7 @@
     const toc = $("tocItems");
     toc.replaceChildren(...state.manual.pages.map((page, i) => {
       const b = create("button", "", "");
-      const displayed = isMobile.matches ? state.page === i : state.page <= i && i < state.page + 2;
+      const displayed = state.readingMode === "continuous" || isMobile.matches ? state.page === i : state.page <= i && i < state.page + 2;
       b.classList.toggle("active", displayed);
       b.setAttribute("aria-current", displayed ? "page" : "false");
       b.append(create("span", "toc-number", String(i + 1).padStart(2, "0")));
@@ -310,7 +311,7 @@
     mobileItems.replaceChildren(...state.manual.pages.map((page, i) => {
       const b = create("button", "mobile-toc-item");
       b.type = "button";
-      const currentPage = isMobile.matches ? i === state.page : state.page <= i && i < state.page + 2;
+      const currentPage = state.readingMode === "continuous" || isMobile.matches ? i === state.page : state.page <= i && i < state.page + 2;
       b.setAttribute("aria-current", currentPage ? "page" : "false");
       b.setAttribute("aria-label", "หน้า " + (i + 1) + " " + page.title + (currentPage ? " กำลังอ่าน" : ""));
       b.append(create("span", "toc-number", String(i + 1).padStart(2, "0")));
@@ -323,6 +324,11 @@
     }));
   }
   function renderReader() {
+    syncReadingMode();
+    if (state.readingMode === "continuous") { renderContinuous(); return; }
+    continuousObserver?.disconnect();
+    $("bookSpread").classList.remove("is-continuous");
+    $("continuousPages").hidden = true;
     if (!state.manual) return;
     const count = state.manual.pages.length;
     const mobile = isMobile.matches;
@@ -338,14 +344,70 @@
     renderMobileToc();
     window.WD_EXPERIENCE?.recordProgress?.(state.manual.id, first);
   }
+  let continuousObserver = null;
+  function renderContinuous() {
+    if (!state.manual) return;
+    continuousObserver?.disconnect();
+    const container = $("continuousPages"), spread = $("bookSpread");
+    spread.classList.add("is-continuous");
+    container.hidden = false;
+    const pages = state.manual.pages;
+    container.replaceChildren(...pages.map((page, index) => {
+      const section = create("section", "continuous-section book-page");
+      section.dataset.sectionIndex = String(index);
+      pageNode(section, page, index);
+      return section;
+    }));
+    $("prevPage").hidden = true;
+    $("nextPage").hidden = true;
+    const current = Math.min(state.page, pages.length - 1);
+    updateContinuousPosition(current, true);
+    requestAnimationFrame(() => {
+      container.children[current]?.scrollIntoView({block:"start",behavior:"instant"});
+      continuousObserver = new IntersectionObserver(entries => {
+        const visible = entries.filter(entry => entry.isIntersecting).sort((a,b) => b.intersectionRatio-a.intersectionRatio);
+        if (visible.length && state.readingMode === "continuous" && state.manual) {
+          const index = Number(visible[0].target.dataset.sectionIndex);
+          if (index !== state.page) updateContinuousPosition(index, true);
+        }
+      }, {root:container,threshold:[0.1,0.4,0.7]});
+      [...container.children].forEach(section => continuousObserver.observe(section));
+    });
+  }
+  function updateContinuousPosition(index, save) {
+    state.page = index;
+    const count = state.manual.pages.length;
+    $("pageCounter").textContent = "ตอน " + (index+1) + " / " + count;
+    $("progressBar").style.width = (((index+1)/count)*100) + "%";
+    renderToc();
+    renderMobileToc();
+    if (save) window.WD_EXPERIENCE?.recordProgress?.(state.manual.id,index);
+  }
+  function syncReadingMode() {
+    const continuous = state.readingMode === "continuous";
+    $("readerModeToggle").setAttribute("aria-pressed", String(continuous));
+    $("readerModeToggle").setAttribute("aria-label", continuous ? "เปลี่ยนเป็นโหมดพลิกหน้า" : "เปลี่ยนเป็นโหมดเลื่อนอ่านต่อเนื่อง");
+    $("readerModeToggle").title = continuous ? "พลิกทีละหน้า" : "เลื่อนอ่านต่อเนื่อง";
+    $("prevPage").hidden = continuous;
+    $("nextPage").hidden = continuous;
+    $("pageLeft").hidden = continuous;
+    $("pageRight").hidden = continuous;
+  }
+  $("readerModeToggle")?.addEventListener("click", () => {
+    state.readingMode = state.readingMode === "paged" ? "continuous" : "paged";
+    window.WD_EXPERIENCE?.setReadingMode?.(state.readingMode);
+    syncReadingMode();
+    if (state.readingMode === "paged" && !isMobile.matches) state.page = Math.floor(state.page/2)*2;
+    renderReader();
+  });
   function jumpTo(i) {
     if (!state.manual) return;
     const n = Math.max(0, Math.min(i, state.manual.pages.length - 1));
-    state.page = isMobile.matches ? n : Math.floor(n / 2) * 2;
+    state.page = state.readingMode === "continuous" || isMobile.matches ? n : Math.floor(n / 2) * 2;
     renderReader();
   }
   function movePage(direction) {
-    if (!state.manual) return;
+    if (!state.manual || state.readingMode === "continuous") return;
     const step = isMobile.matches ? 1 : 2;
     const next = state.page + (direction * step);
     if (next < 0 || next >= state.manual.pages.length) return;
@@ -369,7 +431,7 @@
     const interactive = target => Boolean(target?.closest?.("button,a,input,textarea,select,[contenteditable]"));
     pages.forEach(page => { page.addEventListener("touchstart", event => {
       reset();
-      if (!dialog.open || isTocOpen() || event.touches.length !== 1 || interactive(event.target)) return;
+      if (!dialog.open || state.readingMode === "continuous" || isTocOpen() || event.touches.length !== 1 || interactive(event.target)) return;
       const touch = event.touches[0];
       if (touch.clientX < 32 || touch.clientX > window.innerWidth - 32) return;
       start = { x: touch.clientX, y: touch.clientY, at: Date.now() };
@@ -436,18 +498,19 @@
   }
   dialog.addEventListener("close", () => {
     closeMobileToc(false);
+    continuousObserver?.disconnect();
     state.manual = null;
     if (state.opener?.isConnected) state.opener.focus();
     state.opener = null;
   });
   dialog.addEventListener("keydown", (event) => {
-    if (isTocOpen() || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (state.readingMode === "continuous" || isTocOpen() || event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.key === "ArrowRight") { event.preventDefault(); movePage(1); }
     if (event.key === "ArrowLeft") { event.preventDefault(); movePage(-1); }
   });
   isMobile.addEventListener?.("change", () => {
     if (!isMobile.matches) closeMobileToc(false);
-    if (state.manual) { state.page = isMobile.matches ? state.page : Math.floor(state.page / 2) * 2; renderReader(); }
+    if (state.manual && state.readingMode !== "continuous") { state.page = isMobile.matches ? state.page : Math.floor(state.page / 2) * 2; renderReader(); }
   });
   function updateQuery(value, source) {
     state.query = normalized(value);

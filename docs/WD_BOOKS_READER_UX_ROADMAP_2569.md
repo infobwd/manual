@@ -254,3 +254,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Reader Aa panel adds font family (system/serif/sans), line spacing (normal/relaxed/wide), and page margins (normal/compact/wide) with a reset button.
 - Persist values under the existing `wd-manual-reader-v2` object as `typography`; validate all values on load, preserve favorites/history/progress/theme/font. No external fonts or network calls.
 - Offline cache v16. QA pending: Thai glyph clipping across three themes, small iPhone, tablet split view, 160% text scale, screen reader and keyboard, PWA upgrade and legacy localStorage migration.
+
+
+## UX-P1B candidate — Continuous Scroll
+
+- Reader ⇵ switches paged/continuous mode; persisted in existing localStorage object as `readingMode`, default paged for legacy users.
+- Continuous mode renders each authored logical page as a section, preserves typography, supports TOC jumps, tracks section progress with IntersectionObserver, and hides paged-only arrows; switching back restores the logical section (paired-page alignment on wide screens).
+- No EPUB repagination, cloud sync, or private data. Cache v17.
+- QA pending: real iPhone/iPad long-scroll behavior, accurate active section when quickly scrolling, rotation, TOC jump, closing/reopening at same section, accessibility, older browsers, memory/performance, offline upgrade.
