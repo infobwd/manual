@@ -2,7 +2,7 @@
 
 เว็บไซต์ต้นแบบ **School Manual Library** สำหรับค้นหาและเปิดอ่านคู่มือของโรงเรียนแบบ e-book แยกหมวดหมู่ รองรับมือถือ แท็บเล็ต และคอมพิวเตอร์
 
-> **สถานะ:** Pilot / Draft PR — ยังไม่เปิด GitHub Pages หรือเผยแพร่คู่มือที่อยู่ใน WD Growth Private Repository. คู่มือที่กดอ่านได้ในรุ่นนี้คือ **เล่มแนะนำการใช้เว็บไซต์ (ข้อมูลสาธิต)** เท่านั้น
+> **สถานะ:** เว็บไซต์เวอร์ชันต้นแบบถูกรวมเข้า `main` แล้ว และเจ้าของ repository ได้บันทึกการตั้งค่า GitHub Pages ด้วยตนเอง; รุ่น PWA สำหรับมือถือกำลังตรวจรับใน branch แยก ยังไม่ Merge. เนื้อหาที่เปิดอ่านได้ยังมีเพียงคู่มือสาธิต ไม่เผยแพร่คู่มือหรือข้อมูลจาก repository ภายใน
 
 ## สิ่งที่ทำได้ในต้นแบบ
 
@@ -82,3 +82,25 @@ node tests/library.smoke.cjs
 ไม่มีการคัดลอกเอกสารจาก private repo อัตโนมัติ, ไม่แก้คู่มือร่างใน repository ระบบต้นทาง, ไม่เพิ่มข้อมูลนักเรียนจริง, ไม่ทำฐานข้อมูล/login/analytics, ไม่สร้าง GitHub Actions และไม่ตั้งค่า GitHub Pages/Custom Domain จนกว่าจะได้รับคำสั่งอนุมัติ
 
 ดูรายละเอียดเกณฑ์ก่อนเผยแพร่ใน `docs/CONTENT_GOVERNANCE_2569.md`
+
+## PWA Mobile Reader — รุ่นตรวจรับ 23 ต.ค. 2569
+
+- ไฟล์: `assets/app-experience.css`, `assets/experience.js`, `manifest.webmanifest`, `sw.js`, `icons/icon-192.png`, `icons/icon-512.png`
+- มีเมนูด้านล่างสำหรับมือถือ/แท็บเล็ต, โหมดสว่าง/กระดาษถนอมสายตา/กลางคืน, ตัวปรับอักษร 90–160%, การจดจำหน้าล่าสุดใน localStorage, ปุ่มติดตั้ง PWA ในเบราว์เซอร์ที่รองรับ และวิธีเพิ่มลง Home Screen สำหรับ iPhone/iPad
+- Service Worker ทำ cache เฉพาะทรัพยากรสาธารณะใต้ scope เว็บไซต์นี้ และพยายามอ่านแบบ network-first ก่อนใช้ cache เมื่อออฟไลน์; ไม่เก็บข้อมูลผู้เรียน/เอกสารภายใน
+- ไอคอน PNG 192×192 และ 512×512 มีอยู่จริงบน branch นี้; Manifest และ Service Worker อ้างตรงกับเส้นทางไฟล์
+- ตรวจ syntax JavaScript / JSON และการอ้างอิง static path แล้ว; **ยังไม่ได้ยืนยันการติดตั้งและ UX จริงบน iPhone/iPad/Android** จึงยังเป็นร่างตรวจรับ
+
+**ขั้นทดสอบ Windows (แนะนำ worktree แยก):**
+
+```powershell
+cd D:\wd-manual-preview
+git fetch origin
+git switch feat/manual-mobile-reader-pwa-25691023
+node tests/library.smoke.cjs
+py -m http.server 4173 --bind 127.0.0.1
+```
+
+หรือใช้โฟลเดอร์ใหม่ถ้า `D:\wd-manual-preview` ใช้งานอื่นอยู่; อย่าสั่ง `git switch` เมื่อมีการแก้ไขที่ยังไม่ commit. เปิด `http://127.0.0.1:4173/` แล้วตรวจ Responsive/Fonts/Reader/Install. บน iPhone ให้ทดลองกับ Pages หลังได้รับอนุมัติ Merge และ deploy จริง เพราะ `localhost` ของเครื่อง Windows ไม่ใช่ `localhost` ของ iPhone.
+
+**ยังไม่ได้เปลี่ยน main ใน PR PWA นี้** และไม่เพิ่ม GitHub Actions. หลังตรวจรับและอนุมัติ Merge จึงเปลี่ยนเว็บไซต์ Pages ที่ใช้ `main`.
