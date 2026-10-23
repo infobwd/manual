@@ -223,3 +223,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Do not auto-activate a newly installed worker: activate only on user confirmation, then reload once after controller change.
 - Check for updates when returning to the app; preserve localStorage bookshelf, reading progress and preferences.
 - Acceptance pending: test iPhone Home Screen PWA, iPad Safari/PWA, Android Chrome/PWA; verify update from v9 to v10, Later behavior, offline reload, and preservation of open-reader state (reload can close a book, but saved progress must persist).
+
+
+## Mobile polish — Splash v1.1.0, book-cover theme, reader close (23 ต.ค. 2569)
+
+- Show `เวอร์ชัน 1.1.0` on splash screen; version number is an explicit UI release label, with Service Worker cache bumped to v11.
+- Move the sun/eye-comfort toggle from the catalog header onto each published book cover; it toggles the same local reading theme setting, synchronized across visible covers.
+- Remove the floating bottom-right `ปิดอ่าน` button that obscured text on iPhone. Use the persistent top-right close control, minimum 44px touch target; maintain focus restoration and reading progress.
+- Pending acceptance: iPhone screenshot widths, thumb reach and reader toolbar crowding, iPad landscape, VoiceOver labels, update prompt v10→v11, saved favorites and progress.
