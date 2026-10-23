@@ -80,6 +80,7 @@
       const syncFavorite = () => {
         const saved = Boolean(window.WD_EXPERIENCE?.isFavorite?.(book.id));
         favorite.textContent = saved ? "♥" : "♡";
+        favorite.classList.toggle("is-saved", saved);
         favorite.title = saved ? "นำออกจากหนังสือของฉัน" : "เก็บไว้ในหนังสือของฉัน";
         favorite.setAttribute("aria-pressed", String(saved));
         favorite.setAttribute("aria-label", (saved ? "นำออกจากหนังสือของฉัน " : "เพิ่มในหนังสือของฉัน ") + book.title);
@@ -88,6 +89,14 @@
       favorite.addEventListener("click", () => {
         window.WD_EXPERIENCE?.toggleFavorite?.(book.id);
         syncFavorite();
+        const saved = Boolean(window.WD_EXPERIENCE?.isFavorite?.(book.id));
+        const status = $("pwaStatus");
+        if (status) {
+          status.textContent = saved ? "บันทึกในหนังสือของฉันแล้ว" : "นำออกจากหนังสือของฉันแล้ว";
+          status.hidden = false;
+          window.clearTimeout(favorite.noticeTimer);
+          favorite.noticeTimer = window.setTimeout(() => { status.hidden = true; }, 2200);
+        }
       });
       cover.append(favorite);
 
