@@ -529,15 +529,45 @@
     syncBookmarks();
     if (bookmarkSheetMode()) bookmarkClose.focus();
   });
-  // UX-P2A: search only the currently opened, published manual. Never use innerHTML.
+  // UX-SEARCH-HIGHLIGHT-R1: compact results and next/previous chapter navigation.
   const searchPanel = $("readerSearchPanel"), searchToggle = $("readerSearchToggle");
   const searchInput = $("readerSearchInput"), searchResults = $("readerSearchResults");
   const searchStatus = $("readerSearchStatus");
-  let readerHighlightTerm = "";
+  const searchNav = $("readerSearchNav"), searchPrev = $("readerSearchPrev"), searchNext = $("readerSearchNext");
+  const searchPosition = $("readerSearchPosition"), searchExpand = $("readerSearchExpand");
+  let readerHighlightTerm = "", readerSearchMatches = [], readerSearchSelected = -1, readerSearchCollapsed = false;
   function closeReaderSearch() {
     searchPanel.hidden = true;
     searchToggle.setAttribute("aria-expanded","false");
   }
+  function setSearchCollapsed(value) {
+    readerSearchCollapsed = value;
+    searchResults.hidden = value;
+    searchExpand.textContent = value ? "แสดงผลค้นหา" : "ยุบผลค้นหา";
+    searchExpand.setAttribute("aria-expanded", String(!value));
+  }
+  function syncSearchNavigation() {
+    const count = readerSearchMatches.length;
+    searchNav.hidden = !count;
+    searchPosition.textContent = readerSearchSelected < 0 ? "เลือกตอนจากผลค้นหา" : "ตอนที่เลือก " + (readerSearchSelected + 1) + " / " + count;
+    searchPrev.disabled = !count || readerSearchSelected <= 0;
+    searchNext.disabled = !count || readerSearchSelected >= count - 1;
+    [...searchResults.children].forEach((node, i) => {
+      node.classList.toggle("is-selected", i === readerSearchSelected);
+      node.setAttribute("aria-current", i === readerSearchSelected ? "true" : "false");
+    });
+  }
+  function selectSearchResult(position) {
+    if (position < 0 || position >= readerSearchMatches.length) return;
+    readerSearchSelected = position;
+    jumpTo(readerSearchMatches[position].index);
+    syncSearchNavigation();
+    setSearchCollapsed(true);
+    // Keep the compact search controls accessible while reading.
+  }
+  searchPrev.addEventListener("click", () => selectSearchResult(readerSearchSelected - 1));
+  searchNext.addEventListener("click", () => selectSearchResult(readerSearchSelected + 1));
+  searchExpand.addEventListener("click", () => setSearchCollapsed(!readerSearchCollapsed));
   searchToggle.addEventListener("click", () => {
     const opening = searchPanel.hidden;
     if (opening) closeReaderSubpanels("readerSearchPanel");
@@ -549,36 +579,39 @@
   function searchablePage(page) {
     return [page.title,page.kicker,...(page.paragraphs||[]),...(page.bullets||[]),page.tip].filter(x=>typeof x==="string").join(" ");
   }
+  function cleanSearchSnippet(value) {
+    return value.replace(/[\\u200B-\\u200D\\uFEFF\\uFFFD]/g,"").replace(/\\s+/g," ").trim();
+  }
   function updateReaderSearch() {
     searchResults.replaceChildren();
     const term = normalized(searchInput.value).replace(/\\s+/g," ");
     readerHighlightTerm = term;
+    readerSearchMatches = [];
+    readerSearchSelected = -1;
     if (state.manual && dialog.open) renderReader();
     if (!term || !state.manual || state.manual.status !== "published") {
       searchStatus.textContent = "พิมพ์ข้อความเพื่อค้นหา";
+      searchNav.hidden = true;
+      setSearchCollapsed(false);
       return;
     }
-    const results = [];
     state.manual.pages.forEach((page,index) => {
       const source = searchablePage(page);
       const pos = normalized(source).indexOf(term);
-      if (pos >= 0) results.push({page,index,source,pos});
+      if (pos >= 0) readerSearchMatches.push({page,index,source,pos});
     });
-    searchStatus.textContent = results.length ? "พบ " + results.length + " ตอน" : "ไม่พบข้อความในเล่มนี้";
-    results.forEach(({page,index,source,pos}) => {
+    searchStatus.textContent = readerSearchMatches.length ? "พบ " + readerSearchMatches.length + " ตอน" : "ไม่พบข้อความในเล่มนี้";
+    readerSearchMatches.forEach(({page,index,source,pos},position) => {
       const button = create("button","reader-search-result");
       button.type = "button";
       button.append(create("strong","", "ตอน " + (index+1) + " · " + page.title));
       const before = Math.max(0,pos-34), after = Math.min(source.length,pos+term.length+55);
-      button.append(create("span","", (before?"…":"") + source.slice(before,after) + (after<source.length?"…":"")));
-      button.addEventListener("click", () => {
-        readerHighlightTerm = term;
-        jumpTo(index);
-        closeReaderSearch();
-        $("readerSearchToggle").focus();
-      });
+      button.append(create("span","",cleanSearchSnippet((before?"…":"") + source.slice(before,after) + (after<source.length?"…":"")));
+      button.addEventListener("click", () => selectSearchResult(position));
       searchResults.append(button);
     });
+    setSearchCollapsed(false);
+    syncSearchNavigation();
   }
   searchInput.addEventListener("input",updateReaderSearch);
   $("readerSearchClear").addEventListener("click",() => {
@@ -592,6 +625,10 @@
     searchInput.value = "";
     searchResults.replaceChildren();
     readerHighlightTerm = "";
+    readerSearchMatches = [];
+    readerSearchSelected = -1;
+    searchNav.hidden = true;
+    setSearchCollapsed(false);
   });
   function highlightVisiblePages() {
     document.querySelectorAll(".reader-stage .book-page").forEach(highlightPage);
