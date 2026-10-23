@@ -262,3 +262,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Continuous mode renders each authored logical page as a section, preserves typography, supports TOC jumps, tracks section progress with IntersectionObserver, and hides paged-only arrows; switching back restores the logical section (paired-page alignment on wide screens).
 - No EPUB repagination, cloud sync, or private data. Cache v17.
 - QA pending: real iPhone/iPad long-scroll behavior, accurate active section when quickly scrolling, rotation, TOC jump, closing/reopening at same section, accessibility, older browsers, memory/performance, offline upgrade.
+
+
+## UX-P2A candidate — ค้นหาภายในเล่ม
+
+- Search is scoped to the currently opened `published` manual, searching title, kicker, paragraphs, bullets and tips per logical page; results display chapter title and short snippet and jump to that chapter.
+- Uses textContent-only DOM, no HTML injection, external search index, remote requests or localStorage of queries; resets on closing/changing book. Works with paged and continuous reader modes.
+- Current candidate finds matching *sections* and does not yet highlight the exact term within a page. Exact-term highlighting remains an acceptance gap to resolve before marking P2A complete.
+- QA pending: Thai spacing/diacritics, empty/no results, long queries, PWA offline, mobile keyboard, VoiceOver, continuous/paged jumps, and no draft/private exposure.
