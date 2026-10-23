@@ -606,7 +606,7 @@
       button.type = "button";
       button.append(create("strong","", "ตอน " + (index+1) + " · " + page.title));
       const before = Math.max(0,pos-34), after = Math.min(source.length,pos+term.length+55);
-      button.append(create("span","",cleanSearchSnippet((before?"…":"") + source.slice(before,after) + (after<source.length?"…":"")));
+      button.append(create("span","",cleanSearchSnippet((before?"…":"") + source.slice(before,after) + (after<source.length?"…":""))));
       button.addEventListener("click", () => selectSearchResult(position));
       searchResults.append(button);
     });
