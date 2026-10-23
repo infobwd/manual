@@ -257,6 +257,8 @@
   function openBook(book, opener) {
     if (book.status !== "published" || !book.pages?.length) return;
     state.manual = book;
+    searchInput.value = "";
+    closeReaderSearch();
     const remembered = window.WD_EXPERIENCE?.getProgress?.(book.id) || 0;
     state.page = isMobile.matches ? remembered : Math.floor(remembered / 2) * 2;
     state.readingMode = window.WD_EXPERIENCE?.getReadingMode?.() || "paged";
@@ -269,6 +271,62 @@
     if (!dialog.open) dialog.showModal();
     $("readerClose").focus();
   }
+  // UX-P2A: search only the currently opened, published manual. Never use innerHTML.
+  const searchPanel = $("readerSearchPanel"), searchToggle = $("readerSearchToggle");
+  const searchInput = $("readerSearchInput"), searchResults = $("readerSearchResults");
+  const searchStatus = $("readerSearchStatus");
+  function closeReaderSearch() {
+    searchPanel.hidden = true;
+    searchToggle.setAttribute("aria-expanded","false");
+  }
+  searchToggle.addEventListener("click", () => {
+    searchPanel.hidden = !searchPanel.hidden;
+    searchToggle.setAttribute("aria-expanded",String(!searchPanel.hidden));
+    if (!searchPanel.hidden) { updateReaderSearch(); searchInput.focus(); }
+    else searchToggle.focus();
+  });
+  function searchablePage(page) {
+    return [page.title,page.kicker,...(page.paragraphs||[]),...(page.bullets||[]),page.tip].filter(x=>typeof x==="string").join(" ");
+  }
+  function updateReaderSearch() {
+    searchResults.replaceChildren();
+    const term = normalized(searchInput.value).replace(/\\s+/g," ");
+    if (!term || !state.manual || state.manual.status !== "published") {
+      searchStatus.textContent = "พิมพ์ข้อความเพื่อค้นหา";
+      return;
+    }
+    const results = [];
+    state.manual.pages.forEach((page,index) => {
+      const source = searchablePage(page);
+      const pos = normalized(source).indexOf(term);
+      if (pos >= 0) results.push({page,index,source,pos});
+    });
+    searchStatus.textContent = results.length ? "พบ " + results.length + " ตอน" : "ไม่พบข้อความในเล่มนี้";
+    results.forEach(({page,index,source,pos}) => {
+      const button = create("button","reader-search-result");
+      button.type = "button";
+      button.append(create("strong","", "ตอน " + (index+1) + " · " + page.title));
+      const before = Math.max(0,pos-34), after = Math.min(source.length,pos+term.length+55);
+      button.append(create("span","", (before?"…":"") + source.slice(before,after) + (after<source.length?"…":"")));
+      button.addEventListener("click", () => {
+        jumpTo(index);
+        closeReaderSearch();
+        $("readerSearchToggle").focus();
+      });
+      searchResults.append(button);
+    });
+  }
+  searchInput.addEventListener("input",updateReaderSearch);
+  $("readerSearchClear").addEventListener("click",() => {
+    searchInput.value = "";
+    updateReaderSearch();
+    searchInput.focus();
+  });
+  dialog.addEventListener("close",() => {
+    closeReaderSearch();
+    searchInput.value = "";
+    searchResults.replaceChildren();
+  });
   function pageNode(target, page, index) {
     target.replaceChildren();
     target.classList.toggle("blank-page", !page);
