@@ -41,14 +41,14 @@
   <div class="header-inner">
     <a class="site-brand" href="./" aria-label="กลับหน้าหลักคลังคู่มือ">
       <span class="brand-symbol" aria-hidden="true">WD</span>
-      <span class="brand-copy"><strong>คลังคู่มือบ้านวังด้ง</strong><small>Wang Dong School · Manual Library</small></span>
+      <span class="brand-copy"><strong>คลังคู่มือบ้านวังด้ง</strong><small>คู่มือและเอกสารสำหรับโรงเรียน</small></span>
     </a>
     <nav class="top-nav" aria-label="เมนูหลัก">
       <a class="current" href="#content">หน้าหลัก</a>
       <a href="#library">หมวดหมู่คู่มือ</a>
       <a href="#about">เกี่ยวกับคลัง</a>
     </nav>
-    <span class="header-pill">School Knowledge Hub</span>
+    <span class="header-pill">คลังความรู้ของโรงเรียน</span>
     <div class="header-actions">
       <button id="quickEyeMode" type="button" class="top-action" aria-label="เปิดหรือปิดโหมดถนอมสายตา" title="โหมดถนอมสายตา">☀</button>
       <button id="headerSettings" type="button" class="top-action" aria-label="ตั้งค่าการอ่าน" title="ตั้งค่าการอ่าน">☷</button>
@@ -59,7 +59,7 @@
 <div class="app-shell">
   <aside class="sidebar" aria-label="เลือกหมวดหมู่">
     <div class="sidebar-sticky">
-      <p class="eyebrow">EXPLORE</p>
+      <p class="eyebrow">เลือกหมวดคู่มือ</p>
       <h2>หมวดคู่มือ</h2>
       <div id="categoryNav" class="category-nav" role="group" aria-label="หมวดหมู่"></div>
       <div class="sidebar-note">
@@ -73,7 +73,7 @@
   <main id="content" class="main">
     <section class="quick-find" id="quickFind" aria-labelledby="quickFindTitle">
       <div class="quick-find-label">
-        <p class="eyebrow">WD BOOKS · FIND A MANUAL</p>
+        <p class="eyebrow">ค้นหาคู่มือที่ต้องการ</p>
         <h2 id="quickFindTitle">วันนี้อยากอ่านคู่มืออะไร?</h2>
       </div>
       <label class="quick-search" for="homeSearchInput">
@@ -84,7 +84,7 @@
     </section>
     <section id="continueFeature" class="continue-feature" aria-labelledby="continueFeatureTitle" hidden>
       <div class="section-heading">
-        <div><p class="eyebrow">PICK UP WHERE YOU LEFT OFF</p><h2 id="continueFeatureTitle">อ่านต่อจากครั้งล่าสุด</h2></div>
+        <div><p class="eyebrow">อ่านต่อได้ทันที</p><h2 id="continueFeatureTitle">อ่านต่อจากครั้งล่าสุด</h2></div>
       </div>
       <div id="continueFeatureCard" aria-live="polite"></div>
     </section>
@@ -92,7 +92,7 @@
       <p class="library-lead" id="readyBooksHint">เริ่มจากคู่มือที่เปิดอ่านได้ทันที แล้วเลือกดูรายการเตรียมเผยแพร่ด้านล่าง</p>
       <div class="section-heading">
         <div>
-          <p class="eyebrow">THE BOOKSHELF</p>
+          <p class="eyebrow">รวมคู่มือทั้งหมด</p>
           <h2 id="libraryTitle">ชั้นหนังสือดิจิทัล</h2>
           <p class="app-hint">เลือกเล่มที่พร้อมอ่าน แล้วเปิดต่อจากหน้าล่าสุดได้</p>
           <p class="section-detail" id="resultsText" role="status" aria-live="polite">เลือกหมวดหมู่หรือค้นหาชื่อคู่มือ</p>
@@ -102,8 +102,8 @@
           <input id="searchInput" type="search" autocomplete="off" placeholder="ค้นหาคู่มือหรือคำสำคัญ…">
         </label>
       </div>
-      <div id="categoryChips" class="category-chips" aria-label="ตัวกรองหมวดหมู่"></div>
-      <div id="manualGrid" class="manual-grid"></div>
+      <div id="categoryChips" class="category-chips" aria-label="เลือกหมวดคู่มือ"><span class="wd-skeleton wd-skeleton-line" aria-hidden="true"></span></div>
+      <div id="manualGrid" class="manual-grid" aria-busy="true"><div class="wd-skeleton wd-skeleton-card" aria-hidden="true"></div><div class="wd-skeleton wd-skeleton-card" aria-hidden="true"></div></div>
       <p id="emptyResults" class="empty-state" hidden>ยังไม่พบคู่มือที่ตรงกับคำค้น ลองเปลี่ยนหมวดหมู่หรือใช้คำค้นอื่น</p>
     </section>
 
@@ -122,7 +122,7 @@
       <div class="hero-copy">
         <span class="hero-overline"><span class="overline-dot"></span> DIGITAL KNOWLEDGE LIBRARY</span>
         <h1 id="heroTitle">ทุกคู่มือของโรงเรียน<br><em>อยู่บนชั้นหนังสือเดียวกัน</em></h1>
-        <p>ค้นหาแนวปฏิบัติ คู่มือครู และวิธีใช้ระบบของโรงเรียนได้ง่าย ๆ พร้อมประสบการณ์เปิดอ่านแบบ e-book</p>
+        <p>ค้นหาแนวปฏิบัติ คู่มือครู และวิธีใช้ระบบของโรงเรียนได้ง่าย ๆ พร้อมอ่านสะดวกบนมือถือและแท็บเล็ต</p>
         <a class="hero-link" href="#library">สำรวจชั้นหนังสือ <span aria-hidden="true">↗</span></a>
       </div>
       <div class="hero-art" aria-hidden="true">
@@ -143,7 +143,7 @@
     <section class="about" id="about" aria-labelledby="aboutTitle">
       <div class="about-mark" aria-hidden="true">✳</div>
       <div><p class="eyebrow">ABOUT THIS LIBRARY</p><h2 id="aboutTitle">คู่มือถูกต้อง ค้นหาง่าย และอัปเดตได้</h2>
-        <p>ต้นฉบับงานพัฒนาระบบยังอยู่ใน repository ของแต่ละโครงการ ส่วนคลังนี้เก็บเฉพาะฉบับเผยแพร่ที่ได้รับอนุมัติ พร้อมแสดงสถานะและรอบปรับปรุงอย่างชัดเจน</p>
+        <p>คู่มือที่แสดงในคลังนี้เป็นฉบับที่ตรวจสอบและพร้อมเผยแพร่แล้ว สามารถดูวันที่ปรับปรุงของแต่ละเล่มได้</p>
       </div>
     </section>
     <section id="appUpdateNotice" class="app-update-notice" role="status" aria-live="polite" hidden><div><strong>มี WD Books เวอร์ชันใหม่</strong><p>อัปเดตเพื่อรับการปรับปรุงล่าสุด โดยหนังสือของฉันและหน้าที่อ่านค้างไว้ยังคงอยู่</p></div><div class="app-update-actions"><button id="applyAppUpdate" type="button">อัปเดตตอนนี้</button><button id="laterAppUpdate" type="button">ไว้ภายหลัง</button></div></section>
