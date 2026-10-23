@@ -112,6 +112,7 @@
   function renderCatalog() {
     const filtered = data.manuals.filter(matches).sort((a, b) => (a.status === "published" ? 0 : 1) - (b.status === "published" ? 0 : 1));
     $("manualGrid").replaceChildren(...filtered.map(cardFor));
+    $("manualGrid").setAttribute("aria-busy","false");
     const readyCount = filtered.filter(book => book.status === "published" && book.pages?.length).length;
     $("resultsText").textContent = "พบคู่มือพร้อมอ่าน " + readyCount + " เล่ม · รายการทั้งหมด " + filtered.length + " จาก " + data.manuals.length + " รายการ";
     $("emptyResults").hidden = filtered.length > 0;
@@ -349,7 +350,8 @@
     const hasOpenMenu = window.matchMedia("(max-width:1100px)").matches && !extraTools.hidden;
     if (hasOpenPanel || hasOpenMenu) {
       event.preventDefault(); event.stopPropagation();
-      closeTools(); closeReaderSubpanels(); toolsToggle.focus();
+      if (window.matchMedia("(max-width:1100px)").matches) closeTools();
+      closeReaderSubpanels(); toolsToggle.focus();
     }
   });
   const bookmarkToggle = $("readerBookmarkToggle"), bookmarkListToggle = $("readerBookmarksListToggle"), bookmarksPanel = $("readerBookmarksPanel");
