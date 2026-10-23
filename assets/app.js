@@ -895,14 +895,16 @@
     if (state.manual && state.readingMode !== "continuous") { state.page = isMobile.matches ? state.page : Math.floor(state.page / 2) * 2; renderReader(); }
   });
   catalogUI.bindDiscovery();
+  const readerCoordinator = window.WD_READER_COORDINATOR?.createReaderCoordinator({
+    experience: window.WD_EXPERIENCE, renderShelf, renderContinueFeature, openBook
+  });
+  if (!readerCoordinator) throw new Error("WD Books Reader coordinator is missing");
   window.WD_EXPERIENCE?.bindReader?.(
     (scale) => { state.scale = scale; $("bookSpread").style.setProperty("--readerScale", String(scale)); },
-    (book, opener) => openBook(book, opener)
+    readerCoordinator.openReadable
   );
-  window.WD_EXPERIENCE?.subscribeBooks?.(() => { renderShelf(); renderContinueFeature(); });
   renderStats();
   renderCategories();
   renderCatalog();
-  renderShelf();
-  renderContinueFeature();
+  readerCoordinator.connect();
 })();
