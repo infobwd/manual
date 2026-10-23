@@ -23,3 +23,10 @@
 .sar-chart-result{background:#1b796a}
 .sar-chart-value{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 @media(max-width:400px){.sar-chart{padding:.7rem}.sar-chart-line{grid-template-columns:3.8rem minmax(0,1fr) 3.5rem;gap:.3rem}}
+
+/* SAR page 3 insight: one clear takeaway instead of duplicated bullet rows. */
+.sar-insight{margin:1rem 0;padding:.95rem 1rem;border-radius:14px;border-inline-start:4px solid #278b76;background:rgba(49,128,107,.1);line-height:1.55}
+.sar-insight-headline{display:block;font-weight:750;font-size:1em}
+.sar-insight-primary{margin:.55rem 0 .2rem;font-weight:650;font-size:.92em}
+.sar-insight-detail{margin:.2rem 0 0;opacity:.86;font-size:.84em}
+@media(max-width:400px){.sar-insight{padding:.8rem .85rem}}
