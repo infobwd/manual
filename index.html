@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="./assets/app-experience.css">
   <link rel="stylesheet" href="./assets/mobile-reader.css">
   <link rel="stylesheet" href="./assets/home-p0a.css">
+  <link rel="stylesheet" href="./assets/toc-p0b.css">
   <script defer src="./assets/manuals-data.js"></script>
   <script defer src="./assets/wd-growth-individual-guide.js"></script>
   <script defer src="./assets/experience.js"></script>
@@ -175,6 +176,7 @@
 <dialog id="readerDialog" class="reader-dialog" aria-labelledby="readerTitle">
   <div class="reader-shell">
     <div class="reader-topbar">
+      <button id="openMobileToc" type="button" class="mobile-toc-trigger" aria-label="เปิดสารบัญหนังสือ" aria-controls="mobileTocSheet" aria-expanded="false">☷ <span>สารบัญ</span></button>
       <div class="reader-identity"><span class="reader-mark">WD / READ</span><div><strong id="readerTitle"></strong><small id="readerCategory"></small></div></div>
       <div class="reader-actions">
         <button id="readerEyeMode" class="icon-button eye-button" type="button" aria-label="เปลี่ยนโหมดถนอมสายตา" title="โหมดถนอมสายตา">☼</button>
@@ -202,6 +204,18 @@
         </div>
       </div>
     </div>
+    <section id="mobileTocSheet" class="mobile-toc-overlay" role="dialog" aria-modal="true" aria-labelledby="mobileTocTitle" aria-describedby="mobileTocStatus" hidden>
+      <div id="mobileTocBackdrop" class="mobile-toc-backdrop" aria-hidden="true"></div>
+      <div class="mobile-toc-sheet">
+        <div class="mobile-toc-handle" aria-hidden="true"></div>
+        <div class="mobile-toc-header">
+          <div><p class="mobile-toc-eyebrow">สารบัญหนังสือ</p><h2 id="mobileTocTitle">เลือกหัวข้อที่ต้องการอ่าน</h2><p id="mobileTocStatus" class="mobile-toc-status" aria-live="polite"></p></div>
+          <button id="closeMobileToc" class="mobile-toc-close" type="button" aria-label="ปิดสารบัญ">✕</button>
+        </div>
+        <nav id="mobileTocItems" class="mobile-toc-items" aria-label="หัวข้อหนังสือ" tabindex="-1"></nav>
+        <p class="mobile-toc-footnote">แตะหัวข้อเพื่อเปิดอ่าน · ปัดรายการขึ้นลงได้</p>
+      </div>
+    </section>
   </div>
 </dialog>
 </body>

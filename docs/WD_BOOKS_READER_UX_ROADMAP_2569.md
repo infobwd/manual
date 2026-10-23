@@ -3,7 +3,7 @@
 **Plan ID:** WD-BOOKS-UX-2569  
 **Version:** 1.0 · 23 ตุลาคม 2569  
 **Repository:** infobwd/manual (Public)  
-**Status:** UX-00 DESIGN PREVIEW READY / REAL-DEVICE QA PENDING — มีต้นแบบและเอกสาร baseline สำหรับตรวจรับ แต่ยังไม่อนุมัติให้แก้แอปตามแผนนี้  
+**Status:** UX-P0A MERGED / UX-P0B IMPLEMENTED — UX-00 มีต้นแบบ; อุปกรณ์จริงยังต้องตรวจรับก่อนปิด Gate  
 **Product:** https://infobwd.github.io/manual/  
 **กลุ่มใช้งานหลัก:** ครู/บุคลากรโรงเรียนบน iPhone และ iPad, รองลงมาคือ Android และ Desktop  
 **Source of truth:** เอกสารนี้ใช้กำหนดลำดับงาน, acceptance และ rollout ของการปรับ UX ใน repo นี้ ไม่แก้เนื้อหาวิชาการหรือระบบ WD Growth ต้นทาง
@@ -98,8 +98,8 @@
 | ID | ระยะ | งาน/ผลลัพธ์ | เงื่อนไขตรวจรับสำคัญ | สถานะ |
 |---|---|---|---|---|
 | UX-00 | Gate 0 | เก็บ baseline, ยืนยัน QA device matrix และสถาปัตยกรรม Reader | มีภาพ/บันทึก QA จากข้อมูลสาธารณะ, smoke tests เดิมผ่าน | IN PROGRESS — เอกสาร/Preview พร้อม; รอ QA จริง |
-| UX-P0A | P0 | ลด Hero/สถิติ, นำ “อ่านต่อ” ขึ้นบน, พร้อมอ่านก่อน draft, tab bar 3 รายการ | อ่านเล่มล่าสุดได้ใน 1 แตะจาก Home; ไม่มีเมนูเดิมเสีย | IN REVIEW (branch / PR) — smoke จำลองผ่าน; รอตรวจรับอุปกรณ์จริง |
-| UX-P0B | P0 | Mobile TOC แบบ Bottom Sheet, ชี้ current section, คืน focus เมื่อปิด | มือถือเข้าบทที่เลือกได้ภายใน 2 แตะ; VoiceOver/keyboard ใช้ได้ | TODO |
+| UX-P0A | P0 | ลด Hero/สถิติ, นำ “อ่านต่อ” ขึ้นบน, พร้อมอ่านก่อน draft, tab bar 3 รายการ | อ่านเล่มล่าสุดได้ใน 1 แตะจาก Home; ไม่มีเมนูเดิมเสีย | MERGED PR #8 — รอ QA บนอุปกรณ์จริง |
+| UX-P0B | P0 | Mobile TOC แบบ Bottom Sheet, ชี้ current section, คืน focus เมื่อปิด | มือถือเข้าบทที่เลือกได้ภายใน 2 แตะ; VoiceOver/keyboard ใช้ได้ | IMPLEMENTED — ตรวจ source และ smoke จำลองผ่าน; รอ QA จริง |
 | UX-P0C | P0 | Swipe/แตะเปลี่ยนหน้า + reading chrome ที่แสดงเมื่อเรียกใช้ | ปัดแนวตั้งไม่เปลี่ยนหน้า; ปุ่มสำรอง/close ยังใช้งานได้; ไม่ปะทะ pull-refresh/OS edge | TODO |
 | UX-P0D | P0 | ปรับพฤติกรรมหน้าคู่ tablet และ regression ก่อนปล่อย | portrait/landscape, safe area, iPad Split View, 200% zoom ไม่ตัดเนื้อหา | TODO |
 | UX-P1A | P1 | แผง Aa + ฟอนต์ไทย/ขนาด/ระยะบรรทัด/ระยะขอบ | อ่านไทยทุกธีมได้ ไม่มี clipping; จำค่าเดิมและ rollback settings ได้ | TODO |
@@ -191,3 +191,5 @@
 **ต้องทดสอบ/ตกลงใน Gate 0:** threshold หน้าคู่จาก usable width, ปุ่มปิดถาวรหรือ contextual, tap-edge vs swipe (โดยไม่ทำให้ iOS system navigation ขัดกัน), ตัวเลือกฟอนต์ไทยที่ใช้ได้แบบ offline, ความหมายของ progress ใน Continuous mode, วิธีแสดงหมวด draft และตัวกรองเมื่อจำนวนคู่มือเพิ่ม
 
 **สถานะ UX-00 ณ 23 ต.ค. 2569:** สร้างต้นแบบและ checklist บน branch สำหรับตรวจรับแล้ว (ดูเอกสาร UX-00); ยังไม่มี UX implementation ตาม Roadmap นี้ ไม่มีการแก้ตัวแอปจริง และยังต้องทดสอบ iPhone/iPad กับยืนยัน Decision Register ก่อนเริ่ม P0.
+
+**อัปเดต 23 ต.ค. 2569:** PR #8 Merge UX-P0A แล้ว และเริ่ม UX-P0B; ดู [UX-P0B Acceptance & QA](WD_BOOKS_UX_P0B_ACCEPTANCE_2569.md). การ Merge ไม่ได้หมายถึงการทดสอบอุปกรณ์จริงผ่านโดยอัตโนมัติ

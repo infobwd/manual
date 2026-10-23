@@ -191,6 +191,57 @@
     if ($("favoritesCount")) $("favoritesCount").textContent = favorites.length + " เล่ม";
   }
   const dialog = $("readerDialog");
+  const mobileTocSheet = $("mobileTocSheet");
+  const mobileTocButton = $("openMobileToc");
+  const mobileTocClose = $("closeMobileToc");
+  let tocReturnFocus = null;
+  function isTocOpen() { return Boolean(mobileTocSheet && !mobileTocSheet.hidden); }
+  function openMobileToc() {
+    if (!dialog?.open || !state.manual || !isMobile.matches || !mobileTocSheet || isTocOpen()) return;
+    tocReturnFocus = document.activeElement;
+    mobileTocSheet.hidden = false;
+    mobileTocButton.setAttribute("aria-expanded", "true");
+    $("bookSpread")?.setAttribute("aria-hidden", "true");
+    const background = document.querySelector(".reader-content");
+    if (background) background.inert = true;
+    const header = document.querySelector(".reader-topbar");
+    if (header) header.inert = true;
+    mobileTocClose.focus();
+  }
+  function closeMobileToc(restoreFocus = true) {
+    if (!isTocOpen()) return;
+    mobileTocSheet.hidden = true;
+    mobileTocButton.setAttribute("aria-expanded", "false");
+    $("bookSpread")?.removeAttribute("aria-hidden");
+    const background = document.querySelector(".reader-content");
+    if (background) background.inert = false;
+    const header = document.querySelector(".reader-topbar");
+    if (header) header.inert = false;
+    if (restoreFocus && dialog.open) (tocReturnFocus?.isConnected ? tocReturnFocus : mobileTocButton).focus();
+    tocReturnFocus = null;
+  }
+  mobileTocButton?.addEventListener("click", openMobileToc);
+  mobileTocClose?.addEventListener("click", () => closeMobileToc());
+  $("mobileTocBackdrop")?.addEventListener("click", () => closeMobileToc());
+  mobileTocSheet?.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation?.();
+      closeMobileToc();
+    } else if (event.key === "Tab") {
+      const choices = [mobileTocClose, ...$("mobileTocItems").children].filter(Boolean);
+      if (!choices.length) return;
+      const active = document.activeElement;
+      const current = choices.indexOf(active);
+      if (event.shiftKey && (current <= 0)) { event.preventDefault(); choices[choices.length - 1].focus(); }
+      else if (!event.shiftKey && (current === choices.length - 1 || current < 0)) {
+        event.preventDefault(); choices[0].focus();
+      }
+    }
+  });
+  dialog.addEventListener("cancel", event => {
+    if (isTocOpen()) { event.preventDefault(); closeMobileToc(); }
+  });
   function openBook(book, opener) {
     if (book.status !== "published" || !book.pages?.length) return;
     state.manual = book;
@@ -238,6 +289,27 @@
       return b;
     }));
   }
+  function renderMobileToc() {
+    const mobileItems = $("mobileTocItems");
+    if (!mobileItems || !state.manual) return;
+    const count = state.manual.pages.length;
+    const current = Math.min(state.page + 1, count);
+    $("mobileTocStatus").textContent = "หน้า " + current + " จาก " + count + " · " + state.manual.title;
+    mobileItems.replaceChildren(...state.manual.pages.map((page, i) => {
+      const b = create("button", "mobile-toc-item");
+      b.type = "button";
+      const currentPage = isMobile.matches ? i === state.page : state.page <= i && i < state.page + 2;
+      b.setAttribute("aria-current", currentPage ? "page" : "false");
+      b.setAttribute("aria-label", "หน้า " + (i + 1) + " " + page.title + (currentPage ? " กำลังอ่าน" : ""));
+      b.append(create("span", "toc-number", String(i + 1).padStart(2, "0")));
+      b.append(create("span", "toc-name", page.title));
+      b.addEventListener("click", () => {
+        jumpTo(i);
+        closeMobileToc();
+      });
+      return b;
+    }));
+  }
   function renderReader() {
     if (!state.manual) return;
     const count = state.manual.pages.length;
@@ -251,6 +323,7 @@
     $("pageCounter").textContent = "หน้า " + (first + 1) + (last > first + 1 ? "–" + last : "") + " / " + count;
     $("progressBar").style.width = ((last / count) * 100) + "%";
     renderToc();
+    renderMobileToc();
     window.WD_EXPERIENCE?.recordProgress?.(state.manual.id, first);
   }
   function jumpTo(i) {
@@ -288,16 +361,18 @@
     window.WD_EXPERIENCE?.setScale?.(next);
   }
   dialog.addEventListener("close", () => {
+    closeMobileToc(false);
     state.manual = null;
     if (state.opener?.isConnected) state.opener.focus();
     state.opener = null;
   });
   dialog.addEventListener("keydown", (event) => {
-    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    if (isTocOpen() || event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.key === "ArrowRight") { event.preventDefault(); movePage(1); }
     if (event.key === "ArrowLeft") { event.preventDefault(); movePage(-1); }
   });
   isMobile.addEventListener?.("change", () => {
+    if (!isMobile.matches) closeMobileToc(false);
     if (state.manual) { state.page = isMobile.matches ? state.page : Math.floor(state.page / 2) * 2; renderReader(); }
   });
   function updateQuery(value, source) {

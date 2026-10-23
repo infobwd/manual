@@ -17,7 +17,7 @@ assert.ok(html.indexOf('id="library"') < html.indexOf('id="myBooks"'));
 assert.ok(html.indexOf('id="myBooks"') < html.indexOf('id="heroTitle"'));
 assert.equal((html.match(/class="bottom-nav-item/g) || []).length, 3);
 assert.match(html, /assets\/home-p0a\.css/);
-assert.match(sw, /wd-manual-public-v6-p0a-home-reading-first-20261023/);
+assert.match(sw, /const CACHE_VERSION = "wd-manual-public-v[0-9]+-[^"]+";/);
 assert.match(sw, /assets\/home-p0a\.css/);
 
 class FakeElement {
