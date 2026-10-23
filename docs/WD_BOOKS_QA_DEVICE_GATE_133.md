@@ -52,3 +52,13 @@ PENDING: ยังไม่มีผลทดสอบจริง
 **ผลปัจจุบัน: PENDING**  
 ผู้ตรวจรับ: __________ วันที่: __________  
 งานถัดไปเมื่อผ่าน Gate: UX-SEARCH-HIGHLIGHT
+
+## Closure decision — 23 ต.ค. 2569
+
+ผู้ใช้อนุญาตให้ **ปิดรายการทดสอบที่ค้างเพื่อดำเนินงานถัดไป** จึงปิดการติดตาม Gate ในเชิงกระบวนงาน (administrative closure) และอนุญาตให้เริ่ม UX-SEARCH-HIGHLIGHT โดย **ไม่ได้เปลี่ยนผล NOT TESTED เป็น PASS**
+
+- ยืนยันผ่านจากผู้ใช้: UX-READER-CONTRAST (ภาพบนอุปกรณ์), UX-HEART (ขนาดและรูปลักษณ์)
+- Q01–Q03, Q05–Q13 และ device matrix ที่ไม่มีหลักฐาน: **NOT TESTED / residual risk accepted for progression**
+- Q04: **PARTIAL PASS** เฉพาะภาพที่ผู้ใช้ยืนยัน ไม่ครอบคลุมทุกธีม/ทุกอุปกรณ์
+- ความเสี่ยงคงเหลือ: offline/cache, data persistence, keyboard/screen reader, PWA installation; ต้องทดสอบเมื่อมีอุปกรณ์และหลักฐาน ไม่กล่าวอ้างว่าผ่าน
+- Gate decision: **CONDITIONAL GO (user-authorized)** สำหรับเริ่มพัฒนาคิว 4; ไม่ใช่ใบรับรอง QA ครบ
