@@ -94,8 +94,9 @@
   function openBook(book, opener) {
     if (book.status !== "published" || !book.pages?.length) return;
     state.manual = book;
-    state.page = 0;
-    state.scale = 1;
+    const remembered = window.WD_EXPERIENCE?.getProgress?.(book.id) || 0;
+    state.page = isMobile.matches ? remembered : Math.floor(remembered / 2) * 2;
+    state.scale = window.WD_EXPERIENCE?.getScale?.() || 1;
     state.opener = opener;
     $("bookSpread").style.setProperty("--readerScale", String(state.scale));
     $("readerTitle").textContent = book.title;
@@ -150,6 +151,7 @@
     $("pageCounter").textContent = "หน้า " + (first + 1) + (last > first + 1 ? "–" + last : "") + " / " + count;
     $("progressBar").style.width = ((last / count) * 100) + "%";
     renderToc();
+    window.WD_EXPERIENCE?.recordProgress?.(state.manual.id, first);
   }
   function jumpTo(i) {
     if (!state.manual) return;
@@ -179,8 +181,10 @@
   $("fontDecrease").addEventListener("click", () => resize(-.1));
   $("fontIncrease").addEventListener("click", () => resize(.1));
   function resize(amount) {
-    state.scale = Math.max(.9, Math.min(1.4, Math.round((state.scale + amount) * 10) / 10));
+    const next = Math.max(.9, Math.min(1.6, Math.round((state.scale + amount) * 10) / 10));
+    state.scale = next;
     $("bookSpread").style.setProperty("--readerScale", String(state.scale));
+    window.WD_EXPERIENCE?.setScale?.(next);
   }
   dialog.addEventListener("close", () => {
     state.manual = null;
@@ -199,6 +203,10 @@
     state.query = normalized(event.target.value);
     renderCatalog();
   });
+  window.WD_EXPERIENCE?.bindReader?.(
+    (scale) => { state.scale = scale; $("bookSpread").style.setProperty("--readerScale", String(scale)); },
+    (book, opener) => openBook(book, opener)
+  );
   renderStats();
   renderCategories();
   renderCatalog();
