@@ -6,7 +6,7 @@ const CACHE_PREFIX = "wd-manual-public-";
 const APP_SHELL = [
   "./", "./index.html", "./manifest.webmanifest",
   "./assets/app-version.js", "./assets/styles.css", "./assets/app-experience.css", "./assets/mobile-reader.css", "./assets/google-sans-platform.css", "./assets/home-p0a.css", "./assets/toc-p0b.css",
-  "./assets/home-load-guard.js", "./assets/manuals-data.js", "./assets/wd-growth-individual-guide.js", "./assets/experience.js", "./assets/catalog-core.js", "./assets/catalog-ui.js", "./assets/app.js", "./assets/app-zoom-guard.js",
+  "./assets/home-load-guard.js", "./assets/manuals-data.js", "./assets/wd-growth-individual-guide.js", "./assets/experience.js", "./assets/catalog-core.js", "./assets/catalog-ui.js", "./assets/mybooks-selectors.js", "./assets/app.js", "./assets/app-zoom-guard.js",
   "./icons/icon-192.png", "./icons/icon-512.png"
 ];
 self.addEventListener("install", event => {
