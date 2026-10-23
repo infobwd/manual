@@ -351,11 +351,11 @@
   // UX-P0C: horizontal swipe within the book page only. Do not hijack pinch,
   // vertical scrolling, interactive elements, TOC, or OS edge navigation.
   (() => {
-    const page = $("pageLeft");
+    const pages = [$("pageLeft"), $("pageRight")].filter(Boolean);
     let start = null;
     const reset = () => { start = null; };
     const interactive = target => Boolean(target?.closest?.("button,a,input,textarea,select,[contenteditable]"));
-    page.addEventListener("touchstart", event => {
+    pages.forEach(page => { page.addEventListener("touchstart", event => {
       reset();
       if (!dialog.open || isTocOpen() || event.touches.length !== 1 || interactive(event.target)) return;
       const touch = event.touches[0];
@@ -375,6 +375,7 @@
       if (elapsed > 850 || Math.abs(dx) < 75 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
       movePage(dx < 0 ? 1 : -1);
     }, { passive: true });
+    });
     dialog.addEventListener("close", reset);
   })();
   // Focus mode keeps page navigation and close controls visible.
