@@ -289,8 +289,7 @@
     state.manual = book;
     searchInput.value = "";
     closeReaderSearch();
-    bookmarksPanel.hidden = true;
-    bookmarkListToggle.setAttribute("aria-expanded","false");
+    closeBookmarks(false);
     const remembered = window.WD_EXPERIENCE?.getProgress?.(book.id) || 0;
     state.page = isMobile.matches ? remembered : Math.floor(remembered / 2) * 2;
     state.readingMode = window.WD_EXPERIENCE?.getReadingMode?.() || "paged";
@@ -355,9 +354,31 @@
     }
   });
   const bookmarkToggle = $("readerBookmarkToggle"), bookmarkListToggle = $("readerBookmarksListToggle"), bookmarksPanel = $("readerBookmarksPanel");
+  const bookmarkClose = $("readerBookmarksClose"), bookmarkBackdrop = $("readerBookmarksBackdrop");
+  const bookmarkSheetMode = () => window.matchMedia("(max-width:1100px)").matches;
+  let bookmarkReturnFocus = null;
+  function closeBookmarks(restoreFocus = true) {
+    if (bookmarksPanel.hidden) return;
+    bookmarksPanel.hidden = true;
+    bookmarkListToggle.setAttribute("aria-expanded","false");
+    if (restoreFocus && bookmarkReturnFocus?.isConnected && dialog.open) bookmarkReturnFocus.focus();
+    bookmarkReturnFocus = null;
+  }
+  bookmarkClose.addEventListener("click", () => closeBookmarks());
+  bookmarkBackdrop.addEventListener("click", () => closeBookmarks());
+  bookmarksPanel.addEventListener("keydown", event => {
+    if (!bookmarkSheetMode()) return;
+    if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); closeBookmarks(); return; }
+    if (event.key !== "Tab") return;
+    const focusables = [...bookmarksPanel.querySelectorAll("button:not([disabled]):not([tabindex='-1'])")];
+    const first = focusables[0], last = focusables[focusables.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+  });
+
   function closeReaderSubpanels(except) {
     for (const [panel, button] of [["readerAaPanel","readerAaToggle"],["readerSearchPanel","readerSearchToggle"],["readerBookmarksPanel","readerBookmarksListToggle"]]) {
-      if (panel !== except) { $(panel).hidden = true; $(button).setAttribute("aria-expanded","false"); }
+      if (panel !== except) { if (panel === "readerBookmarksPanel") closeBookmarks(false); else { $(panel).hidden = true; $(button).setAttribute("aria-expanded","false"); } }
     }
   }
   function syncBookmarks() {
@@ -376,7 +397,7 @@
       const label = "ตอน " + (index+1) + " · " + state.manual.pages[index].title;
       const b = create("button", "reader-bookmark-jump", label);
       b.type = "button";
-      b.addEventListener("click", () => { jumpTo(index); bookmarksPanel.hidden = true; bookmarkListToggle.setAttribute("aria-expanded","false"); });
+      b.addEventListener("click", () => { jumpTo(index); closeBookmarks(); });
       const remove = create("button", "reader-bookmark-remove", "ลบ");
       remove.type = "button";
       remove.setAttribute("aria-label", "นำที่คั่นหน้าออก: " + label);
@@ -394,11 +415,13 @@
     syncBookmarks();
   });
   bookmarkListToggle.addEventListener("click", () => {
-    const opening = bookmarksPanel.hidden;
-    if (opening) closeReaderSubpanels("readerBookmarksPanel");
-    bookmarksPanel.hidden = !opening;
-    bookmarkListToggle.setAttribute("aria-expanded",String(!bookmarksPanel.hidden));
-    if (!bookmarksPanel.hidden) syncBookmarks();
+    if (!bookmarksPanel.hidden) { closeBookmarks(); return; }
+    closeReaderSubpanels("readerBookmarksPanel");
+    bookmarkReturnFocus = bookmarkListToggle;
+    bookmarksPanel.hidden = false;
+    bookmarkListToggle.setAttribute("aria-expanded","true");
+    syncBookmarks();
+    if (bookmarkSheetMode()) bookmarkClose.focus();
   });
   // UX-P2A: search only the currently opened, published manual. Never use innerHTML.
   const searchPanel = $("readerSearchPanel"), searchToggle = $("readerSearchToggle");
@@ -694,8 +717,7 @@
   }
   dialog.addEventListener("close", () => {
     closeMobileToc(false);
-    bookmarksPanel.hidden = true;
-    bookmarkListToggle.setAttribute("aria-expanded","false");
+    closeBookmarks(false);
     continuousObserver?.disconnect();
     state.manual = null;
     if (state.opener?.isConnected) state.opener.focus();
