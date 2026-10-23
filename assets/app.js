@@ -75,6 +75,20 @@
       open.setAttribute("aria-label", "เปิดหนังสือ " + book.title);
       open.addEventListener("click", () => openBook(book, open));
       foot.append(open);
+      const favorite = create("button", "favorite-book");
+      favorite.type = "button";
+      const syncFavorite = () => {
+        const saved = Boolean(window.WD_EXPERIENCE?.isFavorite?.(book.id));
+        favorite.textContent = saved ? "♥ บันทึกแล้ว" : "♡ เก็บไว้";
+        favorite.setAttribute("aria-pressed", String(saved));
+        favorite.setAttribute("aria-label", (saved ? "นำออกจากหนังสือของฉัน " : "เพิ่มในหนังสือของฉัน ") + book.title);
+      };
+      syncFavorite();
+      favorite.addEventListener("click", () => {
+        window.WD_EXPERIENCE?.toggleFavorite?.(book.id);
+        syncFavorite();
+      });
+      foot.append(favorite);
     } else {
       foot.append(create("span", "pending-text", book.status === "review" ? "ยังไม่เผยแพร่เนื้อหา" : "ยังไม่มีเนื้อหา"));
     }
@@ -90,6 +104,45 @@
     $("emptyResults").hidden = filtered.length > 0;
   }
 
+  function shelfRow(book, includeRemove = false) {
+    const row = create("div", "personal-row");
+    const cover = create("span", "personal-book-cover", "WD");
+    cover.setAttribute("aria-hidden", "true");
+    const detail = create("div", "personal-book-detail");
+    detail.append(create("strong", "", book.title));
+    const page = window.WD_EXPERIENCE?.getProgress?.(book.id) || 0;
+    detail.append(create("small", "", "อ่านถึงหน้า " + (page + 1) + " / " + book.pages.length));
+    const actions = create("div", "personal-book-actions");
+    const read = create("button", "", "อ่านต่อ ↗");
+    read.type = "button";
+    read.setAttribute("aria-label", "อ่าน " + book.title + " ต่อ");
+    read.addEventListener("click", () => openBook(book, read));
+    actions.append(read);
+    if (includeRemove) {
+      const remove = create("button", "remove-favorite", "นำออก");
+      remove.type = "button";
+      remove.setAttribute("aria-label", "นำ " + book.title + " ออกจากหนังสือของฉัน");
+      remove.addEventListener("click", () => window.WD_EXPERIENCE?.toggleFavorite?.(book.id));
+      actions.append(remove);
+    }
+    detail.append(actions);
+    row.append(cover, detail);
+    return row;
+  }
+  function renderShelf() {
+    const recentNode = $("recentShelf"), favoritesNode = $("favoritesShelf");
+    if (!recentNode || !favoritesNode) return;
+    const experience = window.WD_EXPERIENCE;
+    const readable = (id) => data.manuals.find(book => book.id === id && book.status === "published" && book.pages?.length);
+    const recent = (experience?.getHistory?.() || []).map(readable).filter(Boolean).slice(0, 3);
+    recentNode.replaceChildren(...(recent.length ? recent.map(book => shelfRow(book))
+      : [create("p", "personal-empty", "ยังไม่มีหนังสือที่อ่าน เริ่มอ่านเล่มใดก็ได้จากชั้นหนังสือ")]));
+    const favorites = (experience?.getFavorites?.() || []).map(readable).filter(Boolean);
+    favoritesNode.replaceChildren(...(favorites.length
+      ? favorites.map(book => shelfRow(book, true))
+      : [create("p", "personal-empty", "ยังไม่มีหนังสือที่บันทึกไว้ กด ♡ เก็บไว้ บนเล่มที่สนใจ")]));
+    if ($("favoritesCount")) $("favoritesCount").textContent = favorites.length + " เล่ม";
+  }
   const dialog = $("readerDialog");
   function openBook(book, opener) {
     if (book.status !== "published" || !book.pages?.length) return;
@@ -103,7 +156,7 @@
     $("readerCategory").textContent = (lookup[book.category]?.label || "คู่มือ") + " · " + book.edition;
     renderReader();
     if (!dialog.open) dialog.showModal();
-    $("readerClose").focus();
+    (window.matchMedia("(max-width: 1000px)").matches ? $("readerCloseThumb") || $("readerClose") : $("readerClose")).focus();
   }
   function pageNode(target, page, index) {
     target.replaceChildren();
@@ -178,6 +231,7 @@
   $("prevPage").addEventListener("click", () => movePage(-1));
   $("nextPage").addEventListener("click", () => movePage(1));
   $("readerClose").addEventListener("click", () => dialog.close());
+  $("readerCloseThumb")?.addEventListener("click", () => dialog.close());
   $("fontDecrease").addEventListener("click", () => resize(-.1));
   $("fontIncrease").addEventListener("click", () => resize(.1));
   function resize(amount) {
@@ -207,7 +261,9 @@
     (scale) => { state.scale = scale; $("bookSpread").style.setProperty("--readerScale", String(scale)); },
     (book, opener) => openBook(book, opener)
   );
+  window.WD_EXPERIENCE?.subscribeBooks?.(renderShelf);
   renderStats();
   renderCategories();
   renderCatalog();
+  renderShelf();
 })();

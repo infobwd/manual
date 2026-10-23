@@ -1,0 +1,64 @@
+/* WD Books: bookshelf, splash, mobile one-hand controls and pull-to-refresh. */
+:root { --personal-paper:#fff; --personal-ink:#1d4639; --personal-subtle:#6a8074; --personal-line:#dce8df; }
+[hidden]{display:none!important}
+.app-splash{position:fixed;inset:0;z-index:110;display:grid;place-items:center;background:#174f47;color:#fff;opacity:1;transition:opacity .35s ease,visibility .35s ease;pointer-events:all}
+.app-splash.splash-done{opacity:0;visibility:hidden;pointer-events:none}
+.splash-content{text-align:center;padding:28px}
+.splash-mark{display:flex;align-items:center;justify-content:center;position:relative;margin:0 auto 19px;border-radius:25px;width:108px;height:108px;background:#fff;color:#174f47;font:900 34px system-ui;box-shadow:0 18px 40px #0b2a2466;letter-spacing:-2px}
+.splash-mark span{position:absolute;right:8px;top:6px;color:#9bb771;font-size:17px}
+.splash-content h1{margin:0 0 7px;font-size:30px;font-weight:850;letter-spacing:.015em}
+.splash-content p{margin:0 0 24px;color:#e3f3ea;font-size:13px}
+.splash-track{height:3px;width:112px;border-radius:9px;background:#ffffff52;margin:auto;overflow:hidden}
+.splash-track span{display:block;width:40%;height:100%;border-radius:9px;background:#e0e6b8;animation:splash-progress .9s ease-in-out infinite alternate}
+@keyframes splash-progress{from{transform:translateX(0)}to{transform:translateX(170%)}}
+.pull-refresh{position:fixed;z-index:70;top:calc(9px + env(safe-area-inset-top));left:50%;transform:translate(-50%,-90px);opacity:0;pointer-events:none;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #d9e8dd;border-radius:999px;box-shadow:0 10px 30px #152d2340;color:#215b49;padding:12px 17px;font-size:12px;font-weight:750;transition:transform .14s ease,opacity .14s ease}
+.pull-refresh.is-pulling{opacity:1;transform:translate(-50%,0)}
+.pull-refresh.is-ready{background:#e6f3e9}
+.pull-refresh-icon{font-size:23px;line-height:1}
+.pull-refresh.is-refreshing .pull-refresh-icon{animation:refresh-spin .8s linear infinite}
+@keyframes refresh-spin{to{transform:rotate(360deg)}}
+.my-books{scroll-margin-top:90px;margin-bottom:33px}
+.my-books .section-heading{margin-bottom:18px}
+.personal-shelves{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.personal-shelf{background:var(--personal-paper);border:1px solid var(--personal-line);border-radius:20px;padding:18px;min-width:0;box-shadow:0 5px 22px #152b1d0b}
+.personal-shelf h3{margin:0 0 12px;font-size:15px;color:var(--personal-ink);display:flex;align-items:center;justify-content:space-between}
+.personal-shelf h3 span{font-size:12px;color:var(--personal-subtle)}
+.personal-empty{font-size:12px;line-height:1.85;color:var(--personal-subtle);margin:6px 0 0}
+.personal-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--personal-line)}
+.personal-row:last-child{border-bottom:0;padding-bottom:0}
+.personal-book-cover{background:#255949;color:#fff;width:52px;height:67px;border-radius:5px 10px 10px 5px;display:grid;place-items:center;font-size:25px;flex:none;box-shadow:inset 4px 0 #ffffff1e}
+.personal-book-detail{flex:1;min-width:0}
+.personal-book-detail strong{display:block;color:var(--personal-ink);font-size:13px;line-height:1.45;overflow-wrap:anywhere}
+.personal-book-detail small{display:block;color:var(--personal-subtle);font-size:11px;margin-top:5px}
+.personal-book-actions{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+.personal-book-actions button{background:#eaf4ec;color:#1c5c47;border:1px solid #cce3d3;border-radius:9px;min-height:40px;padding:7px 12px;font-size:12px;font-weight:750}
+.personal-book-actions .remove-favorite{background:transparent;color:var(--personal-subtle)}
+.favorite-book{border:1px solid #ccdcd0;color:#285a46;background:#f4f8f3;border-radius:10px;min-width:44px;min-height:44px;padding:8px 10px;font-size:13px;font-weight:700}
+.favorite-book[aria-pressed="true"]{background:#e1eddc;color:#23523e}
+.manual-card .card-footer{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.manual-card .open-book{flex:1;min-width:100px}
+.reader-close-thumb{display:none}
+body[data-theme="night"]{--personal-paper:#20332b;--personal-ink:#e9f4eb;--personal-subtle:#b2c5b7;--personal-line:#3a5545}
+body[data-theme="sepia"]{--personal-paper:#f6eddc;--personal-ink:#584733;--personal-subtle:#766951;--personal-line:#ddcfb7}
+body[data-theme="night"] .personal-book-actions button,body[data-theme="night"] .favorite-book{background:#314f3e;color:#e6f2e6;border-color:#4b6b54}
+body[data-theme="sepia"] .personal-book-actions button,body[data-theme="sepia"] .favorite-book{background:#ebdec6;color:#675235;border-color:#d8c5a4}
+body[data-theme="night"] .personal-book-actions .remove-favorite{background:transparent}
+body[data-theme="night"] .pull-refresh{background:#20332b;color:#e4f2e6;border-color:#4a6454}
+body[data-theme="sepia"] .pull-refresh{background:#f6eddc;color:#665238;border-color:#dac8ad}
+@media(max-width:1000px){
+  .mobile-bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .bottom-nav-item{font-size:10px}
+  .my-books{scroll-margin-top:83px}
+  .reader-stage{position:relative}
+  .reader-close-thumb{display:flex;align-items:center;justify-content:center;gap:8px;position:absolute;right:calc(18px + env(safe-area-inset-right));bottom:calc(89px + env(safe-area-inset-bottom));z-index:5;background:#205748;color:#fff;border:1px solid #ffffff35;border-radius:999px;box-shadow:0 8px 25px #0004;font-size:13px;font-weight:800;min-height:49px;min-width:112px;padding:11px 16px;touch-action:manipulation}
+  .reader-actions #readerClose{display:none}
+  .book-page{padding-bottom:85px}
+}
+@media(max-width:700px){.personal-shelves{grid-template-columns:1fr;gap:12px}.personal-shelf{padding:15px;border-radius:17px}}
+@media(max-width:600px){
+  .mobile-bottom-nav .bottom-nav-item{font-size:10px;min-height:49px}
+  .mobile-bottom-nav .bottom-nav-icon{font-size:23px}
+  .my-books{margin-bottom:28px}
+  .reader-close-thumb{right:calc(14px + env(safe-area-inset-right));bottom:calc(83px + env(safe-area-inset-bottom))}
+}
+@media(prefers-reduced-motion:reduce){.app-splash,.pull-refresh{transition:none}.splash-track span,.pull-refresh.is-refreshing .pull-refresh-icon{animation:none}}
