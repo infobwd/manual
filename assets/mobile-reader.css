@@ -342,11 +342,11 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
 /* UX-READER-CONTRAST: ensure mobile title remains legible in all themes.
    Scoped to reader header, avoiding global theme/reader text changes. */
 .reader-topbar .reader-mobile-book-title{
-  color:#f4fff8;
+  color:#254f42;
   opacity:1;
   -webkit-text-fill-color:currentColor;
   line-height:1.45;
-  text-shadow:0 1px 1px rgba(0,0,0,.12);
+  text-shadow:none;
 }
 body[data-theme="night"] .reader-topbar .reader-mobile-book-title{
   color:#f2fff4;
@@ -369,3 +369,9 @@ body[data-theme="sepia"] .reader-topbar .reader-identity strong{color:#473522}
     text-overflow:ellipsis;
   }
 }
+
+/* UX-READER-CONTRAST-R1: light header is pale, so its text must be dark.
+   Use explicit theme selectors rather than assuming the header is dark. */
+body:not([data-theme="night"]):not([data-theme="sepia"]) .reader-topbar .reader-mobile-book-title{color:#254f42}
+body[data-theme="night"] .reader-topbar .reader-mobile-book-title{color:#f2fff4}
+body[data-theme="sepia"] .reader-topbar .reader-mobile-book-title{color:#473522}
