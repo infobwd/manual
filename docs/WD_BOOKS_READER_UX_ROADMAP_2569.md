@@ -451,3 +451,9 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Candidate 1.3.9 adds a 6.5s stalled-skeleton detection, visible retry button, and cache-busted document navigation. Never clear localStorage, favorites, history or bookmarks; include guard in SW app shell.
 - QA pending: reproduce on iPhone Safari/PWA, test offline and online, confirm error recovery and that saved books survive; inspect browser console and deployed asset versions if stall persists.
 - Block UX-DISCOVERY until catalog reliably renders.
+
+## HOME-LOAD-STALL-R2 — confirmed JavaScript parser failure (23 ต.ค. 2569)
+
+- Root cause confirmed by parsing production main `assets/app.js`: `SyntaxError: missing ) after argument list` at search result snippet append added in PR #48. Because the entire app script failed to parse, the home catalog skeleton remained and the PR #49 recovery button appeared.
+- Fix candidate 1.3.10: restore the missing closing parenthesis and bump app version so SW refreshes assets. The updated `app.js` passes JavaScript syntax parsing; browser/device functional QA is still pending.
+- Prevent recurrence: add JS syntax validation before merging changes to `assets/app.js`, particularly search UI code; don't rely on visual screenshot alone.
