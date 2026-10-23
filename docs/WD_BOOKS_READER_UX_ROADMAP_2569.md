@@ -415,3 +415,9 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Baseline: `main` v1.3.3, PR #35–#41; ให้ผู้ทดสอบระบุ build/version จริงที่เห็นและ OS/browser ก่อนกรอกผล
 - Gate สำหรับคิว 4 (UX-SEARCH-HIGHLIGHT): ต้องบันทึกผล critical flows, ข้อบกพร่อง และการตัดสินใจ GO/NO-GO พร้อมผู้ตรวจรับ; หากมี critical FAIL ให้แก้ก่อน
 - การแก้ QA findings ให้เปิด PR แยก; ไม่ Merge การเปลี่ยนฟีเจอร์ใน PR เอกสารนี้
+
+## UX-READER-CONTRAST-R1 — iPhone visual FAIL (23 ต.ค. 2569)
+
+- **FAIL confirmed from user screenshot:** light-theme reader topbar on iPhone is pale/white but book title text from PR #41 is near-white; title almost invisible. The previous fix incorrectly assumed dark header in light mode.
+- **Correction candidate 1.3.4:** dark green title on light header; high-lightness title only in night mode; dark brown in sepia. Keep ellipsis and existing buttons.
+- **Acceptance status: FAIL / FIX IN PR / RETEST PENDING.** Verify iPhone Safari/PWA, Android, all three themes, 200% zoom, long title, TalkBack/VoiceOver, offline cache update. No real-device PASS claimed.
