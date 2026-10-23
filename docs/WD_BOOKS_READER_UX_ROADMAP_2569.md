@@ -247,3 +247,10 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Align JavaScript page stepping and CSS breakpoint so there is no blank second page; preserve page progress when rotating or resizing (current paired-page logic may align to the preceding even page when entering spread mode).
 - Improve tablet page padding and reduced-motion page transitions; PWA cache v15.
 - QA pending: iPad portrait/landscape, 50/50 and 1/3 Split View, font 200%, chapter TOC, last odd page, rotation mid-book, safe area, VoiceOver, offline update v14→v15. Do not mark P0D complete until device tests pass.
+
+
+## UX-P1A candidate — Aa Thai reader typography
+
+- Reader Aa panel adds font family (system/serif/sans), line spacing (normal/relaxed/wide), and page margins (normal/compact/wide) with a reset button.
+- Persist values under the existing `wd-manual-reader-v2` object as `typography`; validate all values on load, preserve favorites/history/progress/theme/font. No external fonts or network calls.
+- Offline cache v16. QA pending: Thai glyph clipping across three themes, small iPhone, tablet split view, 160% text scale, screen reader and keyboard, PWA upgrade and legacy localStorage migration.
