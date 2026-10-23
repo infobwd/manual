@@ -65,7 +65,7 @@ window.WD_LIBRARY_DATA = {
     {
       id:"wd-growth-individual-plan",category:"teachers",status:"review",
       title:"WD Growth — บันทึกแผนพัฒนาผู้เรียนรายบุคคล",subtitle:"คู่มือครู · อ.1–ป.6",
-      description:"รายการรอตรวจรับจากงาน WD Growth PR #65 ยังไม่คัดลอกเอกสารจาก repository ส่วนตัวมาเผยแพร่",
+      description:"รายการรอตรวจรับโดยโรงเรียน ยังไม่มีการเผยแพร่เนื้อหาเอกสารภายใน",
       audience:"ครู",updated:"23 ต.ค. 2569",edition:"รอตรวจรับ",readTime:"—",color:"sage",
       coverTitle:"WD Growth\nแผนรายบุคคล",coverTop:"TEACHER GUIDE",tags:["WD Growth","บันทึกแผน","ครู"],pages:[]
     },
