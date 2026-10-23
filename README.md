@@ -26,6 +26,14 @@
 - [เกณฑ์ตรวจรับ UX-P0B](docs/WD_BOOKS_UX_P0B_ACCEPTANCE_2569.md)
 - ทดสอบ `node tests/mobile-toc-p0b.smoke.cjs` ร่วมกับ 3 ชุดเดิม
 
+## UX-P0C — ปัดเปลี่ยนหน้าและโหมดอ่านเต็มพื้นที่ (รอตรวจรับ)
+
+พัฒนาใน feature branch หลัง UX-P0B: ปัดซ้าย–ขวา/แตะขอบกระดาษเพื่อเปลี่ยนหน้า และแตะกลางหน้าเพื่อซ่อน/แสดงแถบเครื่องมือ พร้อมปุ่มควบคุมที่เข้าถึงด้วยคีย์บอร์ดและปุ่มปิดอ่านที่ยังมองเห็นได้
+
+- [เกณฑ์ตรวจรับ UX-P0C และวิธีทดสอบ](docs/WD_BOOKS_UX_P0C_ACCEPTANCE_2569.md)
+- Smoke Test เพิ่ม: `node tests/reader-p0c.smoke.cjs`
+- **ยังไม่ Merge ตัวแอป P0C:** รอตรวจบน iPhone/iPad Safari/PWA จริง; ไม่มีการเปลี่ยน localStorage เดิม
+
 ## แผนพัฒนา Reader UX (P0–P3)
 
 **[WD Books — Reader Experience Roadmap ปี 2569](docs/WD_BOOKS_READER_UX_ROADMAP_2569.md)** คือเอกสารกำกับการปรับประสบการณ์อ่านหนังสือบน iPhone/iPad/Android/PC โดยอ้างอิง Apple Books, Kindle และ Kobo ครอบคลุมการจัดหน้าแรก, สารบัญมือถือ, Swipe, โหมดอ่านเต็มจอ, การตั้งค่าข้อความ, Continuous Scroll, ค้นในหนังสือ และ Bookmark พร้อม Work Packages **UX-00, UX-P0A–P0D, UX-P1A–P1B, UX-P2A–P2B, UX-P3A** และ Release/QA gates

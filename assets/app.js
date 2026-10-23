@@ -10,7 +10,7 @@
     if (value !== undefined) el.textContent = value;
     return el;
   };
-  const state = { category: "all", query: "", manual: null, page: 0, scale: 1, opener: null };
+  const state = { category: "all", query: "", manual: null, page: 0, scale: 1, opener: null, readingFocus: false };
   const isMobile = window.matchMedia("(max-width: 850px)");
   const statuses = { published: "พร้อมอ่าน", review: "รอตรวจรับ", planned: "ตามแผน" };
   const lookup = Object.fromEntries(data.categories.map((c) => [c.id, c]));
@@ -191,6 +191,33 @@
     if ($("favoritesCount")) $("favoritesCount").textContent = favorites.length + " เล่ม";
   }
   const dialog = $("readerDialog");
+  const focusButton = $("readerFocusToggle");
+  const spread = $("bookSpread");
+  let touchGesture = null;
+  let suppressPageClickUntil = 0;
+  let pageTurnPending = false;
+  const selectedText = () => Boolean(window.getSelection?.()?.toString().trim());
+  const isInteractive = (node) => Boolean(node?.closest?.(
+    "a,button,input,select,textarea,summary,details,[contenteditable],[role='button'],[data-no-page-swipe]"
+  ));
+  function setReadingFocus(enabled) {
+    const next = Boolean(enabled && isMobile.matches && dialog.open && !isTocOpen());
+    state.readingFocus = next;
+    if (next) {
+      const active = document.activeElement;
+      if ($("readerTopbar")?.contains(active) || $("readerBottom")?.contains(active)) {
+        focusButton?.focus({ preventScroll: true });
+      }
+    }
+    dialog.classList.toggle("reader-focus", next);
+    if (focusButton) {
+      focusButton.setAttribute("aria-pressed", String(next));
+      focusButton.setAttribute("aria-label", next ? "แสดงแถบเครื่องมืออ่าน" : "ซ่อนแถบเครื่องมืออ่าน");
+      const label = focusButton.querySelector?.("span");
+      if (label) label.textContent = next ? "แสดงเมนู" : "ซ่อนเมนู";
+    }
+  }
+  focusButton?.addEventListener("click", () => setReadingFocus(!state.readingFocus));
   const mobileTocSheet = $("mobileTocSheet");
   const mobileTocButton = $("openMobileToc");
   const mobileTocClose = $("closeMobileToc");
@@ -241,9 +268,11 @@
   });
   dialog.addEventListener("cancel", event => {
     if (isTocOpen()) { event.preventDefault(); closeMobileToc(); }
+    else if (state.readingFocus) { event.preventDefault(); setReadingFocus(false); }
   });
   function openBook(book, opener) {
     if (book.status !== "published" || !book.pages?.length) return;
+    setReadingFocus(false);
     state.manual = book;
     const remembered = window.WD_EXPERIENCE?.getProgress?.(book.id) || 0;
     state.page = isMobile.matches ? remembered : Math.floor(remembered / 2) * 2;
@@ -333,21 +362,73 @@
     renderReader();
   }
   function movePage(direction) {
-    if (!state.manual) return;
+    if (!state.manual || isTocOpen() || pageTurnPending) return;
     const step = isMobile.matches ? 1 : 2;
     const next = state.page + (direction * step);
     if (next < 0 || next >= state.manual.pages.length) return;
     const left = $("pageLeft"), right = $("pageRight");
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion) { jumpTo(next); return; }
+    pageTurnPending = true;
     left.classList.add("turning");
     right.classList.add("turning");
     window.setTimeout(() => {
       jumpTo(next);
       left.classList.remove("turning");
       right.classList.remove("turning");
+      pageTurnPending = false;
     }, 105);
   }
+  // Touch events are passive: vertical scrolling, text selection and pinch zoom
+  // stay native. Never start at the screen's OS back-gesture edge.
+  spread?.addEventListener("touchstart", event => {
+    touchGesture = null;
+    if (!dialog.open || !state.manual || !isMobile.matches || isTocOpen() ||
+        event.touches.length !== 1 || isInteractive(event.target) || selectedText()) return;
+    const point = event.touches[0];
+    const width = window.innerWidth || document.documentElement.clientWidth || 390;
+    if (point.clientX <= 32 || point.clientX >= width - 32) return;
+    touchGesture = { x: point.clientX, y: point.clientY, lastX: point.clientX,
+      lastY: point.clientY, vertical: false, dragged: false };
+  }, { passive: true });
+  spread?.addEventListener("touchmove", event => {
+    if (!touchGesture) return;
+    if (event.touches.length !== 1) { touchGesture = null; return; }
+    const p = event.touches[0];
+    touchGesture.lastX = p.clientX;
+    touchGesture.lastY = p.clientY;
+    const dx = Math.abs(p.clientX - touchGesture.x), dy = Math.abs(p.clientY - touchGesture.y);
+    if (dx > 12 || dy > 12) touchGesture.dragged = true;
+    if (dy > 18 && dy > dx * 1.05) touchGesture.vertical = true;
+  }, { passive: true });
+  spread?.addEventListener("touchend", event => {
+    const gesture = touchGesture;
+    touchGesture = null;
+    if (!gesture || !dialog.open || isTocOpen()) return;
+    const p = event.changedTouches?.[0];
+    const dx = (p?.clientX ?? gesture.lastX) - gesture.x;
+    const dy = (p?.clientY ?? gesture.lastY) - gesture.y;
+    if (gesture.dragged || Math.abs(dx) > 12 || Math.abs(dy) > 12) {
+      suppressPageClickUntil = Date.now() + 450;
+    }
+    if (gesture.vertical || selectedText() || Math.abs(dx) < 60 ||
+        Math.abs(dx) < Math.abs(dy) * 1.45) return;
+    movePage(dx < 0 ? 1 : -1);
+  }, { passive: true });
+  spread?.addEventListener("touchcancel", () => { touchGesture = null; }, { passive: true });
+  spread?.addEventListener("click", event => {
+    if (!dialog.open || !state.manual || !isMobile.matches || isTocOpen() ||
+        Date.now() < suppressPageClickUntil || isInteractive(event.target) || selectedText() ||
+        event.detail === 0) return;
+    const page = event.target?.closest?.(".book-page");
+    if (!page) return;
+    const bounds = page.getBoundingClientRect();
+    if (!bounds.width) return;
+    const position = (event.clientX - bounds.left) / bounds.width;
+    if (position < 0.16) movePage(-1);
+    else if (position > 0.84) movePage(1);
+    else setReadingFocus(!state.readingFocus);
+  });
   $("prevPage").addEventListener("click", () => movePage(-1));
   $("nextPage").addEventListener("click", () => movePage(1));
   $("readerClose").addEventListener("click", () => dialog.close());
@@ -362,17 +443,25 @@
   }
   dialog.addEventListener("close", () => {
     closeMobileToc(false);
+    setReadingFocus(false);
+    touchGesture = null;
     state.manual = null;
     if (state.opener?.isConnected) state.opener.focus();
     state.opener = null;
   });
   dialog.addEventListener("keydown", (event) => {
     if (isTocOpen() || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.key === "Escape" && state.readingFocus) {
+      event.preventDefault();
+      setReadingFocus(false);
+      return;
+    }
+    if (isInteractive(event.target)) return;
     if (event.key === "ArrowRight") { event.preventDefault(); movePage(1); }
     if (event.key === "ArrowLeft") { event.preventDefault(); movePage(-1); }
   });
   isMobile.addEventListener?.("change", () => {
-    if (!isMobile.matches) closeMobileToc(false);
+    if (!isMobile.matches) { closeMobileToc(false); setReadingFocus(false); touchGesture = null; }
     if (state.manual) { state.page = isMobile.matches ? state.page : Math.floor(state.page / 2) * 2; renderReader(); }
   });
   function updateQuery(value, source) {

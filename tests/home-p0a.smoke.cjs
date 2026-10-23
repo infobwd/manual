@@ -47,6 +47,7 @@ function launch() {
   const nodes = new Proxy(Object.create(null), {
     get: (obj, key) => obj[key] ||= new FakeElement()
   });
+  // Reflect the real HTML: the mobile TOC starts hidden until explicitly opened.
   const document = {
     body: new FakeElement("body"), documentElement: new FakeElement("html"),
     createElement: tag => new FakeElement(tag),
@@ -54,6 +55,7 @@ function launch() {
     querySelector: () => null, querySelectorAll: () => [],
     addEventListener() {}
   };
+  document.getElementById("mobileTocSheet").hidden = true;
   const location = { protocol:"https:", hostname:"infobwd.github.io",hash:"",reload() {} };
   const sessionStorage = { getItem: () => null, setItem() {} };
   const navigator = {};

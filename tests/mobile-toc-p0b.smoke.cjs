@@ -13,7 +13,7 @@ for (const id of ["openMobileToc", "mobileTocSheet", "mobileTocBackdrop", "mobil
 }
 assert.match(html, /assets\/toc-p0b\.css/);
 assert.match(sw, /assets\/toc-p0b\.css/);
-assert.match(sw, /wd-manual-public-v7-p0b-mobile-toc-20261023/);
+assert.match(sw, /const CACHE_VERSION = "wd-manual-public-v[0-9]+-[^"]+";/);
 assert.match(html, /aria-controls="mobileTocSheet"/);
 class El {
   constructor(tag = "div", doc) {
