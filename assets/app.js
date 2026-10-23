@@ -51,16 +51,8 @@
     $("statPending").textContent = String(data.manuals.filter((b) => b.status !== "published").length);
     $("statCategories").textContent = String(data.categories.length);
   }
-  const discoveryIndex = new Map(data.manuals.map(book => [book.id, normalized([book.title, book.subtitle, book.description, book.audience, lookup[book.category]?.label, ...(book.tags || [])].join(" "))]));
-  const thaiCollator = new Intl.Collator("th-TH", {sensitivity:"base", numeric:true});
-  function matches(book) {
-    const ready = book.status === "published" && Boolean(book.pages?.length);
-    if (state.availability === "ready" && !ready) return false;
-    if (state.availability === "upcoming" && ready) return false;
-    if (state.category !== "all" && book.category !== state.category) return false;
-    if (!state.query) return true;
-    return (discoveryIndex.get(book.id) || "").includes(state.query);
-  }
+  const catalogCore = window.WD_CATALOG_CORE?.createCatalogCore(data);
+  if (!catalogCore) throw new Error("WD Books catalog core is missing");
   function cardFor(book) {
     const article = create("article", "manual-card");
     const isReadable = book.status === "published" && Boolean(book.pages?.length);
@@ -141,17 +133,7 @@
   }
   function renderCatalog() {
     const history = window.WD_EXPERIENCE?.getHistory?.() || [];
-    const recentRank = new Map(history.map((id, index) => [id, index]));
-    const filtered = data.manuals.filter(matches).sort((a, b) => {
-      if (state.sort === "title") return thaiCollator.compare(a.title, b.title);
-      if (state.sort === "recent") {
-        const aRank = recentRank.get(a.id) ?? Number.MAX_SAFE_INTEGER;
-        const bRank = recentRank.get(b.id) ?? Number.MAX_SAFE_INTEGER;
-        if (aRank !== bRank) return aRank - bRank;
-      }
-      const ready = book => book.status === "published" && Boolean(book.pages?.length);
-      return Number(ready(b)) - Number(ready(a));
-    });
+    const filtered = catalogCore.select(state, history);
     $("manualGrid").replaceChildren(...filtered.map(cardFor));
     $("manualGrid").setAttribute("aria-busy","false");
     document.querySelectorAll("[data-discovery-filter]").forEach(button => {
