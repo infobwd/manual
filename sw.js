@@ -1,6 +1,6 @@
 /* WD Books — static public-only offline app shell.
    Scope is limited to /manual/ by the SW registration in experience.js. */
-const CACHE_VERSION = "wd-manual-public-v2-20261023";
+const CACHE_VERSION = "wd-manual-public-v3-20261023";
 const CACHE_PREFIX = "wd-manual-public-";
 const APP_SHELL = [
   "./", "./index.html", "./manifest.webmanifest",
@@ -28,7 +28,12 @@ self.addEventListener("fetch", event => {
   const url = new URL(request.url);
   const scope = new URL(self.registration.scope);
   if (url.origin !== scope.origin || !url.pathname.startsWith(scope.pathname)) return;
-  if (request.headers.has("authorization") || request.credentials === "include") return;
+  // Public GitHub Pages app shell only. Navigations may have credentials="include"
+  // even on public Pages, so excluding those would break offline Home Screen launch.
+  // Never cache unknown endpoints or requests carrying Authorization.
+  if (request.headers.has("authorization")) return;
+  const permitted = new Set(APP_SHELL.map(path => new URL(path, scope).pathname));
+  if (!permitted.has(url.pathname)) return;
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_VERSION);
     const isNavigation = request.mode === "navigate";
