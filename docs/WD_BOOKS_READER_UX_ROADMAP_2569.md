@@ -528,3 +528,9 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 
 - CAT-01 design PR #61 merged at `a0e65e8ce6fb050e864d76ce6e71bca3e20abd50`. While no computer is available, prepare read-only synthetic/current catalog contract gate and documented stable ID/offline policy: [WD_BOOKS_CAT01A_CONTENT_CONTRACT_2569.md](WD_BOOKS_CAT01A_CONTENT_CONTRACT_2569.md).
 - Adds `tests/cat01-contract.smoke.cjs` only; no production code/version/storage changes. Syntax parsed; Node execution and real-device QA pending. Explicit approval required before merge.
+
+## CAT-01B — opt-in metadata boundary candidate (23 ต.ค. 2569)
+
+- CAT-01A PR #62 merged at `c6fc54a460f5be71f4f811806341cc2a34f7474c`. Add read-only metadata snapshot and synthetic tests, but do **not** load it in production or change SW/Reader until separate integration and offline QA.
+- Details: [WD_BOOKS_CAT01B_METADATA_BOUNDARY_2569.md](WD_BOOKS_CAT01B_METADATA_BOUNDARY_2569.md). Public manuals can be added in independent content PRs during architecture work.
+- Runtime baseline ARCH-01E still pending; no claim of speed improvement. Full Node/device QA pending; explicit approval required for merge.
