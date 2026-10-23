@@ -1,0 +1,14 @@
+const fs = require('node:fs');
+const assert = require('node:assert/strict');
+const html = fs.readFileSync('index.html', 'utf8');
+const js = fs.readFileSync('assets/app-zoom-guard.js', 'utf8');
+const css = fs.readFileSync('assets/app-experience.css', 'utf8');
+assert.match(html, /assets\/app-zoom-guard\.js/);
+assert.match(html, /name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/);
+assert.doesNotMatch(html, /user-scalable=no|maximum-scale=1/);
+assert.match(js, /reader\.contains\(target\)/);
+assert.match(js, /event\.touches\.length > 1/);
+assert.match(js, /gesturestart/);
+assert.match(css, /\.app-shell[^\n]*touch-action: manipulation/);
+assert.doesNotMatch(css, /\.reader-dialog[^\n]*touch-action: manipulation/);
+console.log('App zoom guard static smoke: PASS (device gesture QA still required)');

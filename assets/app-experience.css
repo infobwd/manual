@@ -191,3 +191,6 @@ body[data-theme="night"] .reader-identity strong,body[data-theme="night"] .setti
 @media(prefers-reduced-motion:reduce) {
  .book-page,.manual-card,.progress-track span{transition:none!important}
 }
+
+/* Suppress double-tap page zoom on app chrome; do not apply to reader dialog. */
+.site-header, .app-shell, .mobile-bottom-nav, .settings-dialog { touch-action: manipulation; }
