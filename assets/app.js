@@ -544,6 +544,9 @@
     $("readerModeToggle").title = continuous ? "พลิกทีละหน้า" : "เลื่อนอ่านต่อเนื่อง";
     $("prevPage").hidden = continuous;
     $("nextPage").hidden = continuous;
+    $("readerModeStatus").textContent = continuous ? "เลื่อนขึ้น–ลงเพื่ออ่านต่อ" : "พลิกทีละหน้า";
+    const modeLabel = $("readerModeToggle").querySelector(".tool-label");
+    if (modeLabel) modeLabel.textContent = continuous ? "พลิกหน้า" : "เลื่อนอ่าน";
     $("pageLeft").hidden = continuous;
     $("pageRight").hidden = continuous;
   }
