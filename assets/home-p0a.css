@@ -92,3 +92,10 @@ body[data-theme="night"] .resume-feature-track>span{background:#a8d6ad}
  .resume-feature-card{gap:9px}
 }
 @media(prefers-reduced-motion:reduce){.resume-feature-track>span{transition:none}}
+
+/* UX-DISCOVERY P1: independent status filter with accessible 44px targets. */
+.discovery-filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 14px}
+.discovery-filters button{min-height:44px;padding:9px 14px;border:1px solid #b8cfc0;border-radius:999px;background:transparent;color:inherit;font:inherit;font-size:14px;cursor:pointer}
+.discovery-filters button.selected{background:#315f49;color:#fff;border-color:#315f49}
+.discovery-filters button:focus-visible{outline:3px solid #dba852;outline-offset:2px}
+body[data-theme="night"] .discovery-filters button.selected{background:#a9d3b4;color:#132b20;border-color:#a9d3b4}
