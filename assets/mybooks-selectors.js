@@ -6,7 +6,7 @@
     const resolve = ids => (Array.isArray(ids) ? ids : []).map(id => readable.get(id)).filter(Boolean);
     const recent = (history, limit = 3) => resolve(history).slice(0, limit);
     const favorites = ids => resolve(ids);
-    const resume = history => recent(history, 1)[0] || null;
+    const resume = history => readable.get(Array.isArray(history) ? history[0] : null) || null;
     const bookmarks = (getBookmarks, history) => {
       const order = new Map((Array.isArray(history) ? history : []).map((id, i) => [id, i]));
       return [...readable.values()].map(book => ({
