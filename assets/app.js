@@ -338,7 +338,8 @@
     if (!state.manual) return;
     const id = state.manual.id, indices = window.WD_EXPERIENCE?.getBookmarks?.(id) || [];
     const saved = indices.includes(state.page);
-    bookmarkToggle.textContent = saved ? "◆" : "◇";
+    const bookmarkSymbol = bookmarkToggle.querySelector(".tool-symbol");
+    if (bookmarkSymbol) bookmarkSymbol.textContent = saved ? "🔖" : "♧";
     bookmarkToggle.setAttribute("aria-pressed", String(saved));
     bookmarkToggle.setAttribute("aria-label", saved ? "นำคั่นหน้าออก" : "คั่นหน้าตอนนี้");
     $("readerBookmarksStatus").textContent = indices.length ? "บันทึก " + indices.length + " ตอน" : "ยังไม่มีคั่นหน้า";

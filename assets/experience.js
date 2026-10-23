@@ -66,8 +66,11 @@
     });
     for (const id of ["quickEyeMode", "readerEyeMode"]) {
       const b = $(id); if (!b) continue;
-      b.setAttribute("aria-pressed", String(prefs.theme === "sepia"));
-      b.title = prefs.theme === "sepia" ? "ปิดโหมดถนอมสายตา" : "เปิดโหมดถนอมสายตา";
+      const night = prefs.theme === "night";
+      b.setAttribute("aria-pressed", String(night));
+      b.setAttribute("aria-label", night ? "เปลี่ยนเป็นโหมดสว่าง" : "เปลี่ยนเป็นโหมดกลางคืน");
+      b.title = night ? "เปลี่ยนเป็นโหมดสว่าง" : "เปลี่ยนเป็นโหมดกลางคืน";
+      b.textContent = night ? "☾" : "☀";
     }
   }
   // Cover shortcuts share the same saved reading preference.
@@ -254,8 +257,8 @@
     document.querySelectorAll("[data-reader-theme]").forEach(button => {
       button.addEventListener("click", () => setTheme(button.dataset.readerTheme));
     });
-    for (const id of ["readerEyeMode"]) {
-      $(id)?.addEventListener("click", () => setTheme(prefs.theme === "sepia" ? "light" : "sepia"));
+    for (const id of ["quickEyeMode", "readerEyeMode"]) {
+      $(id)?.addEventListener("click", () => setTheme(prefs.theme === "night" ? "light" : "night"));
     }
     for (const id of ["headerSettings", "navSettings"]) {
       $(id)?.addEventListener("click", () => { openSettings(); updateBottom("settings"); });
