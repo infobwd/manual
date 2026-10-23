@@ -33,7 +33,7 @@
     <h1>WD Books</h1>
     <p>คลังคู่มือโรงเรียนบ้านวังด้ง</p>
     <div class="splash-track"><span></span></div>
-    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.2.5</small>
+    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.2.6</small>
   </div>
 </div>
 <div id="pullRefresh" class="pull-refresh" role="status" aria-live="polite" aria-hidden="true"><span class="pull-refresh-icon">↻</span><span id="pullRefreshText">ดึงลงเพื่อรีเฟรช</span></div>
@@ -196,11 +196,14 @@
         </div>
       </div>
     </div>
-    <section id="readerBookmarksPanel" class="reader-bookmarks-panel" aria-label="ตำแหน่งคั่นหน้าของหนังสือเล่มนี้" hidden>
-      <strong>คั่นหน้าในเล่มนี้</strong>
+    <section id="readerBookmarksPanel" class="reader-bookmarks-panel" role="dialog" aria-modal="true" aria-labelledby="readerBookmarksTitle" hidden>
+      <button id="readerBookmarksBackdrop" class="reader-bookmarks-backdrop" type="button" tabindex="-1" aria-label="ปิดรายการคั่นหน้า"></button>
+      <div class="reader-bookmarks-sheet">
+      <div class="reader-bookmarks-heading"><strong id="readerBookmarksTitle">คั่นหน้าในเล่มนี้</strong><button id="readerBookmarksClose" class="reader-bookmarks-close" type="button" aria-label="ปิดรายการคั่นหน้า">✕</button></div>
       <button id="readerBookmarkToggle" class="reader-bookmark-current" type="button" aria-pressed="false" aria-label="คั่นหน้าตอนนี้">🔖 คั่นหน้าตอนที่กำลังอ่าน</button>
       <p id="readerBookmarksStatus" role="status" aria-live="polite"></p>
       <div id="readerBookmarksItems" class="reader-bookmarks-items"></div>
+      </div>
     </section>
     <section id="readerSearchPanel" class="reader-search-panel" aria-label="ค้นหาภายในหนังสือ" hidden>
       <label for="readerSearchInput">ค้นหาคำในเล่มนี้</label>
