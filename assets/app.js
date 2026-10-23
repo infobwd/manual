@@ -155,7 +155,7 @@
     $("readerCategory").textContent = (lookup[book.category]?.label || "คู่มือ") + " · " + book.edition;
     renderReader();
     if (!dialog.open) dialog.showModal();
-    (isMobile.matches ? $("readerCloseThumb") || $("readerClose") : $("readerClose")).focus();
+    (window.matchMedia("(max-width: 1000px)").matches ? $("readerCloseThumb") || $("readerClose") : $("readerClose")).focus();
   }
   function pageNode(target, page, index) {
     target.replaceChildren();
