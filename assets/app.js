@@ -308,6 +308,11 @@
   const closeTools = () => { extraTools.hidden = true; toolsToggle.setAttribute("aria-expanded","false"); };
   toolsToggle.addEventListener("click", () => {
     extraTools.hidden = !extraTools.hidden;
+    if (!extraTools.hidden) {
+      for (const [panel, button] of [["readerAaPanel","readerAaToggle"],["readerSearchPanel","readerSearchToggle"],["readerBookmarksPanel","readerBookmarksListToggle"]]) {
+        $(panel).hidden = true; $(button).setAttribute("aria-expanded","false");
+      }
+    }
     toolsToggle.setAttribute("aria-expanded",String(!extraTools.hidden));
   });
   const syncToolsViewport = () => {
@@ -319,8 +324,16 @@
   syncToolsViewport();
   window.matchMedia("(min-width:1101px)").addEventListener?.("change",syncToolsViewport);
   dialog.addEventListener("close",() => { if (window.matchMedia("(max-width:1100px)").matches) closeTools(); });
-  extraTools.addEventListener("click",event => { if (event.target.closest("button")) closeTools(); });
+  extraTools.addEventListener("click",event => {
+    if (event.target.closest("[data-reader-theme]")) return;
+    if (event.target.closest("button")) closeTools();
+  });
   const bookmarkToggle = $("readerBookmarkToggle"), bookmarkListToggle = $("readerBookmarksListToggle"), bookmarksPanel = $("readerBookmarksPanel");
+  function closeReaderSubpanels(except) {
+    for (const [panel, button] of [["readerAaPanel","readerAaToggle"],["readerSearchPanel","readerSearchToggle"],["readerBookmarksPanel","readerBookmarksListToggle"]]) {
+      if (panel !== except) { $(panel).hidden = true; $(button).setAttribute("aria-expanded","false"); }
+    }
+  }
   function syncBookmarks() {
     if (!state.manual) return;
     const id = state.manual.id, indices = window.WD_EXPERIENCE?.getBookmarks?.(id) || [];
@@ -343,7 +356,9 @@
     syncBookmarks();
   });
   bookmarkListToggle.addEventListener("click", () => {
-    bookmarksPanel.hidden = !bookmarksPanel.hidden;
+    const opening = bookmarksPanel.hidden;
+    if (opening) closeReaderSubpanels("readerBookmarksPanel");
+    bookmarksPanel.hidden = !opening;
     bookmarkListToggle.setAttribute("aria-expanded",String(!bookmarksPanel.hidden));
     if (!bookmarksPanel.hidden) syncBookmarks();
   });
@@ -356,7 +371,9 @@
     searchToggle.setAttribute("aria-expanded","false");
   }
   searchToggle.addEventListener("click", () => {
-    searchPanel.hidden = !searchPanel.hidden;
+    const opening = searchPanel.hidden;
+    if (opening) closeReaderSubpanels("readerSearchPanel");
+    searchPanel.hidden = !opening;
     searchToggle.setAttribute("aria-expanded",String(!searchPanel.hidden));
     if (!searchPanel.hidden) { updateReaderSearch(); searchInput.focus(); }
     else searchToggle.focus();
@@ -609,7 +626,9 @@
   // UX-P1A: accessible reader typography controls; no new storage key.
   const aaToggle = $("readerAaToggle"), aaPanel = $("readerAaPanel");
   aaToggle?.addEventListener("click", () => {
-    aaPanel.hidden = !aaPanel.hidden;
+    const opening = aaPanel.hidden;
+    if (opening) closeReaderSubpanels("readerAaPanel");
+    aaPanel.hidden = !opening;
     aaToggle.setAttribute("aria-expanded", String(!aaPanel.hidden));
   });
   for (const [id, field] of [["readerFontFamily","family"],["readerLineSpacing","line"],["readerPageMargin","margin"]]) {
