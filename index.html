@@ -4,10 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#174f47">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="WD Books">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
   <meta name="description" content="คลังคู่มือดิจิทัลโรงเรียนบ้านวังด้ง แยกตามหมวดหมู่ ค้นหาและเปิดอ่านในรูปแบบ e-book">
   <title>คลังคู่มือโรงเรียนบ้านวังด้ง | WD Manual Library</title>
   <link rel="stylesheet" href="./assets/styles.css">
+  <link rel="stylesheet" href="./assets/app-experience.css">
   <script defer src="./assets/manuals-data.js"></script>
+  <script defer src="./assets/experience.js"></script>
   <script defer src="./assets/app.js"></script>
 </head>
 <body>
@@ -24,6 +33,10 @@
       <a href="#about">เกี่ยวกับคลัง</a>
     </nav>
     <span class="header-pill">School Knowledge Hub</span>
+    <div class="header-actions">
+      <button id="quickEyeMode" type="button" class="top-action" aria-label="เปิดหรือปิดโหมดถนอมสายตา" title="โหมดถนอมสายตา">☀</button>
+      <button id="headerSettings" type="button" class="top-action" aria-label="ตั้งค่าการอ่าน" title="ตั้งค่าการอ่าน">☷</button>
+    </div>
   </div>
 </header>
 
@@ -69,6 +82,7 @@
         <div>
           <p class="eyebrow">THE BOOKSHELF</p>
           <h2 id="libraryTitle">ชั้นหนังสือดิจิทัล</h2>
+          <p class="app-hint">เลือกเล่มที่พร้อมอ่าน แล้วเปิดต่อจากหน้าล่าสุดได้</p>
           <p class="section-detail" id="resultsText" role="status" aria-live="polite">เลือกหมวดหมู่หรือค้นหาชื่อคู่มือ</p>
         </div>
         <label class="search-box" for="searchInput">
@@ -87,15 +101,43 @@
         <p>ต้นฉบับงานพัฒนาระบบยังอยู่ใน repository ของแต่ละโครงการ ส่วนคลังนี้เก็บเฉพาะฉบับเผยแพร่ที่ได้รับอนุมัติ พร้อมแสดงสถานะและรอบปรับปรุงอย่างชัดเจน</p>
       </div>
     </section>
+    <div id="pwaStatus" class="pwa-status" role="status" aria-live="polite" hidden></div>
     <footer class="site-footer"><span>© โรงเรียนบ้านวังด้ง · คลังคู่มือโรงเรียน</span><span>ต้นแบบเว็บไซต์ · รอตรวจรับก่อนเผยแพร่จริง</span></footer>
   </main>
 </div>
+<nav class="mobile-bottom-nav" aria-label="นำทางแอป">
+  <a id="navHome" href="#content" class="bottom-nav-item active" aria-label="หน้าหลัก"><span class="bottom-nav-icon" aria-hidden="true">⌂</span><span>หน้าหลัก</span></a>
+  <a id="navBooks" href="#library" class="bottom-nav-item" aria-label="ชั้นหนังสือ"><span class="bottom-nav-icon" aria-hidden="true">▤</span><span>หนังสือ</span></a>
+  <button id="navContinue" type="button" class="bottom-nav-item" disabled aria-label="อ่านเล่มล่าสุดต่อ"><span class="bottom-nav-icon" aria-hidden="true">▸</span><span>อ่านต่อ</span></button>
+  <button id="navSettings" type="button" class="bottom-nav-item" aria-label="ตั้งค่าการอ่าน"><span class="bottom-nav-icon" aria-hidden="true">☷</span><span>ตั้งค่า</span></button>
+</nav>
+
+<dialog id="settingsDialog" class="settings-dialog" aria-labelledby="settingsTitle">
+  <div class="settings-sheet">
+    <div class="settings-head"><div><span class="eyebrow">READING COMFORT</span><h2 id="settingsTitle">ตั้งค่าการอ่าน</h2></div><button id="closeSettings" type="button" class="settings-close" aria-label="ปิดการตั้งค่า">✕</button></div>
+    <p class="settings-caption">ปรับให้สบายตา บันทึกไว้ในอุปกรณ์เครื่องนี้</p>
+    <fieldset class="setting-group"><legend>โหมดหน้าจอ</legend>
+      <div class="theme-picker" role="radiogroup" aria-label="เลือกโหมดถนอมสายตา">
+        <label class="theme-option"><input type="radio" name="readerTheme" value="light"><span class="theme-preview theme-light">Aa</span><span>สว่าง</span></label>
+        <label class="theme-option"><input type="radio" name="readerTheme" value="sepia"><span class="theme-preview theme-sepia">Aa</span><span>ถนอมสายตา</span></label>
+        <label class="theme-option"><input type="radio" name="readerTheme" value="night"><span class="theme-preview theme-night">Aa</span><span>กลางคืน</span></label>
+      </div>
+    </fieldset>
+    <fieldset class="setting-group"><legend>ขนาดตัวอักษร</legend>
+      <div class="font-setting"><span class="font-size-small">ก</span><input type="range" id="globalFontSize" min="90" max="160" value="100" step="10" aria-label="ขนาดตัวอักษร 90 ถึง 160 เปอร์เซ็นต์"><span class="font-size-big">ก</span><output id="globalFontLabel" for="globalFontSize">100%</output></div>
+      <p class="settings-caption">ปรับได้ตั้งแต่ 90% ถึง 160% ใช้กับข้อความในหนังสือทุกเล่ม</p>
+    </fieldset>
+    <section class="install-section" aria-labelledby="installHeading"><h3 id="installHeading">ติดตั้งเป็นแอปอ่านหนังสือ</h3><p id="installHelp">iPhone/iPad: เปิดเว็บด้วย Safari แล้วแตะปุ่มแชร์ → เพิ่มไปยังหน้าจอโฮม</p><button id="installApp" type="button" class="install-button" hidden>ติดตั้งแอปบนอุปกรณ์นี้</button><p class="install-note">อ่านหนังสือสาธิตที่เปิดไว้ได้แบบออฟไลน์หลังโหลดแอปสำเร็จ</p></section>
+    <button id="resetReading" class="reset-reading" type="button">คืนค่าการอ่านเริ่มต้น</button>
+  </div>
+</dialog>
 
 <dialog id="readerDialog" class="reader-dialog" aria-labelledby="readerTitle">
   <div class="reader-shell">
     <div class="reader-topbar">
       <div class="reader-identity"><span class="reader-mark">WD / READ</span><div><strong id="readerTitle"></strong><small id="readerCategory"></small></div></div>
       <div class="reader-actions">
+        <button id="readerEyeMode" class="icon-button eye-button" type="button" aria-label="เปลี่ยนโหมดถนอมสายตา" title="โหมดถนอมสายตา">☼</button>
         <button id="fontDecrease" class="icon-button font-button" type="button" aria-label="ลดขนาดตัวอักษร">A−</button>
         <button id="fontIncrease" class="icon-button font-button" type="button" aria-label="เพิ่มขนาดตัวอักษร">A+</button>
         <button id="readerClose" class="icon-button close-button" type="button" aria-label="ปิดหนังสือ">✕</button>
