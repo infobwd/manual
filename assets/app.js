@@ -137,13 +137,14 @@
 
   // Stable resume card: do not replace its button when a page turn saves progress,
   // or the original focus target would disappear while its dialog is open.
+  const myBooks = window.WD_MYBOOKS_SELECTORS?.createMyBooksSelectors(data.manuals);
+  if (!myBooks) throw new Error("WD Books My Books selectors are missing");
   let featuredBookId = null;
   let featureNodes = null;
   function renderContinueFeature() {
     const section = $("continueFeature"), host = $("continueFeatureCard");
     if (!section || !host) return;
-    const recentId = window.WD_EXPERIENCE?.getHistory?.()[0];
-    const book = data.manuals.find(b => b.id === recentId && b.status === "published" && b.pages?.length);
+    const book = myBooks.resume(window.WD_EXPERIENCE?.getHistory?.() || []);
     if (!book) {
       section.hidden = true;
       host.replaceChildren();
@@ -212,14 +213,7 @@
     if (!shelf) return;
     const experience = window.WD_EXPERIENCE;
     const history = experience?.getHistory?.() || [];
-    const groups = data.manuals.filter(book => book.status === "published" && Array.isArray(book.pages) && book.pages.length).map(book => ({
-      book,
-      indices: (experience?.getBookmarks?.(book.id) || []).filter(index => Number.isInteger(index) && index >= 0 && index < book.pages.length)
-    })).filter(group => group.indices.length);
-    groups.sort((a,b) => {
-      const ai = history.indexOf(a.book.id), bi = history.indexOf(b.book.id);
-      return (ai < 0 ? Infinity : ai) - (bi < 0 ? Infinity : bi) || a.book.title.localeCompare(b.book.title, "th");
-    });
+    const groups = myBooks.bookmarks(id => experience?.getBookmarks?.(id), history);
     if (!bookmarkShelfUI.initialized && groups.length) {
       bookmarkShelfUI.expanded.add(groups[0].book.id);
       bookmarkShelfUI.initialized = true;
@@ -282,11 +276,10 @@
     const recentNode = $("recentShelf"), favoritesNode = $("favoritesShelf");
     if (!recentNode || !favoritesNode) return;
     const experience = window.WD_EXPERIENCE;
-    const readable = (id) => data.manuals.find(book => book.id === id && book.status === "published" && book.pages?.length);
-    const recent = (experience?.getHistory?.() || []).map(readable).filter(Boolean).slice(0, 3);
+    const recent = myBooks.recent(experience?.getHistory?.() || []);
     recentNode.replaceChildren(...(recent.length ? recent.map(book => shelfRow(book))
       : [create("p", "personal-empty", "ยังไม่มีหนังสือที่อ่าน เริ่มอ่านเล่มใดก็ได้จากชั้นหนังสือ")]));
-    const favorites = (experience?.getFavorites?.() || []).map(readable).filter(Boolean);
+    const favorites = myBooks.favorites(experience?.getFavorites?.() || []);
     favoritesNode.replaceChildren(...(favorites.length
       ? favorites.map(book => shelfRow(book, true))
       : [create("p", "personal-empty", "ยังไม่มีหนังสือที่บันทึกไว้ กด ♡ เก็บไว้ บนเล่มที่สนใจ")]));
