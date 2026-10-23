@@ -99,3 +99,13 @@ body[data-theme="night"] .resume-feature-track>span{background:#a8d6ad}
 .discovery-filters button.selected{background:#315f49;color:#fff;border-color:#315f49}
 .discovery-filters button:focus-visible{outline:3px solid #dba852;outline-offset:2px}
 body[data-theme="night"] .discovery-filters button.selected{background:#a9d3b4;color:#132b20;border-color:#a9d3b4}
+
+/* UX-DISCOVERY P2: clear filter hierarchy and visible horizontal-scroll cue. */
+.discovery-group-label{margin:14px 0 5px;font-weight:700;font-size:13px;letter-spacing:.02em;color:inherit}
+.discovery-category-heading{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.discovery-category-heading span{font-size:12px;opacity:.75;white-space:nowrap}
+.discovery-empty-actions{display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+#resetDiscoveryFilters{min-height:44px;border:1px solid #9ebdaa;border-radius:12px;padding:10px 16px;background:#315f49;color:white;font:inherit;font-weight:650}
+#resetDiscoveryFilters[hidden]{display:none}
+#resetDiscoveryFilters:focus-visible{outline:3px solid #dba852;outline-offset:2px}
+#resultsText:focus{outline:none}
