@@ -348,6 +348,51 @@
       right.classList.remove("turning");
     }, 105);
   }
+  // UX-P0C: horizontal swipe within the book page only. Do not hijack pinch,
+  // vertical scrolling, interactive elements, TOC, or OS edge navigation.
+  (() => {
+    const pages = [$("pageLeft"), $("pageRight")].filter(Boolean);
+    let start = null;
+    const reset = () => { start = null; };
+    const interactive = target => Boolean(target?.closest?.("button,a,input,textarea,select,[contenteditable]"));
+    pages.forEach(page => { page.addEventListener("touchstart", event => {
+      reset();
+      if (!dialog.open || isTocOpen() || event.touches.length !== 1 || interactive(event.target)) return;
+      const touch = event.touches[0];
+      if (touch.clientX < 32 || touch.clientX > window.innerWidth - 32) return;
+      start = { x: touch.clientX, y: touch.clientY, at: Date.now() };
+    }, { passive: true });
+    page.addEventListener("touchmove", event => {
+      if (event.touches.length !== 1) reset();
+    }, { passive: true });
+    page.addEventListener("touchcancel", reset, { passive: true });
+    page.addEventListener("touchend", event => {
+      if (!start || !dialog.open || isTocOpen() || event.changedTouches.length !== 1) { reset(); return; }
+      const touch = event.changedTouches[0];
+      const dx = touch.clientX - start.x, dy = touch.clientY - start.y;
+      const elapsed = Date.now() - start.at;
+      reset();
+      if (elapsed > 850 || Math.abs(dx) < 75 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
+      movePage(dx < 0 ? 1 : -1);
+    }, { passive: true });
+    });
+    dialog.addEventListener("close", reset);
+  })();
+  // Focus mode keeps page navigation and close controls visible.
+  const focusToggle = $("readerFocusToggle");
+  const syncFocus = () => {
+    const active = dialog.classList.contains("reader-focus-mode");
+    focusToggle?.setAttribute("aria-pressed", String(active));
+    focusToggle?.setAttribute("aria-label", active ? "ปิดโหมดอ่านเต็มตา" : "เปิดโหมดอ่านเต็มตา");
+  };
+  focusToggle?.addEventListener("click", () => {
+    dialog.classList.toggle("reader-focus-mode");
+    syncFocus();
+  });
+  dialog.addEventListener("close", () => {
+    dialog.classList.remove("reader-focus-mode");
+    syncFocus();
+  });
   $("prevPage").addEventListener("click", () => movePage(-1));
   $("nextPage").addEventListener("click", () => movePage(1));
   $("readerClose").addEventListener("click", () => dialog.close());

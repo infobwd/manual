@@ -1,6 +1,6 @@
 /* WD Books — static public-only offline app shell.
    Scope is limited to /manual/ by the SW registration in experience.js. */
-const CACHE_VERSION = "wd-manual-public-v8-zoom-guard-20261023";
+const CACHE_VERSION = "wd-manual-public-v9-reader-p0c-20261023";
 const CACHE_PREFIX = "wd-manual-public-";
 const APP_SHELL = [
   "./", "./index.html", "./manifest.webmanifest",

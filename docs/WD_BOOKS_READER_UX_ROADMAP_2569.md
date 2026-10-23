@@ -201,3 +201,17 @@
 - ยังรอ QA จริง iPhone/iPad/Android และตรวจ Service Worker cache (v7 ยังไม่รวมไฟล์ app-zoom-guard.js ในรายการ offline shell)
 - UX-P0C ยังไม่ผ่าน Gate: ต้องพัฒนา swipe และ reading focus โดยไม่รบกวน pinch zoom, TOC, pull refresh หรือ gesture ระบบ
 - ก่อน Merge P0C ต้องทดสอบด้วยเครื่องจริงและบันทึกผล UX-00/P0B/P0C
+
+
+## UX-P0C implementation candidate (PR pending)
+
+Swipe left/right is scoped to the active book page. It ignores multi-touch, vertical movement, interactive controls, TOC, and screen-edge gestures. Focus mode hides secondary reader hints and desktop TOC while retaining navigation and close controls. Device QA, accessibility, zoom regression, and offline cache update are required before merge. This is not a completed release gate.
+
+
+### UX-P0C QA checklist (release blocker)
+- [ ] iPhone Safari/PWA: horizontal swipe changes one page; vertical scroll does not; pinch zoom still works inside reader; OS edge back remains usable
+- [ ] iPad portrait/landscape: both visible pages accept swipe; orientation retains reading position
+- [ ] Mobile TOC and pull-to-refresh: no gesture collision; closing reader returns focus
+- [ ] Focus toggle: accessible name and pressed state; navigation/close always visible; screen reader and keyboard tested
+- [ ] Offline update: v8 to v9 service worker activation and all published books accessible; no localStorage loss
+- [ ] Windows: run Node smoke tests and inspect browser console before approval
