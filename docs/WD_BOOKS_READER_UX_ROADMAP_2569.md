@@ -429,3 +429,9 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Replace font-dependent ♡/♥ with a 24px SVG heart centered in existing touch target; outlined when unsaved, filled when saved.
 - Preserve existing favorite state, localStorage schema, aria-label/aria-pressed and separate tap behavior from full-card open.
 - QA pending: Android Chrome/PWA, iPhone, selected/unselected, multiple covers, light/sepia/night, TalkBack/VoiceOver, offline/cache update.
+
+## Gate decision and UX-SEARCH-HIGHLIGHT — 23 ต.ค. 2569
+
+- ผู้ใช้ยืนยัน **UX-READER-CONTRAST PASS** และ **UX-HEART PASS**; QA-DEVICE-GATE ปิดการติดตามตามคำสั่งผู้ใช้แบบ **CONDITIONAL GO** โดยคงรายการที่ยังไม่ได้ทดสอบเป็น NOT TESTED (รายละเอียดใน WD_BOOKS_QA_DEVICE_GATE_133.md)
+- เริ่มคิว 4: **UX-SEARCH-HIGHLIGHT candidate v1.3.7**. ค้นหาในเล่มและไฮไลต์ข้อความด้วย DOM Text/mark เท่านั้น ไม่มี innerHTML; รองรับ Paged/Continuous และสามธีม; ค้นหาเฉพาะ published
+- QA candidate ยังไม่ผ่าน: ตรวจคำไทย, คำหลายจุด, ล้างคำค้น, เปลี่ยนเล่ม, PWA, screen reader, ไฮไลต์ไม่ทำลายเนื้อหาเดิม และไม่ทำให้การอ่านต่อเนื่องสะดุด
