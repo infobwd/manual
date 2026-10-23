@@ -239,3 +239,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Replace per-book cover sun with a heart button to add/remove from **หนังสือของฉัน**. No separate favorite button in card footer. Keep `aria-pressed`, clear accessible label, 46px touch target.
 - Move `ปิดอ่าน` to the bottom reader controls adjacent to `หน้าถัดไป` without overlapping book text. Distinguish close visually from the primary next-page button; preserve focus restoration and progress.
 - Offline cache v12. Pending iPhone/iPad layout and PWA upgrade verification.
+
+
+## UX-P0D tablet candidate — 23 ต.ค. 2569
+
+- Portrait tablet and narrow Split View (reader viewport up to 1100px): single-page reading; wider layouts keep two pages and desktop TOC.
+- Align JavaScript page stepping and CSS breakpoint so there is no blank second page; preserve page progress when rotating or resizing (current paired-page logic may align to the preceding even page when entering spread mode).
+- Improve tablet page padding and reduced-motion page transitions; PWA cache v15.
+- QA pending: iPad portrait/landscape, 50/50 and 1/3 Split View, font 200%, chapter TOC, last odd page, rotation mid-book, safe area, VoiceOver, offline update v14→v15. Do not mark P0D complete until device tests pass.
