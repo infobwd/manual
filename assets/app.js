@@ -213,7 +213,8 @@
     if (focusButton) {
       focusButton.setAttribute("aria-pressed", String(next));
       focusButton.setAttribute("aria-label", next ? "แสดงแถบเครื่องมืออ่าน" : "ซ่อนแถบเครื่องมืออ่าน");
-      focusButton.querySelector("span").textContent = next ? "แสดงเมนู" : "ซ่อนเมนู";
+      const label = focusButton.querySelector?.("span");
+      if (label) label.textContent = next ? "แสดงเมนู" : "ซ่อนเมนู";
     }
   }
   focusButton?.addEventListener("click", () => setReadingFocus(!state.readingFocus));
