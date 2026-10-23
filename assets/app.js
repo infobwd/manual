@@ -653,6 +653,29 @@
     target.append(create("div", "page-kicker", page.kicker || "WD SCHOOL MANUAL"));
     target.append(create("h2", "page-heading", page.title));
     (page.paragraphs || []).forEach((text) => target.append(create("p", "page-copy", text)));
+    if (page.chart?.kind === "target-result" && Array.isArray(page.chart.rows)) {
+      const figure = create("figure", "sar-chart");
+      figure.setAttribute("aria-label", page.chart.title || "เปรียบเทียบเป้าหมายกับผลประเมิน");
+      figure.append(create("figcaption", "sar-chart-title", page.chart.title || "เปรียบเทียบเป้าหมายและผลประเมิน"));
+      page.chart.rows.forEach(row => {
+        const targetValue = Number(row.target), resultValue = Number(row.result);
+        if (![targetValue, resultValue].every(Number.isFinite) || targetValue < 0 || targetValue > 100 || resultValue < 0 || resultValue > 100) return;
+        const group = create("div", "sar-chart-group");
+        group.append(create("div", "sar-chart-label", row.label));
+        [[targetValue,"เป้าหมาย","target"],[resultValue,"ผลประเมิน","result"]].forEach(([value,label,kind]) => {
+          const line = create("div", "sar-chart-line");
+          line.append(create("span", "sar-chart-legend", label));
+          const track = create("div", "sar-chart-track");
+          const bar = create("div", "sar-chart-bar sar-chart-" + kind);
+          bar.style.width = value + "%";
+          track.append(bar);
+          line.append(track, create("strong", "sar-chart-value", value + "%"));
+          group.append(line);
+        });
+        figure.append(group);
+      });
+      target.append(figure);
+    }
     if (page.bullets?.length) {
       const ul = create("ul", "page-list");
       page.bullets.forEach((text) => ul.append(create("li", "", text)));
