@@ -338,3 +338,34 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
 .manual-card-readable:active{transform:translateY(0);box-shadow:0 0 0 2px #7cb39855}
 .manual-card:not(.manual-card-readable){cursor:default}
 @media(prefers-reduced-motion:reduce){.manual-card-readable{transition:none}}
+
+/* UX-READER-CONTRAST: ensure mobile title remains legible in all themes.
+   Scoped to reader header, avoiding global theme/reader text changes. */
+.reader-topbar .reader-mobile-book-title{
+  color:#f4fff8;
+  opacity:1;
+  -webkit-text-fill-color:currentColor;
+  line-height:1.45;
+  text-shadow:0 1px 1px rgba(0,0,0,.12);
+}
+body[data-theme="night"] .reader-topbar .reader-mobile-book-title{
+  color:#f2fff4;
+  text-shadow:none;
+}
+body[data-theme="sepia"] .reader-topbar .reader-mobile-book-title{
+  color:#473522;
+  text-shadow:none;
+}
+.reader-topbar .reader-identity strong{color:inherit;opacity:1}
+body[data-theme="night"] .reader-topbar .reader-identity strong{color:#f2fff4}
+body[data-theme="sepia"] .reader-topbar .reader-identity strong{color:#473522}
+.reader-topbar .reader-mobile-book-title:empty{display:none}
+@media(max-width:1100px){
+  .reader-topbar .reader-mobile-book-title{
+    min-width:0;
+    max-width:100%;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+  }
+}
