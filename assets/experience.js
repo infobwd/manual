@@ -246,8 +246,45 @@
     if (!("serviceWorker" in navigator)) return;
     const isSecure = location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1";
     if (!isSecure) return;
-    navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch(() => {
-      // App remains usable online when offline setup is unavailable.
+    const notice = $("appUpdateNotice"), apply = $("applyAppUpdate"), later = $("laterAppUpdate");
+    let waiting = null, refreshing = false, dismissed = null;
+    const show = worker => {
+      if (!worker || !navigator.serviceWorker.controller) return;
+      waiting = worker;
+      if (dismissed === worker) return;
+      if (notice) notice.hidden = false;
+    };
+    apply?.addEventListener("click", () => {
+      if (!waiting) return;
+      apply.disabled = true;
+      apply.textContent = "กำลังอัปเดต…";
+      // Existing localStorage preferences, bookshelf and progress are untouched.
+      waiting.postMessage({ type: "SKIP_WAITING" });
+    });
+    later?.addEventListener("click", () => {
+      dismissed = waiting;
+      if (notice) notice.hidden = true;
+    });
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (refreshing) return;
+      refreshing = true;
+      window.location.reload();
+    });
+    navigator.serviceWorker.register("./sw.js", { scope: "./" }).then(registration => {
+      if (registration.waiting) show(registration.waiting);
+      registration.addEventListener("updatefound", () => {
+        const installing = registration.installing;
+        if (!installing) return;
+        installing.addEventListener("statechange", () => {
+          if (installing.state === "installed") show(registration.waiting || installing);
+        });
+      });
+      // Check when users return to the app; no aggressive background polling.
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) registration.update().catch(() => {});
+      });
+    }).catch(() => {
+      // Online reading remains available if the worker cannot be registered.
     });
   }
   window.WD_EXPERIENCE = {

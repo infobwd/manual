@@ -205,3 +205,13 @@ body[data-theme="night"] .reader-identity strong,body[data-theme="night"] .setti
 @media(max-width:600px) {
   .reader-focus-mode .reader-identity { min-width:0; }
 }
+
+/* PWA update notice: reachable on mobile and tablet without covering reader controls. */
+.app-update-notice{position:fixed;left:50%;bottom:calc(78px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(520px,calc(100% - 28px));z-index:80;background:#f9fcf8;color:#214d3f;border:1px solid #a5c9b3;border-radius:18px;padding:16px;box-shadow:0 15px 45px #102b2440;display:flex;gap:14px;align-items:center;justify-content:space-between}
+.app-update-notice[hidden]{display:none}
+.app-update-notice strong{font-size:15px}
+.app-update-notice p{font-size:12px;line-height:1.65;margin:5px 0 0}
+.app-update-actions{display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+.app-update-actions button{border:1px solid #aac8b6;border-radius:10px;padding:10px 12px;min-height:44px;background:white;color:#285c49;font-weight:750}
+.app-update-actions #applyAppUpdate{background:#205748;color:white;border-color:#205748}
+@media(max-width:520px){.app-update-notice{align-items:stretch;flex-direction:column;bottom:calc(70px + env(safe-area-inset-bottom))}.app-update-actions{flex-direction:row}.app-update-actions button{flex:1}}

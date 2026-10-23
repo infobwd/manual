@@ -215,3 +215,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - [ ] Focus toggle: accessible name and pressed state; navigation/close always visible; screen reader and keyboard tested
 - [ ] Offline update: v8 to v9 service worker activation and all published books accessible; no localStorage loss
 - [ ] Windows: run Node smoke tests and inspect browser console before approval
+
+
+## PWA Update Notice — 23 ต.ค. 2569
+
+- Detect a waiting Service Worker and show a Thai update notice with **อัปเดตตอนนี้** and **ไว้ภายหลัง**.
+- Do not auto-activate a newly installed worker: activate only on user confirmation, then reload once after controller change.
+- Check for updates when returning to the app; preserve localStorage bookshelf, reading progress and preferences.
+- Acceptance pending: test iPhone Home Screen PWA, iPad Safari/PWA, Android Chrome/PWA; verify update from v9 to v10, Later behavior, offline reload, and preservation of open-reader state (reload can close a book, but saved progress must persist).
