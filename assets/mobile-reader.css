@@ -71,4 +71,4 @@ body[data-theme="sepia"] .pull-refresh{background:#f6eddc;color:#665238;border-c
 .book-cover{position:relative}
 .cover-eye-mode{position:absolute;right:12px;top:12px;z-index:2;display:grid;place-items:center;width:44px;height:44px;border:1px solid #ffffff85;border-radius:14px;background:#ffffffeb;color:#205748;font-size:23px;box-shadow:0 4px 12px #09251b30;touch-action:manipulation}
 .cover-eye-mode[aria-pressed="true"]{background:#e3ecd3;color:#204e3e;outline:2px solid #b7d7b0}
-@media(max-width:600px){.reader-identity small{display:none}.reader-actions .font-button{min-width:34px;padding:7px 5px}.reader-actions .reader-focus-toggle{display:none}}
+@media(max-width:600px){.reader-identity small{display:none}.reader-actions .font-button{min-width:34px;padding:7px 5px}.reader-actions .reader-focus-toggle{min-width:36px;padding:7px 5px}}
