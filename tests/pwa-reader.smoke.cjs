@@ -69,7 +69,7 @@ function launch() {
     window, document, localStorage, sessionStorage, navigator, location
   });
   for (const file of ["assets/manuals-data.js", "assets/wd-growth-individual-guide.js",
-    "assets/experience.js", "assets/catalog-core.js", "assets/catalog-ui.js", "assets/mybooks-selectors.js", "assets/app.js"]) {
+    "assets/experience.js", "assets/catalog-core.js", "assets/catalog-ui.js", "assets/mybooks-selectors.js", "assets/reader-coordinator.js", "assets/app.js"]) {
     vm.runInContext(read(file), context, { filename: file });
   }
   const fire = (node, type, event) => (node.handlers[type] || []).forEach(fn => fn(event));
