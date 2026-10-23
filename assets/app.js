@@ -306,6 +306,12 @@
   }
   const toolsToggle = $("readerToolsToggle"), extraTools = $("readerExtraTools");
   const closeTools = () => { extraTools.hidden = true; toolsToggle.setAttribute("aria-expanded","false"); };
+  // Avoid iOS interpreting two rapid taps on ⋯ as page zoom; preserve pinch zoom elsewhere.
+  toolsToggle.addEventListener("dblclick", event => event.preventDefault());
+  toolsToggle.addEventListener("touchend", event => {
+    if (event.cancelable) event.preventDefault();
+    toolsToggle.click();
+  }, {passive:false});
   toolsToggle.addEventListener("click", () => {
     extraTools.hidden = !extraTools.hidden;
     if (!extraTools.hidden) {
