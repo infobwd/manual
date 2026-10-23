@@ -177,6 +177,16 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
 }
 @media(min-width:1101px){.reader-extra-tools{display:flex;align-items:center;gap:7px}}
 
+/* Reader toolbar regression fix: reserve room for TOC + a visible tools button. */
+@media(max-width:1100px){
+  .reader-topbar{display:flex;flex-wrap:nowrap;justify-content:space-between;min-width:0;overflow:visible}
+  .reader-topbar #openMobileToc{flex:0 0 auto;min-width:0}
+  .reader-topbar .reader-actions{width:auto;min-width:48px;max-width:100%;flex:0 0 auto;margin-left:auto;display:flex;justify-content:flex-end}
+  .reader-topbar .reader-actions::before{display:none}
+  .reader-topbar #readerToolsToggle{display:inline-flex!important;flex:0 0 48px;min-width:48px;min-height:48px;visibility:visible}
+  .reader-topbar .reader-extra-tools{box-sizing:border-box;max-width:calc(100vw - 24px);right:8px}
+}
+
 /* UX-P0E: one vertical scroll surface per reading mode, with fixed controls. */
 @media(max-width:1100px){
   body.reader-open{overflow:hidden;overscroll-behavior:none}

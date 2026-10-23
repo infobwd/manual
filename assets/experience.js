@@ -179,9 +179,12 @@
   }
   function initSplash() {
     const splash = $("appSplash");
+    const version = String(window.WD_BOOKS_VERSION || "1.2.0");
+    const versionLabel = $("splashVersion");
+    if (versionLabel) versionLabel.textContent = "เวอร์ชัน " + version;
     if (!splash) return;
     let shown = false;
-    try { shown = sessionStorage.getItem("wd-manual-splash-shown") === "1"; sessionStorage.setItem("wd-manual-splash-shown", "1"); } catch {}
+    try { shown = sessionStorage.getItem("wd-manual-splash-shown") === version; sessionStorage.setItem("wd-manual-splash-shown", version); } catch {}
     const hide = () => {
       splash.classList.add("splash-done");
       splash.setAttribute("aria-hidden", "true");
