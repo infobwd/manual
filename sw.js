@@ -1,11 +1,11 @@
 /* WD Books — static public-only offline app shell.
    Scope is limited to /manual/ by the SW registration in experience.js. */
-const CACHE_VERSION = "wd-manual-public-v3-20261023";
+const CACHE_VERSION = "wd-manual-public-v4-guide-20261023";
 const CACHE_PREFIX = "wd-manual-public-";
 const APP_SHELL = [
   "./", "./index.html", "./manifest.webmanifest",
   "./assets/styles.css", "./assets/app-experience.css",
-  "./assets/manuals-data.js", "./assets/experience.js", "./assets/app.js",
+  "./assets/manuals-data.js", "./assets/wd-growth-individual-guide.js", "./assets/experience.js", "./assets/app.js",
   "./icons/icon-192.png", "./icons/icon-512.png"
 ];
 self.addEventListener("install", event => {
