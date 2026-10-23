@@ -1,12 +1,59 @@
 # WD Books — Reader Experience Roadmap (Mobile/Tablet-first) ปี 2569
 
 **Plan ID:** WD-BOOKS-UX-2569  
-**Version:** 1.0 · 23 ตุลาคม 2569  
+**Version:** 1.1 · 23 ตุลาคม 2569 (Master Roadmap reconciliation)  
 **Repository:** infobwd/manual (Public)  
-**Status:** UX-P0A MERGED / UX-P0B IMPLEMENTED — UX-00 มีต้นแบบ; อุปกรณ์จริงยังต้องตรวจรับก่อนปิด Gate  
+**Status:** WD Books 1.3.1 merged (PR #38); งาน UX สำคัญหลายส่วน Merge แล้ว แต่ QA บนอุปกรณ์จริงและ Accessibility ยังไม่ปิด Gate  
 **Product:** https://infobwd.github.io/manual/  
 **กลุ่มใช้งานหลัก:** ครู/บุคลากรโรงเรียนบน iPhone และ iPad, รองลงมาคือ Android และ Desktop  
 **Source of truth:** เอกสารนี้ใช้กำหนดลำดับงาน, acceptance และ rollout ของการปรับ UX ใน repo นี้ ไม่แก้เนื้อหาวิชาการหรือระบบ WD Growth ต้นทาง
+
+## MASTER EXECUTION PLAN — ลำดับเดียวสำหรับงานเดิมและงานใหม่ (ปรับ 23 ต.ค. 2569)
+
+**หลักการ:** ใช้เอกสารนี้เป็น Master Roadmap เพียงฉบับเดียว ไม่สร้างแผนคู่ขนาน; แยกสถานะ **Merged (รวมโค้ด)**, **Device QA pending (รอตรวจรับจริง)**, **Planned (ยังไม่ทำ)** และ **Accepted (ตรวจรับแล้ว)** ให้ชัดเจน ห้ามถือว่า Merge = QA ผ่าน
+
+### A. Current Baseline (main)
+
+- **WD Books 1.3.1 — PR #38 Merged:** คั่นหน้าแยกตามคู่มือ ค้นหา ยุบ/ขยาย และเปิดตอนโดยตรง; QA Android/iOS/Desktop, คั่นหน้า 50+ รายการ, offline/VoiceOver ยังรอตรวจรับครบ
+- **PR #37 Merged / 1.3.0:** Sarabun มีหัวบน Android/desktop, ฟอนต์ระบบบน iOS, แนะนำติดตั้ง PWA ตามอุปกรณ์; ยังต้องตรวจอุปกรณ์จริง
+- **PR #36 Merged / 1.2.9:** Google Sans Flex เป็นงานก่อนหน้า **ถูกแทนที่** โดยนโยบาย Sarabun ใน PR #37; ไม่ใช่สิ่งที่ต้องกลับไปทำ
+- **PR #35 Merged / 1.2.8:** รวมคั่นหน้าในหน้า ของฉัน; พัฒนาต่อด้วย PR #38
+- งานเดิมที่มี implementation แล้ว: TOC mobile, reader typography/Aa, Continuous/Paged, ค้นหาในเล่มและ jump, bookmarks, PWA; **ยังไม่ถือว่า acceptance ครบ** จนบันทึกผล regression จริง
+- ตาราง Work Packages เดิมใน §4 เป็น **historical baseline**; ให้ใช้ตารางลำดับด้านล่างตัดสินใจทำงานต่อ หากสถานะขัดกัน
+
+### B. Prioritized Execution Queue
+
+| คิว | ID | ผลลัพธ์ | เหตุผล/เงื่อนไขก่อนทำ | เกณฑ์ตรวจรับและสถานะ |
+|---|---|---|---|---|
+| 1 | UX-FULLCARD | แตะการ์ดคู่มือบริเวณหน้าปก/ชื่อ/พื้นที่ว่างเพื่อเปิดอ่าน; หัวใจทำงานแยก | ปัญหาการแตะบนมือถือที่เห็นจริง; ห้าม nested interactive elements | เปิดด้วยแตะ/Enter/Space, หัวใจไม่เปิดเล่ม, draft ไม่ถูกเปิด, focus/keyboard ถูกต้อง — **PLANNED** |
+| 2 | UX-READER-CONTRAST | เพิ่ม contrast ชื่อเล่ม/ชื่อตอนบนแถบ Reader Android ทุกธีม | ภาพ Android แสดงข้อความจางมาก; ห้ามลดพื้นที่อ่าน/ขนาดปุ่ม | light/sepia/night, ชื่อยาว/ellipsis, TalkBack, zoom 200% — **PLANNED** |
+| 3 | QA-DEVICE-GATE | ตรวจ regression บน iPhone Safari/PWA, Android Chrome/PWA, iPad/Tablet, Desktop | ตรวจผลจาก PR #35–#38 และงาน Reader ก่อนขยายฟีเจอร์ | bookmark 0/1/50+, install banner, theme, offline/cache, keyboard, VoiceOver/TalkBack, persisted localStorage, safe-area; บันทึกหลักฐาน — **PENDING** |
+| 4 | UX-SEARCH-HIGHLIGHT | ไฮไลต์คำที่ตรงผลค้นภายในคู่มืออย่างปลอดภัย | ต่อจากค้นหาและ jump เดิม; ห้ามแสดง draft/private | คำไทย, คำหลายจุด, ไม่แก้เนื้อหาต้นฉบับ/ไม่ทำ HTML injection, Paged/Continuous — **PLANNED** |
+| 5 | UX-DISCOVERY | ปรับค้นหา/ตัวกรองและการค้นพบคู่มือเมื่อคลังขยาย | ทำหลังงาน usability ที่กระทบผู้ใช้ปัจจุบัน | เข้าถึงเล่มเร็ว, filter สถานะ published, ทดสอบรายการจำนวนมาก, mobile scroll — **PLANNED** |
+| 6 | ARCH-01 | แยก app.js เป็นโมดูลตามหน้าที่ (Home/Catalog/My Books/Reader) และแยกทะเบียนจากเนื้อหา | ต้องมี regression gate และ snapshot behavior; คง PWA เดียว | ไม่มี breaking change ต่อ bookId, progress, bookmarks, favorites, URLs, reader settings; rollback ได้ — **PLANNED** |
+| 7 | CAT-01 | Catalog metadata + lazy-load คู่มือและนโยบาย offline รายเล่ม | ทำหลัง ARCH-01; วัดขนาด bundle และ latency ก่อน | metadata id/title/category/status/version/content path; ไม่ cache ทุกเล่มอัตโนมัติ; update/invalidation, offline และ fallback ผ่าน — **PLANNED** |
+| 8 | UX-P3A | ศึกษา Thai TTS/reading focus/accessibility ขั้นสูง | feasibility/privacy/copyright/a11y review ก่อนลงมือ | มี prototype และตัดสินใจ go/no-go; **BACKLOG** |
+
+**ลำดับการทำงาน:** 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8; งาน 1–2 แยก PR, งาน 3 เป็น QA gate (ไม่จำเป็นต้องมี PR โค้ด), งาน 6–7 ห้ามย้ายสถาปัตยกรรมพร้อมปรับ UX หลายอย่างใน PR เดียว หาก QA พบ regression ให้แก้ก่อนดำเนินคิวถัดไป
+
+### C. Scale and Architecture Decision Rules
+
+- **1–20 คู่มือ:** โครงสร้าง static/PWA เดิมยังใช้ได้เมื่อ performance ผ่าน; ไม่ใช่ hard limit
+- **20–100 คู่มือ:** พิจารณาแยกเนื้อหาเป็นไฟล์ต่อคู่มือ และโหลดเมื่อเปิดอ่านตามผลวัดขนาด/เวลาโหลดจริง
+- **มากกว่า 100 คู่มือ:** พิจารณาดัชนีค้นหาแบ่งส่วน, lazy rendering และการเก็บออฟไลน์แบบเลือกเล่ม; ตัดสินจากจำนวนหน้า รูปภาพ และอุปกรณ์จริง ไม่ใช่จำนวนเล่มอย่างเดียว
+- **โครงสร้างเป้าหมาย:** PWA/HTML shell เดียว; โมดูล UI แยกหน้าที่; catalog เก็บ ID ถาวร/ชื่อ/หมวด/สถานะ/เวอร์ชัน/ที่อยู่เนื้อหา; เนื้อหาแยกตามเล่มหรือบท; localStorage เดิมเป็น source of truth สำหรับ progress/favorites/bookmarks จนมี migration ที่ทดสอบแล้ว
+- **ไม่ทำโดยอัตโนมัติ:** สร้างหลายเว็บไซต์, เปลี่ยน GitHub Pages, เพิ่มบัญชี/ฐานข้อมูล/server, sync ข้ามอุปกรณ์, GitHub Actions หรือข้อมูลนักเรียนจริงใน repo Public
+
+### D. Definition of Done / Governance
+
+1. งานแต่ละรายการมี branch + PR แยก; **ไม่ Merge โดยไม่มีคำอนุมัติชัดเจน**
+2. ก่อน Merge ต้องตรวจ smoke/regression ที่ทำได้ และระบุชัดว่า device QA ใดค้าง; ห้ามอ้างว่าได้ทดสอบเครื่องจริงโดยไม่มีหลักฐาน
+3. ตรวจทั้ง light/sepia/night, Android/iPhone/iPad/Desktop, accessibility, PWA offline/cache update, เนื้อหา published/draft
+4. ตรวจข้อมูลเดิมใน `wd-manual-reader-v2`: bookmarks, favorites, progress, history, typography ต้องไม่สูญหาย; หากเปลี่ยน schema ต้องมี migration/rollback ที่ทดสอบได้
+5. หลัง Merge อัปเดตเวอร์ชัน, PR/commit, ผล QA และคิวถัดไปใน Master Roadmap; บันทึกสถานะ Merged กับ Accepted แยกกัน
+6. ทุกไฟล์ใน public repository ต้องเป็นข้อมูลเผยแพร่ได้; ไม่ใช้ข้อมูลนักเรียนจริงหรือเอกสาร private
+
+---
 
 ## 0. เป้าหมาย / ขอบเขต / สิ่งที่ไม่ทำ
 
