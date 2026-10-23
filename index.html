@@ -182,6 +182,8 @@
       <button id="openMobileToc" type="button" class="mobile-toc-trigger" aria-label="เปิดสารบัญหนังสือ" aria-controls="mobileTocSheet" aria-expanded="false">☷ <span>สารบัญ</span></button>
       <div class="reader-identity"><span class="reader-mark">WD / READ</span><div><strong id="readerTitle"></strong><small id="readerCategory"></small></div></div>
       <div class="reader-actions">
+        <button id="readerToolsToggle" class="icon-button reader-tools-toggle" type="button" aria-label="เครื่องมืออ่านเพิ่มเติม" aria-controls="readerExtraTools" aria-expanded="false">⋯</button>
+        <div id="readerExtraTools" class="reader-extra-tools" hidden>
         <button id="readerFocusToggle" class="icon-button reader-focus-toggle" type="button" aria-label="เปิดโหมดอ่านเต็มตา" aria-pressed="false" title="โหมดอ่านเต็มตา">▣</button>
         <button id="readerEyeMode" class="icon-button eye-button" type="button" aria-label="เปลี่ยนโหมดถนอมสายตา" title="โหมดถนอมสายตา">☼</button>
         <button id="readerBookmarkToggle" class="icon-button" type="button" aria-label="คั่นหน้าตอนนี้" aria-pressed="false" title="คั่นหน้า">♧</button>
@@ -191,6 +193,7 @@
         <button id="readerAaToggle" class="icon-button" type="button" aria-label="ตั้งค่าการอ่าน" aria-expanded="false" aria-controls="readerAaPanel">Aa</button>
         <button id="fontDecrease" class="icon-button font-button" type="button" aria-label="ลดขนาดตัวอักษร">A−</button>
         <button id="fontIncrease" class="icon-button font-button" type="button" aria-label="เพิ่มขนาดตัวอักษร">A+</button>
+        </div>
       </div>
     </div>
     <section id="readerBookmarksPanel" class="reader-bookmarks-panel" aria-label="ตำแหน่งคั่นหน้าของหนังสือเล่มนี้" hidden>
