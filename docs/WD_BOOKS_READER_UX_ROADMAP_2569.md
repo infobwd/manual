@@ -511,3 +511,9 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Owner confirmed ARCH-01D1 behavior after PR #58. Candidate v1.3.17 isolates My Books refresh subscription and published-only Reader opening adapter into `assets/reader-coordinator.js`.
 - No storage writes, schema migrations or Reader UI redesign; preserves existing `openBook` and renderers. Includes synthetic smoke test and PWA shell registration.
 - JavaScript syntax checked; complete Node suite and iPhone/iPad offline regression pending. PR remains unmerged until explicit approval.
+
+## ARCH-01E — performance/offline baseline candidate (23 ต.ค. 2569)
+
+- Owner confirmed normal operation after ARCH-01D2 PR #59 merged (v1.3.17). Begin measurement-only gate; no production code or version change.
+- Add local static app-shell asset measurement and real-device 3-run cold/warm, search, Reader, offline, and optional heap runbook: [WD_BOOKS_ARCH01E_PERFORMANCE_BASELINE_2569.md](WD_BOOKS_ARCH01E_PERFORMANCE_BASELINE_2569.md).
+- No measured runtime values yet; do not claim a speed improvement. CAT-01 lazy loading remains gated on actual results and separate approval.
