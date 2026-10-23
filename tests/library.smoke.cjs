@@ -37,17 +37,24 @@ const media = { matches: false, addEventListener() {} };
 const window = { matchMedia: () => media, setTimeout: callback => callback() };
 const context = vm.createContext({ window, document });
 vm.runInContext(load('assets/manuals-data.js'), context, { filename: 'assets/manuals-data.js' });
+vm.runInContext(load('assets/wd-growth-individual-guide.js'), context, { filename: 'assets/wd-growth-individual-guide.js' });
 vm.runInContext(load('assets/app.js'), context, { filename: 'assets/app.js' });
 
 const catalog = window.WD_LIBRARY_DATA;
 assert.equal(catalog.categories.length, 7);
 assert.equal(catalog.manuals.length, 7);
-assert.equal(catalog.manuals.filter(b => b.status === 'published').length, 1);
+assert.equal(catalog.manuals.filter(b => b.status === 'published').length, 2);
 assert.ok(catalog.manuals.filter(b => b.status !== 'published').every(b => b.pages.length === 0),
   'Only demo/publicly approved contents should have pages');
 assert.equal(nodes.manualGrid.children.length, 7);
-assert.equal(nodes.statPublished.textContent, '1');
-assert.equal(nodes.statPending.textContent, '6');
+assert.equal(nodes.statPublished.textContent, '2');
+assert.equal(nodes.statPending.textContent, '5');
+const guide = catalog.manuals.find(b => b.id === 'wd-growth-individual-plan');
+assert.ok(guide && guide.status === 'published');
+assert.equal(guide.pages.length, 15);
+for (let n = 1; n <= 7; n++) assert.ok(guide.pages.some(p => p.title.startsWith('0' + n + ' ')));
+assert.ok(guide.pages.some(p => p.title.includes('ปฐมวัย')));
+assert.ok(guide.pages.some(p => p.title.includes('ประถมศึกษา')));
 
 function openFirstBook() {
   const cardBody = nodes.manualGrid.children[0].children[2];
@@ -79,4 +86,17 @@ assert.equal(nodes.pageCounter.textContent, 'หน้า 1 / 8');
 nodes.nextPage.handlers.click();
 assert.equal(nodes.pageCounter.textContent, 'หน้า 2 / 8');
 nodes.readerClose.handlers.click();
-console.log('Manual Library — offline smoke tests PASS');
+// Reader works for the newly published individual plan, not only for the demo book.
+media.matches = false;
+const guideCard = nodes.manualGrid.children.find(card =>
+  card.children[2].children.some(el => el.tagName === 'h3' && el.textContent.includes('พัฒนาผู้เรียนรายบุคคล'))
+);
+assert.ok(guideCard, 'Public individual-plan guide must appear in catalog');
+const guideOpen = guideCard.children[2].children.at(-1).children.find(el => el.tagName === 'button');
+assert.ok(guideOpen, 'Public guide must be readable');
+guideOpen.handlers.click();
+assert.equal(nodes.readerDialog.open, true);
+assert.equal(nodes.tocItems.children.length, 15);
+assert.equal(nodes.pageCounter.textContent, 'หน้า 1–2 / 15');
+nodes.readerClose.handlers.click();
+console.log('Manual Library — offline smoke tests PASS (catalog + 15-page guide)');

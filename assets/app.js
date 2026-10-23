@@ -12,7 +12,7 @@
   };
   const state = { category: "all", query: "", manual: null, page: 0, scale: 1, opener: null };
   const isMobile = window.matchMedia("(max-width: 850px)");
-  const statuses = { published: "สาธิต · เปิดอ่าน", review: "รอตรวจรับ", planned: "ตามแผน" };
+  const statuses = { published: "พร้อมอ่าน", review: "รอตรวจรับ", planned: "ตามแผน" };
   const lookup = Object.fromEntries(data.categories.map((c) => [c.id, c]));
   const normalized = (s) => String(s || "").toLocaleLowerCase("th-TH").trim();
 
@@ -79,7 +79,7 @@
       foot.append(create("span", "pending-text", book.status === "review" ? "ยังไม่เผยแพร่เนื้อหา" : "ยังไม่มีเนื้อหา"));
     }
     body.append(foot);
-    const badge = create("span", "card-state" + (book.status === "published" ? " ready" : ""), statuses[book.status] || "ตามแผน");
+    const badge = create("span", "card-state" + (book.status === "published" ? " ready" : ""), (book.id === "welcome-to-manual-library" ? "สาธิต · เปิดอ่าน" : statuses[book.status] || "ตามแผน"));
     article.append(cover, badge, body);
     return article;
   }
