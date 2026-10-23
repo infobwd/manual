@@ -533,6 +533,7 @@
   const searchPanel = $("readerSearchPanel"), searchToggle = $("readerSearchToggle");
   const searchInput = $("readerSearchInput"), searchResults = $("readerSearchResults");
   const searchStatus = $("readerSearchStatus");
+  let readerHighlightTerm = "";
   function closeReaderSearch() {
     searchPanel.hidden = true;
     searchToggle.setAttribute("aria-expanded","false");
@@ -551,6 +552,8 @@
   function updateReaderSearch() {
     searchResults.replaceChildren();
     const term = normalized(searchInput.value).replace(/\\s+/g," ");
+    readerHighlightTerm = term;
+    if (state.manual && dialog.open) highlightVisiblePages();
     if (!term || !state.manual || state.manual.status !== "published") {
       searchStatus.textContent = "พิมพ์ข้อความเพื่อค้นหา";
       return;
@@ -569,6 +572,7 @@
       const before = Math.max(0,pos-34), after = Math.min(source.length,pos+term.length+55);
       button.append(create("span","", (before?"…":"") + source.slice(before,after) + (after<source.length?"…":"")));
       button.addEventListener("click", () => {
+        readerHighlightTerm = term;
         jumpTo(index);
         closeReaderSearch();
         $("readerSearchToggle").focus();
@@ -579,6 +583,7 @@
   searchInput.addEventListener("input",updateReaderSearch);
   $("readerSearchClear").addEventListener("click",() => {
     searchInput.value = "";
+    readerHighlightTerm = "";
     updateReaderSearch();
     searchInput.focus();
   });
@@ -586,7 +591,37 @@
     closeReaderSearch();
     searchInput.value = "";
     searchResults.replaceChildren();
+    readerHighlightTerm = "";
   });
+  function highlightVisiblePages() {
+    document.querySelectorAll(".reader-stage .book-page").forEach(highlightPage);
+  }
+  function highlightPage(root) {
+    if (!root || !readerHighlightTerm) return;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (node.parentElement?.closest("mark, .book-page-number")) continue;
+      if (node.nodeValue?.toLocaleLowerCase().includes(readerHighlightTerm)) nodes.push(node);
+    }
+    nodes.forEach(node => {
+      const value = node.nodeValue;
+      const lower = value.toLocaleLowerCase();
+      const fragment = document.createDocumentFragment();
+      let cursor = 0, found;
+      while ((found = lower.indexOf(readerHighlightTerm, cursor)) !== -1) {
+        if (found > cursor) fragment.append(document.createTextNode(value.slice(cursor, found)));
+        const mark = document.createElement("mark");
+        mark.className = "reader-search-highlight";
+        mark.textContent = value.slice(found, found + readerHighlightTerm.length);
+        fragment.append(mark);
+        cursor = found + readerHighlightTerm.length;
+      }
+      if (cursor < value.length) fragment.append(document.createTextNode(value.slice(cursor)));
+      node.replaceWith(fragment);
+    });
+  }
   function pageNode(target, page, index) {
     target.replaceChildren();
     target.classList.toggle("blank-page", !page);
@@ -605,6 +640,7 @@
     }
     if (page.tip) target.append(create("div", "page-callout", page.tip));
     target.append(create("div", "book-page-number", "WD MANUAL LIBRARY  ·  " + (index + 1)));
+    highlightPage(target);
     target.scrollTop = 0;
   }
   function renderToc() {
