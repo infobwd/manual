@@ -305,3 +305,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - คงข้อมูลคั่นหน้าเดิมใน localStorage โดยไม่เปลี่ยน schema หรือรายการโปรด
 - **ยังไม่ทำ:** รายการคั่นหน้ารวมในหน้า “ของฉัน” และการจำตำแหน่งระดับบรรทัด (วางแผนหลังตรวจรับ)
 - QA ก่อน Merge: iPhone Safari/PWA และ iPad, บันทึกหลายตอน, ลบรายตอน, กดไปตอน, สลับโหมดพลิกหน้า/เลื่อนต่อเนื่อง, ปิดเปิดแอปแล้วข้อมูลอยู่, VoiceOver, offline, ไม่มีแผงซ้อนกัน
+
+## UX-P2B-R2 candidate — Bookmark Bottom Sheet (1.2.6)
+
+- เปลี่ยนแผงคั่นหน้าบนมือถือและแท็บเล็ตแนวแคบเป็น bottom sheet แบบลอย เพื่อไม่ลดพื้นที่อ่าน
+- เพิ่มปุ่มปิด 48px, แตะฉากหลังเพื่อปิด, Escape, คืน focus ให้ปุ่มเปิด, trap Tab ในแผงบนจอแคบ
+- รายการคั่นหน้ามากเลื่อนภายในแผงได้ พร้อมรองรับ safe area ของ iPhone
+- คงข้อมูลและกลไกการนำทางไปยังตอนที่ผู้ใช้ตรวจรับแล้ว ไม่เปลี่ยน localStorage schema
+- QA ค้างก่อน Merge: iPhone PWA/Safari, iPad portrait/Split View, scroll หลายรายการ, เปิด/ปิด/กดฉากหลัง, keyboard/VoiceOver, scroll เนื้อหาหลังปิด, offline/cache update
