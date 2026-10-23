@@ -127,3 +127,11 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
 .book-spread[data-page-margin="compact"] .book-page{padding-left:clamp(12px,2vw,22px);padding-right:clamp(12px,2vw,22px)}
 .book-spread[data-page-margin="wide"] .book-page{padding-left:clamp(22px,4vw,48px);padding-right:clamp(22px,4vw,48px)}
 @media(max-width:520px){.reader-aa-panel{padding:10px;gap:8px}.reader-aa-panel label{flex-basis:calc(50% - 8px)}}
+
+/* UX-P1B: scroll all authored logical sections without repagination. */
+.book-spread.is-continuous{display:block;overflow:hidden;max-width:850px;filter:none;min-height:0}
+.continuous-pages[hidden]{display:none}
+.continuous-pages{height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scroll-padding-top:12px}
+.continuous-section.book-page{display:block!important;overflow:visible;height:auto;min-height:0;margin:0 0 14px;border-radius:12px;box-shadow:0 2px 14px #334e3418;transform:none;opacity:1;scroll-margin-top:12px}
+.reader-bottom button[hidden],.book-spread>.book-page[hidden]{display:none!important}
+@media(max-width:600px){.continuous-section.book-page{padding-top:24px;padding-bottom:22px}}
