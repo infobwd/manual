@@ -184,10 +184,17 @@
       <div class="reader-actions">
         <button id="readerFocusToggle" class="icon-button reader-focus-toggle" type="button" aria-label="เปิดโหมดอ่านเต็มตา" aria-pressed="false" title="โหมดอ่านเต็มตา">▣</button>
         <button id="readerEyeMode" class="icon-button eye-button" type="button" aria-label="เปลี่ยนโหมดถนอมสายตา" title="โหมดถนอมสายตา">☼</button>
+        <button id="readerAaToggle" class="icon-button" type="button" aria-label="ตั้งค่าการอ่าน" aria-expanded="false" aria-controls="readerAaPanel">Aa</button>
         <button id="fontDecrease" class="icon-button font-button" type="button" aria-label="ลดขนาดตัวอักษร">A−</button>
         <button id="fontIncrease" class="icon-button font-button" type="button" aria-label="เพิ่มขนาดตัวอักษร">A+</button>
       </div>
     </div>
+    <section id="readerAaPanel" class="reader-aa-panel" aria-label="ตั้งค่ารูปแบบการอ่าน" hidden>
+      <label>ฟอนต์ภาษาไทย<select id="readerFontFamily"><option value="system">มาตรฐาน</option><option value="serif">แบบมีเชิง</option><option value="sans">อ่านง่าย</option></select></label>
+      <label>ระยะบรรทัด<select id="readerLineSpacing"><option value="normal">ปกติ</option><option value="relaxed">สบายตา</option><option value="wide">กว้าง</option></select></label>
+      <label>ระยะขอบ<select id="readerPageMargin"><option value="normal">ปกติ</option><option value="compact">แคบ</option><option value="wide">กว้าง</option></select></label>
+      <button id="readerResetTypography" type="button">คืนค่ารูปแบบเริ่มต้น</button>
+    </section>
     <div class="reader-content">
       <aside class="reader-toc" aria-label="สารบัญ">
         <div class="toc-label">สารบัญ</div>
