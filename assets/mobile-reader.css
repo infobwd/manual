@@ -51,8 +51,12 @@ body[data-theme="sepia"] .pull-refresh{background:#f6eddc;color:#665238;border-c
   .my-books{scroll-margin-top:83px}
   .reader-stage{position:relative}
   .reader-close-thumb{display:flex;align-items:center;justify-content:center;gap:8px;position:absolute;right:calc(18px + env(safe-area-inset-right));bottom:calc(89px + env(safe-area-inset-bottom));z-index:5;background:#205748;color:#fff;border:1px solid #ffffff35;border-radius:999px;box-shadow:0 8px 25px #0004;font-size:13px;font-weight:800;min-height:49px;min-width:112px;padding:11px 16px;touch-action:manipulation}
-  .reader-actions #readerClose{display:none}
-  .book-page{padding-bottom:85px}
+  .reader-actions #readerClose{display:grid;place-items:center;min-width:44px;min-height:44px;background:#205748;color:#fff;border-color:#205748;border-radius:12px;font-size:20px;flex-shrink:0}
+  .reader-actions{gap:5px}
+  .reader-topbar{gap:6px}
+  .reader-identity{flex:1;min-width:0}
+  .reader-actions .icon-button{min-width:38px;min-height:44px;padding:8px}
+  .book-page{padding-bottom:30px}
 }
 @media(max-width:700px){.personal-shelves{grid-template-columns:1fr;gap:12px}.personal-shelf{padding:15px;border-radius:17px}}
 @media(max-width:600px){
@@ -62,3 +66,9 @@ body[data-theme="sepia"] .pull-refresh{background:#f6eddc;color:#665238;border-c
   .reader-close-thumb{right:calc(14px + env(safe-area-inset-right));bottom:calc(83px + env(safe-area-inset-bottom))}
 }
 @media(prefers-reduced-motion:reduce){.app-splash,.pull-refresh{transition:none}.splash-track span,.pull-refresh.is-refreshing .pull-refresh-icon{animation:none}}
+
+.splash-version{display:block;margin-top:16px;color:#d6e9df;font:600 12px system-ui;letter-spacing:.05em}
+.book-cover{position:relative}
+.cover-eye-mode{position:absolute;right:12px;top:12px;z-index:2;display:grid;place-items:center;width:44px;height:44px;border:1px solid #ffffff85;border-radius:14px;background:#ffffffeb;color:#205748;font-size:23px;box-shadow:0 4px 12px #09251b30;touch-action:manipulation}
+.cover-eye-mode[aria-pressed="true"]{background:#e3ecd3;color:#204e3e;outline:2px solid #b7d7b0}
+@media(max-width:600px){.reader-identity small{display:none}.reader-actions .font-button{min-width:34px;padding:7px 5px}.reader-actions .reader-focus-toggle{display:none}}
