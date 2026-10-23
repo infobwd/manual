@@ -106,6 +106,7 @@ Preview URL: http://127.0.0.1:4173/docs/previews/WD_BOOKS_UX00_READER_PREVIEW_25
 | Commit design preview ใน feature branch | PASS |
 | ตรวจ source ว่าไม่มีข้อมูลนักเรียนจริง | PASS (source inspection) |
 | Live production screenshots | NOT TESTED |
+| Smoke tests ผ่านใน JavaScript simulation (ไม่ใช่ Node บน Windows) | PASS: tests/library.smoke.cjs และ tests/pwa-reader.smoke.cjs |
 | Node tests บน Windows | NOT TESTED |
 | iPhone/iPad real touch + PWA | NOT TESTED |
 | Design decision D01–D05 | PENDING OWNER REVIEW |
