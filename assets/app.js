@@ -134,8 +134,9 @@
     if (!recentNode || !favoritesNode) return;
     const experience = window.WD_EXPERIENCE;
     const readable = (id) => data.manuals.find(book => book.id === id && book.status === "published" && book.pages?.length);
-    const recent = (experience?.getHistory?.() || []).map(readable).find(Boolean);
-    recentNode.replaceChildren(recent ? shelfRow(recent) : create("p", "personal-empty", "ยังไม่มีหนังสือที่อ่าน เริ่มอ่านเล่มใดก็ได้จากชั้นหนังสือ"));
+    const recent = (experience?.getHistory?.() || []).map(readable).filter(Boolean).slice(0, 3);
+    recentNode.replaceChildren(...(recent.length ? recent.map(book => shelfRow(book))
+      : [create("p", "personal-empty", "ยังไม่มีหนังสือที่อ่าน เริ่มอ่านเล่มใดก็ได้จากชั้นหนังสือ")]));
     const favorites = (experience?.getFavorites?.() || []).map(readable).filter(Boolean);
     favoritesNode.replaceChildren(...(favorites.length
       ? favorites.map(book => shelfRow(book, true))
