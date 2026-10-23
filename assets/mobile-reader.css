@@ -112,3 +112,18 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
   .book-page{transition:none}
   .book-page.turning{transform:none;opacity:1}
 }
+
+/* UX-P1A: Thai reading settings; CSS-based font choices, no external font downloads. */
+.reader-aa-panel[hidden]{display:none}
+.reader-aa-panel{display:flex;flex-wrap:wrap;align-items:end;gap:12px;padding:12px 20px;background:#f5f8f3;border-bottom:1px solid #dce5db;max-height:40vh;overflow:auto}
+.reader-aa-panel label{display:flex;flex:1 1 130px;flex-direction:column;gap:6px;font-size:12px;font-weight:750;color:#315648}
+.reader-aa-panel select,.reader-aa-panel button{min-height:44px;border:1px solid #bfd0c2;border-radius:10px;background:white;color:#315648;padding:8px;font-size:13px}
+.book-spread[data-font-family="serif"] .book-page{font-family:Georgia,"Noto Serif Thai",serif}
+.book-spread[data-font-family="sans"] .book-page{font-family:system-ui,"Noto Sans Thai",sans-serif}
+.book-spread[data-line-spacing="relaxed"] .page-copy{line-height:2.3}
+.book-spread[data-line-spacing="wide"] .page-copy{line-height:2.6}
+.book-spread[data-line-spacing="relaxed"] .page-list li{line-height:2.2}
+.book-spread[data-line-spacing="wide"] .page-list li{line-height:2.5}
+.book-spread[data-page-margin="compact"] .book-page{padding-left:clamp(12px,2vw,22px);padding-right:clamp(12px,2vw,22px)}
+.book-spread[data-page-margin="wide"] .book-page{padding-left:clamp(22px,4vw,48px);padding-right:clamp(22px,4vw,48px)}
+@media(max-width:520px){.reader-aa-panel{padding:10px;gap:8px}.reader-aa-panel label{flex-basis:calc(50% - 8px)}}
