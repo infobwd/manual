@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>WD Books UX-00 — Design Preview (not production)</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;color:#203d33;background:#edf2ec;--forest:#1f5b48;--mint:#eaf2e8;--muted:#6c8276;--edge:#d9e4dc;--cream:#fffdf7}
+*{box-sizing:border-box}body{margin:0;padding:25px 18px 50px}button{cursor:pointer;font:inherit}button:focus-visible,a:focus-visible{outline:3px solid #dbb66b;outline-offset:2px}
+.notice{max-width:1130px;margin:0 auto 20px;border:1px solid #d9e4dc;background:white;padding:18px 22px;border-radius:20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:11px}.logo{background:var(--forest);color:#fff;font-weight:900;padding:12px;border-radius:13px}.brand strong{display:block;font-size:19px}.brand small,.notice p{font-size:12px;color:var(--muted)}.notice p{margin:0;flex:1;min-width:230px;line-height:1.65}
+.flag{background:#fff0cd;color:#865c10;border-radius:30px;padding:7px 10px;font-size:11px;font-weight:750;white-space:nowrap}
+.switcher{max-width:1130px;margin:0 auto 16px;display:flex;gap:8px;flex-wrap:wrap}.switcher button{border:1px solid var(--edge);border-radius:12px;padding:11px 16px;background:#fff;color:#557165;font-size:12px;font-weight:750;min-height:44px}
+.switcher button[aria-pressed=true]{background:var(--forest);color:#fff;border-color:var(--forest)}
+.deck{max-width:1130px;margin:0 auto;display:flex;justify-content:center;align-items:flex-start;gap:18px;flex-wrap:wrap}
+.device{display:none;flex-direction:column;align-items:center;width:100%}.device.active{display:flex}
+.hint{max-width:890px;margin:13px auto 0;font-size:13px;color:#62786b;line-height:1.8;text-align:center}
+.phone{width:min(390px,100%);height:780px;background:#f5f8f4;border:9px solid #233c32;border-radius:43px;overflow:hidden;position:relative;box-shadow:0 22px 45px #1937292b}
+.status{height:34px;display:flex;justify-content:center;align-items:flex-start;color:#617c70;font-size:10px;padding-top:8px;font-weight:800;letter-spacing:3px}
+.apphead{height:66px;display:flex;align-items:center;gap:10px;padding:10px 17px;background:#f9fbf8;border-bottom:1px solid #ecf0eb}
+.apphead .mark{font-size:12px;font-weight:900;color:#fff;background:var(--forest);padding:12px;border-radius:12px}
+.apphead .title{flex:1;min-width:0}.apphead .title strong{display:block;font-size:15px}.apphead .title small{color:#82958a;font-size:10px}
+.roundbtn{border:1px solid #dde8de;background:white;color:#294b3b;border-radius:13px;width:44px;height:44px;display:grid;place-items:center;font-size:18px}
+.mobile-scroll{height:calc(100% - 168px);overflow-y:auto;padding:17px;scrollbar-width:thin}
+.eyebrow{font-size:10px;letter-spacing:.12em;color:#819d8e;font-weight:850;margin:2px 0 9px}.search{background:white;border:1px solid #dee8e0;border-radius:14px;padding:14px;color:#859c8d;font-size:12px}
+.section-title{font-size:19px;margin:21px 0 12px;font-weight:850;letter-spacing:-.04em}
+.resume{background:#fff;border:1px solid #dfe9dd;border-radius:19px;padding:15px;box-shadow:0 5px 22px #223f2920}
+.resumecap{font-weight:800;font-size:12px;display:flex;gap:8px;align-items:center;margin:0 0 12px}.resume-inner{display:flex;align-items:center;gap:13px}
+.book{background:#376b5e;border-radius:5px 13px 11px 5px;box-shadow:inset 6px 0 #0002,5px 8px 13px #0001;color:white;display:grid;place-content:center;text-align:center;padding:8px;font-weight:750;letter-spacing:.03em;font-size:11px;line-height:1.6;flex:none;width:74px;height:105px}
+.resume-copy{min-width:0;flex:1}.resume-copy strong{display:block;font-size:13px;line-height:1.6}.resume-copy small{display:block;font-size:10px;color:var(--muted);margin-top:5px}
+.line{height:5px;border-radius:8px;background:#e6eee6;margin:10px 0}.line span{display:block;height:100%;width:33%;border-radius:8px;background:#33795a}.readlink{border:0;background:transparent;color:var(--forest);padding:5px 0;font-size:12px;font-weight:800}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-top:22px;gap:10px}.section-head h3{font-size:16px;margin:0}.section-head span{font-size:11px;color:#30654e;font-weight:800}
+.bookgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:13px 0}.booktile{border:1px solid #e2e8df;border-radius:14px;padding:10px;background:#fff}.booktile .book{height:112px;width:100%;font-size:13px;border-radius:7px 11px 10px 7px}
+.booktile .other{background:#688674}.booktile strong{display:block;font-size:11px;margin:9px 0 5px;line-height:1.55}.booktile small{font-size:10px;color:#789084}
+.categories{display:flex;gap:8px;overflow:hidden;margin:13px 0}.categories span{font-size:11px;padding:8px 12px;border-radius:20px;background:#edf3ed;color:#618270;white-space:nowrap}.categories span:first-child{background:#245c48;color:#fff}
+.more{font-size:11px;color:#7e8d81;background:#fff;border:1px solid #e4ebe4;border-radius:12px;padding:12px;margin-top:17px}
+.nav{position:absolute;bottom:0;left:0;right:0;height:69px;background:white;display:flex;justify-content:space-around;border-top:1px solid #e3e9e0;padding-bottom:7px}
+.nav span{font-size:11px;color:#81958a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex:1}.nav span b{font-size:19px;line-height:1}.nav .selected{color:#20614b;background:#edf4ec;border-radius:13px;margin:6px}
+.reader-head{height:64px;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:#f8faf7;border-bottom:1px solid #e7eee6;gap:8px}
+.reader-head strong{font-size:12px;flex:1;line-height:1.6;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+.reader-main{height:calc(100% - 180px);background:#ebece6;padding:13px 12px;position:relative}
+.paper{height:100%;overflow:auto;background:#fffdf8;border:1px solid #dedfd6;border-radius:14px;padding:26px 23px;box-shadow:0 6px 22px #2c382516;line-height:1.92;font-size:13px;color:#344338}
+.paper h2{font-size:19px;line-height:1.5;color:#203f32}.paper h3{font-size:14px}.paper .kicker{font-size:9px;color:#9aaa97;letter-spacing:.1em;font-weight:800}
+.paper p{margin:13px 0}.paper ul{padding-left:20px;margin:10px 0}.paper li{margin:9px 0}.paper .callout{background:#ebf3e9;border-radius:11px;padding:11px;color:#315943;font-size:11px}
+.reader-foot{height:82px;background:#f8faf7;border-top:1px solid #e3e9df;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.reader-foot .pill{border:1px solid #dae6dd;background:#fff;color:#335544;border-radius:13px;padding:11px;font-size:11px;min-height:44px;white-space:nowrap}
+.reader-foot .pill.next{background:#245d49;color:#fff}.counter{font-size:10px;text-align:center;min-width:60px;color:#617a6a}.counter span{display:block;width:58px;height:4px;background:linear-gradient(90deg,#358467 37%,#dbe8de 37%);margin:8px auto;border-radius:8px}
+.sheetmask{position:absolute;inset:0;background:#17382a55;display:none;z-index:5}.sheetmask.open{display:block}
+.sheet{background:#fff;position:absolute;bottom:0;left:0;right:0;max-height:68%;border-radius:23px 23px 0 0;padding:19px 18px 25px;overflow:auto;box-shadow:0 -12px 36px #0012}
+.sheetheader{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.sheetheader strong{font-size:17px}
+.tocrow{width:100%;background:#fff;border:0;border-bottom:1px solid #eff1ed;display:flex;gap:12px;align-items:center;min-height:51px;padding:10px 3px;font-size:12px;color:#567065;text-align:left}
+.tocrow.current{color:#256246;font-weight:850;background:#f1f7ef;border-radius:10px;padding:10px}
+.tocrow span{color:#8aa294;font-size:10px;font-weight:850}
+.tip{background:#eaf3e8;color:#42664f;border-radius:9px;padding:10px;font-size:11px;margin-bottom:10px}
+.tablet{width:min(1050px,100%);height:700px;background:#edf0e8;border:11px solid #273f35;border-radius:28px;overflow:hidden;box-shadow:0 24px 45px #17362a32}
+.tablethead{height:62px;background:#fff;display:flex;align-items:center;padding:0 18px;gap:14px;border-bottom:1px solid var(--edge)}
+.tablethead strong{flex:1;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tabletmain{display:flex;height:calc(100% - 130px)}
+.tablettoc{width:230px;background:#fafcf8;border-right:1px solid var(--edge);padding:19px 12px;overflow:auto;flex:none}
+.tablettoc h3{font-size:13px;padding-left:9px;margin:0 0 12px}.tablet .tocrow{padding:10px 7px;font-size:11px}
+.tabletreading{flex:1;min-width:0;display:flex;flex-direction:column;padding:18px 22px;gap:10px;align-items:center}
+.sheets{display:flex;gap:10px;min-height:0;flex:1;width:100%;max-width:870px}
+.sheets .paper{flex:1;min-width:0;padding:23px 25px}
+.tabletfoot{height:68px;display:flex;align-items:center;justify-content:space-between;background:#f9fbf7;padding:0 20px;border-top:1px solid var(--edge)}
+.tabletfoot .pill{border:1px solid #dbe7df;background:#fff;color:#205844;border-radius:12px;padding:10px 16px;font-size:12px;min-height:44px}
+.tabletfoot .pill.next{background:#235d48;color:white}
+.tabletfoot small{color:#678274}
+.device-note{margin:10px 0 3px;font-size:12px;color:#5a7467;text-align:center}
+@media(max-width:650px){body{padding:14px 8px 30px}.notice{padding:13px;gap:9px}.notice p{min-width:0}.tablet{height:590px;border-width:7px}.tablettoc{display:none}.sheets .paper:last-child{display:none}.tablethead{height:60px}.tabletmain{height:calc(100% - 128px)}.tabletreading{padding:12px 10px}.sheets .paper{padding:16px}.device-note{max-width:360px}.switcher button{flex:1;padding:10px 8px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="notice">
+<div class="brand"><span class="logo">WD</span><div><strong>WD Books · UX-00</strong><small>ตัวอย่างก่อนเริ่มพัฒนา P0</small></div></div>
+<p>แบบจำลองเพื่อพิจารณาการจัดหน้าจอ iPhone และ iPad โดยใช้เพียงข้อมูลตัวอย่างสาธารณะ ไม่ใช่หน้าเว็บจริง และยังไม่เชื่อมข้อมูลผู้ใช้</p>
+<span class="flag">DESIGN PREVIEW — ไม่ใช่ Production</span>
+</header>
+<div class="switcher" role="group" aria-label="เลือกภาพตัวอย่าง">
+<button type="button" data-panel="home" aria-pressed="true">01 · iPhone หน้าแรก</button>
+<button type="button" data-panel="read" aria-pressed="false">02 · iPhone อ่านหนังสือ</button>
+<button type="button" data-panel="ipad" aria-pressed="false">03 · iPad หน้าคู่</button>
+</div>
+<main class="deck">
+<section class="device active" id="home" aria-label="ตัวอย่างหน้าแรก iPhone">
+<div class="phone">
+<div class="status" aria-hidden="true">WD BOOKS</div>
+<div class="apphead"><span class="mark">WD</span><div class="title"><strong>WD Books</strong><small>คลังคู่มือโรงเรียนบ้านวังด้ง</small></div><button class="roundbtn" aria-label="การตั้งค่า แบบจำลอง" type="button">⚙</button></div>
+<div class="mobile-scroll">
+<p class="eyebrow">GOOD TO SEE YOU AGAIN</p>
+<div class="search">⌕ &nbsp; ค้นหาคู่มือหรือหัวข้อที่ต้องการ</div>
+<h2 class="section-title">อ่านต่อจากครั้งล่าสุด</h2>
+<div class="resume"><p class="resumecap">◉ &nbsp; หนังสือที่กำลังอ่าน</p><div class="resume-inner"><div class="book">WD Growth<br>คู่มือครู</div><div class="resume-copy"><strong>การบันทึกแผนพัฒนาผู้เรียนรายบุคคล</strong><small>ตัวอย่าง: หน้า 5 จาก 15</small><div class="line"><span></span></div><button class="readlink" type="button" data-open-reader>อ่านต่อ &nbsp;→</button></div></div></div>
+<div class="section-head"><h3>คู่มือพร้อมอ่าน</h3><span>ดูทั้งหมด →</span></div>
+<div class="categories"><span>ทั้งหมด</span><span>คู่มือครู</span><span>ระบบออนไลน์</span></div>
+<div class="bookgrid">
+<div class="booktile"><div class="book">WD Growth<br>คู่มือครู</div><strong>บันทึกพัฒนาผู้เรียนรายบุคคล</strong><small>คู่มือสำหรับครู</small></div>
+<div class="booktile"><div class="book other">WD Books<br>เริ่มต้นใช้งาน</div><strong>วิธีใช้คลังคู่มือโรงเรียน</strong><small>คู่มือเริ่มต้น</small></div>
+</div>
+<div class="more">รายการเตรียมเผยแพร่และสถิติรวมย้ายไว้ด้านล่าง</div>
+</div>
+<nav class="nav" aria-label="เมนูแบบจำลอง"><span class="selected"><b>⌂</b>หน้าหลัก</span><span><b>▤</b>คลังคู่มือ</span><span><b>♡</b>ของฉัน</span></nav>
+</div>
+<p class="device-note">เป้าหมาย UX-P0A: เปิดแอปแล้วพบ “อ่านต่อ” และคู่มือพร้อมอ่านทันที · เมนูเหลือ 3 รายการ</p>
+</section>
+<section class="device" id="read" aria-label="ตัวอย่างตัวอ่านบน iPhone">
+<div class="phone">
+<div class="status" aria-hidden="true">WD BOOKS</div>
+<div class="reader-head">
+<button class="roundbtn" type="button" id="openMobileToc" aria-label="เปิดสารบัญ">☷</button>
+<strong>WD Growth — คู่มือครู</strong>
+<button class="roundbtn" type="button" aria-label="การตั้งค่าการอ่าน แบบจำลอง">Aa</button>
+<button class="roundbtn" type="button" aria-label="ปิดตัวอย่างหนังสือ" id="closeMobileReader">✕</button>
+</div>
+<div class="reader-main">
+<article class="paper" id="mobilePaper">
+<span class="kicker">WD GROWTH · TEACHER GUIDE</span>
+<h2>02 สรุปผล Baseline รายทักษะ</h2>
+<p>ก่อนวางแผนพัฒนา ให้ครูตรวจสอบผลประเมินพื้นฐานและหลักฐานการเรียนรู้ของผู้เรียนแต่ละคน เพื่อมองเห็นทั้งจุดแข็งและทักษะที่ต้องส่งเสริม</p>
+<h3>ตัวอย่างแนวปฏิบัติ</h3>
+<ul><li>พิจารณาผลรายทักษะจากหลักฐานที่มี</li><li>เลือกทักษะที่ควรพัฒนาไม่เกิน 2 เรื่อง</li><li>กำหนดเป้าหมายที่สังเกตและวัดได้</li></ul>
+<div class="callout">เนื้อหานี้เป็นเพียงภาพจำลองของเค้าโครงหน้าอ่าน ไม่ใช่คะแนนหรือข้อมูลของนักเรียนจริง</div>
+<p>หน้าหนังสือให้เลื่อนได้ตามแนวตั้ง โดยการปัดด้านข้างไม่ควรขัดกับการอ่านหรือการเลือกข้อความ</p>
+</article>
+<div class="sheetmask" id="mobileToc" aria-hidden="true">
+<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="tocTitle">
+<div class="sheetheader"><strong id="tocTitle">สารบัญ · WD Growth</strong><button class="roundbtn" type="button" id="closeMobileToc" aria-label="ปิดสารบัญ">✕</button></div>
+<p class="tip">เลือกหัวข้อเพื่อข้ามไปอ่านได้ทันที · ตัวอย่างการจัดวาง</p>
+<button class="tocrow" type="button"><span>01</span> ข้อมูลผู้เรียนและรหัสแผน</button>
+<button class="tocrow current" type="button"><span>02</span> สรุปผล Baseline รายทักษะ ✓</button>
+<button class="tocrow" type="button"><span>03</span> จุดแข็งของผู้เรียน</button>
+<button class="tocrow" type="button"><span>04</span> ทักษะที่ต้องพัฒนา</button>
+<button class="tocrow" type="button"><span>05</span> เป้าหมายที่วัดได้</button>
+<button class="tocrow" type="button"><span>06</span> กิจกรรมช่วยพัฒนา</button>
+<button class="tocrow" type="button"><span>07</span> ติดตามผลและทบทวนแผน</button>
+</div></div>
+</div>
+<div class="reader-foot">
+<button class="pill" type="button" id="previousDemo">← ก่อนหน้า</button>
+<div class="counter">หน้า <span id="counterDemo">5</span> / 15<span aria-hidden="true"></span></div>
+<button class="pill next" type="button" id="nextDemo">ถัดไป →</button>
+</div>
+</div>
+<p class="device-note">เป้าหมาย UX-P0B/C: ปุ่มสารบัญชัดเจน · แผงสารบัญเปิดจากด้านล่าง · ปิดหนังสือได้ด้วยมือขวา · เลื่อนแนวตั้งได้</p>
+</section>
+<section class="device" id="ipad" aria-label="ตัวอย่างตัวอ่านบน iPad">
+<div class="tablet">
+<div class="tablethead">
+<span class="logo">WD</span><strong>คู่มือการบันทึกแผนพัฒนาผู้เรียนรายบุคคล</strong>
+<button class="roundbtn" type="button" id="toggleIpadToc" aria-label="สลับสารบัญ">☷</button>
+<button class="roundbtn" type="button" aria-label="การตั้งค่าแบบจำลอง">Aa</button>
+<button class="roundbtn" type="button" aria-label="ปิดตัวอย่าง iPad">✕</button>
+</div>
+<div class="tabletmain">
+<aside class="tablettoc" id="ipadToc"><h3>สารบัญ</h3>
+<div class="tocrow">01 · ข้อมูลผู้เรียน</div><div class="tocrow current">02 · ผล Baseline</div><div class="tocrow">03 · จุดแข็ง</div><div class="tocrow">04 · ทักษะเป้าหมาย</div><div class="tocrow">05 · เป้าหมายที่วัดได้</div><div class="tocrow">06 · กิจกรรมพัฒนา</div><div class="tocrow">07 · ติดตามผล</div>
+</aside>
+<div class="tabletreading">
+<div class="sheets">
+<article class="paper"><span class="kicker">WD GROWTH · คู่มือครู</span><h2>02 สรุปผล Baseline</h2><p>ใช้ผลประเมินพื้นฐานเพื่ออธิบายระดับทักษะปัจจุบันของผู้เรียน โดยระบุหลักฐานอย่างกระชับ</p><h3>แนวทางบันทึก</h3><ul><li>ตรวจสอบผลรายทักษะ</li><li>เขียนจุดแข็งอย่างเป็นรูปธรรม</li><li>เลือกประเด็นพัฒนาไม่เกินสองเรื่อง</li></ul><div class="callout">คู่มือสาธิต ไม่มีชื่อหรือคะแนนจริง</div></article>
+<article class="paper"><span class="kicker">WD GROWTH · ตัวอย่าง</span><h2>03 จุดแข็งของผู้เรียน</h2><p>เน้นสิ่งที่เด็กทำได้ด้วยตนเองและความก้าวหน้าที่เห็นจากหลักฐานในชีวิตประจำวัน</p><h3>แนวทางทำงานร่วมกัน</h3><ul><li>ครูประจำชั้นร่วมบันทึกได้</li><li>เลือกกิจกรรมเสริมให้เหมาะกับเด็ก</li><li>นัดติดตามผลต่อเนื่อง</li></ul><div class="callout">พื้นที่การอ่านปรับตามความกว้างที่เหลือจริงหลังเปิดสารบัญ</div></article>
+</div>
+</div>
+</div>
+<div class="tabletfoot"><button class="pill" type="button">← หน้าก่อน</button><small>ตัวอย่าง · หน้า 5–6 จาก 15</small><button class="pill next" type="button">หน้าถัดไป →</button></div>
+</div>
+<p class="device-note">เป้าหมาย UX-P0D: iPad Landscape แสดงหน้าคู่เมื่อมีพื้นที่จริงพอ · สารบัญปิดได้ · Portrait/Split View ให้ยุบเป็นหน้าเดี่ยว</p>
+</section>
+</main>
+<script>
+(()=>{
+const panels=[...document.querySelectorAll(".device")], switches=[...document.querySelectorAll("[data-panel]")];
+const show=id=>{panels.forEach(p=>p.classList.toggle("active",p.id===id));switches.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.panel===id)))};
+switches.forEach(b=>b.addEventListener("click",()=>show(b.dataset.panel)));
+document.querySelector("[data-open-reader]").addEventListener("click",()=>show("read"));
+const mask=document.getElementById("mobileToc"),open=document.getElementById("openMobileToc"),close=document.getElementById("closeMobileToc");
+function setToc(visible){mask.classList.toggle("open",visible);mask.setAttribute("aria-hidden",String(!visible));if(visible)close.focus();else open.focus()}
+open.addEventListener("click",()=>setToc(true));close.addEventListener("click",()=>setToc(false));
+mask.addEventListener("click",e=>{if(e.target===mask || e.target.closest(".tocrow"))setToc(false)});
+document.getElementById("closeMobileReader").addEventListener("click",()=>show("home"));
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&mask.classList.contains("open"))setToc(false)});
+let n=5;const counter=document.getElementById("counterDemo");
+document.getElementById("previousDemo").addEventListener("click",()=>{n=Math.max(1,n-1);counter.textContent=n});
+document.getElementById("nextDemo").addEventListener("click",()=>{n=Math.min(15,n+1);counter.textContent=n});
+const ipad=document.getElementById("ipadToc");document.getElementById("toggleIpadToc").addEventListener("click",()=>{ipad.hidden=!ipad.hidden});
+})();
+</script>
+</body>
+</html>

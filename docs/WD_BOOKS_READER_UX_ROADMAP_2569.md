@@ -3,7 +3,7 @@
 **Plan ID:** WD-BOOKS-UX-2569  
 **Version:** 1.0 · 23 ตุลาคม 2569  
 **Repository:** infobwd/manual (Public)  
-**Status:** APPROVED FOR PLANNING / NOT STARTED — บันทึกแผนแล้ว แต่ยังไม่อนุมัติให้แก้แอปตามแผนนี้  
+**Status:** UX-00 DESIGN PREVIEW READY / REAL-DEVICE QA PENDING — มีต้นแบบและเอกสาร baseline สำหรับตรวจรับ แต่ยังไม่อนุมัติให้แก้แอปตามแผนนี้  
 **Product:** https://infobwd.github.io/manual/  
 **กลุ่มใช้งานหลัก:** ครู/บุคลากรโรงเรียนบน iPhone และ iPad, รองลงมาคือ Android และ Desktop  
 **Source of truth:** เอกสารนี้ใช้กำหนดลำดับงาน, acceptance และ rollout ของการปรับ UX ใน repo นี้ ไม่แก้เนื้อหาวิชาการหรือระบบ WD Growth ต้นทาง
@@ -56,6 +56,8 @@
 
 > ข้อค้นพบข้างต้นเป็นการตรวจโค้ด; **ไม่ใช่ผลทดสอบ UX บนเครื่องจริง**. ก่อนแก้ implementation ต้องเก็บ baseline ภาพหน้าจอของผู้ใช้ทดลองบนเครื่องจริง (ไม่มีข้อมูลนักเรียน) และลงผลใน QA log
 
+**เอกสารตรวจรับ UX-00:** [Baseline & Design Review](WD_BOOKS_UX00_BASELINE_AND_DESIGN_REVIEW_2569.md) และ [ตัวอย่างหน้าจอ HTML](previews/WD_BOOKS_UX00_READER_PREVIEW_2569.html) — ไม่มีการเปลี่ยนแอปใน UX-00 และรอภาพ baseline จริง/อนุมัติ D01–D05 ก่อนลงมือ UX-P0A.
+
 ## 3. รูปแบบ UX เป้าหมาย
 
 ### 3.1 หน้าแรก: “ไปถึงหนังสือเร็วที่สุด”
@@ -93,7 +95,7 @@
 
 | ID | ระยะ | งาน/ผลลัพธ์ | เงื่อนไขตรวจรับสำคัญ | สถานะ |
 |---|---|---|---|---|
-| UX-00 | Gate 0 | เก็บ baseline, ยืนยัน QA device matrix และสถาปัตยกรรม Reader | มีภาพ/บันทึก QA จากข้อมูลสาธารณะ, smoke tests เดิมผ่าน | TODO |
+| UX-00 | Gate 0 | เก็บ baseline, ยืนยัน QA device matrix และสถาปัตยกรรม Reader | มีภาพ/บันทึก QA จากข้อมูลสาธารณะ, smoke tests เดิมผ่าน | IN PROGRESS — เอกสาร/Preview พร้อม; รอ QA จริง |
 | UX-P0A | P0 | ลด Hero/สถิติ, นำ “อ่านต่อ” ขึ้นบน, พร้อมอ่านก่อน draft, tab bar 3 รายการ | อ่านเล่มล่าสุดได้ใน 1 แตะจาก Home; ไม่มีเมนูเดิมเสีย | TODO |
 | UX-P0B | P0 | Mobile TOC แบบ Bottom Sheet, ชี้ current section, คืน focus เมื่อปิด | มือถือเข้าบทที่เลือกได้ภายใน 2 แตะ; VoiceOver/keyboard ใช้ได้ | TODO |
 | UX-P0C | P0 | Swipe/แตะเปลี่ยนหน้า + reading chrome ที่แสดงเมื่อเรียกใช้ | ปัดแนวตั้งไม่เปลี่ยนหน้า; ปุ่มสำรอง/close ยังใช้งานได้; ไม่ปะทะ pull-refresh/OS edge | TODO |
@@ -186,4 +188,4 @@
 
 **ต้องทดสอบ/ตกลงใน Gate 0:** threshold หน้าคู่จาก usable width, ปุ่มปิดถาวรหรือ contextual, tap-edge vs swipe (โดยไม่ทำให้ iOS system navigation ขัดกัน), ตัวเลือกฟอนต์ไทยที่ใช้ได้แบบ offline, ความหมายของ progress ใน Continuous mode, วิธีแสดงหมวด draft และตัวกรองเมื่อจำนวนคู่มือเพิ่ม
 
-**สถานะ ณ บันทึกแผน:** ไม่มี UX implementation ตาม roadmap นี้, ไม่มี Merge/Deploy ของหน้าเว็บจากแผนนี้. เริ่ม UX-00 เมื่อเจ้าของโครงการสั่งดำเนินการในรอบถัดไป
+**สถานะ UX-00 ณ 23 ต.ค. 2569:** สร้างต้นแบบและ checklist บน branch สำหรับตรวจรับแล้ว (ดูเอกสาร UX-00); ยังไม่มี UX implementation ตาม Roadmap นี้ ไม่มีการแก้ตัวแอปจริง และยังต้องทดสอบ iPhone/iPad กับยืนยัน Decision Register ก่อนเริ่ม P0.
