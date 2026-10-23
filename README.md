@@ -11,13 +11,20 @@
 
 **สถานะ:** ออกแบบ UX-00 พร้อมตรวจ แต่ยังไม่ผ่าน Gate 0 จนกว่าจะตรวจบนเครื่องจริงและยืนยันแบบก่อนเริ่ม P0
 
-## UX-P0A — หน้าแรกแบบอ่านต่อก่อน (รอตรวจรับ)
+## UX-P0A — หน้าแรกแบบอ่านต่อก่อน (Merge PR #8)
 
 มีการจัดหน้า Home ใหม่ใน feature branch: แสดงช่องค้นหาบนมือถือ, การ์ดอ่านต่อจากเล่มล่าสุด, รายการคู่มือพร้อมอ่านก่อนรอตรวจรับ และลด bottom tabs เหลือ 3 รายการ โดยยังรักษา localStorage และ PWA เดิมไว้
 
 - [แผนตรวจรับและ Local-First QA ของ UX-P0A](docs/WD_BOOKS_UX_P0A_ACCEPTANCE_2569.md)
 - Smoke tests: `node tests/home-p0a.smoke.cjs`, `node tests/library.smoke.cjs`, `node tests/pwa-reader.smoke.cjs`
-- **ยังไม่ Merge implementation:** ต้องตรวจ iPhone/iPad จริง, accessibility, PWA/Offline ก่อนปล่อยลง Pages
+- **Merge PR #8 แล้ว**: ต้องตรวจ iPhone/iPad จริง, accessibility และ PWA/Offline บน Pages อีกครั้ง
+
+## UX-P0B — สารบัญบนมือถือ
+
+เพิ่มปุ่มสารบัญให้ Reader บน iPhone/จอเล็ก เปิด Bottom Sheet เลือกบท แสดงบทปัจจุบัน ปิดด้วยปุ่ม/ฉากหลัง/Escape และคืน focus ไปจุดเดิม
+
+- [เกณฑ์ตรวจรับ UX-P0B](docs/WD_BOOKS_UX_P0B_ACCEPTANCE_2569.md)
+- ทดสอบ `node tests/mobile-toc-p0b.smoke.cjs` ร่วมกับ 3 ชุดเดิม
 
 ## แผนพัฒนา Reader UX (P0–P3)
 
