@@ -421,3 +421,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - **FAIL confirmed from user screenshot:** light-theme reader topbar on iPhone is pale/white but book title text from PR #41 is near-white; title almost invisible. The previous fix incorrectly assumed dark header in light mode.
 - **Correction candidate 1.3.4:** dark green title on light header; high-lightness title only in night mode; dark brown in sepia. Keep ellipsis and existing buttons.
 - **Acceptance status: FAIL / FIX IN PR / RETEST PENDING.** Verify iPhone Safari/PWA, Android, all three themes, 200% zoom, long title, TalkBack/VoiceOver, offline cache update. No real-device PASS claimed.
+
+## UX-HEART-R1 — Android cover favorite icon (candidate 1.3.5)
+
+- User confirms UX-READER-CONTRAST **PASS** on device (23 ต.ค. 2569); QA-DEVICE-GATE other checks remain pending.
+- User screenshot shows font-glyph heart distorted on Android cover cards. **Prioritize this fix before other roadmap items.**
+- Replace font-dependent ♡/♥ with a 24px SVG heart centered in existing touch target; outlined when unsaved, filled when saved.
+- Preserve existing favorite state, localStorage schema, aria-label/aria-pressed and separate tap behavior from full-card open.
+- QA pending: Android Chrome/PWA, iPhone, selected/unselected, multiple covers, light/sepia/night, TalkBack/VoiceOver, offline/cache update.
