@@ -72,3 +72,11 @@ body[data-theme="sepia"] .pull-refresh{background:#f6eddc;color:#665238;border-c
 .cover-eye-mode{position:absolute;right:12px;top:12px;z-index:2;display:grid;place-items:center;width:44px;height:44px;border:1px solid #ffffff85;border-radius:14px;background:#ffffffeb;color:#205748;font-size:23px;box-shadow:0 4px 12px #09251b30;touch-action:manipulation}
 .cover-eye-mode[aria-pressed="true"]{background:#e3ecd3;color:#204e3e;outline:2px solid #b7d7b0}
 @media(max-width:600px){.reader-identity small{display:none}.reader-actions .font-button{min-width:34px;padding:7px 5px}.reader-actions .reader-focus-toggle{min-width:36px;padding:7px 5px}}
+
+/* Book-level favorite replaces the cover sun; global eye mode returns to header. */
+.cover-eye-mode{display:none}
+.book-cover .cover-favorite{position:absolute;right:12px;top:12px;z-index:2;display:grid;place-items:center;width:46px;height:46px;min-width:46px;min-height:46px;padding:0;border:1px solid #ffffff99;border-radius:14px;background:#fffffff0;color:#245a48;font-size:30px;line-height:1;box-shadow:0 4px 12px #09251b30;touch-action:manipulation}
+.book-cover .cover-favorite[aria-pressed="true"]{background:#e2f0e5;color:#23624b;border-color:#b3d4bd}
+.reader-bottom .reader-close-bottom{flex:0 0 46px;min-width:46px;min-height:46px;padding:8px;background:#fff;color:#425e53;border:1px solid #cedbd2;font-size:19px;font-weight:800}
+.reader-bottom .reader-close-bottom:focus-visible,.book-cover .cover-favorite:focus-visible{outline:3px solid #dbad52;outline-offset:3px}
+@media(max-width:600px){.reader-bottom{gap:7px}.reader-bottom .page-control{padding:10px 9px;min-height:46px}.reader-bottom .reader-progress{min-width:58px;gap:4px;flex:1}.reader-bottom .reader-close-bottom{flex-basis:46px}.reader-bottom #pageCounter{white-space:nowrap}}

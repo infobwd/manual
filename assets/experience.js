@@ -49,7 +49,7 @@
     document.querySelectorAll('input[name="readerTheme"]').forEach((radio) => {
       radio.checked = radio.value === prefs.theme;
     });
-    for (const id of ["readerEyeMode"]) {
+    for (const id of ["quickEyeMode", "readerEyeMode"]) {
       const b = $(id); if (!b) continue;
       b.setAttribute("aria-pressed", String(prefs.theme === "sepia"));
       b.title = prefs.theme === "sepia" ? "ปิดโหมดถนอมสายตา" : "เปิดโหมดถนอมสายตา";
