@@ -33,7 +33,7 @@
     <h1>WD Books</h1>
     <p>คลังคู่มือโรงเรียนบ้านวังด้ง</p>
     <div class="splash-track"><span></span></div>
-    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.2.6</small>
+    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.2.7</small>
   </div>
 </div>
 <div id="pullRefresh" class="pull-refresh" role="status" aria-live="polite" aria-hidden="true"><span class="pull-refresh-icon">↻</span><span id="pullRefreshText">ดึงลงเพื่อรีเฟรช</span></div>
@@ -182,6 +182,7 @@
     <div class="reader-topbar">
       <button id="openMobileToc" type="button" class="mobile-toc-trigger" aria-label="เปิดสารบัญหนังสือ" aria-controls="mobileTocSheet" aria-expanded="false">☷ <span>สารบัญ</span></button>
       <div class="reader-identity"><span class="reader-mark">WD / READ</span><div><strong id="readerTitle"></strong><small id="readerCategory"></small></div></div>
+      <div id="readerMobileBookTitle" class="reader-mobile-book-title" aria-label="คู่มือที่กำลังอ่าน" title=""></div>
       <div class="reader-actions">
         <button id="readerToolsToggle" class="icon-button reader-tools-toggle" type="button" aria-label="เครื่องมืออ่านเพิ่มเติม" aria-controls="readerExtraTools" aria-expanded="false">⋯</button>
         <div id="readerExtraTools" class="reader-extra-tools" hidden>
@@ -199,7 +200,7 @@
     <section id="readerBookmarksPanel" class="reader-bookmarks-panel" role="dialog" aria-modal="true" aria-labelledby="readerBookmarksTitle" hidden>
       <button id="readerBookmarksBackdrop" class="reader-bookmarks-backdrop" type="button" tabindex="-1" aria-label="ปิดรายการคั่นหน้า"></button>
       <div class="reader-bookmarks-sheet">
-      <div class="reader-bookmarks-heading"><strong id="readerBookmarksTitle">คั่นหน้าในเล่มนี้</strong><button id="readerBookmarksClose" class="reader-bookmarks-close" type="button" aria-label="ปิดรายการคั่นหน้า">✕</button></div>
+      <div class="reader-bookmarks-heading"><div class="reader-bookmarks-heading-copy"><strong id="readerBookmarksTitle">คั่นหน้าในเล่มนี้</strong><small id="readerBookmarksBookTitle" class="reader-bookmarks-book-title"></small></div><button id="readerBookmarksClose" class="reader-bookmarks-close" type="button" aria-label="ปิดรายการคั่นหน้า">✕</button></div>
       <button id="readerBookmarkToggle" class="reader-bookmark-current" type="button" aria-pressed="false" aria-label="คั่นหน้าตอนนี้">🔖 คั่นหน้าตอนที่กำลังอ่าน</button>
       <p id="readerBookmarksStatus" role="status" aria-live="polite"></p>
       <div id="readerBookmarksItems" class="reader-bookmarks-items"></div>
