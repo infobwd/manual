@@ -11,7 +11,7 @@
   const validBookIds = (items) => [...new Set(
     (Array.isArray(items) ? items : []).filter((id) => typeof id === "string" && hasBook(id))
   )].slice(0,30);
-  const defaultPrefs = () => ({ theme: "light", font: 100, recent: null, progress: {}, favorites: [], history: [], readingMode: "paged", typography: { family: "system", line: "normal", margin: "normal" } });
+  const defaultPrefs = () => ({ theme: "light", font: 100, recent: null, progress: {}, favorites: [], history: [], bookmarks: {}, readingMode: "paged", typography: { family: "system", line: "normal", margin: "normal" } });
   function load() {
     try {
       const saved = JSON.parse(localStorage.getItem(key) || "{}");
@@ -23,6 +23,10 @@
         progress: saved.progress && typeof saved.progress === "object" && !Array.isArray(saved.progress) ? saved.progress : {},
         favorites: validBookIds(saved.favorites),
         history: validBookIds([saved.recent, ...(Array.isArray(saved.history) ? saved.history : [])]),
+        bookmarks: Object.fromEntries(Object.entries(saved.bookmarks && typeof saved.bookmarks === "object" && !Array.isArray(saved.bookmarks) ? saved.bookmarks : {}).filter(([id]) => hasBook(id)).map(([id, indices]) => {
+          const book = window.WD_LIBRARY_DATA.manuals.find(b => b.id === id);
+          return [id, [...new Set((Array.isArray(indices) ? indices : []).filter(n => Number.isInteger(n) && n >= 0 && n < book.pages.length))].slice(0,40)];
+        })),
         readingMode: saved.readingMode === "continuous" ? "continuous" : "paged",
         typography: {
           family: ["system","serif","sans"].includes(saved.typography?.family) ? saved.typography.family : "system",
@@ -124,6 +128,20 @@
     save();
     updateContinue();
     onBooksChanged?.();
+  }
+  function getBookmarks(bookId) {
+    if (!hasBook(bookId)) return [];
+    return [...(prefs.bookmarks[bookId] || [])].sort((a,b) => a-b);
+  }
+  function isBookmarked(bookId, index) { return getBookmarks(bookId).includes(index); }
+  function toggleBookmark(bookId, index) {
+    if (!hasBook(bookId)) return false;
+    const book = window.WD_LIBRARY_DATA.manuals.find(b => b.id === bookId);
+    if (!Number.isInteger(index) || index < 0 || index >= book.pages.length) return false;
+    const saved = getBookmarks(bookId);
+    prefs.bookmarks[bookId] = saved.includes(index) ? saved.filter(n => n !== index) : [...saved,index].sort((a,b)=>a-b).slice(0,40);
+    save();
+    return prefs.bookmarks[bookId].includes(index);
   }
   function isFavorite(bookId) { return prefs.favorites.includes(bookId); }
   function getFavorites() { return [...prefs.favorites]; }
@@ -326,6 +344,9 @@
     getProgress,
     recordProgress,
     getFavorites,
+    getBookmarks,
+    isBookmarked,
+    toggleBookmark,
     getHistory,
     isFavorite,
     toggleFavorite,
