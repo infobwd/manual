@@ -203,6 +203,35 @@
     if ($("favoritesCount")) $("favoritesCount").textContent = favorites.length + " เล่ม";
   }
   const dialog = $("readerDialog");
+  // UX-P0E: modal body lock is restored by the native dialog close lifecycle.
+  dialog.addEventListener("close", () => document.body.classList.remove("reader-open"));
+  // A swipe started on the narrow stage gutter should move the actual book,
+  // not a non-scrollable shell. Do not intercept buttons, panels or horizontal swipes.
+  (() => {
+    const stage = document.querySelector(".reader-stage");
+    let lastY = null, lastX = null, redirect = false;
+    stage.addEventListener("touchstart", event => {
+      redirect = false;
+      if (!dialog.open || !isMobile.matches || event.touches.length !== 1) return;
+      if (event.target.closest("button,a,input,select,textarea,.book-page,.continuous-pages,.reader-bottom")) return;
+      const t = event.touches[0];
+      lastY = t.clientY; lastX = t.clientX; redirect = true;
+    }, {passive:true});
+    stage.addEventListener("touchmove", event => {
+      if (!redirect || event.touches.length !== 1) return;
+      const t = event.touches[0], dy = t.clientY-lastY, dx = t.clientX-lastX;
+      if (Math.abs(dx)>Math.abs(dy)*1.2) { redirect=false; return; }
+      const target = state.readingMode === "continuous" ? $("continuousPages") : $("pageLeft");
+      if (target && Math.abs(dy)>0) { target.scrollTop -= dy; event.preventDefault(); }
+      lastY=t.clientY; lastX=t.clientX;
+    }, {passive:false});
+    for (const eventName of ["touchend","touchcancel"]) stage.addEventListener(eventName,()=>{redirect=false;lastY=null;lastX=null},{passive:true});
+    stage.addEventListener("wheel",event => {
+      if (!dialog.open || !isMobile.matches || event.target.closest(".book-page,.continuous-pages,.reader-bottom,button,input,select")) return;
+      const target=state.readingMode==="continuous" ? $("continuousPages") : $("pageLeft");
+      if (target && Math.abs(event.deltaY)>Math.abs(event.deltaX)) {target.scrollTop+=event.deltaY;event.preventDefault();}
+    },{passive:false});
+  })();
   const mobileTocSheet = $("mobileTocSheet");
   const mobileTocButton = $("openMobileToc");
   const mobileTocClose = $("closeMobileToc");
@@ -272,6 +301,7 @@
     renderReader();
     syncBookmarks();
     if (!dialog.open) dialog.showModal();
+    document.body.classList.add("reader-open");
     $("readerClose").focus();
   }
   const toolsToggle = $("readerToolsToggle"), extraTools = $("readerExtraTools");
