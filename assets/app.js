@@ -268,9 +268,37 @@
     $("readerTitle").textContent = book.title;
     $("readerCategory").textContent = (lookup[book.category]?.label || "คู่มือ") + " · " + book.edition;
     renderReader();
+    syncBookmarks();
     if (!dialog.open) dialog.showModal();
     $("readerClose").focus();
   }
+  const bookmarkToggle = $("readerBookmarkToggle"), bookmarkListToggle = $("readerBookmarksListToggle"), bookmarksPanel = $("readerBookmarksPanel");
+  function syncBookmarks() {
+    if (!state.manual) return;
+    const id = state.manual.id, indices = window.WD_EXPERIENCE?.getBookmarks?.(id) || [];
+    const saved = indices.includes(state.page);
+    bookmarkToggle.textContent = saved ? "◆" : "◇";
+    bookmarkToggle.setAttribute("aria-pressed", String(saved));
+    bookmarkToggle.setAttribute("aria-label", saved ? "นำคั่นหน้าออก" : "คั่นหน้าตอนนี้");
+    $("readerBookmarksStatus").textContent = indices.length ? "บันทึก " + indices.length + " ตอน" : "ยังไม่มีคั่นหน้า";
+    const items = $("readerBookmarksItems");
+    items.replaceChildren(...indices.map(index => {
+      const b = create("button", "reader-bookmark-jump", "ตอน " + (index+1) + " · " + state.manual.pages[index].title);
+      b.type = "button";
+      b.addEventListener("click", () => { jumpTo(index); bookmarksPanel.hidden = true; bookmarkListToggle.setAttribute("aria-expanded","false"); });
+      return b;
+    }));
+  }
+  bookmarkToggle.addEventListener("click", () => {
+    if (!state.manual) return;
+    window.WD_EXPERIENCE?.toggleBookmark?.(state.manual.id,state.page);
+    syncBookmarks();
+  });
+  bookmarkListToggle.addEventListener("click", () => {
+    bookmarksPanel.hidden = !bookmarksPanel.hidden;
+    bookmarkListToggle.setAttribute("aria-expanded",String(!bookmarksPanel.hidden));
+    if (!bookmarksPanel.hidden) syncBookmarks();
+  });
   // UX-P2A: search only the currently opened, published manual. Never use innerHTML.
   const searchPanel = $("readerSearchPanel"), searchToggle = $("readerSearchToggle");
   const searchInput = $("readerSearchInput"), searchResults = $("readerSearchResults");
@@ -400,6 +428,7 @@
     $("progressBar").style.width = ((last / count) * 100) + "%";
     renderToc();
     renderMobileToc();
+    syncBookmarks();
     window.WD_EXPERIENCE?.recordProgress?.(state.manual.id, first);
   }
   let continuousObserver = null;
@@ -439,6 +468,7 @@
     $("progressBar").style.width = (((index+1)/count)*100) + "%";
     renderToc();
     renderMobileToc();
+    syncBookmarks();
     if (save) window.WD_EXPERIENCE?.recordProgress?.(state.manual.id,index);
   }
   function syncReadingMode() {
