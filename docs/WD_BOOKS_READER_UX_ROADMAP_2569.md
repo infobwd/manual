@@ -517,3 +517,9 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Owner confirmed normal operation after ARCH-01D2 PR #59 merged (v1.3.17). Begin measurement-only gate; no production code or version change.
 - Add local static app-shell asset measurement and real-device 3-run cold/warm, search, Reader, offline, and optional heap runbook: [WD_BOOKS_ARCH01E_PERFORMANCE_BASELINE_2569.md](WD_BOOKS_ARCH01E_PERFORMANCE_BASELINE_2569.md).
 - No measured runtime values yet; do not claim a speed improvement. CAT-01 lazy loading remains gated on actual results and separate approval.
+
+## CAT-01 preflight — no computer available (23 ต.ค. 2569)
+
+- ARCH-01E PR #60 merged, but local command execution and device performance measurements are pending.
+- Source inspection shows catalog and public guide scripts loaded before app.js and precached by SW; lazy loading must preserve this dependency and offline behavior.
+- Documented phased design and compatibility gates in [WD_BOOKS_CAT01_LOADING_DESIGN_2569.md](WD_BOOKS_CAT01_LOADING_DESIGN_2569.md). Documentation-only PR, no version bump, no runtime change; proceed to CAT-01A contract tests after approval.
