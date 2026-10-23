@@ -10,7 +10,7 @@
     if (value !== undefined) el.textContent = value;
     return el;
   };
-  const state = { category: "all", query: "", manual: null, page: 0, scale: 1, opener: null, readingMode: "paged" };
+  const state = { category: "all", availability: "all", query: "", manual: null, page: 0, scale: 1, opener: null, readingMode: "paged" };
   // Reader single-page threshold includes portrait tablets and narrow Split View.
   const isMobile = window.matchMedia("(max-width: 1100px)");
   const statuses = { published: "พร้อมอ่าน", review: "รอตรวจรับ", planned: "ตามแผน" };
@@ -52,6 +52,9 @@
     $("statCategories").textContent = String(data.categories.length);
   }
   function matches(book) {
+    const ready = book.status === "published" && Boolean(book.pages?.length);
+    if (state.availability === "ready" && !ready) return false;
+    if (state.availability === "upcoming" && ready) return false;
     if (state.category !== "all" && book.category !== state.category) return false;
     if (!state.query) return true;
     const haystack = [book.title, book.subtitle, book.description, book.audience,
@@ -140,6 +143,11 @@
     const filtered = data.manuals.filter(matches).sort((a, b) => (a.status === "published" ? 0 : 1) - (b.status === "published" ? 0 : 1));
     $("manualGrid").replaceChildren(...filtered.map(cardFor));
     $("manualGrid").setAttribute("aria-busy","false");
+    document.querySelectorAll("[data-discovery-filter]").forEach(button => {
+      const active = button.dataset.discoveryFilter === state.availability;
+      button.setAttribute("aria-pressed", String(active));
+      button.classList.toggle("selected", active);
+    });
     const readyCount = filtered.filter(book => book.status === "published" && book.pages?.length).length;
     $("resultsText").textContent = "พบคู่มือพร้อมอ่าน " + readyCount + " เล่ม · รายการทั้งหมด " + filtered.length + " จาก " + data.manuals.length + " รายการ";
     $("emptyResults").hidden = filtered.length > 0;
@@ -922,6 +930,12 @@
   for (const id of ["searchInput", "homeSearchInput"]) {
     $(id)?.addEventListener("input", (event) => updateQuery(event.target.value, event.target));
   }
+  document.querySelectorAll("[data-discovery-filter]").forEach(button => {
+    button.addEventListener("click", () => {
+      state.availability = button.dataset.discoveryFilter;
+      renderCatalog();
+    });
+  });
   window.WD_EXPERIENCE?.bindReader?.(
     (scale) => { state.scale = scale; $("bookSpread").style.setProperty("--readerScale", String(scale)); },
     (book, opener) => openBook(book, opener)

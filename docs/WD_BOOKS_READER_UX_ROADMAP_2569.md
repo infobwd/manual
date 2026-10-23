@@ -457,3 +457,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Root cause confirmed by parsing production main `assets/app.js`: `SyntaxError: missing ) after argument list` at search result snippet append added in PR #48. Because the entire app script failed to parse, the home catalog skeleton remained and the PR #49 recovery button appeared.
 - Fix candidate 1.3.10: restore the missing closing parenthesis and bump app version so SW refreshes assets. The updated `app.js` passes JavaScript syntax parsing; browser/device functional QA is still pending.
 - Prevent recurrence: add JS syntax validation before merging changes to `assets/app.js`, particularly search UI code; don't rely on visual screenshot alone.
+
+## UX-DISCOVERY P1 — Status filters (23 ต.ค. 2569)
+
+- User confirms home catalog renders and works again after PR #50 (home display PASS; device-wide regression checks remain pending).
+- Candidate v1.3.11: independent catalog status chips **ทั้งหมด / พร้อมอ่าน / เตรียมเผยแพร่**; combine with existing category and text search; preserve current published-first ordering and existing reading/localStorage behavior.
+- Ready = published with nonempty pages; upcoming = other catalog entries. No private/draft content made readable.
+- JavaScript syntax validation performed before PR. QA pending: iPhone Safari/PWA, Android, iPad, 0/1/many matches, combinations with categories and search, keyboard/screen reader, themes and offline cache.
+- Next: UX-DISCOVERY P2 sort/search scalability after P1 device acceptance; no automatic merge.
