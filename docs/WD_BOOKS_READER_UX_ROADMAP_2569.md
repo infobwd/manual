@@ -286,3 +286,12 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Keep reader top and bottom controls fixed; paged mode scrolls only `#pageLeft`, continuous mode scrolls only `#continuousPages`.
 - Forward vertical gestures starting on stage gutter to active reading scroll surface, without stealing controls or horizontal gestures. CSS contains overscroll, and PWA cache v21.
 - Real-device QA required before merge: iPhone Safari/PWA portrait and landscape, top/bottom scroll boundaries, gutter swipes, iPad Split View, paged horizontal swipes, continuous progress, TOC and Aa overlays, zoom, keyboard and VoiceOver, closing restores page scrolling.
+
+
+## UX-P0I candidate — ปิดเครื่องมือเมื่อแตะด้านนอก / ปุ่มล่าง / โหลดเนื้อหา
+
+- แตะพื้นที่อ่านหรือพื้นที่ว่างของหน้าต่างเพื่อปิดเมนู ⋯ และแผงค้นหา คั่นหน้า และตัวอักษร โดยไม่ขัดจังหวะการอ่าน; กด Escape ปิดแผงก่อนปิดหนังสือ
+- ปรับแถบปุ่มล่างให้เคารพ safe-area ของ iPhone และจอแคบ พร้อมขนาดสัมผัสขั้นต่ำ
+- แสดง skeleton ขณะเตรียมรายการคู่มือและหน้าอ่าน โดยรองรับ prefers-reduced-motion
+- ปรับคำภาษาอังกฤษและศัพท์เชิงพัฒนาในส่วนที่ผู้ใช้ทั่วไปเห็นให้เป็นภาษาไทยอ่านง่าย
+- QA ค้าง: iPhone Safari/PWA, ปุ่มย้อน/ถัดไปทุกขนาดจอ, safe-area, VoiceOver, เลื่อนอ่าน, แตะนอกเมนู, Esc, skeleton ขณะโหลดช้าและโหมดลดการเคลื่อนไหว
