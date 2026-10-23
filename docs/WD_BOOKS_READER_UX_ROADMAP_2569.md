@@ -480,3 +480,9 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Reset-all also resets sort; history, favorites, bookmarks, progress, localStorage schema remain unchanged.
 - Pre-PR JavaScript syntax parse PASS. QA pending: iPhone Safari/PWA, Android/iPad, sorting order, mixed filters, empty state reset, 0/1/100+ synthetic items, offline and accessibility. Avoid claiming performance gains until measured.
 - After device acceptance, consider measured catalog rendering limits before pagination or architectural modularization.
+
+## UX-DISCOVERY P3 accepted → ARCH-01A start (23 ต.ค. 2569)
+
+- Owner confirms P3 (PR #53, v1.3.13) **ACCEPTED on tested device**; wider Android/iPad/offline/accessibility checks remain unverified.
+- Queue 5 UX-DISCOVERY P1–P3 delivered; next queue 6 **ARCH-01**. Start with non-runtime **ARCH-01A** baseline/contract and JS parser/offline-shell gate, then small separately approved module extraction PRs.
+- Detailed source of truth for extraction: [WD_BOOKS_ARCH01_BASELINE_2569.md](WD_BOOKS_ARCH01_BASELINE_2569.md). No version bump needed for docs/tests-only PR.
