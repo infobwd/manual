@@ -257,3 +257,10 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
 .book-spread.reader-loading .book-page{opacity:.35}
 @keyframes wd-skeleton-pulse{to{background-position-x:-220%}}
 @media(prefers-reduced-motion:reduce){.wd-skeleton{animation:none}}
+
+/* UX-P2B-R1: one bookmark hub, thumb-sized actions, individual removal. */
+.reader-bookmark-current{display:block;width:100%;min-height:48px;padding:12px 14px;margin:10px 0;border:1px solid #7ea38b;border-radius:12px;background:#e5f1e3;color:#244e3c;text-align:left;font-weight:700;font-size:14px;touch-action:manipulation}
+.reader-bookmark-row{display:flex;align-items:stretch;gap:8px;min-width:0}
+.reader-bookmark-row .reader-bookmark-jump{flex:1 1 auto;min-width:0;overflow-wrap:anywhere}
+.reader-bookmark-remove{flex:0 0 auto;min-width:48px;min-height:48px;padding:8px 12px;border:1px solid #c9d8cb;border-radius:10px;background:#fff;color:#73453b;font-size:13px;font-weight:700;touch-action:manipulation}
+.reader-bookmark-current:focus-visible,.reader-bookmark-remove:focus-visible{outline:3px solid #dba852;outline-offset:2px}
