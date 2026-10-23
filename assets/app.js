@@ -426,6 +426,7 @@
       remove.addEventListener("click", () => {
         if (window.WD_EXPERIENCE?.getBookmarks?.(id)?.includes(index)) window.WD_EXPERIENCE.toggleBookmark(id,index);
         syncBookmarks();
+        renderShelf();
       });
       row.append(b,remove);
       return row;
@@ -435,6 +436,7 @@
     if (!state.manual) return;
     window.WD_EXPERIENCE?.toggleBookmark?.(state.manual.id,state.page);
     syncBookmarks();
+    renderShelf();
   });
   bookmarkListToggle.addEventListener("click", () => {
     if (!bookmarksPanel.hidden) { closeBookmarks(); return; }
