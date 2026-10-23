@@ -278,3 +278,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Saved as `bookmarks` in existing `wd-manual-reader-v2` localStorage. Book IDs and page indices are validated; older localStorage remains compatible. Favorites, progress, history and typography are untouched.
 - PWA cache v19. QA pending: iPhone/iPad tap targets, switching books, rotation, persisted bookmarks after restart, invalid legacy data, accessibility and offline updates.
 - Future refinement: allow removing a different bookmarked chapter directly from the list; current toggle removes the current chapter.
+
+
+## UX-P0E candidate — Reader Scroll Lock & Single Scroll Area
+
+- Lock body background only while native reader dialog is open, restoring it on close.
+- Keep reader top and bottom controls fixed; paged mode scrolls only `#pageLeft`, continuous mode scrolls only `#continuousPages`.
+- Forward vertical gestures starting on stage gutter to active reading scroll surface, without stealing controls or horizontal gestures. CSS contains overscroll, and PWA cache v21.
+- Real-device QA required before merge: iPhone Safari/PWA portrait and landscape, top/bottom scroll boundaries, gutter swipes, iPad Split View, paged horizontal swipes, continuous progress, TOC and Aa overlays, zoom, keyboard and VoiceOver, closing restores page scrolling.

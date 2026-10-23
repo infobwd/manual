@@ -176,3 +176,18 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
   .reader-topbar .reader-actions:before{content:"อ่านหนังสือ";margin-right:auto;font-size:13px;font-weight:750;color:#d5e5d6}
 }
 @media(min-width:1101px){.reader-extra-tools{display:flex;align-items:center;gap:7px}}
+
+/* UX-P0E: one vertical scroll surface per reading mode, with fixed controls. */
+@media(max-width:1100px){
+  body.reader-open{overflow:hidden;overscroll-behavior:none}
+  .reader-dialog{overscroll-behavior:contain}
+  .reader-shell,.reader-content,.reader-stage{min-height:0;overflow:hidden}
+  .reader-topbar,.reader-bottom{flex-shrink:0}
+  .reader-stage{flex:1;align-items:stretch;padding:8px 10px 12px}
+  .book-spread{min-height:0;max-width:none;overflow:hidden}
+  #pageLeft{min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;touch-action:pan-y}
+  .book-spread.is-continuous{flex:1;min-height:0;max-width:none;overflow:hidden}
+  .continuous-pages{height:100%;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;touch-action:pan-y}
+  .continuous-section.book-page{overflow:visible;touch-action:pan-y}
+  .reader-bottom{padding-top:8px}
+}
