@@ -193,3 +193,11 @@
 **สถานะ UX-00 ณ 23 ต.ค. 2569:** สร้างต้นแบบและ checklist บน branch สำหรับตรวจรับแล้ว (ดูเอกสาร UX-00); ยังไม่มี UX implementation ตาม Roadmap นี้ ไม่มีการแก้ตัวแอปจริง และยังต้องทดสอบ iPhone/iPad กับยืนยัน Decision Register ก่อนเริ่ม P0.
 
 **อัปเดต 23 ต.ค. 2569:** PR #8 Merge UX-P0A แล้ว และเริ่ม UX-P0B; ดู [UX-P0B Acceptance & QA](WD_BOOKS_UX_P0B_ACCEPTANCE_2569.md). การ Merge ไม่ได้หมายถึงการทดสอบอุปกรณ์จริงผ่านโดยอัตโนมัติ
+
+
+## อัปเดต 23 ต.ค. 2569 — Zoom guard
+
+- PR #11 merged to main (commit ac6439ebabb4dd64af47100e5b0ab6882a1b0075): จำกัดการซูมหน้าแอป โดยคงการซูมภายใน reader และการปรับฟอนต์
+- ยังรอ QA จริง iPhone/iPad/Android และตรวจ Service Worker cache (v7 ยังไม่รวมไฟล์ app-zoom-guard.js ในรายการ offline shell)
+- UX-P0C ยังไม่ผ่าน Gate: ต้องพัฒนา swipe และ reading focus โดยไม่รบกวน pinch zoom, TOC, pull refresh หรือ gesture ระบบ
+- ก่อน Merge P0C ต้องทดสอบด้วยเครื่องจริงและบันทึกผล UX-00/P0B/P0C
