@@ -366,15 +366,26 @@
     const saved = indices.includes(state.page);
     const bookmarkSymbol = bookmarkToggle.querySelector(".tool-symbol");
     if (bookmarkSymbol) bookmarkSymbol.textContent = saved ? "🔖" : "♧";
+    bookmarkToggle.textContent = saved ? "✓ คั่นหน้าตอนนี้แล้ว · แตะเพื่อนำออก" : "＋ คั่นหน้าตอนที่กำลังอ่าน";
     bookmarkToggle.setAttribute("aria-pressed", String(saved));
     bookmarkToggle.setAttribute("aria-label", saved ? "นำคั่นหน้าออก" : "คั่นหน้าตอนนี้");
-    $("readerBookmarksStatus").textContent = indices.length ? "บันทึก " + indices.length + " ตอน" : "ยังไม่มีคั่นหน้า";
+    $("readerBookmarksStatus").textContent = indices.length ? "บันทึกไว้ " + indices.length + " ตอน · แตะชื่อเพื่อเปิดอ่าน" : "ยังไม่มีตอนที่คั่นไว้";
     const items = $("readerBookmarksItems");
     items.replaceChildren(...indices.map(index => {
-      const b = create("button", "reader-bookmark-jump", "ตอน " + (index+1) + " · " + state.manual.pages[index].title);
+      const row = create("div", "reader-bookmark-row");
+      const label = "ตอน " + (index+1) + " · " + state.manual.pages[index].title;
+      const b = create("button", "reader-bookmark-jump", label);
       b.type = "button";
       b.addEventListener("click", () => { jumpTo(index); bookmarksPanel.hidden = true; bookmarkListToggle.setAttribute("aria-expanded","false"); });
-      return b;
+      const remove = create("button", "reader-bookmark-remove", "ลบ");
+      remove.type = "button";
+      remove.setAttribute("aria-label", "นำที่คั่นหน้าออก: " + label);
+      remove.addEventListener("click", () => {
+        if (window.WD_EXPERIENCE?.getBookmarks?.(id)?.includes(index)) window.WD_EXPERIENCE.toggleBookmark(id,index);
+        syncBookmarks();
+      });
+      row.append(b,remove);
+      return row;
     }));
   }
   bookmarkToggle.addEventListener("click", () => {
