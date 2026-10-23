@@ -435,3 +435,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - ผู้ใช้ยืนยัน **UX-READER-CONTRAST PASS** และ **UX-HEART PASS**; QA-DEVICE-GATE ปิดการติดตามตามคำสั่งผู้ใช้แบบ **CONDITIONAL GO** โดยคงรายการที่ยังไม่ได้ทดสอบเป็น NOT TESTED (รายละเอียดใน WD_BOOKS_QA_DEVICE_GATE_133.md)
 - เริ่มคิว 4: **UX-SEARCH-HIGHLIGHT candidate v1.3.7**. ค้นหาในเล่มและไฮไลต์ข้อความด้วย DOM Text/mark เท่านั้น ไม่มี innerHTML; รองรับ Paged/Continuous และสามธีม; ค้นหาเฉพาะ published
 - QA candidate ยังไม่ผ่าน: ตรวจคำไทย, คำหลายจุด, ล้างคำค้น, เปลี่ยนเล่ม, PWA, screen reader, ไฮไลต์ไม่ทำลายเนื้อหาเดิม และไม่ทำให้การอ่านต่อเนื่องสะดุด
+
+## UX-SEARCH-HIGHLIGHT-R1 — iPhone screenshot findings (23 ต.ค. 2569)
+
+- ผู้ใช้ยืนยันจากภาพว่าคำว่า “ครู” ถูกไฮไลต์ในหน้าอ่านแล้ว (partial visual PASS); ผลค้นหาแบบรายการกินพื้นที่จอมาก, ไม่มีนำทางผลก่อนหน้า/ถัดไป, ตัวอย่างข้อความมีอักขระผิดปกติ
+- Candidate v1.3.8: จำกัดความสูงแผงผลค้นหา, ยุบรายการอัตโนมัติหลังเลือกตอนแต่คงช่องค้นหาและแถบนำทาง, ปุ่มยุบ/แสดง, แสดงตำแหน่งตอนที่เลือก, ก่อนหน้า/ถัดไป, ทำความสะอาด zero-width/replacement character ใน snippet เท่านั้น, ทำกรอบรายการที่เลือก
+- ค้นหายังเป็นระดับ **ตอน** (ไม่ใช่ทุก occurrence); ไม่อ้างว่าปุ่มก่อนหน้า/ถัดไปนำทางแต่ละคำภายในตอน; ไม่เปลี่ยน schema localStorage
+- **QA PENDING:** iPhone Safari/PWA, Android, iPad, แสดงผลหลังเลือกตอน, เลื่อนต่อเนื่อง, ค้นคำไทย, เปิด/ปิดแผง, ปุ่มนำทาง, ความคงอยู่ของไฮไลต์, การอ่านด้วย screen reader
+- หลังตรวจรับ R1 จึงกลับสู่ UX-DISCOVERY
