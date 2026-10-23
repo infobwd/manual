@@ -60,6 +60,22 @@
   }
   function cardFor(book) {
     const article = create("article", "manual-card");
+    const isReadable = book.status === "published" && Boolean(book.pages?.length);
+    if (isReadable) {
+      article.classList.add("manual-card-readable");
+      article.setAttribute("role", "button");
+      article.setAttribute("tabindex", "0");
+      article.setAttribute("aria-label", "เปิดหนังสือ " + book.title);
+      article.addEventListener("click", event => {
+        if (event.target.closest("button, a, input, select, textarea")) return;
+        openBook(book, article);
+      });
+      article.addEventListener("keydown", event => {
+        if (event.target !== article || !["Enter", " "].includes(event.key)) return;
+        event.preventDefault();
+        openBook(book, article);
+      });
+    }
     const cover = create("div", "book-cover cover-" + (book.color || "forest"));
     cover.append(create("span", "cover-eyebrow", book.coverTop || "MANUAL"));
     cover.append(create("strong", "", book.coverTitle || book.title));
@@ -70,7 +86,7 @@
     body.append(create("p", "", book.description));
     const foot = create("div", "card-footer");
     foot.append(create("span", "card-meta", book.edition + (book.readTime !== "—" ? " · " + book.readTime : "")));
-    if (book.status === "published" && book.pages?.length) {
+    if (isReadable) {
       const open = create("button", "open-book", "เปิดอ่าน ↗");
       open.type = "button";
       open.setAttribute("aria-label", "เปิดหนังสือ " + book.title);

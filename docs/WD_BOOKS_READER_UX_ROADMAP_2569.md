@@ -393,3 +393,10 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - แตะชื่อตอนแล้วเปิดไปยังตำแหน่งเดิม; สองคอลัมน์บนจอกว้างและคอลัมน์เดียวบนมือถือ
 - QA ก่อน Merge: 0/1/หลายคู่มือ, 50+ ตอน, ค้นหา, โหมดมืด/ถนอมสายตา, iPhone/Android/desktop, VoiceOver, ปิดเปิด PWA, ออฟไลน์
 - หมายเหตุ: ลำดับตามประวัติการเปิดอ่านคู่มือ ไม่ใช่เวลาคั่นหน้าแต่ละตอน เพราะ schema เดิมไม่บันทึกเวลา
+
+## UX-FULLCARD — candidate 1.3.2 (PR pending)
+
+- Published cards with readable pages open by tapping cover, title, description, or card whitespace; existing Open button remains.
+- Favorite button is an independent action and must never open the reader; review/draft cards are not clickable.
+- Card is keyboard-focusable (Enter/Space) with focus ring and descriptive label; reduced-motion respected.
+- Acceptance pending: Android/iPhone touch, keyboard and screen readers, favorite button, published/review state, reader focus return, PWA/offline regression. Mark Accepted only after evidence.
