@@ -149,3 +149,12 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
 .reader-search-result strong{font-size:13px}
 .reader-search-result span{font-size:12px;line-height:1.6}
 .reader-search-result:focus-visible{outline:3px solid #dba852}
+
+/* UX-P2B: saved chapter bookmarks, kept distinct from favorites. */
+.reader-bookmarks-panel[hidden]{display:none}
+.reader-bookmarks-panel{padding:12px 18px;max-height:40vh;overflow:auto;background:#f7faf5;border-bottom:1px solid #dce5db;color:#315648}
+.reader-bookmarks-panel>strong{font-size:13px}
+.reader-bookmarks-panel p{font-size:12px;margin:7px 0}
+.reader-bookmarks-items{display:flex;flex-direction:column;gap:6px}
+.reader-bookmark-jump{display:block;width:100%;min-height:44px;padding:10px 12px;border:1px solid #d9e7d9;border-radius:10px;background:#fff;color:#315648;text-align:left;font-size:13px}
+.reader-bookmark-jump:focus-visible{outline:3px solid #dba852}
