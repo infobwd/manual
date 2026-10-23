@@ -4,6 +4,13 @@
 
 > **สถานะ:** เว็บไซต์และ PWA อยู่ใน `main` และ GitHub Pages เผยแพร่สำเร็จแล้ว คู่มือสาธารณะที่เปิดอ่านได้มีคู่มือแนะนำเว็บไซต์และคู่มือกรอกแบบบันทึกพัฒนาผู้เรียนรายบุคคลฉบับออนไลน์ โดยไม่แสดงข้อมูลเด็กจริงหรือไฟล์ภายใน
 
+## UX-00 — ตรวจแบบก่อนพัฒนาหน้าอ่าน
+
+- **[เอกสาร Baseline + Design Review + QA Gate](docs/WD_BOOKS_UX00_BASELINE_AND_DESIGN_REVIEW_2569.md)** — ตรวจโค้ดระบบเดิม, จุดต่างด้าน UX, เกณฑ์เก็บภาพ iPhone/iPad จริง และตาราง D01–D05 รอตรวจรับ
+- **[ต้นแบบหน้าแรก/หน้าอ่าน iPhone และ iPad](docs/previews/WD_BOOKS_UX00_READER_PREVIEW_2569.html)** — ไฟล์ตัวอย่าง interactive สำหรับตรวจแนวทางเท่านั้น ไม่ใช่หน้า Production และไม่มีข้อมูลนักเรียน
+
+**สถานะ:** ออกแบบ UX-00 พร้อมตรวจ แต่ยังไม่ผ่าน Gate 0 จนกว่าจะตรวจบนเครื่องจริงและยืนยันแบบก่อนเริ่ม P0
+
 ## แผนพัฒนา Reader UX (P0–P3)
 
 **[WD Books — Reader Experience Roadmap ปี 2569](docs/WD_BOOKS_READER_UX_ROADMAP_2569.md)** คือเอกสารกำกับการปรับประสบการณ์อ่านหนังสือบน iPhone/iPad/Android/PC โดยอ้างอิง Apple Books, Kindle และ Kobo ครอบคลุมการจัดหน้าแรก, สารบัญมือถือ, Swipe, โหมดอ่านเต็มจอ, การตั้งค่าข้อความ, Continuous Scroll, ค้นในหนังสือ และ Bookmark พร้อม Work Packages **UX-00, UX-P0A–P0D, UX-P1A–P1B, UX-P2A–P2B, UX-P3A** และ Release/QA gates
