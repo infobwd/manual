@@ -331,3 +331,10 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
 .bookmark-chapter-icon{flex:none}
 .bookmark-show-all{min-height:44px;border:1px solid var(--personal-line);border-radius:9px;background:transparent;color:var(--personal-ink);font-weight:700}
 @media(max-width:850px){#myBookmarksShelf{grid-template-columns:minmax(0,1fr)}}
+
+/* UX-FULLCARD: entire published book card is actionable, except its own buttons. */
+.manual-card-readable{cursor:pointer;touch-action:manipulation}
+.manual-card-readable:focus-visible{outline:3px solid #2e7d61;outline-offset:4px}
+.manual-card-readable:active{transform:translateY(0);box-shadow:0 0 0 2px #7cb39855}
+.manual-card:not(.manual-card-readable){cursor:default}
+@media(prefers-reduced-motion:reduce){.manual-card-readable{transition:none}}
