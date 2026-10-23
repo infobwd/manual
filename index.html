@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="./assets/mobile-reader.css">
   <link rel="stylesheet" href="./assets/home-p0a.css">
   <link rel="stylesheet" href="./assets/toc-p0b.css">
+  <link rel="stylesheet" href="./assets/reader-p0c.css">
   <script defer src="./assets/manuals-data.js"></script>
   <script defer src="./assets/wd-growth-individual-guide.js"></script>
   <script defer src="./assets/experience.js"></script>
@@ -175,7 +176,7 @@
 
 <dialog id="readerDialog" class="reader-dialog" aria-labelledby="readerTitle">
   <div class="reader-shell">
-    <div class="reader-topbar">
+    <div class="reader-topbar" id="readerTopbar">
       <button id="openMobileToc" type="button" class="mobile-toc-trigger" aria-label="เปิดสารบัญหนังสือ" aria-controls="mobileTocSheet" aria-expanded="false">☷ <span>สารบัญ</span></button>
       <div class="reader-identity"><span class="reader-mark">WD / READ</span><div><strong id="readerTitle"></strong><small id="readerCategory"></small></div></div>
       <div class="reader-actions">
@@ -191,13 +192,14 @@
         <nav id="tocItems" aria-label="บทในหนังสือ"></nav>
       </aside>
       <div class="reader-stage">
-        <div class="reader-hint">คลิกเปลี่ยนหน้า หรือใช้แป้นลูกศร ← → เพื่อเปิดอ่าน</div>
+        <button id="readerFocusToggle" class="reader-focus-toggle" type="button" aria-pressed="false" aria-controls="readerTopbar readerBottom" aria-label="ซ่อนแถบเครื่องมืออ่าน">◧ <span>ซ่อนเมนู</span></button>
+        <div class="reader-hint" id="readerGestureHint">ปัดซ้าย–ขวาหรือแตะขอบกระดาษเพื่อเปลี่ยนหน้า · แตะกลางหน้าเพื่อซ่อนหรือแสดงเมนู</div>
         <div id="bookSpread" class="book-spread" aria-live="polite">
           <article id="pageLeft" class="book-page"></article>
           <article id="pageRight" class="book-page"></article>
         </div>
         <button id="readerCloseThumb" class="reader-close-thumb" type="button" aria-label="ปิดอ่านและกลับไปชั้นหนังสือ">✕ <span>ปิดอ่าน</span></button>
-        <div class="reader-bottom">
+        <div class="reader-bottom" id="readerBottom">
           <button id="prevPage" class="page-control" type="button">← หน้าก่อน</button>
           <div class="reader-progress"><span id="pageCounter">หน้า 1</span><div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div></div>
           <button id="nextPage" class="page-control page-primary" type="button">หน้าถัดไป →</button>
