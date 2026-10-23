@@ -215,8 +215,8 @@
     <section id="readerSearchPanel" class="reader-search-panel" aria-label="ค้นหาภายในหนังสือ" hidden>
       <label for="readerSearchInput">ค้นหาคำในเล่มนี้</label>
       <div class="reader-search-field"><input id="readerSearchInput" type="search" autocomplete="off" placeholder="พิมพ์คำหรือข้อความที่ต้องการค้นหา"><button id="readerSearchClear" type="button">ล้าง</button></div>
-      <p id="readerSearchStatus" role="status" aria-live="polite">พิมพ์ข้อความเพื่อค้นหา</p>
-      <div id="readerSearchResults" class="reader-search-results" aria-label="ผลการค้นหา"></div>
+      <div class="reader-search-summary"><p id="readerSearchStatus" role="status" aria-live="polite">พิมพ์ข้อความเพื่อค้นหา</p><button id="readerSearchExpand" type="button" aria-controls="readerSearchResults" aria-expanded="true">ยุบผลค้นหา</button></div>
+      <div id="readerSearchResults" class="reader-search-results" aria-label="ผลการค้นหา"></div><div id="readerSearchNav" class="reader-search-nav" hidden><span id="readerSearchPosition" aria-live="polite">เลือกตอนจากผลค้นหา</span><button id="readerSearchPrev" type="button" aria-label="ผลก่อนหน้า">← ก่อนหน้า</button><button id="readerSearchNext" type="button" aria-label="ผลถัดไป">ถัดไป →</button></div>
     </section>
     <section id="readerAaPanel" class="reader-aa-panel" aria-label="ตั้งค่ารูปแบบการอ่าน" hidden>
       <label>ฟอนต์ภาษาไทย<select id="readerFontFamily"><option value="system">มาตรฐาน</option><option value="serif">แบบมีเชิง</option><option value="sans">อ่านง่าย</option></select></label>
