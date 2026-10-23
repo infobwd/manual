@@ -158,3 +158,21 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
 .reader-bookmarks-items{display:flex;flex-direction:column;gap:6px}
 .reader-bookmark-jump{display:block;width:100%;min-height:44px;padding:10px 12px;border:1px solid #d9e7d9;border-radius:10px;background:#fff;color:#315648;text-align:left;font-size:13px}
 .reader-bookmark-jump:focus-visible{outline:3px solid #dba852}
+
+/* Mobile reader hotfix: no sideways toolbar scroll; hide unused facing page. */
+.reader-tools-toggle{display:none}
+.reader-extra-tools[hidden]{display:none}
+@media(max-width:1100px){
+  .reader-topbar{position:relative;min-width:0;gap:8px}
+  .reader-actions{margin-left:auto;flex:0 0 auto}
+  .reader-tools-toggle{display:inline-flex;align-items:center;justify-content:center;min-width:48px;min-height:48px;font-size:25px}
+  .reader-extra-tools{position:absolute;z-index:35;right:12px;top:calc(100% - 2px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:min(320px,calc(100vw - 24px));padding:12px;border:1px solid #c5d7c9;border-radius:14px;background:#213d32;box-shadow:0 12px 26px #10201e55}
+  .reader-extra-tools .icon-button{min-width:0;min-height:48px;padding:8px;font-size:15px}
+  .reader-extra-tools[hidden]{display:none}
+  #pageRight{display:none!important}
+  .reader-hint{display:none}
+  .reader-topbar .reader-identity{display:none}
+  .reader-topbar .reader-actions{width:100%;justify-content:flex-end}
+  .reader-topbar .reader-actions:before{content:"อ่านหนังสือ";margin-right:auto;font-size:13px;font-weight:750;color:#d5e5d6}
+}
+@media(min-width:1101px){.reader-extra-tools{display:flex;align-items:center;gap:7px}}
