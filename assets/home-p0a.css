@@ -109,3 +109,11 @@ body[data-theme="night"] .discovery-filters button.selected{background:#a9d3b4;c
 #resetDiscoveryFilters[hidden]{display:none}
 #resetDiscoveryFilters:focus-visible{outline:3px solid #dba852;outline-offset:2px}
 #resultsText:focus{outline:none}
+
+/* UX-DISCOVERY P3: compact, touch-friendly sorting. */
+.discovery-sort-row{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin:10px 0 15px}
+.discovery-sort-row label{font-size:13px;font-weight:700}
+.discovery-sort-row select{min-height:44px;max-width:66%;padding:8px 12px;border:1px solid #a6bdaa;border-radius:12px;background:var(--surface,#fff);color:var(--ink,#244236);font:inherit;font-size:14px}
+.discovery-sort-row select:focus-visible{outline:3px solid #dba852;outline-offset:2px}
+body[data-theme="night"] .discovery-sort-row select{background:#20372c;color:#e6f4e8;border-color:#688773}
+@media(max-width:420px){.discovery-sort-row{justify-content:space-between}}

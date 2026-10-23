@@ -472,3 +472,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Candidate v1.3.12: label status vs category filter groups, horizontal category-scroll hint, contextual zero-result text, one-tap reset of search/category/status without touching localStorage or reading history.
 - Pre-PR JS syntax parsing passed; QA pending on iPhone Safari/PWA, Android, iPad, night/light/sepia, zero results and reset, focus/VoiceOver, long category list and offline.
 - Continue scalable sorting/indexing only after P2 acceptance; no auto merge.
+
+## UX-DISCOVERY P3 — sort and indexed catalog search (23 ต.ค. 2569)
+
+- User reports P2 PASS on iPhone. Candidate v1.3.13 adds sort **พร้อมอ่านก่อน / ชื่อ ก–ฮ / อ่านล่าสุดก่อน** (history-based, books never read follow published-first order), combined with current status/category/search filters.
+- Build normalized searchable strings once per catalog book (title, subtitle, description, audience, category and tags); keep in-memory only; do not index unpublished page bodies or store user data remotely. Thai title ordering uses Intl.Collator('th-TH').
+- Reset-all also resets sort; history, favorites, bookmarks, progress, localStorage schema remain unchanged.
+- Pre-PR JavaScript syntax parse PASS. QA pending: iPhone Safari/PWA, Android/iPad, sorting order, mixed filters, empty state reset, 0/1/100+ synthetic items, offline and accessibility. Avoid claiming performance gains until measured.
+- After device acceptance, consider measured catalog rendering limits before pagination or architectural modularization.

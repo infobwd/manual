@@ -10,7 +10,7 @@
     if (value !== undefined) el.textContent = value;
     return el;
   };
-  const state = { category: "all", availability: "all", query: "", manual: null, page: 0, scale: 1, opener: null, readingMode: "paged" };
+  const state = { category: "all", availability: "all", sort: "default", query: "", manual: null, page: 0, scale: 1, opener: null, readingMode: "paged" };
   // Reader single-page threshold includes portrait tablets and narrow Split View.
   const isMobile = window.matchMedia("(max-width: 1100px)");
   const statuses = { published: "พร้อมอ่าน", review: "รอตรวจรับ", planned: "ตามแผน" };
@@ -51,15 +51,15 @@
     $("statPending").textContent = String(data.manuals.filter((b) => b.status !== "published").length);
     $("statCategories").textContent = String(data.categories.length);
   }
+  const discoveryIndex = new Map(data.manuals.map(book => [book.id, normalized([book.title, book.subtitle, book.description, book.audience, lookup[book.category]?.label, ...(book.tags || [])].join(" "))]));
+  const thaiCollator = new Intl.Collator("th-TH", {sensitivity:"base", numeric:true});
   function matches(book) {
     const ready = book.status === "published" && Boolean(book.pages?.length);
     if (state.availability === "ready" && !ready) return false;
     if (state.availability === "upcoming" && ready) return false;
     if (state.category !== "all" && book.category !== state.category) return false;
     if (!state.query) return true;
-    const haystack = [book.title, book.subtitle, book.description, book.audience,
-      lookup[book.category]?.label, ...(book.tags || [])].map(normalized).join(" ");
-    return haystack.includes(state.query);
+    return (discoveryIndex.get(book.id) || "").includes(state.query);
   }
   function cardFor(book) {
     const article = create("article", "manual-card");
@@ -140,7 +140,18 @@
     return article;
   }
   function renderCatalog() {
-    const filtered = data.manuals.filter(matches).sort((a, b) => (a.status === "published" ? 0 : 1) - (b.status === "published" ? 0 : 1));
+    const history = window.WD_EXPERIENCE?.getHistory?.() || [];
+    const recentRank = new Map(history.map((id, index) => [id, index]));
+    const filtered = data.manuals.filter(matches).sort((a, b) => {
+      if (state.sort === "title") return thaiCollator.compare(a.title, b.title);
+      if (state.sort === "recent") {
+        const aRank = recentRank.get(a.id) ?? Number.MAX_SAFE_INTEGER;
+        const bRank = recentRank.get(b.id) ?? Number.MAX_SAFE_INTEGER;
+        if (aRank !== bRank) return aRank - bRank;
+      }
+      const ready = book => book.status === "published" && Boolean(book.pages?.length);
+      return Number(ready(b)) - Number(ready(a));
+    });
     $("manualGrid").replaceChildren(...filtered.map(cardFor));
     $("manualGrid").setAttribute("aria-busy","false");
     document.querySelectorAll("[data-discovery-filter]").forEach(button => {
@@ -151,6 +162,7 @@
     const readyCount = filtered.filter(book => book.status === "published" && book.pages?.length).length;
     $("resultsText").textContent = filtered.length ? "พบคู่มือพร้อมอ่าน " + readyCount + " เล่ม · รายการทั้งหมด " + filtered.length + " จาก " + data.manuals.length + " รายการ" : "ไม่พบคู่มือที่ตรงกับคำค้นหาและตัวกรองที่เลือก";
     $("resetDiscoveryFilters").hidden = filtered.length > 0;
+    $("discoverySort").value = state.sort;
     $("emptyResults").textContent = "ลองล้างตัวกรองเพื่อดูคู่มือทั้งหมดอีกครั้ง";
     $("emptyResults").hidden = filtered.length > 0;
   }
@@ -935,11 +947,16 @@
   $("resetDiscoveryFilters").addEventListener("click", () => {
     state.availability = "all";
     state.category = "all";
+    state.sort = "default";
     state.query = "";
     for (const id of ["searchInput", "homeSearchInput"]) { if ($(id)) $(id).value = ""; }
     renderCategories();
     renderCatalog();
     $("resultsText").focus();
+  });
+  $("discoverySort").addEventListener("change", event => {
+    state.sort = ["default", "title", "recent"].includes(event.target.value) ? event.target.value : "default";
+    renderCatalog();
   });
   document.querySelectorAll("[data-discovery-filter]").forEach(button => {
     button.addEventListener("click", () => {
