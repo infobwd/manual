@@ -465,3 +465,10 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - Ready = published with nonempty pages; upcoming = other catalog entries. No private/draft content made readable.
 - JavaScript syntax validation performed before PR. QA pending: iPhone Safari/PWA, Android, iPad, 0/1/many matches, combinations with categories and search, keyboard/screen reader, themes and offline cache.
 - Next: UX-DISCOVERY P2 sort/search scalability after P1 device acceptance; no automatic merge.
+
+## UX-DISCOVERY P2 — clarity and reset (23 ต.ค. 2569)
+
+- User iPhone screenshots verify ready filter shows 2 of 7 manuals, zero-results state, and reading progress 13/15 persists; other device QA remains pending.
+- Candidate v1.3.12: label status vs category filter groups, horizontal category-scroll hint, contextual zero-result text, one-tap reset of search/category/status without touching localStorage or reading history.
+- Pre-PR JS syntax parsing passed; QA pending on iPhone Safari/PWA, Android, iPad, night/light/sepia, zero results and reset, focus/VoiceOver, long category list and offline.
+- Continue scalable sorting/indexing only after P2 acceptance; no auto merge.
