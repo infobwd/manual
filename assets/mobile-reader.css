@@ -80,3 +80,9 @@ body[data-theme="sepia"] .pull-refresh{background:#f6eddc;color:#665238;border-c
 .reader-bottom .reader-close-bottom{flex:0 0 46px;min-width:46px;min-height:46px;padding:8px;background:#fff;color:#425e53;border:1px solid #cedbd2;font-size:19px;font-weight:800}
 .reader-bottom .reader-close-bottom:focus-visible,.book-cover .cover-favorite:focus-visible{outline:3px solid #dbad52;outline-offset:3px}
 @media(max-width:600px){.reader-bottom{gap:7px}.reader-bottom .page-control{padding:10px 9px;min-height:46px}.reader-bottom .reader-progress{min-width:58px;gap:4px;flex:1}.reader-bottom .reader-close-bottom{flex-basis:46px}.reader-bottom #pageCounter{white-space:nowrap}}
+
+/* Explicit saved/unsaved states: shape and color, not color alone. */
+.book-cover .cover-favorite:not([aria-pressed="true"]){background:#ffffff;color:#31574a;border:2px solid #d5e4d9}
+.book-cover .cover-favorite[aria-pressed="true"]{background:#fff0f1;color:#c3264c;border:2px solid #f3a1b2;box-shadow:0 3px 14px #32101830}
+body[data-theme="night"] .book-cover .cover-favorite:not([aria-pressed="true"]){background:#edf4ee;color:#31574a;border-color:#d5e4d9}
+body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{background:#fff0f1;color:#c3264c;border-color:#f3a1b2}
