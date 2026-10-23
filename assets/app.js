@@ -553,7 +553,7 @@
     searchResults.replaceChildren();
     const term = normalized(searchInput.value).replace(/\\s+/g," ");
     readerHighlightTerm = term;
-    if (state.manual && dialog.open) highlightVisiblePages();
+    if (state.manual && dialog.open) renderReader();
     if (!term || !state.manual || state.manual.status !== "published") {
       searchStatus.textContent = "พิมพ์ข้อความเพื่อค้นหา";
       return;
