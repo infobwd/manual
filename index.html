@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#174f47">
+  <meta name="description" content="คลังคู่มือดิจิทัลโรงเรียนบ้านวังด้ง แยกตามหมวดหมู่ ค้นหาและเปิดอ่านในรูปแบบ e-book">
+  <title>คลังคู่มือโรงเรียนบ้านวังด้ง | WD Manual Library</title>
+  <link rel="stylesheet" href="./assets/styles.css">
+  <script defer src="./assets/manuals-data.js"></script>
+  <script defer src="./assets/app.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#content">ข้ามไปยังเนื้อหา</a>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="site-brand" href="./" aria-label="กลับหน้าหลักคลังคู่มือ">
+      <span class="brand-symbol" aria-hidden="true">WD</span>
+      <span class="brand-copy"><strong>คลังคู่มือบ้านวังด้ง</strong><small>Wang Dong School · Manual Library</small></span>
+    </a>
+    <nav class="top-nav" aria-label="เมนูหลัก">
+      <a class="current" href="#content">หน้าหลัก</a>
+      <a href="#library">หมวดหมู่คู่มือ</a>
+      <a href="#about">เกี่ยวกับคลัง</a>
+    </nav>
+    <span class="header-pill">School Knowledge Hub</span>
+  </div>
+</header>
+
+<div class="app-shell">
+  <aside class="sidebar" aria-label="เลือกหมวดหมู่">
+    <div class="sidebar-sticky">
+      <p class="eyebrow">EXPLORE</p>
+      <h2>หมวดคู่มือ</h2>
+      <div id="categoryNav" class="category-nav" role="group" aria-label="หมวดหมู่"></div>
+      <div class="sidebar-note">
+        <span class="sidebar-note-icon" aria-hidden="true">✦</span>
+        <strong>เรียนรู้ได้ทุกที่</strong>
+        <p>ใช้คู่มือฉบับที่ผ่านการตรวจรับ เปิดอ่านได้ทั้งคอมพิวเตอร์และโทรศัพท์</p>
+      </div>
+    </div>
+  </aside>
+
+  <main id="content" class="main">
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero-copy">
+        <span class="hero-overline"><span class="overline-dot"></span> DIGITAL KNOWLEDGE LIBRARY</span>
+        <h1 id="heroTitle">ทุกคู่มือของโรงเรียน<br><em>อยู่บนชั้นหนังสือเดียวกัน</em></h1>
+        <p>ค้นหาแนวปฏิบัติ คู่มือครู และวิธีใช้ระบบของโรงเรียนได้ง่าย ๆ พร้อมประสบการณ์เปิดอ่านแบบ e-book</p>
+        <a class="hero-link" href="#library">สำรวจชั้นหนังสือ <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="hero-ring ring-one"></div><div class="hero-ring ring-two"></div>
+        <div class="floating-book book-back"><span>WORKFLOW</span><b>ระบบโรงเรียน</b><small>MANUALS</small></div>
+        <div class="floating-book book-front"><span>WD GROWTH</span><b>เรียนรู้<br>เติบโต</b><small>TEACHER GUIDE</small></div>
+        <div class="hero-star">✳</div>
+      </div>
+    </section>
+
+    <section class="summary-strip" aria-label="ภาพรวมคลังคู่มือ">
+      <div><span class="summary-number" id="statPublished">—</span><span class="summary-label">คู่มือพร้อมอ่าน</span></div>
+      <div><span class="summary-number" id="statPending">—</span><span class="summary-label">รายการเตรียมเผยแพร่</span></div>
+      <div><span class="summary-number" id="statCategories">—</span><span class="summary-label">หมวดหมู่หลัก</span></div>
+      <p class="summary-help">เผยแพร่เฉพาะเนื้อหาสาธารณะที่ผ่านการตรวจรับแล้วเท่านั้น</p>
+    </section>
+
+    <section class="library" id="library" aria-labelledby="libraryTitle">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">THE BOOKSHELF</p>
+          <h2 id="libraryTitle">ชั้นหนังสือดิจิทัล</h2>
+          <p class="section-detail" id="resultsText" role="status" aria-live="polite">เลือกหมวดหมู่หรือค้นหาชื่อคู่มือ</p>
+        </div>
+        <label class="search-box" for="searchInput">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input id="searchInput" type="search" autocomplete="off" placeholder="ค้นหาคู่มือหรือคำสำคัญ…">
+        </label>
+      </div>
+      <div id="categoryChips" class="category-chips" aria-label="ตัวกรองหมวดหมู่"></div>
+      <div id="manualGrid" class="manual-grid"></div>
+      <p id="emptyResults" class="empty-state" hidden>ยังไม่พบคู่มือที่ตรงกับคำค้น ลองเปลี่ยนหมวดหมู่หรือใช้คำค้นอื่น</p>
+    </section>
+
+    <section class="about" id="about" aria-labelledby="aboutTitle">
+      <div class="about-mark" aria-hidden="true">✳</div>
+      <div><p class="eyebrow">ABOUT THIS LIBRARY</p><h2 id="aboutTitle">คู่มือถูกต้อง ค้นหาง่าย และอัปเดตได้</h2>
+        <p>ต้นฉบับงานพัฒนาระบบยังอยู่ใน repository ของแต่ละโครงการ ส่วนคลังนี้เก็บเฉพาะฉบับเผยแพร่ที่ได้รับอนุมัติ พร้อมแสดงสถานะและรอบปรับปรุงอย่างชัดเจน</p>
+      </div>
+    </section>
+    <footer class="site-footer"><span>© โรงเรียนบ้านวังด้ง · คลังคู่มือโรงเรียน</span><span>ต้นแบบเว็บไซต์ · รอตรวจรับก่อนเผยแพร่จริง</span></footer>
+  </main>
+</div>
+
+<dialog id="readerDialog" class="reader-dialog" aria-labelledby="readerTitle">
+  <div class="reader-shell">
+    <div class="reader-topbar">
+      <div class="reader-identity"><span class="reader-mark">WD / READ</span><div><strong id="readerTitle"></strong><small id="readerCategory"></small></div></div>
+      <div class="reader-actions">
+        <button id="fontDecrease" class="icon-button font-button" type="button" aria-label="ลดขนาดตัวอักษร">A−</button>
+        <button id="fontIncrease" class="icon-button font-button" type="button" aria-label="เพิ่มขนาดตัวอักษร">A+</button>
+        <button id="readerClose" class="icon-button close-button" type="button" aria-label="ปิดหนังสือ">✕</button>
+      </div>
+    </div>
+    <div class="reader-content">
+      <aside class="reader-toc" aria-label="สารบัญ">
+        <div class="toc-label">สารบัญ</div>
+        <nav id="tocItems" aria-label="บทในหนังสือ"></nav>
+      </aside>
+      <div class="reader-stage">
+        <div class="reader-hint">คลิกเปลี่ยนหน้า หรือใช้แป้นลูกศร ← → เพื่อเปิดอ่าน</div>
+        <div id="bookSpread" class="book-spread" aria-live="polite">
+          <article id="pageLeft" class="book-page"></article>
+          <article id="pageRight" class="book-page"></article>
+        </div>
+        <div class="reader-bottom">
+          <button id="prevPage" class="page-control" type="button">← หน้าก่อน</button>
+          <div class="reader-progress"><span id="pageCounter">หน้า 1</span><div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div></div>
+          <button id="nextPage" class="page-control page-primary" type="button">หน้าถัดไป →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
+</body>
+</html>
