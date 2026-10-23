@@ -11,6 +11,14 @@
 
 **สถานะ:** ออกแบบ UX-00 พร้อมตรวจ แต่ยังไม่ผ่าน Gate 0 จนกว่าจะตรวจบนเครื่องจริงและยืนยันแบบก่อนเริ่ม P0
 
+## UX-P0A — หน้าแรกแบบอ่านต่อก่อน (รอตรวจรับ)
+
+มีการจัดหน้า Home ใหม่ใน feature branch: แสดงช่องค้นหาบนมือถือ, การ์ดอ่านต่อจากเล่มล่าสุด, รายการคู่มือพร้อมอ่านก่อนรอตรวจรับ และลด bottom tabs เหลือ 3 รายการ โดยยังรักษา localStorage และ PWA เดิมไว้
+
+- [แผนตรวจรับและ Local-First QA ของ UX-P0A](docs/WD_BOOKS_UX_P0A_ACCEPTANCE_2569.md)
+- Smoke tests: `node tests/home-p0a.smoke.cjs`, `node tests/library.smoke.cjs`, `node tests/pwa-reader.smoke.cjs`
+- **ยังไม่ Merge implementation:** ต้องตรวจ iPhone/iPad จริง, accessibility, PWA/Offline ก่อนปล่อยลง Pages
+
 ## แผนพัฒนา Reader UX (P0–P3)
 
 **[WD Books — Reader Experience Roadmap ปี 2569](docs/WD_BOOKS_READER_UX_ROADMAP_2569.md)** คือเอกสารกำกับการปรับประสบการณ์อ่านหนังสือบน iPhone/iPad/Android/PC โดยอ้างอิง Apple Books, Kindle และ Kobo ครอบคลุมการจัดหน้าแรก, สารบัญมือถือ, Swipe, โหมดอ่านเต็มจอ, การตั้งค่าข้อความ, Continuous Scroll, ค้นในหนังสือ และ Bookmark พร้อม Work Packages **UX-00, UX-P0A–P0D, UX-P1A–P1B, UX-P2A–P2B, UX-P3A** และ Release/QA gates

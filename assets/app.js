@@ -98,10 +98,57 @@
     return article;
   }
   function renderCatalog() {
-    const filtered = data.manuals.filter(matches);
+    const filtered = data.manuals.filter(matches).sort((a, b) => (a.status === "published" ? 0 : 1) - (b.status === "published" ? 0 : 1));
     $("manualGrid").replaceChildren(...filtered.map(cardFor));
-    $("resultsText").textContent = "แสดง " + filtered.length + " รายการ จาก " + data.manuals.length + " รายการ (รวมรายการที่ยังไม่เผยแพร่)";
+    const readyCount = filtered.filter(book => book.status === "published" && book.pages?.length).length;
+    $("resultsText").textContent = "พบคู่มือพร้อมอ่าน " + readyCount + " เล่ม · รายการทั้งหมด " + filtered.length + " จาก " + data.manuals.length + " รายการ";
     $("emptyResults").hidden = filtered.length > 0;
+  }
+
+  // Stable resume card: do not replace its button when a page turn saves progress,
+  // or the original focus target would disappear while its dialog is open.
+  let featuredBookId = null;
+  let featureNodes = null;
+  function renderContinueFeature() {
+    const section = $("continueFeature"), host = $("continueFeatureCard");
+    if (!section || !host) return;
+    const recentId = window.WD_EXPERIENCE?.getHistory?.()[0];
+    const book = data.manuals.find(b => b.id === recentId && b.status === "published" && b.pages?.length);
+    if (!book) {
+      section.hidden = true;
+      host.replaceChildren();
+      featuredBookId = null;
+      featureNodes = null;
+      return;
+    }
+    section.hidden = false;
+    if (featuredBookId !== book.id || !featureNodes) {
+      const card = create("div", "resume-feature-card");
+      const cover = create("div", "resume-feature-cover");
+      cover.append(create("span", "resume-feature-cover-kicker", book.coverTop || "WD BOOKS"));
+      cover.append(create("strong", "", book.coverTitle || book.title));
+      const copy = create("div", "resume-feature-copy");
+      const label = create("span", "resume-feature-label", "หนังสือที่อ่านล่าสุด");
+      const title = create("h3", "", book.title);
+      const subtitle = create("p", "", book.subtitle || lookup[book.category]?.label || "คู่มือ");
+      const progressText = create("span", "resume-feature-progress");
+      const track = create("div", "resume-feature-track");
+      track.setAttribute("aria-hidden", "true");
+      const bar = create("span", "");
+      track.append(bar);
+      const read = create("button", "resume-feature-action", "อ่านต่อ →");
+      read.type = "button";
+      read.setAttribute("aria-label", "อ่าน " + book.title + " ต่อจากหน้าล่าสุด");
+      read.addEventListener("click", () => openBook(book, read));
+      copy.append(label, title, subtitle, progressText, track, read);
+      card.append(cover, copy);
+      host.replaceChildren(card);
+      featureNodes = { progressText, bar };
+      featuredBookId = book.id;
+    }
+    const page = window.WD_EXPERIENCE?.getProgress?.(book.id) || 0;
+    featureNodes.progressText.textContent = "หน้า " + (page + 1) + " จาก " + book.pages.length + " · " + Math.round(((page + 1) / book.pages.length) * 100) + "%";
+    featureNodes.bar.style.width = ((page + 1) / book.pages.length * 100) + "%";
   }
 
   function shelfRow(book, includeRemove = false) {
@@ -253,17 +300,25 @@
   isMobile.addEventListener?.("change", () => {
     if (state.manual) { state.page = isMobile.matches ? state.page : Math.floor(state.page / 2) * 2; renderReader(); }
   });
-  $("searchInput").addEventListener("input", (event) => {
-    state.query = normalized(event.target.value);
+  function updateQuery(value, source) {
+    state.query = normalized(value);
+    for (const id of ["searchInput", "homeSearchInput"]) {
+      const field = $(id);
+      if (field && field !== source) field.value = value;
+    }
     renderCatalog();
-  });
+  }
+  for (const id of ["searchInput", "homeSearchInput"]) {
+    $(id)?.addEventListener("input", (event) => updateQuery(event.target.value, event.target));
+  }
   window.WD_EXPERIENCE?.bindReader?.(
     (scale) => { state.scale = scale; $("bookSpread").style.setProperty("--readerScale", String(scale)); },
     (book, opener) => openBook(book, opener)
   );
-  window.WD_EXPERIENCE?.subscribeBooks?.(renderShelf);
+  window.WD_EXPERIENCE?.subscribeBooks?.(() => { renderShelf(); renderContinueFeature(); });
   renderStats();
   renderCategories();
   renderCatalog();
   renderShelf();
+  renderContinueFeature();
 })();
