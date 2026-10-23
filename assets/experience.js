@@ -284,27 +284,71 @@
   }
   function installUI() {
     const button = $("installApp");
-    if (!button) return;
-    window.addEventListener("beforeinstallprompt", (event) => {
-      event.preventDefault();
-      deferredInstall = event;
-      button.hidden = false;
-      $("installHelp").textContent = "อุปกรณ์นี้รองรับการติดตั้งแอปจากเบราว์เซอร์";
-    });
-    button.addEventListener("click", async () => {
-      if (!deferredInstall) return;
+    const banner = $("installSuggestion");
+    const bannerText = $("installSuggestionText");
+    const bannerAction = $("installSuggestionAction");
+    const bannerDismiss = $("installSuggestionDismiss");
+    const help = $("installHelp");
+    if (!button || !help) return;
+    const ua = navigator.userAgent || "";
+    const apple = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const android = /Android/i.test(ua);
+    const safari = apple && /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
+    const standalone = () => window.matchMedia?.("(display-mode: standalone)")?.matches || navigator.standalone === true;
+    const instructions = apple
+      ? (safari ? "iPhone/iPad: แตะปุ่มแชร์ใน Safari แล้วเลือก เพิ่มไปยังหน้าจอโฮม จากนั้นแตะ เพิ่ม" : "iPhone/iPad: เปิดเว็บไซต์นี้ใน Safari แล้วแตะ แชร์ → เพิ่มไปยังหน้าจอโฮม → เพิ่ม")
+      : android
+        ? "Android: เปิดเว็บไซต์ใน Chrome แตะเมนู ⋮ แล้วเลือก ติดตั้งแอป หรือ เพิ่มไปยังหน้าจอหลัก จากนั้นยืนยัน"
+        : "คอมพิวเตอร์: เปิดด้วย Chrome หรือ Edge แล้วกดไอคอนติดตั้งในแถบที่อยู่ หรือเมนู ⋮ → ติดตั้งแอป";
+    let dismissed = false;
+    try { dismissed = sessionStorage.getItem("wd-books-install-dismissed") === "1"; } catch {}
+    function refreshInstallUI() {
+      if (standalone()) {
+        banner.hidden = true;
+        button.hidden = true;
+        help.textContent = "กำลังใช้งาน WD Books ในโหมดแอปแล้ว";
+        return;
+      }
+      help.textContent = instructions;
+      banner.hidden = dismissed;
+      if (bannerText) bannerText.textContent = instructions;
+      if (bannerAction) bannerAction.textContent = deferredInstall ? "ติดตั้งแอป" : "ดูวิธีติดตั้ง";
+      button.hidden = !deferredInstall;
+    }
+    async function triggerInstall() {
+      if (!deferredInstall) { openSettings(); updateBottom("settings"); return; }
       const prompt = deferredInstall;
       deferredInstall = null;
-      button.hidden = true;
-      try { await prompt.prompt(); await prompt.userChoice; } catch { announce("ติดตั้งไม่สำเร็จ สามารถลองจากเมนูเบราว์เซอร์"); }
+      try {
+        await prompt.prompt();
+        const choice = await prompt.userChoice;
+        if (choice?.outcome !== "accepted") refreshInstallUI();
+      } catch {
+        announce("ติดตั้งไม่สำเร็จ ลองติดตั้งจากเมนูเบราว์เซอร์");
+      }
+      refreshInstallUI();
+    }
+    window.addEventListener("beforeinstallprompt", event => {
+      event.preventDefault();
+      deferredInstall = event;
+      refreshInstallUI();
+    });
+    button.addEventListener("click", triggerInstall);
+    bannerAction?.addEventListener("click", triggerInstall);
+    bannerDismiss?.addEventListener("click", () => {
+      dismissed = true;
+      try { sessionStorage.setItem("wd-books-install-dismissed", "1"); } catch {}
+      refreshInstallUI();
     });
     window.addEventListener("appinstalled", () => {
+      deferredInstall = null;
+      dismissed = true;
+      banner.hidden = true;
       button.hidden = true;
+      help.textContent = "ติดตั้ง WD Books แล้ว";
       announce("ติดตั้ง WD Books แล้ว");
     });
-    const standalone = window.matchMedia?.("(display-mode: standalone)")?.matches ||
-      window.navigator?.standalone === true;
-    if (standalone) $("installHelp").textContent = "กำลังใช้งานในโหมดแอปจากหน้าจอโฮม";
+    refreshInstallUI();
   }
   function registerWorker() {
     if (!("serviceWorker" in navigator)) return;

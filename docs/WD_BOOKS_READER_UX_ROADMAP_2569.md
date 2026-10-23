@@ -329,3 +329,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - อัปเดตรายการเมื่อบันทึกหรือลบคั่นหน้า ไม่เปลี่ยนโครงสร้างข้อมูลเดิม
 - รอตรวจรับ: เปิดจากหน้า ของฉัน หลายเล่ม, ปิดเปิดแอป, ใช้งานออฟไลน์, iPhone/iPad/Android และ VoiceOver
 - ขั้นต่อไป: ไฮไลต์คำค้นหา ตรวจ PWA และปรับสถานะ Roadmap
+
+## 1.3.0 — ฟอนต์ไทยมีหัวและคำแนะนำติดตั้งตามอุปกรณ์
+
+- คอมพิวเตอร์และ Android ใช้ Sarabun ซึ่งเป็นฟอนต์ไทยมีหัว; iPhone/iPad ใช้ฟอนต์ระบบ Apple
+- หน้าเว็บในเบราว์เซอร์แสดงคำแนะนำติดตั้งที่ปิดได้; iOS Safari/เบราว์เซอร์อื่น, Android และคอมพิวเตอร์มีขั้นตอนต่างกัน
+- โหมด standalone ไม่แสดงคำแนะนำ; ปุ่มติดตั้งอัตโนมัติแสดงเฉพาะเมื่อเบราว์เซอร์ส่ง beforeinstallprompt
+- ใช้ฟอนต์สำรองเมื่อออฟไลน์ ไม่เปลี่ยนข้อมูลการอ่านและการตั้งค่าฟอนต์เฉพาะเล่ม
+- รอตรวจรับจริง: iOS Safari/Chrome/PWA, Android Chrome/PWA, Windows Chrome/Edge, Mac Safari/Chrome, การปิดแบนเนอร์, แป้นพิมพ์/VoiceOver และ PWA offline
