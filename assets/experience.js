@@ -49,17 +49,24 @@
     document.querySelectorAll('input[name="readerTheme"]').forEach((radio) => {
       radio.checked = radio.value === prefs.theme;
     });
-    for (const id of ["quickEyeMode", "readerEyeMode"]) {
+    for (const id of ["readerEyeMode"]) {
       const b = $(id); if (!b) continue;
       b.setAttribute("aria-pressed", String(prefs.theme === "sepia"));
       b.title = prefs.theme === "sepia" ? "ปิดโหมดถนอมสายตา" : "เปิดโหมดถนอมสายตา";
     }
+  }
+  // Cover shortcuts share the same saved reading preference.
+  function syncCoverThemes() {
+    document.querySelectorAll(".cover-eye-mode").forEach(button => {
+      button.setAttribute("aria-pressed", String(prefs.theme === "sepia"));
+    });
   }
   function setTheme(theme) {
     if (!themes.includes(theme)) return;
     prefs.theme = theme;
     save();
     syncTheme();
+    syncCoverThemes();
   }
   function syncFont() {
     const input = $("globalFontSize"), label = $("globalFontLabel");
@@ -193,7 +200,7 @@
     syncTheme();
     syncFont();
     updateContinue();
-    for (const id of ["quickEyeMode", "readerEyeMode"]) {
+    for (const id of ["readerEyeMode"]) {
       $(id)?.addEventListener("click", () => setTheme(prefs.theme === "sepia" ? "light" : "sepia"));
     }
     for (const id of ["headerSettings", "navSettings"]) {

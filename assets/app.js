@@ -63,6 +63,20 @@
     cover.append(create("span", "cover-eyebrow", book.coverTop || "MANUAL"));
     cover.append(create("strong", "", book.coverTitle || book.title));
     cover.append(create("span", "cover-subtitle", book.subtitle));
+    if (book.status === "published" && book.pages?.length) {
+      const eye = create("button", "cover-eye-mode", "☀");
+      eye.type = "button";
+      eye.setAttribute("aria-label", "เปลี่ยนโหมดถนอมสายตา");
+      eye.setAttribute("title", "โหมดถนอมสายตา");
+      eye.setAttribute("aria-pressed", String(window.WD_EXPERIENCE?.getTheme?.() === "sepia"));
+      eye.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const experience = window.WD_EXPERIENCE;
+        experience?.setTheme?.(experience.getTheme?.() === "sepia" ? "light" : "sepia");
+      });
+      cover.append(eye);
+    }
+
     const body = create("div", "card-body");
     body.append(create("span", "card-category", lookup[book.category]?.label || "คู่มือ"));
     body.append(create("h3", "", book.title));
@@ -254,7 +268,7 @@
     $("readerCategory").textContent = (lookup[book.category]?.label || "คู่มือ") + " · " + book.edition;
     renderReader();
     if (!dialog.open) dialog.showModal();
-    (window.matchMedia("(max-width: 1000px)").matches ? $("readerCloseThumb") || $("readerClose") : $("readerClose")).focus();
+    $("readerClose").focus();
   }
   function pageNode(target, page, index) {
     target.replaceChildren();
@@ -396,7 +410,6 @@
   $("prevPage").addEventListener("click", () => movePage(-1));
   $("nextPage").addEventListener("click", () => movePage(1));
   $("readerClose").addEventListener("click", () => dialog.close());
-  $("readerCloseThumb")?.addEventListener("click", () => dialog.close());
   $("fontDecrease").addEventListener("click", () => resize(-.1));
   $("fontIncrease").addEventListener("click", () => resize(.1));
   function resize(amount) {
