@@ -301,3 +301,14 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
 .personal-bookmark-open strong{font-size:13px;overflow-wrap:anywhere}
 .personal-bookmark-open small{font-size:12px;line-height:1.5;color:#587568;overflow-wrap:anywhere}
 .personal-bookmark-open:focus-visible{outline:3px solid #dba852;outline-offset:2px}
+
+/* Install guidance is dismissible and avoids the bottom navigation on phones. */
+.install-suggestion[hidden]{display:none!important}
+.install-suggestion{position:fixed;z-index:45;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);box-sizing:border-box;width:min(620px,calc(100vw - 24px));display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;background:#f8fbf7;color:#234c3c;border:1px solid #cfe0d2;border-radius:16px;box-shadow:0 12px 38px #102f2340}
+.install-suggestion-copy{min-width:0}
+.install-suggestion-copy strong{font-size:13px}
+.install-suggestion-copy p{font-size:12px;line-height:1.55;margin:4px 0 0}
+.install-suggestion-actions{display:flex;gap:6px;flex:0 0 auto}
+.install-suggestion-actions button{min-height:44px;border:1px solid #c9d9cd;border-radius:10px;background:white;color:#285846;padding:8px 11px;font-weight:700;font-size:12px}
+.install-suggestion-actions #installSuggestionAction{background:#235a44;color:white}
+@media(max-width:850px){.install-suggestion{bottom:calc(76px + env(safe-area-inset-bottom));align-items:flex-start;flex-direction:column}.install-suggestion-actions{align-self:flex-end}}
