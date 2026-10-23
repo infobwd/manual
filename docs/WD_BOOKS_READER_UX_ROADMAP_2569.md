@@ -3,7 +3,7 @@
 **Plan ID:** WD-BOOKS-UX-2569  
 **Version:** 1.1 · 23 ตุลาคม 2569 (Master Roadmap reconciliation)  
 **Repository:** infobwd/manual (Public)  
-**Status:** WD Books 1.3.1 merged (PR #38); งาน UX สำคัญหลายส่วน Merge แล้ว แต่ QA บนอุปกรณ์จริงและ Accessibility ยังไม่ปิด Gate  
+**Status:** WD Books 1.3.3 merged (PR #41); QA-DEVICE-GATE เปิดเตรียมตรวจรับ ยังไม่มีหลักฐานอุปกรณ์จริงครบ  
 **Product:** https://infobwd.github.io/manual/  
 **กลุ่มใช้งานหลัก:** ครู/บุคลากรโรงเรียนบน iPhone และ iPad, รองลงมาคือ Android และ Desktop  
 **Source of truth:** เอกสารนี้ใช้กำหนดลำดับงาน, acceptance และ rollout ของการปรับ UX ใน repo นี้ ไม่แก้เนื้อหาวิชาการหรือระบบ WD Growth ต้นทาง
@@ -25,9 +25,9 @@
 
 | คิว | ID | ผลลัพธ์ | เหตุผล/เงื่อนไขก่อนทำ | เกณฑ์ตรวจรับและสถานะ |
 |---|---|---|---|---|
-| 1 | UX-FULLCARD | แตะการ์ดคู่มือบริเวณหน้าปก/ชื่อ/พื้นที่ว่างเพื่อเปิดอ่าน; หัวใจทำงานแยก | ปัญหาการแตะบนมือถือที่เห็นจริง; ห้าม nested interactive elements | เปิดด้วยแตะ/Enter/Space, หัวใจไม่เปิดเล่ม, draft ไม่ถูกเปิด, focus/keyboard ถูกต้อง — **PLANNED** |
-| 2 | UX-READER-CONTRAST | เพิ่ม contrast ชื่อเล่ม/ชื่อตอนบนแถบ Reader Android ทุกธีม | ภาพ Android แสดงข้อความจางมาก; ห้ามลดพื้นที่อ่าน/ขนาดปุ่ม | light/sepia/night, ชื่อยาว/ellipsis, TalkBack, zoom 200% — **PLANNED** |
-| 3 | QA-DEVICE-GATE | ตรวจ regression บน iPhone Safari/PWA, Android Chrome/PWA, iPad/Tablet, Desktop | ตรวจผลจาก PR #35–#38 และงาน Reader ก่อนขยายฟีเจอร์ | bookmark 0/1/50+, install banner, theme, offline/cache, keyboard, VoiceOver/TalkBack, persisted localStorage, safe-area; บันทึกหลักฐาน — **PENDING** |
+| 1 | UX-FULLCARD | แตะการ์ดคู่มือบริเวณหน้าปก/ชื่อ/พื้นที่ว่างเพื่อเปิดอ่าน; หัวใจทำงานแยก | ปัญหาการแตะบนมือถือที่เห็นจริง; ห้าม nested interactive elements | เปิดด้วยแตะ/Enter/Space, หัวใจไม่เปิดเล่ม, draft ไม่ถูกเปิด, focus/keyboard ถูกต้อง — **MERGED PR #40 / QA PENDING** |
+| 2 | UX-READER-CONTRAST | เพิ่ม contrast ชื่อเล่ม/ชื่อตอนบนแถบ Reader Android ทุกธีม | ภาพ Android แสดงข้อความจางมาก; ห้ามลดพื้นที่อ่าน/ขนาดปุ่ม | light/sepia/night, ชื่อยาว/ellipsis, TalkBack, zoom 200% — **MERGED PR #41 / QA PENDING** |
+| 3 | QA-DEVICE-GATE | ตรวจ regression บน iPhone Safari/PWA, Android Chrome/PWA, iPad/Tablet, Desktop | ตรวจผลจาก PR #35–#38 และงาน Reader ก่อนขยายฟีเจอร์ | bookmark 0/1/50+, install banner, theme, offline/cache, keyboard, VoiceOver/TalkBack, persisted localStorage, safe-area; บันทึกหลักฐาน — **QA RUNBOOK READY / EXECUTION PENDING** |
 | 4 | UX-SEARCH-HIGHLIGHT | ไฮไลต์คำที่ตรงผลค้นภายในคู่มืออย่างปลอดภัย | ต่อจากค้นหาและ jump เดิม; ห้ามแสดง draft/private | คำไทย, คำหลายจุด, ไม่แก้เนื้อหาต้นฉบับ/ไม่ทำ HTML injection, Paged/Continuous — **PLANNED** |
 | 5 | UX-DISCOVERY | ปรับค้นหา/ตัวกรองและการค้นพบคู่มือเมื่อคลังขยาย | ทำหลังงาน usability ที่กระทบผู้ใช้ปัจจุบัน | เข้าถึงเล่มเร็ว, filter สถานะ published, ทดสอบรายการจำนวนมาก, mobile scroll — **PLANNED** |
 | 6 | ARCH-01 | แยก app.js เป็นโมดูลตามหน้าที่ (Home/Catalog/My Books/Reader) และแยกทะเบียนจากเนื้อหา | ต้องมี regression gate และ snapshot behavior; คง PWA เดียว | ไม่มี breaking change ต่อ bookId, progress, bookmarks, favorites, URLs, reader settings; rollback ได้ — **PLANNED** |
@@ -407,3 +407,11 @@ Swipe left/right is scoped to the active book page. It ignores multi-touch, vert
 - ป้องกันการถูกสีจางเดิม override; ชื่อยาวยัง ellipsis และไม่บังปุ่ม TOC/เมนู
 - ยืนยัน title จากคู่มือปัจจุบัน; ไม่แก้เนื้อหาหนังสือ, ขนาดหน้า หรือข้อมูลการอ่านเดิม
 - **QA pending:** Android Chrome/PWA ภาพก่อน-หลัง, iPhone/iPad, light/night/sepia, zoom 200%, TalkBack/VoiceOver, ชื่อยาว, ปุ่มข้างเคียง และ PWA offline
+
+## QA-DEVICE-GATE — Execution Record (23 ต.ค. 2569)
+
+- สถานะ: **RUNBOOK READY; DEVICE QA NOT EXECUTED**. ไม่มีการอ้างว่า iPhone/Android/iPad/Windows ผ่านแล้ว
+- เอกสารทดสอบและบันทึกผล: [WD_BOOKS_QA_DEVICE_GATE_133.md](WD_BOOKS_QA_DEVICE_GATE_133.md)
+- Baseline: `main` v1.3.3, PR #35–#41; ให้ผู้ทดสอบระบุ build/version จริงที่เห็นและ OS/browser ก่อนกรอกผล
+- Gate สำหรับคิว 4 (UX-SEARCH-HIGHLIGHT): ต้องบันทึกผล critical flows, ข้อบกพร่อง และการตัดสินใจ GO/NO-GO พร้อมผู้ตรวจรับ; หากมี critical FAIL ให้แก้ก่อน
+- การแก้ QA findings ให้เปิด PR แยก; ไม่ Merge การเปลี่ยนฟีเจอร์ใน PR เอกสารนี้
