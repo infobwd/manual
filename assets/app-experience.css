@@ -194,3 +194,13 @@ body[data-theme="night"] .reader-identity strong,body[data-theme="night"] .setti
 
 /* Suppress double-tap page zoom on app chrome; do not apply to reader dialog. */
 .site-header, .app-shell, .mobile-bottom-nav, .settings-dialog { touch-action: manipulation; }
+
+/* UX-P0C: focus mode hides decorative chrome, not the close or page controls. */
+.reader-focus-mode .reader-hint { display:none; }
+.reader-focus-mode .reader-identity small { display:none; }
+.reader-focus-mode .reader-toc { display:none; }
+.reader-focus-mode .reader-content { grid-template-columns:minmax(0,1fr); }
+.reader-focus-toggle[aria-pressed="true"] { background:#dcead1;outline:2px solid #448667; }
+@media(max-width:600px) {
+  .reader-focus-mode .reader-identity { min-width:0; }
+}
