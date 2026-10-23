@@ -15,6 +15,7 @@
   <title>คลังคู่มือโรงเรียนบ้านวังด้ง | WD Manual Library</title>
   <link rel="stylesheet" href="./assets/styles.css">
   <link rel="stylesheet" href="./assets/app-experience.css">
+  <link rel="stylesheet" href="./assets/mobile-reader.css">
   <script defer src="./assets/manuals-data.js"></script>
   <script defer src="./assets/wd-growth-individual-guide.js"></script>
   <script defer src="./assets/experience.js"></script>
@@ -22,6 +23,15 @@
 </head>
 <body>
 <a class="skip-link" href="#content">ข้ามไปยังเนื้อหา</a>
+<div id="appSplash" class="app-splash" role="status" aria-label="เปิดแอปคลังคู่มือบ้านวังด้ง">
+  <div class="splash-content" aria-hidden="true">
+    <div class="splash-mark">WD<span>✳</span></div>
+    <h1>WD Books</h1>
+    <p>คลังคู่มือโรงเรียนบ้านวังด้ง</p>
+    <div class="splash-track"><span></span></div>
+  </div>
+</div>
+<div id="pullRefresh" class="pull-refresh" role="status" aria-live="polite" aria-hidden="true"><span class="pull-refresh-icon">↻</span><span id="pullRefreshText">ดึงลงเพื่อรีเฟรช</span></div>
 <header class="site-header">
   <div class="header-inner">
     <a class="site-brand" href="./" aria-label="กลับหน้าหลักคลังคู่มือ">
@@ -78,6 +88,17 @@
       <p class="summary-help">เผยแพร่เฉพาะเนื้อหาสาธารณะที่ผ่านการตรวจรับแล้วเท่านั้น</p>
     </section>
 
+    <section class="my-books" id="myBooks" aria-labelledby="myBooksTitle">
+      <div class="section-heading"><div>
+        <p class="eyebrow">PERSONAL BOOKSHELF</p>
+        <h2 id="myBooksTitle">หนังสือของฉัน</h2>
+        <p class="section-detail">ชั้นหนังสือส่วนตัว จดจำเฉพาะในอุปกรณ์นี้</p>
+      </div></div>
+      <div class="personal-shelves">
+        <div class="personal-shelf"><h3>อ่านล่าสุด</h3><div id="recentShelf" aria-live="polite"></div></div>
+        <div class="personal-shelf"><h3>หนังสือที่บันทึกไว้ <span id="favoritesCount"></span></h3><div id="favoritesShelf" aria-live="polite"></div></div>
+      </div>
+    </section>
     <section class="library" id="library" aria-labelledby="libraryTitle">
       <div class="section-heading">
         <div>
@@ -109,6 +130,7 @@
 <nav class="mobile-bottom-nav" aria-label="นำทางแอป">
   <a id="navHome" href="#content" class="bottom-nav-item active" aria-label="หน้าหลัก"><span class="bottom-nav-icon" aria-hidden="true">⌂</span><span>หน้าหลัก</span></a>
   <a id="navBooks" href="#library" class="bottom-nav-item" aria-label="ชั้นหนังสือ"><span class="bottom-nav-icon" aria-hidden="true">▤</span><span>หนังสือ</span></a>
+  <a id="navMyBooks" href="#myBooks" class="bottom-nav-item" aria-label="หนังสือของฉัน"><span class="bottom-nav-icon" aria-hidden="true">♡</span><span>ของฉัน</span></a>
   <button id="navContinue" type="button" class="bottom-nav-item" disabled aria-label="อ่านเล่มล่าสุดต่อ"><span class="bottom-nav-icon" aria-hidden="true">▸</span><span>อ่านต่อ</span></button>
   <button id="navSettings" type="button" class="bottom-nav-item" aria-label="ตั้งค่าการอ่าน"><span class="bottom-nav-icon" aria-hidden="true">☷</span><span>ตั้งค่า</span></button>
 </nav>
@@ -155,6 +177,7 @@
           <article id="pageLeft" class="book-page"></article>
           <article id="pageRight" class="book-page"></article>
         </div>
+        <button id="readerCloseThumb" class="reader-close-thumb" type="button" aria-label="ปิดอ่านและกลับไปชั้นหนังสือ">✕ <span>ปิดอ่าน</span></button>
         <div class="reader-bottom">
           <button id="prevPage" class="page-control" type="button">← หน้าก่อน</button>
           <div class="reader-progress"><span id="pageCounter">หน้า 1</span><div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div></div>
