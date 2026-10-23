@@ -135,3 +135,17 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
 .continuous-section.book-page{display:block!important;overflow:visible;height:auto;min-height:0;margin:0 0 14px;border-radius:12px;box-shadow:0 2px 14px #334e3418;transform:none;opacity:1;scroll-margin-top:12px}
 .reader-bottom button[hidden],.book-spread>.book-page[hidden]{display:none!important}
 @media(max-width:600px){.continuous-section.book-page{padding-top:24px;padding-bottom:22px}}
+
+/* UX-P2A: compact, accessible in-book search panel. */
+.reader-search-panel[hidden]{display:none}
+.reader-search-panel{padding:12px 18px;background:#f7faf5;border-bottom:1px solid #dce5db;max-height:45vh;overflow:auto;color:#315648}
+.reader-search-panel>label{display:block;font-size:12px;font-weight:800;margin-bottom:7px}
+.reader-search-field{display:flex;gap:8px}
+.reader-search-field input{flex:1;min-width:0;min-height:44px;border:1px solid #bfd0c2;border-radius:10px;padding:9px 12px;background:#fff;color:#244f3d;font-size:16px}
+.reader-search-field button{min-height:44px;border:1px solid #bfd0c2;border-radius:10px;background:white;color:#315648;padding:8px 12px}
+.reader-search-panel p{font-size:12px;margin:9px 0}
+.reader-search-results{display:flex;flex-direction:column;gap:6px}
+.reader-search-result{display:flex;flex-direction:column;text-align:left;gap:5px;padding:11px;border:1px solid #d9e7d9;border-radius:10px;background:white;color:#315648;min-height:44px}
+.reader-search-result strong{font-size:13px}
+.reader-search-result span{font-size:12px;line-height:1.6}
+.reader-search-result:focus-visible{outline:3px solid #dba852}
