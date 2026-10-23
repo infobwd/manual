@@ -1,6 +1,6 @@
 /* WD Books — static public-only offline app shell.
    Scope is limited to /manual/ by the SW registration in experience.js. */
-const CACHE_VERSION = "wd-manual-public-v9-reader-p0c-20261023";
+const CACHE_VERSION = "wd-manual-public-v10-update-notice-20261023";
 const CACHE_PREFIX = "wd-manual-public-";
 const APP_SHELL = [
   "./", "./index.html", "./manifest.webmanifest",
@@ -12,8 +12,11 @@ self.addEventListener("install", event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_VERSION);
     await cache.addAll(APP_SHELL.map(path => new Request(path, { cache: "reload" })));
-    await self.skipWaiting();
+    // Wait for the user's confirmation before activating an update.
   })());
+});
+self.addEventListener("message", event => {
+  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
 });
 self.addEventListener("activate", event => {
   event.waitUntil((async () => {
