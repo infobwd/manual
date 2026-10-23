@@ -39,6 +39,7 @@ const context = vm.createContext({ window, document });
 vm.runInContext(load('assets/manuals-data.js'), context, { filename: 'assets/manuals-data.js' });
 vm.runInContext(load('assets/wd-growth-individual-guide.js'), context, { filename: 'assets/wd-growth-individual-guide.js' });
 vm.runInContext(load('assets/catalog-core.js'), context, { filename: 'assets/catalog-core.js' });
+vm.runInContext(load('assets/catalog-ui.js'), context, { filename: 'assets/catalog-ui.js' });
 vm.runInContext(load('assets/app.js'), context, { filename: 'assets/app.js' });
 
 const catalog = window.WD_LIBRARY_DATA;
