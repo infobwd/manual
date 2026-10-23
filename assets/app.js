@@ -11,7 +11,8 @@
     return el;
   };
   const state = { category: "all", query: "", manual: null, page: 0, scale: 1, opener: null };
-  const isMobile = window.matchMedia("(max-width: 850px)");
+  // Reader single-page threshold includes portrait tablets and narrow Split View.
+  const isMobile = window.matchMedia("(max-width: 1100px)");
   const statuses = { published: "พร้อมอ่าน", review: "รอตรวจรับ", planned: "ตามแผน" };
   const lookup = Object.fromEntries(data.categories.map((c) => [c.id, c]));
   const normalized = (s) => String(s || "").toLocaleLowerCase("th-TH").trim();

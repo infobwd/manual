@@ -89,3 +89,26 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
 
 /* Smaller visual heart, retain a comfortable 44px finger target. */
 .book-cover .cover-favorite{width:44px;height:44px;min-width:44px;min-height:44px;font-size:23px;border-radius:12px;right:10px;top:10px}
+
+/* UX-P0D: portrait tablet and iPad Split View use a comfortable single page. */
+@media (min-width:851px) and (max-width:1100px){
+  .reader-content{grid-template-columns:minmax(0,1fr)}
+  .reader-toc{display:none}
+  .book-spread{grid-template-columns:minmax(0,1fr);max-width:720px}
+  .book-page:last-child{display:none}
+  .book-page:first-child{border-radius:12px;box-shadow:none}
+  .reader-stage{padding-inline:clamp(12px,3vw,30px)}
+  .reader-bottom{max-width:720px}
+}
+@media (min-width:1101px) and (max-width:1400px){
+  .reader-stage{padding-inline:clamp(12px,2vw,24px)}
+  .book-page{padding-inline:clamp(16px,2vw,32px)}
+}
+@media (max-width:1100px){
+  .reader-dialog{max-width:calc(100vw - 12px);width:calc(100vw - 12px)}
+  .reader-stage{min-width:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .book-page{transition:none}
+  .book-page.turning{transform:none;opacity:1}
+}
