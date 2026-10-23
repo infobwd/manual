@@ -279,3 +279,17 @@ body[data-theme="night"] .book-cover .cover-favorite[aria-pressed="true"]{backgr
   .reader-bookmarks-items{min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:6px}
 }
 .reader-bookmarks-close:focus-visible{outline:3px solid #dba852;outline-offset:2px}
+
+/* UX-P2B-R3: compact content-sized bookmark sheet and visible active manual. */
+.reader-mobile-book-title{display:none}
+.reader-bookmarks-heading-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+.reader-bookmarks-book-title{display:block;font-size:12px;line-height:1.45;font-weight:500;color:#59756a;overflow-wrap:anywhere}
+@media(max-width:1100px){
+  .reader-topbar .reader-mobile-book-title{display:block;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#d9e9dd;font-size:clamp(11px,2.7vw,14px);font-weight:700;text-align:left}
+  .reader-topbar .reader-actions{margin-left:0}
+  .reader-bookmarks-sheet{flex:0 1 auto;height:auto;max-height:min(72dvh,640px)}
+  .reader-bookmarks-items{flex:0 1 auto;min-height:0;max-height:calc(min(72dvh,640px) - 210px);overflow-y:auto}
+}
+@media(max-width:360px){
+  .reader-topbar .reader-mobile-book-title{font-size:11px}
+}
