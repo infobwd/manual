@@ -128,7 +128,7 @@
       "publication_year": "2569",
       "publisher": "วารสารครุศาสตร์ปัญญา 5(3), 565–581",
       "abstract_summary": "กระบวนการ 5 ขั้นตอน: กำหนดนโยบายและเป้าหมาย วางแผน ดำเนินงาน ติดตามสะท้อนผล และนำผลไปพัฒนา; ประเมินความเหมาะสมและประโยชน์ระดับมากที่สุด",
-      "detail_status": "abstract_extracted_pdf_pages_pending",
+      "detail_status": "abstract_only_pdf_page_unverified",
       "approval_evidence_url": null,
       "approval_date": null,
       "source_verification_scope": "publisher_or_journal_article_page",
@@ -142,7 +142,7 @@
         "wd_relevance": "ใช้เป็นแนวทางออกแบบวงจร PLC/นิเทศภายในร่วมกับการสะท้อนผลของครูใน WD Growth; ไม่ใช่หลักฐานผลสัมฤทธิ์ของผู้เรียนในโรงเรียนบ้านวังด้ง",
         "publisher": "วารสารครุศาสตร์ปัญญา 5(3), 565–581",
         "evidence_basis": "publisher_abstract",
-        "page_citation_status": "pending_pdf_page_validation",
+        "page_citation_status": "pending_pdf_access",
         "source_checked_at": "2026-10-24"
       }
     },
@@ -168,7 +168,7 @@
       "publication_year": "2569",
       "publisher": "Arts of Management Journal 10(4), 359–372",
       "abstract_summary": "แนวทาง 7 ด้าน รวม 35 แนวทาง (7A-PLC); ประเมินความเหมาะสมเฉลี่ย 4.62 ความเป็นไปได้ 4.55 และประโยชน์ 4.74",
-      "detail_status": "abstract_extracted_pdf_pages_pending",
+      "detail_status": "abstract_only_pdf_page_unverified",
       "approval_evidence_url": null,
       "approval_date": null,
       "source_verification_scope": "publisher_or_journal_article_page",
@@ -182,7 +182,7 @@
         "wd_relevance": "ใช้เป็นกรอบเทียบองค์ประกอบการบริหารงานวิชาการและความเป็นไปได้ของระบบ PLC; ยังไม่ยืนยันผลลัพธ์ผู้เรียน WD Growth",
         "publisher": "Arts of Management Journal 10(4), 359–372",
         "evidence_basis": "publisher_abstract",
-        "page_citation_status": "pending_pdf_page_validation",
+        "page_citation_status": "pending_pdf_access",
         "source_checked_at": "2026-10-24"
       }
     },
@@ -207,7 +207,7 @@
       "publication_year": "2568",
       "publisher": "วารสารนวัตกรรมการจัดการศึกษาและการวิจัย 7(6), 1131–1144",
       "abstract_summary": "PLC และการจัดการเรียนรู้ภาพรวมอยู่ระดับมาก; การบริหาร PLC พยากรณ์การจัดการเรียนรู้ศตวรรษที่ 21 ได้ร้อยละ 36.40",
-      "detail_status": "abstract_extracted_pdf_pages_pending",
+      "detail_status": "pdf_page_verified",
       "approval_evidence_url": null,
       "approval_date": null,
       "source_verification_scope": "publisher_or_journal_article_page",
@@ -219,9 +219,21 @@
         "findings": "PLC และการจัดการเรียนรู้ภาพรวมอยู่ระดับมาก; การบริหาร PLC พยากรณ์การจัดการเรียนรู้ศตวรรษที่ 21 ได้ร้อยละ 36.40",
         "wd_relevance": "ใช้สนับสนุนความสำคัญของ PLC ในบริบทกาญจนบุรี แต่เป็นความสัมพันธ์ทางสถิติ ไม่ใช่ข้อพิสูจน์เชิงเหตุและผลของ WD Growth",
         "publisher": "วารสารนวัตกรรมการจัดการศึกษาและการวิจัย 7(6), 1131–1144",
-        "evidence_basis": "publisher_abstract",
-        "page_citation_status": "pending_pdf_page_validation",
-        "source_checked_at": "2026-10-24"
+        "evidence_basis": "full_text_pdf",
+        "page_citation_status": "verified_for_listed_claims",
+        "source_checked_at": "2026-10-24",
+        "page_references": {
+          "objective": "1131, 1133",
+          "method": "1131, 1136–1137",
+          "instruments": "1131, 1136–1137",
+          "findings": "1131, 1138–1139"
+        },
+        "pdf_page_references": {
+          "objective": "1, 3",
+          "method": "1, 6–7",
+          "instruments": "1, 6–7",
+          "findings": "1, 8–9"
+        }
       }
     },
     {
