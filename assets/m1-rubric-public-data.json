@@ -1,0 +1,546 @@
+{
+  "asOf": "2026-10-24",
+  "status": "DRAFT_NOT_CERTIFIED",
+  "records": [
+    {
+      "id": "D1-01.1",
+      "summary": "ส่งเสริมผู้เรียนด้านการเรียนรู้ พัฒนาการ คุณลักษณะ สุขภาวะ หรือความเป็นอยู่",
+      "page": "152/157",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "baseline_and_individual_plan",
+      "gate": "R3-A"
+    },
+    {
+      "id": "D1-01.2",
+      "summary": "ผู้เรียนเป็นกลุ่มเป้าหมายที่ได้รับผลโดยตรง",
+      "page": "152/157",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "baseline_and_individual_plan",
+      "gate": "R3-A"
+    },
+    {
+      "id": "D1-01.3",
+      "summary": "ดำเนินการตรงความต้องการจำเป็นของผู้เรียน",
+      "page": "152/157",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "baseline_and_individual_plan",
+      "gate": "R3-A"
+    },
+    {
+      "id": "D1-01.4",
+      "summary": "คิดค้นวิธีการใหม่ในการส่งเสริมผู้เรียน",
+      "page": "152/157",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "baseline_and_individual_plan",
+      "gate": "R3-A"
+    },
+    {
+      "id": "D1-01.5",
+      "summary": "ปรับเปลี่ยนวิธีการส่งเสริมผู้เรียนจนได้ผลดียิ่งขึ้น",
+      "page": "152/157",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "baseline_and_individual_plan",
+      "gate": "R3-A"
+    },
+    {
+      "id": "D1-02.1",
+      "summary": "ปรับปรุงหลักสูตร กิจกรรม สื่อ หรือเครื่องมือการสอน",
+      "page": "152/157",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "assessment_and_curriculum",
+      "gate": "R3-A"
+    },
+    {
+      "id": "D1-02.2",
+      "summary": "สร้างความรู้และประสบการณ์ใหม่ให้ผู้เรียน",
+      "page": "152/157",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "assessment_and_curriculum",
+      "gate": "R3-A"
+    },
+    {
+      "id": "D1-02.3",
+      "summary": "สอดคล้องสภาพผู้เรียนและบริบทสถานศึกษา",
+      "page": "152/157",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "assessment_and_curriculum",
+      "gate": "R3-A"
+    },
+    {
+      "id": "D1-02.4",
+      "summary": "คิดค้นวิธีการใหม่พัฒนาหลักสูตรและการสอน",
+      "page": "152/157",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "assessment_and_curriculum",
+      "gate": "R3-A"
+    },
+    {
+      "id": "D1-02.5",
+      "summary": "ปรับเปลี่ยนวิธีการพัฒนาหลักสูตรและการสอน",
+      "page": "152/157",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "assessment_and_curriculum",
+      "gate": "R3-A"
+    },
+    {
+      "id": "D1-03.1",
+      "summary": "เสริมสร้างสมรรถนะจากการลงมือปฏิบัติจริง",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "plc_coaching",
+      "gate": "R3-B"
+    },
+    {
+      "id": "D1-03.2",
+      "summary": "ครูได้รับการพัฒนาสมรรถนะการสอนหรือทำงาน",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "plc_coaching",
+      "gate": "R3-B"
+    },
+    {
+      "id": "D1-03.3",
+      "summary": "ผู้เรียนได้รับการพัฒนาสมรรถนะตามหลักสูตร",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "plc_coaching",
+      "gate": "R3-B"
+    },
+    {
+      "id": "D1-03.4",
+      "summary": "คิดค้นวิธีการใหม่พัฒนาสมรรถนะครูและนักเรียน",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "plc_coaching",
+      "gate": "R3-B"
+    },
+    {
+      "id": "D1-03.5",
+      "summary": "ปรับเปลี่ยนวิธีการพัฒนาสมรรถนะครูและนักเรียน",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "plc_coaching",
+      "gate": "R3-B"
+    },
+    {
+      "id": "D1-04.1",
+      "summary": "ครูแลกเปลี่ยนเรียนรู้วิธีสอนหรือทำงานร่วมกัน",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "plc_coaching",
+      "gate": "R3-B"
+    },
+    {
+      "id": "D1-04.2",
+      "summary": "ผู้บริหารเป็นผู้ชี้แนะพัฒนาการสอนครู",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "plc_coaching",
+      "gate": "R3-B"
+    },
+    {
+      "id": "D1-04.3",
+      "summary": "ผู้บริหารเป็นผู้นำ PLC พัฒนาการสอน",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "plc_coaching",
+      "gate": "R3-B"
+    },
+    {
+      "id": "D1-04.4",
+      "summary": "คิดค้นวิธีการใหม่พัฒนาครู",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "plc_coaching",
+      "gate": "R3-B"
+    },
+    {
+      "id": "D1-04.5",
+      "summary": "ปรับเปลี่ยนวิธีการพัฒนาครู",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "plc_coaching",
+      "gate": "R3-B"
+    },
+    {
+      "id": "D1-05.1",
+      "summary": "วิเคราะห์ออกแบบกระบวนการทำงานอย่างเป็นระบบ",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "wd_growth_operational_adoption",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-05.2",
+      "summary": "พัฒนาคุณภาพระบบงานต่อเนื่อง",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "wd_growth_operational_adoption",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-05.3",
+      "summary": "ระบบงานยั่งยืนไม่ใช่เฉพาะหน้า",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "wd_growth_operational_adoption",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-05.4",
+      "summary": "คิดค้นวิธีการใหม่พัฒนาระบบงาน",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "wd_growth_operational_adoption",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-05.5",
+      "summary": "ปรับเปลี่ยนวิธีการพัฒนาระบบงาน",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "wd_growth_operational_adoption",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-06.1",
+      "summary": "เป้าหมายการเปลี่ยนแปลงสถานศึกษาชัดเจนและทำได้",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "wd_growth_operational_adoption",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-06.2",
+      "summary": "สถานศึกษาเป็นองค์กรแห่งการเรียนรู้",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "wd_growth_operational_adoption",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-06.3",
+      "summary": "ประยุกต์ใช้นวัตกรรมหรือเครื่องมือบริหาร",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "wd_growth_operational_adoption",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-06.4",
+      "summary": "คิดค้นวิธีการใหม่พัฒนาคุณภาพสถานศึกษา",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "wd_growth_operational_adoption",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-06.5",
+      "summary": "ปรับเปลี่ยนวิธีการใหม่พัฒนาคุณภาพสถานศึกษา",
+      "page": "153/158",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "wd_growth_operational_adoption",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-07.1",
+      "summary": "ประสานความร่วมมือผู้ปกครองและชุมชน",
+      "page": "154/159",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "partnership_and_principal_decisions",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-07.2",
+      "summary": "ใช้เครือข่ายระดมทรัพยากรและความร่วมมือภายนอก",
+      "page": "154/159",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "partnership_and_principal_decisions",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-07.3",
+      "summary": "สถานศึกษาได้ประโยชน์จากเครือข่าย",
+      "page": "154/159",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "partnership_and_principal_decisions",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-07.4",
+      "summary": "คิดค้นวิธีการใหม่สร้างเครือข่าย",
+      "page": "154/159",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "partnership_and_principal_decisions",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-07.5",
+      "summary": "ปรับเปลี่ยนวิธีการใหม่สร้างเครือข่าย",
+      "page": "154/159",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "partnership_and_principal_decisions",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-08.1",
+      "summary": "ทำงานเป็นทีมและเรียนรู้ร่วมกัน",
+      "page": "154/159",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "partnership_and_principal_decisions",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-08.2",
+      "summary": "กระบวนการทำงานเน้นการมีส่วนร่วม",
+      "page": "154/159",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "partnership_and_principal_decisions",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-08.3",
+      "summary": "แสดงภาวะผู้นำการเปลี่ยนแปลงสถานศึกษา",
+      "page": "154/159",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "partnership_and_principal_decisions",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-08.4",
+      "summary": "คิดค้นวิธีการใหม่สร้างกระบวนการทำงานร่วมกันของครู",
+      "page": "154/159",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "partnership_and_principal_decisions",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D1-08.5",
+      "summary": "ปรับเปลี่ยนวิธีการใหม่สร้างกระบวนการทำงานร่วมกันของครู",
+      "page": "154/159",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "partnership_and_principal_decisions",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D2-01.1",
+      "summary": "ผลเป็นไปตามเป้าหมายข้อตกลงพัฒนางาน",
+      "page": "155/160",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "management_outcomes",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D2-01.2",
+      "summary": "เหมาะกับบริบทครูและนักเรียน",
+      "page": "155/160",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "management_outcomes",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D2-01.3",
+      "summary": "สอดคล้องความต้องการผู้ปกครองและชุมชน",
+      "page": "155/160",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "management_outcomes",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D2-01.4",
+      "summary": "เป็นผลปฏิบัติร่วมของครูไม่ใช่บุคคลเดียว",
+      "page": "155/160",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "management_outcomes",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D2-01.5",
+      "summary": "เหมาะสมคุ้มค่าและเป็นประโยชน์ต่อการเรียนรู้",
+      "page": "155/160",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "management_outcomes",
+      "gate": "R3-C"
+    },
+    {
+      "id": "D2-02.1",
+      "summary": "ทักษะพื้นฐานผู้เรียน เช่น การสื่อสาร การเรียนรู้ ทักษะชีวิต",
+      "page": "155/160",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "verified_comparable_student_outcomes",
+      "gate": "R3-D"
+    },
+    {
+      "id": "D2-02.2",
+      "summary": "คุณภาพชีวิต สุขภาวะและพัฒนาการผู้เรียน",
+      "page": "155/160",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "verified_comparable_student_outcomes",
+      "gate": "R3-D"
+    },
+    {
+      "id": "D2-02.3",
+      "summary": "บูรณาการทักษะการทำงานข้ามหน้าที่ของผู้เรียน",
+      "page": "155/160",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "verified_comparable_student_outcomes",
+      "gate": "R3-D"
+    },
+    {
+      "id": "D2-02.4",
+      "summary": "ผู้เรียนส่วนใหญ่ได้รับผล ไม่ใช่เพียงบางคน",
+      "page": "155/160",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "verified_comparable_student_outcomes",
+      "gate": "R3-D"
+    },
+    {
+      "id": "D2-02.5",
+      "summary": "ผลต่อผู้เรียนต่อเนื่องยั่งยืนระยะยาว",
+      "page": "155/160",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "verified_comparable_student_outcomes",
+      "gate": "R3-D"
+    },
+    {
+      "id": "D2-03.1",
+      "summary": "ทักษะสอน วิชาการ หรือจัดการหลักสูตรและการสอน",
+      "page": "156/161",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "teacher_practice_outcomes",
+      "gate": "R3-B"
+    },
+    {
+      "id": "D2-03.2",
+      "summary": "การเรียนรู้ร่วมกันแบบ PLC",
+      "page": "156/161",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "teacher_practice_outcomes",
+      "gate": "R3-B"
+    },
+    {
+      "id": "D2-03.3",
+      "summary": "ทักษะทีมและความสามัคคีองค์กร",
+      "page": "156/161",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "teacher_practice_outcomes",
+      "gate": "R3-B"
+    },
+    {
+      "id": "D2-03.4",
+      "summary": "ภาวะผู้นำร่วมของครู",
+      "page": "156/161",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "teacher_practice_outcomes",
+      "gate": "R3-B"
+    },
+    {
+      "id": "D2-03.5",
+      "summary": "ความทุ่มเท เสียสละและจรรยาบรรณวิชาชีพ",
+      "page": "156/161",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "teacher_practice_outcomes",
+      "gate": "R3-B"
+    },
+    {
+      "id": "D2-04.1",
+      "summary": "ผลลัพธ์ผู้เรียนเปลี่ยนแปลงในทิศทางดีขึ้น",
+      "page": "156/161",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "school_outcomes",
+      "gate": "R3-D"
+    },
+    {
+      "id": "D2-04.2",
+      "summary": "การทำงานครูเปลี่ยนแปลงในทิศทางดีขึ้น",
+      "page": "156/161",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "school_outcomes",
+      "gate": "R3-D"
+    },
+    {
+      "id": "D2-04.3",
+      "summary": "ผลทำงานร่วมครูและผู้ปกครอง",
+      "page": "156/161",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "school_outcomes",
+      "gate": "R3-D"
+    },
+    {
+      "id": "D2-04.4",
+      "summary": "ผลพัฒนาสถานศึกษาจากความร่วมมือชุมชนหรือองค์กร",
+      "page": "156/161",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "school_outcomes",
+      "gate": "R3-D"
+    },
+    {
+      "id": "D2-04.5",
+      "summary": "การยอมรับคุณภาพสถานศึกษาจากหน่วยงานหรือองค์กร",
+      "page": "156/161",
+      "sourceLock": "BLOCKED_AMENDMENTS",
+      "status": "GAP_NOT_ACCEPTED",
+      "family": "school_outcomes",
+      "gate": "R3-D"
+    }
+  ]
+}
