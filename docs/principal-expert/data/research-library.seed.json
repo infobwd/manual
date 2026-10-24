@@ -12,8 +12,8 @@
       "verification_level": "D",
       "source_page_url": "https://so04.tci-thaijo.org/index.php/JAPDEAT/article/view/286552",
       "pdf_url": null,
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "PLC",
@@ -24,7 +24,9 @@
       "abstract_summary": null,
       "detail_status": "metadata_only",
       "approval_evidence_url": null,
-      "approval_date": null
+      "approval_date": null,
+      "source_verification_scope": "publisher_or_journal_article_page",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "L02",
@@ -36,8 +38,8 @@
       "verification_level": "D",
       "source_page_url": "https://so17.tci-thaijo.org/index.php/jealsnruacth/article/view/1432",
       "pdf_url": null,
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "PLC",
@@ -48,7 +50,9 @@
       "abstract_summary": null,
       "detail_status": "metadata_only",
       "approval_evidence_url": null,
-      "approval_date": null
+      "approval_date": null,
+      "source_verification_scope": "publisher_or_journal_article_page",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "L03",
@@ -60,8 +64,8 @@
       "verification_level": "D",
       "source_page_url": "https://so04.tci-thaijo.org/index.php/JAPDEAT/article/view/287147",
       "pdf_url": null,
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "PLC",
@@ -72,7 +76,9 @@
       "abstract_summary": null,
       "detail_status": "metadata_only",
       "approval_evidence_url": null,
-      "approval_date": null
+      "approval_date": null,
+      "source_verification_scope": "publisher_or_journal_article_page",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "L04",
@@ -84,8 +90,8 @@
       "verification_level": "D",
       "source_page_url": "https://so09.tci-thaijo.org/index.php/JISSE/article/view/8135",
       "pdf_url": null,
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "PLC",
@@ -96,21 +102,25 @@
       "abstract_summary": null,
       "detail_status": "metadata_only",
       "approval_evidence_url": null,
-      "approval_date": null
+      "approval_date": null,
+      "source_verification_scope": "publisher_or_journal_article_page",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "L05",
       "title": "การนิเทศภายในโดยใช้ PLC ร่วมกับ Lesson Study โรงเรียนบ้านแม่สลิด",
       "authors": [
-        "จินตนา แก้วคำมา และคณะ"
+        "จินตนา แก้วคำมา",
+        "ดวงพร อุ่นจิตต์",
+        "วิยดา เหล่มตระกูล"
       ],
       "document_type": "research_article",
       "verification_level": "D",
-      "source_page_url": "https://www.tci-thaijo.org/articles/social06-294309",
-      "pdf_url": null,
-      "link_status": "unverified",
-      "link_checked_at": null,
-      "access_rights": "unknown",
+      "source_page_url": "https://so06.tci-thaijo.org/index.php/IEJ/article/view/294309",
+      "pdf_url": "https://so06.tci-thaijo.org/index.php/IEJ/article/download/294309/197004/1402678",
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
+      "access_rights": "public",
       "topics": [
         "PLC",
         "school-management"
@@ -120,21 +130,26 @@
       "abstract_summary": null,
       "detail_status": "metadata_only",
       "approval_evidence_url": null,
-      "approval_date": null
+      "approval_date": null,
+      "source_verification_scope": "publisher_or_journal_article_page",
+      "discovery_page_url": "https://www.tci-thaijo.org/articles/social06-294309",
+      "pdf_status": "opened_full_text"
     },
     {
       "id": "L06",
       "title": "แนวทางการบริหารงานวิชาการโดยใช้ PLC เขตตรวจราชการที่ 9",
       "authors": [
+        "สกุนา ทองชม",
+        "สุภัชฌาน์ ศรีเอี่ยม",
         "วัสส์พร จิโรจพันธุ์"
       ],
       "document_type": "research_article",
       "verification_level": "D",
-      "source_page_url": "https://www.tci-thaijo.org/articles/social02-288285",
-      "pdf_url": null,
-      "link_status": "unverified",
-      "link_checked_at": null,
-      "access_rights": "unknown",
+      "source_page_url": "https://so02.tci-thaijo.org/index.php/jam/article/view/288285",
+      "pdf_url": "https://so02.tci-thaijo.org/index.php/jam/article/download/288285/190194/1351855",
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
+      "access_rights": "public",
       "topics": [
         "PLC",
         "school-management"
@@ -144,31 +159,37 @@
       "abstract_summary": null,
       "detail_status": "metadata_only",
       "approval_evidence_url": null,
-      "approval_date": null
+      "approval_date": null,
+      "source_verification_scope": "publisher_or_journal_article_page",
+      "discovery_page_url": "https://www.tci-thaijo.org/articles/social02-288285",
+      "pdf_status": "opened_full_text"
     },
     {
       "id": "L07",
-      "title": "การบริหารจัดการ PLC กับการจัดการเรียนรู้ในศตวรรษที่ 21 ของครู สพม.กาญจนบุรี",
+      "title": "การบริหารจัดการชุมชนแห่งการเรียนรู้ทางวิชาชีพที่ส่งผลต่อการจัดการเรียนรู้ในศตวรรษที่ 21 ของครูในสถานศึกษา สังกัดสำนักงานเขตพื้นที่การศึกษามัธยมศึกษากาญจนบุรี",
       "authors": [
-        "ไม่ระบุในข้อมูลที่บันทึก"
+        "ณิชากร ขำสุนทร",
+        "พาที เกศธนากร"
       ],
       "document_type": "research_article",
       "verification_level": "D",
       "source_page_url": "https://so02.tci-thaijo.org/index.php/jemri/article/view/283729",
-      "pdf_url": null,
-      "link_status": "unverified",
-      "link_checked_at": null,
-      "access_rights": "unknown",
+      "pdf_url": "https://so02.tci-thaijo.org/index.php/jemri/article/download/283729/187802/1281298",
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
+      "access_rights": "public",
       "topics": [
         "PLC",
         "school-management"
       ],
-      "publication_year": "2569",
-      "publisher": null,
+      "publication_year": "2568",
+      "publisher": "วารสารนวัตกรรมการจัดการศึกษาและการวิจัย 7(6), 1131–1144",
       "abstract_summary": null,
       "detail_status": "metadata_only",
       "approval_evidence_url": null,
-      "approval_date": null
+      "approval_date": null,
+      "source_verification_scope": "publisher_or_journal_article_page",
+      "pdf_status": "opened_full_text"
     },
     {
       "id": "P01",
@@ -188,12 +209,14 @@
       "publisher": null,
       "abstract_summary": null,
       "detail_status": "name_only",
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "principal-expert"
-      ]
+      ],
+      "source_verification_scope": "secondary_news_page_only_not_person_or_approval",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "P02",
@@ -213,12 +236,14 @@
       "publisher": null,
       "abstract_summary": null,
       "detail_status": "name_only",
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "principal-expert"
-      ]
+      ],
+      "source_verification_scope": "secondary_news_page_only_not_person_or_approval",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "P03",
@@ -238,12 +263,14 @@
       "publisher": null,
       "abstract_summary": null,
       "detail_status": "name_only",
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "principal-expert"
-      ]
+      ],
+      "source_verification_scope": "secondary_news_page_only_not_person_or_approval",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "P04",
@@ -263,12 +290,14 @@
       "publisher": null,
       "abstract_summary": null,
       "detail_status": "name_only",
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "principal-expert"
-      ]
+      ],
+      "source_verification_scope": "secondary_news_page_only_not_person_or_approval",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "P05",
@@ -288,12 +317,14 @@
       "publisher": null,
       "abstract_summary": null,
       "detail_status": "name_only",
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "principal-expert"
-      ]
+      ],
+      "source_verification_scope": "secondary_news_page_only_not_person_or_approval",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "P06",
@@ -313,12 +344,14 @@
       "publisher": null,
       "abstract_summary": null,
       "detail_status": "name_only",
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "principal-expert"
-      ]
+      ],
+      "source_verification_scope": "secondary_news_page_only_not_person_or_approval",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "P07",
@@ -338,12 +371,14 @@
       "publisher": null,
       "abstract_summary": null,
       "detail_status": "name_only",
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "principal-expert"
-      ]
+      ],
+      "source_verification_scope": "secondary_news_page_only_not_person_or_approval",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "P08",
@@ -363,12 +398,14 @@
       "publisher": null,
       "abstract_summary": null,
       "detail_status": "name_only",
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "principal-expert"
-      ]
+      ],
+      "source_verification_scope": "secondary_news_page_only_not_person_or_approval",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "P09",
@@ -388,12 +425,14 @@
       "publisher": null,
       "abstract_summary": null,
       "detail_status": "name_only",
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "principal-expert"
-      ]
+      ],
+      "source_verification_scope": "secondary_news_page_only_not_person_or_approval",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "P10",
@@ -413,12 +452,14 @@
       "publisher": null,
       "abstract_summary": null,
       "detail_status": "name_only",
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "principal-expert"
-      ]
+      ],
+      "source_verification_scope": "secondary_news_page_only_not_person_or_approval",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "P11",
@@ -438,12 +479,14 @@
       "publisher": null,
       "abstract_summary": null,
       "detail_status": "name_only",
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "principal-expert"
-      ]
+      ],
+      "source_verification_scope": "secondary_news_page_only_not_person_or_approval",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "P12",
@@ -463,12 +506,14 @@
       "publisher": null,
       "abstract_summary": null,
       "detail_status": "name_only",
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "principal-expert"
-      ]
+      ],
+      "source_verification_scope": "secondary_news_page_only_not_person_or_approval",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "P13",
@@ -488,12 +533,14 @@
       "publisher": null,
       "abstract_summary": null,
       "detail_status": "name_only",
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "principal-expert"
-      ]
+      ],
+      "source_verification_scope": "secondary_news_page_only_not_person_or_approval",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "P14",
@@ -513,12 +560,14 @@
       "publisher": null,
       "abstract_summary": null,
       "detail_status": "name_only",
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "principal-expert"
-      ]
+      ],
+      "source_verification_scope": "secondary_news_page_only_not_person_or_approval",
+      "pdf_status": "not_confirmed"
     },
     {
       "id": "P15",
@@ -538,12 +587,14 @@
       "publisher": null,
       "abstract_summary": null,
       "detail_status": "name_only",
-      "link_status": "unverified",
-      "link_checked_at": null,
+      "link_status": "verified",
+      "link_checked_at": "2026-10-24",
       "access_rights": "unknown",
       "topics": [
         "principal-expert"
-      ]
+      ],
+      "source_verification_scope": "secondary_news_page_only_not_person_or_approval",
+      "pdf_status": "not_confirmed"
     }
   ]
 }
