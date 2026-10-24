@@ -128,7 +128,7 @@
       "publication_year": "2569",
       "publisher": "วารสารครุศาสตร์ปัญญา 5(3), 565–581",
       "abstract_summary": "กระบวนการ 5 ขั้นตอน: กำหนดนโยบายและเป้าหมาย วางแผน ดำเนินงาน ติดตามสะท้อนผล และนำผลไปพัฒนา; ประเมินความเหมาะสมและประโยชน์ระดับมากที่สุด",
-      "detail_status": "abstract_only_pdf_page_unverified",
+      "detail_status": "pdf_page_verified",
       "approval_evidence_url": null,
       "approval_date": null,
       "source_verification_scope": "publisher_or_journal_article_page",
@@ -141,9 +141,21 @@
         "findings": "กระบวนการ 5 ขั้นตอน: กำหนดนโยบายและเป้าหมาย วางแผน ดำเนินงาน ติดตามสะท้อนผล และนำผลไปพัฒนา; ประเมินความเหมาะสมและประโยชน์ระดับมากที่สุด",
         "wd_relevance": "ใช้เป็นแนวทางออกแบบวงจร PLC/นิเทศภายในร่วมกับการสะท้อนผลของครูใน WD Growth; ไม่ใช่หลักฐานผลสัมฤทธิ์ของผู้เรียนในโรงเรียนบ้านวังด้ง",
         "publisher": "วารสารครุศาสตร์ปัญญา 5(3), 565–581",
-        "evidence_basis": "publisher_abstract",
-        "page_citation_status": "pending_pdf_access",
-        "source_checked_at": "2026-10-24"
+        "evidence_basis": "full_text_pdf",
+        "page_citation_status": "verified_for_listed_claims",
+        "source_checked_at": "2026-10-24",
+        "page_references": {
+          "objective": "568",
+          "method": "571–573",
+          "instruments": "571–573",
+          "findings": "574–575"
+        },
+        "pdf_page_references": {
+          "objective": "4",
+          "method": "7–9",
+          "instruments": "7–9",
+          "findings": "10–11"
+        }
       }
     },
     {
@@ -168,7 +180,7 @@
       "publication_year": "2569",
       "publisher": "Arts of Management Journal 10(4), 359–372",
       "abstract_summary": "แนวทาง 7 ด้าน รวม 35 แนวทาง (7A-PLC); ประเมินความเหมาะสมเฉลี่ย 4.62 ความเป็นไปได้ 4.55 และประโยชน์ 4.74",
-      "detail_status": "abstract_only_pdf_page_unverified",
+      "detail_status": "pdf_page_verified",
       "approval_evidence_url": null,
       "approval_date": null,
       "source_verification_scope": "publisher_or_journal_article_page",
@@ -176,14 +188,26 @@
       "pdf_status": "opened_full_text",
       "research_detail": {
         "objective": "ศึกษาปัญหาการบริหารงานวิชาการผ่าน PLC และพัฒนาแนวทางเพื่อส่งเสริมคุณภาพสถานศึกษา",
-        "method": "2 ระยะ: สำรวจครู 385 คน; พัฒนาแนวทางโดยผู้เชี่ยวชาญ 7 คน และประเมินด้วยผู้เชี่ยวชาญอีก 7 คน",
-        "instruments": "แบบสอบถาม แบบสัมภาษณ์แบบมีโครงสร้าง แบบสังเคราะห์ข้อมูล และแบบประเมินความเหมาะสม ความเป็นไปได้ และประโยชน์",
+        "method": "วิจัยแบบผสมวิธีตามลำดับ 2 ระยะ; ระยะ 1 สำรวจครู 385 คน; ระยะ 2 พัฒนาและตรวจสอบแนวทางโดยผู้เชี่ยวชาญ",
+        "instruments": "แบบสอบถาม 5 ระดับ 84 ข้อ (IOC 0.60–1.00; ความเชื่อมั่น 0.993) แบบสัมภาษณ์แบบมีโครงสร้าง แบบสังเคราะห์ข้อมูล และแบบประเมินแนวทาง",
         "findings": "แนวทาง 7 ด้าน รวม 35 แนวทาง (7A-PLC); ประเมินความเหมาะสมเฉลี่ย 4.62 ความเป็นไปได้ 4.55 และประโยชน์ 4.74",
         "wd_relevance": "ใช้เป็นกรอบเทียบองค์ประกอบการบริหารงานวิชาการและความเป็นไปได้ของระบบ PLC; ยังไม่ยืนยันผลลัพธ์ผู้เรียน WD Growth",
         "publisher": "Arts of Management Journal 10(4), 359–372",
-        "evidence_basis": "publisher_abstract",
-        "page_citation_status": "pending_pdf_access",
-        "source_checked_at": "2026-10-24"
+        "evidence_basis": "full_text_pdf",
+        "page_citation_status": "verified_for_listed_claims",
+        "source_checked_at": "2026-10-24",
+        "page_references": {
+          "objective": "361",
+          "method": "363–365",
+          "instruments": "364–365",
+          "findings": "365–366"
+        },
+        "pdf_page_references": {
+          "objective": "3",
+          "method": "5–7",
+          "instruments": "6–7",
+          "findings": "7–8"
+        }
       }
     },
     {
