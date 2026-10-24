@@ -55,6 +55,78 @@
         "PLC",
         "school-leadership"
       ]
+    },
+    {
+      "id": "L04",
+      "title": "แนวทางส่งเสริมชุมชนแห่งการเรียนรู้ทางวิชาชีพของผู้บริหารสถานศึกษา สพป.ลพบุรี เขต 1",
+      "authors": [
+        "ชัยภัทร วทัญญู และคณะ"
+      ],
+      "document_type": "research_article",
+      "verification_level": "D",
+      "source_page_url": "https://so09.tci-thaijo.org/index.php/JISSE/article/view/8135",
+      "pdf_url": null,
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "PLC",
+        "school-management"
+      ]
+    },
+    {
+      "id": "L05",
+      "title": "การนิเทศภายในโดยใช้ PLC ร่วมกับ Lesson Study โรงเรียนบ้านแม่สลิด",
+      "authors": [
+        "จินตนา แก้วคำมา และคณะ"
+      ],
+      "document_type": "research_article",
+      "verification_level": "D",
+      "source_page_url": "https://www.tci-thaijo.org/articles/social06-294309",
+      "pdf_url": null,
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "PLC",
+        "school-management"
+      ]
+    },
+    {
+      "id": "L06",
+      "title": "แนวทางการบริหารงานวิชาการโดยใช้ PLC เขตตรวจราชการที่ 9",
+      "authors": [
+        "วัสส์พร จิโรจพันธุ์"
+      ],
+      "document_type": "research_article",
+      "verification_level": "D",
+      "source_page_url": "https://www.tci-thaijo.org/articles/social02-288285",
+      "pdf_url": null,
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "PLC",
+        "school-management"
+      ]
+    },
+    {
+      "id": "L07",
+      "title": "การบริหารจัดการ PLC กับการจัดการเรียนรู้ในศตวรรษที่ 21 ของครู สพม.กาญจนบุรี",
+      "authors": [
+        "ไม่ระบุในข้อมูลที่บันทึก"
+      ],
+      "document_type": "research_article",
+      "verification_level": "D",
+      "source_page_url": "https://so02.tci-thaijo.org/index.php/jemri/article/view/283729",
+      "pdf_url": null,
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "PLC",
+        "school-management"
+      ]
     }
   ]
 }
