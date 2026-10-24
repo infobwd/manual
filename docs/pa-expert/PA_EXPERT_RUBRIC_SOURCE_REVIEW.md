@@ -76,3 +76,19 @@
 - [ ] ให้ผู้ตรวจอิสระตรวจซ้ำก่อนอนุมัติ Merge
 
 **SOURCE LOCK = NOT PASSED; NO MERGE / NO E-BOOK / NO PAGES / NO PRODUCTION.**
+
+## Follow-up review — 24 ต.ค. 2569 (หลัง commit 3c6f189)
+
+ตรวจแหล่งข้อมูล ก.ค.ศ. ที่เปิดอ่านได้เพิ่มเติม:
+- [ก.ค.ศ. สรุปเส้นทางแก้ไข](https://otepc.go.th/th/144-km/inforgraphics/5971-pa-3.html) ระบุชัดว่า **ล 679/2566 เปลี่ยนเกณฑ์การตัดสินด้าน 1–2**. ยังไม่ได้ถอดคะแนนผ่านจากตัวบทหนังสือ.
+- [ล 1144/2567](https://otepc.go.th/th/content_page/item/5012-1144-2567.html) และ [คำอธิบายการเปลี่ยนแปลง](https://www.otepc.go.th/en/pa-infographic/item/5971-pa-3.html): มีการเพิ่มห้องเรียนกิจกรรมพัฒนาผู้เรียนและช่องทางแนบเอกสารผลสัมฤทธิ์/รางวัลแบบไม่บังคับ; **ยังไม่มีหลักฐานจากหน้านี้ว่าแก้ rubric D1/D2 60 ข้อทุกข้อ**. ต้องอ่านสิ่งที่ส่งมาด้วยและบันทึก applicability.
+- [ล 1933/2567](https://otepc.go.th/th/content_page/item/5170-1933-2567.html): เป็นฉบับรวบรวมหลักเกณฑ์ผู้บริหารสถานศึกษาและที่แก้ไขเพิ่มเติม (22 พ.ย. 2567); [PDF OCR ทางการ](https://circular.otepc.go.th/mfhandler.php?field=circular_code_file_pdf&file=L1933-2567_OCR.pdf&key1=646&pageType=view&table=v1_t_circualr_book) ใช้เป็นเอกสารตรวจต่อ โดยต้องเทียบข้อความและหน้าจริง.
+- [สารบัญหลักเกณฑ์ ก.ค.ศ.](https://otepc.go.th/th/pa-download/pa-criteria.html) มี **ล 1222/2568** และ **ว 1/2569**. ว 1/2569 เป็นช่องทางเฉพาะผู้ได้รับรางวัลจากผลงานเชิงประจักษ์; **ไม่ถือว่าเป็นเกณฑ์ทั่วไปที่ใช้แทน ว 10/2564** โดยอัตโนมัติ.
+
+**ผลต่อ M0-A:** ยืนยันได้ว่าเอกสารแก้ไขมีอยู่และต้องตรวจ applicability; **ยังยืนยัน threshold/วันมีผล/ข้อความ rubric ฉบับล่าสุดไม่ได้**. ห้ามอ้างว่า Source Lock ผ่าน.
+
+### Consistency / action log
+- PR #76 rubric header เคยกล่าวว่า 60 ช่องเป็น placeholder แต่หลัง commit 593041f ได้ถอดใจความแล้ว; แก้สถานะ header ให้ตรงความจริงใน commit ถัดไป
+- PR #75 ลบทะเบียน 60 ช่องซ้ำและอ้างอิง canonical ใน PR #76 แล้ว (commit `d626701c561dc941be57b488afef9c88b208e141`); ข้อความเดิมในไฟล์นี้ที่ว่า 'ยังมีทะเบียน 60 ช่องซ้ำ' ให้ถือว่า **superseded**
+- แผนแม่บท `docs/WD_PRINCIPAL_EXPERT_RANK_MASTER_PLAN_2570.md` ใน main ยังเป็น roadmap หลัก; ไม่มีการย้ายเนื้อหาซ้ำ
+- คง **NO MERGE / NO E-BOOK / NO PAGES / NO PRODUCTION** จนกว่าจะตรวจฉบับเต็มและได้รับอนุมัติ
