@@ -146,36 +146,12 @@
 - [ ] ตรวจเกณฑ์ตัดสินที่แก้ไขโดย ล 679/2566 และฉบับรวม ล 1933/2567
 - [ ] ตรวจหนังสือแก้ไขที่ประกาศถึงวันยื่นจริงและลงนาม M0-A LOCK
 
-## 10. M0-A rubric-level verification register (24 ต.ค. 2569)
+## 10. M0-A rubric-level verification — canonical register in PR #76
 
-**IMPORTANT:** การเข้าถึง PDF `2Mv10-2564.pdf` ขนาด 13.89 MB ผ่านเครื่องมืออ่านเว็บถูกปฏิเสธเนื่องจากไฟล์ใหญ่; ยัง **ไม่ได้** ตรวจข้อความย่อย 5 ข้อของทั้ง 12 ตัวบ่งชี้จากต้นฉบับฉบับเต็ม. ห้ามทำเครื่องหมายว่าตรวจครบหรือแปลงข้อเสนอหลักฐานเป็นถ้อยคำทางการ.
+**Supersedes the former duplicate 60-slot table in this document.** The single maintained rubric register is [docs/pa-expert/M0_A_EXPERT_RUBRIC_MATRIX.md](https://github.com/infobwd/manual/blob/docs/pa-expert-m0a-transfer-25691024/docs/pa-expert/M0_A_EXPERT_RUBRIC_MATRIX.md) in [PR #76](https://github.com/infobwd/manual/pull/76). Its source/version precedence is [PA_EXPERT_RUBRIC_SOURCE_REVIEW.md](https://github.com/infobwd/manual/blob/docs/pa-expert-m0a-transfer-25691024/docs/pa-expert/PA_EXPERT_RUBRIC_SOURCE_REVIEW.md).
 
-**แหล่งที่ยืนยันรายการเอกสาร:** https://www.otepc.go.th/th/pa-download/pa-manual/item/3885-10-2564-2.html  
-**แหล่งยืนยันประวัติแก้ไข:** https://otepc.go.th/th/144-km/inforgraphics/5971-pa-3.html (ล 679/2566 แก้เกณฑ์ตัดสินด้าน 1–2; ล 1933/2567 รวบรวมฉบับแก้ไขผู้บริหารสถานศึกษา)
+**Status as of 24 Oct 2026:** 12 indicators registered, 60 placeholders, **0 verified official subitem wordings**. The referenced official PDF and amendments have not been fully verified at page-level. Do not call M0-A locked; do not use placeholder IDs as regulatory text.
 
-### รายทะเบียนรายข้อ (ตรวจครบโครงสร้าง; เนื้อหาย่อยยัง pending)
-| ตัวบ่งชี้ | Rubric 1 | Rubric 2 | Rubric 3 | Rubric 4 | Rubric 5 | สิ่งที่ต้องตรวจ |
-|---|---|---|---|---|---|---|
-| D1-01 | P | P | P | P | P | ถ้อยคำและเลขหน้า |
-| D1-02 | P | P | P | P | P | ถ้อยคำและเลขหน้า |
-| D1-03 | P | P | P | P | P | ถ้อยคำและเลขหน้า |
-| D1-04 | P | P | P | P | P | ถ้อยคำและเลขหน้า |
-| D1-05 | P | P | P | P | P | ถ้อยคำและเลขหน้า |
-| D1-06 | P | P | P | P | P | ถ้อยคำและเลขหน้า |
-| D1-07 | P | P | P | P | P | ถ้อยคำและเลขหน้า |
-| D1-08 | P | P | P | P | P | ถ้อยคำและเลขหน้า |
-| D2-01 | P | P | P | P | P | ถ้อยคำและเลขหน้า |
-| D2-02 | P | P | P | P | P | ถ้อยคำและเลขหน้า |
-| D2-03 | P | P | P | P | P | ถ้อยคำและเลขหน้า |
-| D2-04 | P | P | P | P | P | ถ้อยคำและเลขหน้า |
+**Division of responsibility:** PR #75 owns official-criteria research, expert-rank academic-work analysis, approved-exemplar verification and research notes. PR #76 owns the canonical D1/D2 rubric and source precedence. The master plan in main owns M0–M6 roadmap. M1 will be separate.
 
-**P = Pending source-verification; ไม่มีการตีความว่าเป็นคะแนน 1–5 หรือข้อย่อยที่ผ่านแล้ว.** ต้องบันทึก: source filename + ฉบับแก้ไข + PDF page + printed page + original wording + rubric level + evidence type + verifier/date. รวม **60 ช่องตรวจ**.
-
-### ขั้นตอนปิด M0-A แบบตรวจสอบย้อนกลับได้
-1. ดาวน์โหลด PDF ต้นฉบับคู่มือ ว 10/2564 และฉบับรวม ล 1933/2567 จากเว็บไซต์ ก.ค.ศ. ลงเครื่องท้องถิ่น (ห้ามอัปโหลดข้อมูลบุคคล).
-2. เปิดแบบประเมิน **ตำแหน่งผู้บริหารสถานศึกษา วิทยฐานะเชี่ยวชาญ สังกัด สพฐ.** และอ่าน rubric 5 ข้อย่อยทุกตัวบ่งชี้ โดยคัดถ้อยคำที่จำเป็นพร้อมเลขหน้า.
-3. เปิดหนังสือ ล 679/2566 และตรวจเกณฑ์ตัดสินด้าน 1–2 ที่แก้ไข แล้วเทียบกับ ล 1933/2567 และประกาศใหม่ที่มีผลใช้บังคับ.
-4. เติม 60 ช่อง P เป็น V (Verified) เฉพาะเมื่อมีข้อความและเลขหน้ารองรับ; ถ้าถ้อยคำเปลี่ยนต้องบันทึก revision.
-5. ผู้ขอตรวจรับ M0-A; **หลังจากนั้นเท่านั้น** ให้ประกาศ M0-A LOCK และใช้ rubric จัด M1 evidence audit.
-
-**Current status:** 12/12 indicator rows tracked; **0/60 rubric subitems source-verified** in this round. M0-A **NOT LOCKED**.
+**Before review/merge:** inspect official PA 4/บส/ชช for สพฐ. page by page, verify each rubric subitem and its scoring, reconcile ล 679/2566, ล 1144/2567, ล 1933/2567 and subsequent amendments; record PDF page, printed page, reviewer and date. Keep PR #75 and #76 unmerged until explicit review. Do not publish e-book.
