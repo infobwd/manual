@@ -1,0 +1,60 @@
+{
+  "schema_version": "m0b-library.1",
+  "updated_at": "2026-10-24",
+  "records": [
+    {
+      "id": "L01",
+      "title": "การพัฒนารูปแบบการบริหารงานแบบมีส่วนร่วมโดยใช้แนวคิด PLC เพื่อส่งเสริมกิจกรรมเสริมหลักสูตร",
+      "authors": [
+        "ธีระ ธุศรีวรรณ"
+      ],
+      "document_type": "research_article",
+      "verification_level": "D",
+      "source_page_url": "https://so04.tci-thaijo.org/index.php/JAPDEAT/article/view/286552",
+      "pdf_url": null,
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "PLC",
+        "participatory-management"
+      ]
+    },
+    {
+      "id": "L02",
+      "title": "รูปแบบการบริหารสถานศึกษาโดยใช้ PLC เพื่อพัฒนาการจัดการเรียนรู้เชิงรุก",
+      "authors": [
+        "สกลรัตน์ มุกดา"
+      ],
+      "document_type": "research_article",
+      "verification_level": "D",
+      "source_page_url": "https://so17.tci-thaijo.org/index.php/jealsnruacth/article/view/1432",
+      "pdf_url": null,
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "PLC",
+        "active-learning"
+      ]
+    },
+    {
+      "id": "L03",
+      "title": "ชุมชนการเรียนรู้ทางวิชาชีพ (PLC): กลไกสำคัญการพัฒนาวิชาชีพผู้บริหารสถานศึกษา",
+      "authors": [
+        "อรรถพล พลวัฒน์ และคณะ"
+      ],
+      "document_type": "academic_article",
+      "verification_level": "D",
+      "source_page_url": "https://so04.tci-thaijo.org/index.php/JAPDEAT/article/view/287147",
+      "pdf_url": null,
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "PLC",
+        "school-leadership"
+      ]
+    }
+  ]
+}
