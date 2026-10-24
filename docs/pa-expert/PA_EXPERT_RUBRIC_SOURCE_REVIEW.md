@@ -1,0 +1,121 @@
+# PA Expert — Official Rubric Source Review
+สถานะ: working reference / ตรวจสอบการแก้ไขล่าสุดก่อนใช้ยื่นจริง
+แหล่งหลัก: สำนักงาน ก.ค.ศ. คู่มือ ว10/2564 (กันยายน 2564), https://www.otepc.go.th/th/pa-download/pa-manual/download/165/3885/17.html
+ไฟล์ต้นฉบับที่ผู้ใช้แนบ: 2Mv10-2564.pdf (227 หน้า)
+## ตำแหน่งที่ต้องเปิดตรวจ
+- หลักเกณฑ์ผู้อำนวยการเชี่ยวชาญ: หน้าเลขพิมพ์ 33 เป็นต้นไป
+- PA 2/บส ชำนาญการพิเศษ: หน้า 100 เป็นต้นไป (PA ประจำปีของวิทยฐานะเดิม)
+- PA 4/บส เชี่ยวชาญ สังกัด สพฐ.: หน้า 152 เป็นต้นไป (ด้าน 1 และ 2)
+- PA 5/บส/ชช: หน้า 218 เป็นต้นไป (ด้าน 3)
+หมายเหตุ: เลขหน้าเป็นเลขในสารบัญ ไม่ใช่ลำดับหน้าของ PDF; ให้ตรวจจากแบบประเมินจริงก่อนลงคะแนน
+## โครงสร้าง
+ด้าน 1: ทักษะการวางแผนพัฒนาสถานศึกษา กลยุทธ์ เครื่องมือหรือนวัตกรรมการบริหาร
+ด้าน 2: ผลลัพธ์ในการพัฒนาการบริหารสถานศึกษา
+ด้าน 3: ผลงานทางวิชาการ (วิทยฐานะเชี่ยวชาญ)
+## กฎการใช้
+1. แยกข้อกำหนด ก.ค.ศ. ออกจาก checklist วิเคราะห์ภายในอย่างชัดเจน
+2. ไม่ใช้ผลงานหรือกิจกรรมแทนหลักฐานผลลัพธ์ที่ตรวจสอบได้
+3. ทุกข้อเก็บหน้าเอกสาร ข้อความเกณฑ์ หลักฐาน ตัวชี้วัด และสถานะการตรวจทาน
+4. ยังไม่ยืนยันว่าคู่มือ 2564 ครอบคลุมหนังสือแก้ไขทุกฉบับถึง ต.ค. 2569
+5. ไม่จัดเก็บข้อมูลระบุตัวนักเรียนใน repo
+
+## Cross-PR reconciliation / source precedence (24 ต.ค. 2569)
+
+**สถานะ: REVIEW REQUIRED — ยังไม่ผ่าน M0-A LOCK; ไม่เผยแพร่เป็น e-book**
+
+- **แผนแม่บทที่ main:** [WD_PRINCIPAL_EXPERT_RANK_MASTER_PLAN_2570.md](../WD_PRINCIPAL_EXPERT_RANK_MASTER_PLAN_2570.md) เป็นเจ้าของ roadmap M0–M6 และหลักการบริหาร
+- **งาน M0 และกรณีศึกษาผู้ผ่าน (PR #75):** [M0 research](https://github.com/infobwd/manual/pull/75) เป็นเจ้าของ criteria research / exemplar ledger; ยังเปิด PR อยู่และมี **ทะเบียน 60 ช่องซ้ำ** ซึ่งต้องเปลี่ยนเป็นลิงก์มายัง matrix ใน PR #76 ก่อน merge #75
+- **PR #76:** [M0_A_EXPERT_RUBRIC_MATRIX.md](M0_A_EXPERT_RUBRIC_MATRIX.md) เป็น **canonical register** สำหรับ 12 ตัวชี้วัดและ 60 จุดตรวจเท่านั้น; ไฟล์นี้เป็น source ledger ไม่ทำ rubric ซ้ำ
+- **M1:** เปิดเอกสารและ PR แยกหลัง M0-A lock; ห้ามผสมผล audit จริงกับ placeholder
+
+### Revision / precedence checks
+| เอกสาร | แหล่งทางการ | ข้อควรตรวจ |
+|---|---|---|
+| ว 10/2564 | https://www.otepc.go.th/th/pa-download/pa-criteria/item/3369-10-2564.html | ต้นเกณฑ์ผู้บริหารสถานศึกษา |
+| คู่มือ ว 10/2564 | https://otepc.go.th/images/00_YEAR2564/03_PV1/2Mv10-2564.pdf | PA 4/บส/ชช สพฐ. ต้องตรวจภาพหน้าจริง ไม่ถือสารบัญเป็น PDF index |
+| ล 679/2566 | https://otepc.go.th/th/144-km/inforgraphics/5971-pa-3.html | ก.ค.ศ. ยืนยันมีการแก้เกณฑ์ **ตัดสิน** ด้าน 1–2; ต้องอ่านฉบับเต็ม |
+| ล 1933/2567 | https://circular.otepc.go.th/v1_t_circualr_book_view.php?editid1=646 | ฉบับรวมแก้ไขสำหรับผู้บริหารสถานศึกษา |
+| ล 1144/2567 | https://circular.otepc.go.th/v1_t_circualr_book_view.php?editid1=632 | แก้ไขตัวชี้วัด; ต้องตรวจว่ากระทบ D1/D2 อย่างไร |
+| ล 1222/2568 | https://otepc.go.th/th/144-km/inforgraphics/5971-pa-3.html | แก้ข้อกำหนดด้าน 3; ตรวจแยกจาก M0-A |
+| ว 17/2567 | https://otepc.go.th/th/144-km/inforgraphics/5971-pa-3.html | ตรวจความซ้ำซ้อนผลงานทางวิชาการ |
+
+**กฎ:** ใช้ถ้อยคำฉบับแก้ไขที่มีผลในวันยื่นเหนือข้อความเดิมที่ขัดกัน; หน้าเว็บไซต์/infographic ยืนยันการมีอยู่ของเอกสาร ไม่แทนเนื้อหาข้อบังคับ.
+
+**Validation fields ต่อหนึ่ง subitem:** `ID | official wording | document/version | URL | printed page | PDF page | scoring rule | evidence | reviewer | date | status`; สถานะ `PENDING_SOURCE / VERIFIED_ORIGINAL / VERIFIED_AMENDED / SUPERSEDED`. ขณะนี้ **60/60 มีดัชนีใจความที่ตรวจเทียบต้นฉบับปี 2564 แล้ว** (ไม่ใช่การคัดคำต่อคำ); การยืนยันฉบับแก้ไขและเกณฑ์ตัดสินยังค้าง.
+
+**ต้องปิดก่อนเสนอ Merge:** อ่านต้นฉบับ PA 4/บส/ชช รายข้อ, ตรวจแก้ไข ล 679/2566 และ ล 1144/2567 กับ ล 1933/2567, ตรวจคะแนนผ่านที่แก้ไข, peer review, แก้ PR #75 ให้ link กลับ canonical, ขอเจ้าของงานตรวจรับ. **ห้ามเผยแพร่ e-book / Pages / production**.
+
+**แหล่งที่ตรวจจริง:** ไฟล์แนบ `2Mv10-2564.pdf` จำนวน 227 หน้าในแชทผู้ใช้; ตรวจหน้าพิมพ์ 152–157 ตรง PDF หน้า 157–162 (นับหน้าแรกเป็น 1). PDF ไม่ถูกเพิ่มเข้า repo สาธารณะ. ตาราง rubric ในไฟล์คู่เป็นข้อความถอดใจความสำหรับทำดัชนี มิใช่คำอ้างตรง; ผู้ตรวจต้องเปิดต้นฉบับเพื่ออ่านถ้อยคำทางการ.
+
+
+## Original PDF audit — 24 ต.ค. 2569
+- **ตรวจเอกสารจริง:** PA 4/บส สพฐ. **เชี่ยวชาญ** หน้าพิมพ์ 152–157 = PDF หน้า 157–162; ไม่ใช้แบบเชี่ยวชาญพิเศษที่เริ่มหน้าพิมพ์ 158 หรือแบบ กศน.
+- **ด้าน 1:** 8 ตัวชี้วัด × 5 ข้อย่อย = 40; กติกา 1–5 คะแนนมีเงื่อนไขลำดับ 1–3 และข้อ 4/5 (หน้าพิมพ์ 152/PDF 157)
+- **ด้าน 2:** 4 ตัวชี้วัด × 5 ข้อย่อย = 20; ให้คะแนนตามจำนวนข้อที่ปรากฏชัดเจน (หน้าพิมพ์ 155/PDF 160)
+- **แบบสรุป:** ด้าน 1 คะแนนดิบ × 2.5; ด้าน 2 คะแนนดิบ × 5 (หน้าพิมพ์ 157/PDF 162)
+- **ข้อควรระวัง:** 60 ข้อย่อยที่ลงทะเบียนเป็น *ใจความ* เพื่อใช้จับคู่หลักฐาน ไม่ใช่คำต่อคำตามแบบประเมิน; กฎแก้ไขมีลำดับศักดิ์เหนือคู่มือเดิมเมื่อใช้บังคับ
+
+## Amendment impact ledger — ยังไม่ผ่านการยืนยันฉบับเต็ม
+| เอกสาร | ฐานเดิม | สิ่งที่พบจากแหล่ง ก.ค.ศ. | เกณฑ์ใช้จริง / งานค้าง | แหล่ง |
+|---|---|---|---|---|
+| ว10/2564 + คู่มือ | 12 ตัวชี้วัด 60 ข้อ; วิธีคะแนนตามหน้า 152/155 | ตรวจ PDF ต้นฉบับ 227 หน้าแล้ว | **ยืนยันเฉพาะต้นฉบับปี 2564** | https://www.otepc.go.th/th/pa-download/pa-manual/download/165/3885/17.html |
+| ล679/2566 | เกณฑ์ตัดสินด้าน 1–2 เดิม | ก.ค.ศ. ระบุว่าแก้ไขหลักเกณฑ์การตัดสิน | **รอ PDF ฉบับเต็มและหน้าแก้ไข**; ห้ามใช้ threshold เดิมเป็นข้อยืนยัน | https://otepc.go.th/th/144-km/inforgraphics/5971-pa-3.html |
+| ล1144/2567 | ตัวชี้วัดและวิธีประเมินเดิม | ก.ค.ศ. ระบุว่าแก้หลักเกณฑ์และตัวชี้วัด | **รอ PDF สิ่งที่ส่งมาด้วยเพื่อเทียบรายข้อ** | https://otepc.go.th/th/content_page/item/5012-1144-2567.html |
+| ล1933/2567 | ว10 และหนังสือแก้ไขก่อนหน้า | มีฉบับรวมเกณฑ์ผู้บริหารสถานศึกษา | **รอเทียบข้อความและเลขหน้าแบบ consolidated** | https://otepc.go.th/th/content_page/item/5170-1933-2567.html |
+| ล1222/2568 | ข้อกำหนดหลายสายงานรวม ว10 | ก.ค.ศ. ประกาศแก้ไข ว9–ว12/2564 และ ว18/2567 | **รอตรวจ PDF และภาคผนวกผลกระทบเฉพาะผู้บริหารเชี่ยวชาญ**; ประสาน PR #75 ด้าน 3 | https://www.otepc.go.th/th/content_page/item/5622-1222-2568-9-12-2564-18-2567.html |
+| ล1122/2567, ว17/2567 | ข้อกำหนดอื่นที่เกี่ยวข้อง | พบรายการในทะเบียนหนังสือ ก.ค.ศ. | **รอคัดกรองผลกระทบตามวันยื่นและผลงานวิชาการ** | https://otepc.go.th/th/content_page/14-circular-letter.html?start=60 |
+
+**ข้อจำกัด:** หน้าเว็บไซต์ทางการยืนยันการมีอยู่/หัวข้อเอกสาร แต่ไม่พอระบุข้อความแก้ไขหรือวันเริ่มใช้ในรายละเอียด จึงไม่อ้างว่าเป็นเกณฑ์ปัจจุบันที่ตรวจครบ. ช่อง 'เกณฑ์ใช้จริง' ยังค้าง ไม่เติมจากการอนุมาน.
+
+## M0-A acceptance / source lock
+- [x] ตรวจโครงสร้าง 12 ตัวชี้วัดและใจความ 60 ข้อย่อยกับคู่มือ ว10/2564 (หน้าพิมพ์และ PDF)
+- [x] แยกเกณฑ์เดิมจากข้อเสนอหลักฐาน WD Growth Together และกำหนดสถานะหลักฐาน
+- [x] เชื่อมโยงแผนแม่บท main และ PR #75 (canonical matrix อยู่ PR #76)
+- [ ] ตรวจถ้อยคำแบบคำต่อคำและผลของหนังสือแก้ไขฉบับเต็มทั้งหมด
+- [ ] ยืนยันเกณฑ์ตัดสินฉบับมีผลใช้บังคับและเงื่อนไขผู้ยื่น
+- [ ] ให้ผู้ตรวจอิสระตรวจซ้ำก่อนอนุมัติ Merge
+
+**SOURCE LOCK = NOT PASSED; NO MERGE / NO E-BOOK / NO PAGES / NO PRODUCTION.**
+
+## Follow-up review — 24 ต.ค. 2569 (หลัง commit 3c6f189)
+
+ตรวจแหล่งข้อมูล ก.ค.ศ. ที่เปิดอ่านได้เพิ่มเติม:
+- [ก.ค.ศ. สรุปเส้นทางแก้ไข](https://otepc.go.th/th/144-km/inforgraphics/5971-pa-3.html) ระบุชัดว่า **ล 679/2566 เปลี่ยนเกณฑ์การตัดสินด้าน 1–2**. ยังไม่ได้ถอดคะแนนผ่านจากตัวบทหนังสือ.
+- [ล 1144/2567](https://otepc.go.th/th/content_page/item/5012-1144-2567.html) และ [คำอธิบายการเปลี่ยนแปลง](https://www.otepc.go.th/en/pa-infographic/item/5971-pa-3.html): มีการเพิ่มห้องเรียนกิจกรรมพัฒนาผู้เรียนและช่องทางแนบเอกสารผลสัมฤทธิ์/รางวัลแบบไม่บังคับ; **ยังไม่มีหลักฐานจากหน้านี้ว่าแก้ rubric D1/D2 60 ข้อทุกข้อ**. ต้องอ่านสิ่งที่ส่งมาด้วยและบันทึก applicability.
+- [ล 1933/2567](https://otepc.go.th/th/content_page/item/5170-1933-2567.html): เป็นฉบับรวบรวมหลักเกณฑ์ผู้บริหารสถานศึกษาและที่แก้ไขเพิ่มเติม (22 พ.ย. 2567); [PDF OCR ทางการ](https://circular.otepc.go.th/mfhandler.php?field=circular_code_file_pdf&file=L1933-2567_OCR.pdf&key1=646&pageType=view&table=v1_t_circualr_book) ใช้เป็นเอกสารตรวจต่อ โดยต้องเทียบข้อความและหน้าจริง.
+- [สารบัญหลักเกณฑ์ ก.ค.ศ.](https://otepc.go.th/th/pa-download/pa-criteria.html) มี **ล 1222/2568** และ **ว 1/2569**. ว 1/2569 เป็นช่องทางเฉพาะผู้ได้รับรางวัลจากผลงานเชิงประจักษ์; **ไม่ถือว่าเป็นเกณฑ์ทั่วไปที่ใช้แทน ว 10/2564** โดยอัตโนมัติ.
+
+**ผลต่อ M0-A:** ยืนยันได้ว่าเอกสารแก้ไขมีอยู่และต้องตรวจ applicability; **ยังยืนยัน threshold/วันมีผล/ข้อความ rubric ฉบับล่าสุดไม่ได้**. ห้ามอ้างว่า Source Lock ผ่าน.
+
+### Consistency / action log
+- PR #76 rubric header เคยกล่าวว่า 60 ช่องเป็น placeholder แต่หลัง commit 593041f ได้ถอดใจความแล้ว; แก้สถานะ header ให้ตรงความจริงใน commit ถัดไป
+- PR #75 ลบทะเบียน 60 ช่องซ้ำและอ้างอิง canonical ใน PR #76 แล้ว (commit `d626701c561dc941be57b488afef9c88b208e141`); ข้อความเดิมในไฟล์นี้ที่ว่า 'ยังมีทะเบียน 60 ช่องซ้ำ' ให้ถือว่า **superseded**
+- แผนแม่บท `docs/WD_PRINCIPAL_EXPERT_RANK_MASTER_PLAN_2570.md` ใน main ยังเป็น roadmap หลัก; ไม่มีการย้ายเนื้อหาซ้ำ
+- คง **NO MERGE / NO E-BOOK / NO PAGES / NO PRODUCTION** จนกว่าจะตรวจฉบับเต็มและได้รับอนุมัติ
+
+## Independent line-by-line comparison against original PA 4/บส/สพฐ. (24 Oct 2026)
+
+**Evidence used:** attached original `2Mv10-2564.pdf` retrieved from the user's file library; PDF pages **157–162** correspond to printed **152–157**. This round re-read all six pages and compared **all 60 index paraphrases** in [M0-A matrix](M0_A_EXPERT_RUBRIC_MATRIX.md) against the source. The comparison is to the **original 2564 form only**, not a later amended consolidated form.
+
+| Indicator | Original PDF/printed | Indexed items | Semantic comparison | Detail requiring preservation in official interpretation |
+|---|---|---:|---|---|
+| D1-01 | 157/152 | 5/5 | MATCH (paraphrase) | learner well-being and direct need |
+| D1-02 | 157/152 | 5/5 | MATCH (paraphrase) | curriculum **and** teaching/learning |
+| D1-03 | 158/153 | 5/5 | MATCH (paraphrase) | real hands-on participation |
+| D1-04 | 158/153 | 5/5 | MATCH (paraphrase) | director as coach and PLC leader |
+| D1-05 | 158/153 | 5/5 | MATCH (paraphrase) | explicitly designed workflow, sustainability |
+| D1-06 | 158/153 | 5/5 | MATCH (paraphrase) | application of innovation/tool and organizational learning |
+| D1-07 | 159/154 | 5/5 | MATCH (paraphrase) | benefit actually received from networks |
+| D1-08 | 159/154 | 5/5 | MATCH (paraphrase) | stakeholder participation and shared leadership |
+| D2-01 | 160/155 | 5/5 | MATCH (paraphrase) | PA objectives, collective teacher effort, value |
+| D2-02 | 160/155 | 5/5 | MATCH (paraphrase) | **majority** of learners, cross-functional skills, long-term results |
+| D2-03 | 161/156 | 5/5 | MATCH (paraphrase) | professional ethics and shared teacher leadership |
+| D2-04 | 161/156 | 5/5 | MATCH (paraphrase) | **recognition by external agency** distinct from internal improvement |
+
+**Result: 60/60 paraphrases substantively align with original 2564 form, no item-order discrepancy found.** This is **not** a word-for-word transcription, and does **not** establish applicability of later amendments. Preserve source PDF as authoritative; do not relabel the paraphrases as official quotes.
+
+**Original scoring cross-check:** D1 1–3 points depend on how many of first 3 subitems are met; 4 requires all first 3 plus either 4 or 5; 5 requires all five (PDF 157/printed 152). D2 score 1–5 by count of visibly met subitems (PDF 160/printed 155). Summary form raw-to-weighted multipliers **D1 ×2.5, D2 ×5** (PDF 162/printed 157). **These are original 2564 scoring instructions only; passing thresholds still unverified after amendments.**
+
+**Potential label ambiguity:** Printed 155 calls D2 'ผลลัพธ์ในการพัฒนาคุณภาพผู้เรียน ครู และสถานศึกษา', while printed 157 summary uses 'ผลลัพธ์ในการพัฒนาการบริหารสถานศึกษา'. Preserve both in context rather than treating them as different assessment domains.
+
+**Source lock remains BLOCKED:** Must still inspect full text/effective dates of ล 679/2566, ล 1144/2567, ล 1933/2567, ล 1222/2568 and any subsequent applicable notices, then conduct independent second-person review. No merge or e-book.
