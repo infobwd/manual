@@ -1,5 +1,5 @@
 {
-  "schema_version": "m0b-library.2",
+  "schema_version": "m0b-library.3",
   "updated_at": "2026-10-24",
   "records": [
     {
@@ -126,14 +126,25 @@
         "school-management"
       ],
       "publication_year": "2569",
-      "publisher": null,
-      "abstract_summary": null,
-      "detail_status": "metadata_only",
+      "publisher": "วารสารครุศาสตร์ปัญญา 5(3), 565–581",
+      "abstract_summary": "กระบวนการ 5 ขั้นตอน: กำหนดนโยบายและเป้าหมาย วางแผน ดำเนินงาน ติดตามสะท้อนผล และนำผลไปพัฒนา; ประเมินความเหมาะสมและประโยชน์ระดับมากที่สุด",
+      "detail_status": "abstract_extracted_pdf_pages_pending",
       "approval_evidence_url": null,
       "approval_date": null,
       "source_verification_scope": "publisher_or_journal_article_page",
       "discovery_page_url": "https://www.tci-thaijo.org/articles/social06-294309",
-      "pdf_status": "opened_full_text"
+      "pdf_status": "opened_full_text",
+      "research_detail": {
+        "objective": "ศึกษาและยกร่างกระบวนการนิเทศภายใน ทดลองใช้ และประเมินผลการใช้กระบวนการในโรงเรียนบ้านแม่สลิด",
+        "method": "วิจัย 3 ระยะ: ศึกษาและยกร่าง ทดลองใช้ และประเมินผล; ผู้บริหาร ครู และศึกษานิเทศก์ 12 คน",
+        "instruments": "แบบสัมภาษณ์และแบบประเมินคุณภาพกระบวนการ",
+        "findings": "กระบวนการ 5 ขั้นตอน: กำหนดนโยบายและเป้าหมาย วางแผน ดำเนินงาน ติดตามสะท้อนผล และนำผลไปพัฒนา; ประเมินความเหมาะสมและประโยชน์ระดับมากที่สุด",
+        "wd_relevance": "ใช้เป็นแนวทางออกแบบวงจร PLC/นิเทศภายในร่วมกับการสะท้อนผลของครูใน WD Growth; ไม่ใช่หลักฐานผลสัมฤทธิ์ของผู้เรียนในโรงเรียนบ้านวังด้ง",
+        "publisher": "วารสารครุศาสตร์ปัญญา 5(3), 565–581",
+        "evidence_basis": "publisher_abstract",
+        "page_citation_status": "pending_pdf_page_validation",
+        "source_checked_at": "2026-10-24"
+      }
     },
     {
       "id": "L06",
@@ -155,14 +166,25 @@
         "school-management"
       ],
       "publication_year": "2569",
-      "publisher": null,
-      "abstract_summary": null,
-      "detail_status": "metadata_only",
+      "publisher": "Arts of Management Journal 10(4), 359–372",
+      "abstract_summary": "แนวทาง 7 ด้าน รวม 35 แนวทาง (7A-PLC); ประเมินความเหมาะสมเฉลี่ย 4.62 ความเป็นไปได้ 4.55 และประโยชน์ 4.74",
+      "detail_status": "abstract_extracted_pdf_pages_pending",
       "approval_evidence_url": null,
       "approval_date": null,
       "source_verification_scope": "publisher_or_journal_article_page",
       "discovery_page_url": "https://www.tci-thaijo.org/articles/social02-288285",
-      "pdf_status": "opened_full_text"
+      "pdf_status": "opened_full_text",
+      "research_detail": {
+        "objective": "ศึกษาปัญหาการบริหารงานวิชาการผ่าน PLC และพัฒนาแนวทางเพื่อส่งเสริมคุณภาพสถานศึกษา",
+        "method": "2 ระยะ: สำรวจครู 385 คน; พัฒนาแนวทางโดยผู้เชี่ยวชาญ 7 คน และประเมินด้วยผู้เชี่ยวชาญอีก 7 คน",
+        "instruments": "แบบสอบถาม แบบสัมภาษณ์แบบมีโครงสร้าง แบบสังเคราะห์ข้อมูล และแบบประเมินความเหมาะสม ความเป็นไปได้ และประโยชน์",
+        "findings": "แนวทาง 7 ด้าน รวม 35 แนวทาง (7A-PLC); ประเมินความเหมาะสมเฉลี่ย 4.62 ความเป็นไปได้ 4.55 และประโยชน์ 4.74",
+        "wd_relevance": "ใช้เป็นกรอบเทียบองค์ประกอบการบริหารงานวิชาการและความเป็นไปได้ของระบบ PLC; ยังไม่ยืนยันผลลัพธ์ผู้เรียน WD Growth",
+        "publisher": "Arts of Management Journal 10(4), 359–372",
+        "evidence_basis": "publisher_abstract",
+        "page_citation_status": "pending_pdf_page_validation",
+        "source_checked_at": "2026-10-24"
+      }
     },
     {
       "id": "L07",
@@ -184,12 +206,23 @@
       ],
       "publication_year": "2568",
       "publisher": "วารสารนวัตกรรมการจัดการศึกษาและการวิจัย 7(6), 1131–1144",
-      "abstract_summary": null,
-      "detail_status": "metadata_only",
+      "abstract_summary": "PLC และการจัดการเรียนรู้ภาพรวมอยู่ระดับมาก; การบริหาร PLC พยากรณ์การจัดการเรียนรู้ศตวรรษที่ 21 ได้ร้อยละ 36.40",
+      "detail_status": "abstract_extracted_pdf_pages_pending",
       "approval_evidence_url": null,
       "approval_date": null,
       "source_verification_scope": "publisher_or_journal_article_page",
-      "pdf_status": "opened_full_text"
+      "pdf_status": "opened_full_text",
+      "research_detail": {
+        "objective": "ศึกษาการบริหาร PLC การจัดการเรียนรู้ศตวรรษที่ 21 และอำนาจพยากรณ์ของ PLC ต่อการจัดการเรียนรู้",
+        "method": "วิจัยเชิงปริมาณ กลุ่มตัวอย่างผู้บริหารและครู 311 คน สุ่มแบบแบ่งชั้นตามขนาดโรงเรียน",
+        "instruments": "แบบสอบถามมาตรประมาณค่า 5 ระดับ IOC 0.67–1.00 ความเชื่อมั่น 0.96; วิเคราะห์ถดถอยพหุแบบขั้นตอน",
+        "findings": "PLC และการจัดการเรียนรู้ภาพรวมอยู่ระดับมาก; การบริหาร PLC พยากรณ์การจัดการเรียนรู้ศตวรรษที่ 21 ได้ร้อยละ 36.40",
+        "wd_relevance": "ใช้สนับสนุนความสำคัญของ PLC ในบริบทกาญจนบุรี แต่เป็นความสัมพันธ์ทางสถิติ ไม่ใช่ข้อพิสูจน์เชิงเหตุและผลของ WD Growth",
+        "publisher": "วารสารนวัตกรรมการจัดการศึกษาและการวิจัย 7(6), 1131–1144",
+        "evidence_basis": "publisher_abstract",
+        "page_citation_status": "pending_pdf_page_validation",
+        "source_checked_at": "2026-10-24"
+      }
     },
     {
       "id": "P01",
