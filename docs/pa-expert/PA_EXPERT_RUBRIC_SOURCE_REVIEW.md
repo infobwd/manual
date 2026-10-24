@@ -92,3 +92,30 @@
 - PR #75 ลบทะเบียน 60 ช่องซ้ำและอ้างอิง canonical ใน PR #76 แล้ว (commit `d626701c561dc941be57b488afef9c88b208e141`); ข้อความเดิมในไฟล์นี้ที่ว่า 'ยังมีทะเบียน 60 ช่องซ้ำ' ให้ถือว่า **superseded**
 - แผนแม่บท `docs/WD_PRINCIPAL_EXPERT_RANK_MASTER_PLAN_2570.md` ใน main ยังเป็น roadmap หลัก; ไม่มีการย้ายเนื้อหาซ้ำ
 - คง **NO MERGE / NO E-BOOK / NO PAGES / NO PRODUCTION** จนกว่าจะตรวจฉบับเต็มและได้รับอนุมัติ
+
+## Independent line-by-line comparison against original PA 4/บส/สพฐ. (24 Oct 2026)
+
+**Evidence used:** attached original `2Mv10-2564.pdf` retrieved from the user's file library; PDF pages **157–162** correspond to printed **152–157**. This round re-read all six pages and compared **all 60 index paraphrases** in [M0-A matrix](M0_A_EXPERT_RUBRIC_MATRIX.md) against the source. The comparison is to the **original 2564 form only**, not a later amended consolidated form.
+
+| Indicator | Original PDF/printed | Indexed items | Semantic comparison | Detail requiring preservation in official interpretation |
+|---|---|---:|---|---|
+| D1-01 | 157/152 | 5/5 | MATCH (paraphrase) | learner well-being and direct need |
+| D1-02 | 157/152 | 5/5 | MATCH (paraphrase) | curriculum **and** teaching/learning |
+| D1-03 | 158/153 | 5/5 | MATCH (paraphrase) | real hands-on participation |
+| D1-04 | 158/153 | 5/5 | MATCH (paraphrase) | director as coach and PLC leader |
+| D1-05 | 158/153 | 5/5 | MATCH (paraphrase) | explicitly designed workflow, sustainability |
+| D1-06 | 158/153 | 5/5 | MATCH (paraphrase) | application of innovation/tool and organizational learning |
+| D1-07 | 159/154 | 5/5 | MATCH (paraphrase) | benefit actually received from networks |
+| D1-08 | 159/154 | 5/5 | MATCH (paraphrase) | stakeholder participation and shared leadership |
+| D2-01 | 160/155 | 5/5 | MATCH (paraphrase) | PA objectives, collective teacher effort, value |
+| D2-02 | 160/155 | 5/5 | MATCH (paraphrase) | **majority** of learners, cross-functional skills, long-term results |
+| D2-03 | 161/156 | 5/5 | MATCH (paraphrase) | professional ethics and shared teacher leadership |
+| D2-04 | 161/156 | 5/5 | MATCH (paraphrase) | **recognition by external agency** distinct from internal improvement |
+
+**Result: 60/60 paraphrases substantively align with original 2564 form, no item-order discrepancy found.** This is **not** a word-for-word transcription, and does **not** establish applicability of later amendments. Preserve source PDF as authoritative; do not relabel the paraphrases as official quotes.
+
+**Original scoring cross-check:** D1 1–3 points depend on how many of first 3 subitems are met; 4 requires all first 3 plus either 4 or 5; 5 requires all five (PDF 157/printed 152). D2 score 1–5 by count of visibly met subitems (PDF 160/printed 155). Summary form raw-to-weighted multipliers **D1 ×2.5, D2 ×5** (PDF 162/printed 157). **These are original 2564 scoring instructions only; passing thresholds still unverified after amendments.**
+
+**Potential label ambiguity:** Printed 155 calls D2 'ผลลัพธ์ในการพัฒนาคุณภาพผู้เรียน ครู และสถานศึกษา', while printed 157 summary uses 'ผลลัพธ์ในการพัฒนาการบริหารสถานศึกษา'. Preserve both in context rather than treating them as different assessment domains.
+
+**Source lock remains BLOCKED:** Must still inspect full text/effective dates of ล 679/2566, ล 1144/2567, ล 1933/2567, ล 1222/2568 and any subsequent applicable notices, then conduct independent second-person review. No merge or e-book.
