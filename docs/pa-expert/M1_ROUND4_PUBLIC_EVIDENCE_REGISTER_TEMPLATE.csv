@@ -1,0 +1,6 @@
+evidence_id,rubric_id,evidence_type,public_status,review_month,gap_category,next_action
+M1-A-BASELINE,D1-01,baseline_source,REVIEW_PENDING,2026-10,teacher_verification,Verify source forms and class denominator privately
+M1-B-PLC,D1-03,plc_meeting_index,GAP,,dated_operational_records,Obtain redacted index of actual meetings
+M1-C-LEAD,D1-08,principal_decision_index,GAP,,decision_trail,Review dated decisions privately
+M1-D-OUTCOME,D2-02,comparable_retest,GAP,,outcome_evidence,Confirm approved comparable retest and denominators
+M1-E-RUBRIC,D2-04,official_criteria_source,GAP,,source_lock,Check effective official amendments before subcriterion acceptance
