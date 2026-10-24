@@ -1,5 +1,5 @@
 {
-  "schema_version": "m0b-library.1",
+  "schema_version": "m0b-library.2",
   "updated_at": "2026-10-24",
   "records": [
     {
@@ -18,7 +18,13 @@
       "topics": [
         "PLC",
         "participatory-management"
-      ]
+      ],
+      "publication_year": "2569",
+      "publisher": "JAPDEAT 8(3), 15–28",
+      "abstract_summary": null,
+      "detail_status": "metadata_only",
+      "approval_evidence_url": null,
+      "approval_date": null
     },
     {
       "id": "L02",
@@ -36,7 +42,13 @@
       "topics": [
         "PLC",
         "active-learning"
-      ]
+      ],
+      "publication_year": "2569",
+      "publisher": "วารสารการบริหารการศึกษาและภาวะผู้นำ มรภ.สกลนคร 14(54), 59–70",
+      "abstract_summary": null,
+      "detail_status": "metadata_only",
+      "approval_evidence_url": null,
+      "approval_date": null
     },
     {
       "id": "L03",
@@ -54,7 +66,13 @@
       "topics": [
         "PLC",
         "school-leadership"
-      ]
+      ],
+      "publication_year": "2569",
+      "publisher": "JAPDEAT 8(3), 564–583",
+      "abstract_summary": null,
+      "detail_status": "metadata_only",
+      "approval_evidence_url": null,
+      "approval_date": null
     },
     {
       "id": "L04",
@@ -72,7 +90,13 @@
       "topics": [
         "PLC",
         "school-management"
-      ]
+      ],
+      "publication_year": "2569",
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "metadata_only",
+      "approval_evidence_url": null,
+      "approval_date": null
     },
     {
       "id": "L05",
@@ -90,7 +114,13 @@
       "topics": [
         "PLC",
         "school-management"
-      ]
+      ],
+      "publication_year": "2569",
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "metadata_only",
+      "approval_evidence_url": null,
+      "approval_date": null
     },
     {
       "id": "L06",
@@ -108,7 +138,13 @@
       "topics": [
         "PLC",
         "school-management"
-      ]
+      ],
+      "publication_year": "2569",
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "metadata_only",
+      "approval_evidence_url": null,
+      "approval_date": null
     },
     {
       "id": "L07",
@@ -126,6 +162,387 @@
       "topics": [
         "PLC",
         "school-management"
+      ],
+      "publication_year": "2569",
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "metadata_only",
+      "approval_evidence_url": null,
+      "approval_date": null
+    },
+    {
+      "id": "P01",
+      "title": "การพัฒนารูปแบบการบริหารสถานศึกษาสู่การเป็นโรงเรียนอัจฉริยะเพื่อพัฒนาคุณภาพผู้เรียนในยุคดิจิทัลของโรงเรียนอนุบาลชัยภูมิ",
+      "authors": [
+        "นายนิพัทธ์ อาจมิตร"
+      ],
+      "document_type": "principal_expert_case",
+      "verification_level": "C",
+      "verification_note": "รายชื่อจากข่าว/ฐานเดิม ต้องตรวจเอกสารประกาศ ก.ค.ศ. ต้นฉบับก่อนยืนยัน",
+      "source_page_url": "https://www.kruwandee.com/news-id58877.html",
+      "approval_evidence_url": null,
+      "approval_date": null,
+      "approval_round": "12/2569",
+      "pdf_url": null,
+      "publication_year": null,
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "name_only",
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "principal-expert"
+      ]
+    },
+    {
+      "id": "P02",
+      "title": "การพัฒนารูปแบบการบริหารสถานศึกษาสู่ความเป็นเลิศในระดับปฐมวัยตามมาตรฐานสถานศึกษาพระราชทาน",
+      "authors": [
+        "นางสาวสุจีรา บุญเรืองรอด"
+      ],
+      "document_type": "principal_expert_case",
+      "verification_level": "C",
+      "verification_note": "รายชื่อจากข่าว/ฐานเดิม ต้องตรวจเอกสารประกาศ ก.ค.ศ. ต้นฉบับก่อนยืนยัน",
+      "source_page_url": "https://www.kruwandee.com/news-id58877.html",
+      "approval_evidence_url": null,
+      "approval_date": null,
+      "approval_round": "12/2569",
+      "pdf_url": null,
+      "publication_year": null,
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "name_only",
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "principal-expert"
+      ]
+    },
+    {
+      "id": "P03",
+      "title": "รูปแบบการบริหารสถานศึกษาตามแนวคิด PLC สู่การเป็นโรงเรียนคุณภาพ",
+      "authors": [
+        "นางสาวสิมาพร ลิ้มไพบูลย์"
+      ],
+      "document_type": "principal_expert_case",
+      "verification_level": "C",
+      "verification_note": "รายชื่อจากข่าว/ฐานเดิม ต้องตรวจเอกสารประกาศ ก.ค.ศ. ต้นฉบับก่อนยืนยัน",
+      "source_page_url": "https://www.kruwandee.com/news-id58877.html",
+      "approval_evidence_url": null,
+      "approval_date": null,
+      "approval_round": "12/2569",
+      "pdf_url": null,
+      "publication_year": null,
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "name_only",
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "principal-expert"
+      ]
+    },
+    {
+      "id": "P04",
+      "title": "การพัฒนารูปแบบการบริหารจัดการเชิงกลยุทธ์ตามหลักธรรมาภิบาล",
+      "authors": [
+        "นางพวงผกา ศาลาคาม"
+      ],
+      "document_type": "principal_expert_case",
+      "verification_level": "C",
+      "verification_note": "รายชื่อจากข่าว/ฐานเดิม ต้องตรวจเอกสารประกาศ ก.ค.ศ. ต้นฉบับก่อนยืนยัน",
+      "source_page_url": "https://www.kruwandee.com/news-id58877.html",
+      "approval_evidence_url": null,
+      "approval_date": null,
+      "approval_round": "12/2569",
+      "pdf_url": null,
+      "publication_year": null,
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "name_only",
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "principal-expert"
+      ]
+    },
+    {
+      "id": "P05",
+      "title": "การพัฒนาแนวทางการบริหารแบบมีส่วนร่วมของเครือข่ายการจัดการศึกษา",
+      "authors": [
+        "นางอ่อนจันทร์ นุชบูรณ์"
+      ],
+      "document_type": "principal_expert_case",
+      "verification_level": "C",
+      "verification_note": "รายชื่อจากข่าว/ฐานเดิม ต้องตรวจเอกสารประกาศ ก.ค.ศ. ต้นฉบับก่อนยืนยัน",
+      "source_page_url": "https://www.kruwandee.com/news-id58877.html",
+      "approval_evidence_url": null,
+      "approval_date": null,
+      "approval_round": "12/2569",
+      "pdf_url": null,
+      "publication_year": null,
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "name_only",
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "principal-expert"
+      ]
+    },
+    {
+      "id": "P06",
+      "title": "การพัฒนารูปแบบการบริหารสถานศึกษาเพื่อพัฒนานักเรียนให้มีทักษะการเป็นผู้ประกอบการในศตวรรษที่ 21",
+      "authors": [
+        "นายเรวัฒน์ พรหมสะโร"
+      ],
+      "document_type": "principal_expert_case",
+      "verification_level": "C",
+      "verification_note": "รายชื่อจากข่าว/ฐานเดิม ต้องตรวจเอกสารประกาศ ก.ค.ศ. ต้นฉบับก่อนยืนยัน",
+      "source_page_url": "https://www.kruwandee.com/news-id58877.html",
+      "approval_evidence_url": null,
+      "approval_date": null,
+      "approval_round": "12/2569",
+      "pdf_url": null,
+      "publication_year": null,
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "name_only",
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "principal-expert"
+      ]
+    },
+    {
+      "id": "P07",
+      "title": "การพัฒนารูปแบบการบริหารจัดการช่วยเหลือระยะแรกเริ่มแบบมีส่วนร่วมของเครือข่ายสหวิชาชีพและครอบครัว",
+      "authors": [
+        "นายโกสินทร์ สวัสดิ์ชัย"
+      ],
+      "document_type": "principal_expert_case",
+      "verification_level": "C",
+      "verification_note": "รายชื่อจากข่าว/ฐานเดิม ต้องตรวจเอกสารประกาศ ก.ค.ศ. ต้นฉบับก่อนยืนยัน",
+      "source_page_url": "https://kruwandee.com/news-id58810.html",
+      "approval_evidence_url": null,
+      "approval_date": null,
+      "approval_round": "10/2569",
+      "pdf_url": null,
+      "publication_year": null,
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "name_only",
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "principal-expert"
+      ]
+    },
+    {
+      "id": "P08",
+      "title": "การพัฒนารูปแบบการบริหารสถานศึกษาโดยใช้ศาสตร์พระราชา เพื่อส่งเสริมการใช้เทคโนโลยีดิจิทัลในการพัฒนาคุณภาพผู้เรียน",
+      "authors": [
+        "นายสุรพล พรชัย"
+      ],
+      "document_type": "principal_expert_case",
+      "verification_level": "C",
+      "verification_note": "รายชื่อจากข่าว/ฐานเดิม ต้องตรวจเอกสารประกาศ ก.ค.ศ. ต้นฉบับก่อนยืนยัน",
+      "source_page_url": "https://kruwandee.com/news-id58810.html",
+      "approval_evidence_url": null,
+      "approval_date": null,
+      "approval_round": "10/2569",
+      "pdf_url": null,
+      "publication_year": null,
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "name_only",
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "principal-expert"
+      ]
+    },
+    {
+      "id": "P09",
+      "title": "การพัฒนารูปแบบนวัตกรรมการบริหารจัดการสถานศึกษาด้วยเทคโนโลยีดิจิทัลเป็นฐานสู่องค์กรยุคใหม่",
+      "authors": [
+        "นายสมศักดิ์ คำสนิท"
+      ],
+      "document_type": "principal_expert_case",
+      "verification_level": "C",
+      "verification_note": "รายชื่อจากข่าว/ฐานเดิม ต้องตรวจเอกสารประกาศ ก.ค.ศ. ต้นฉบับก่อนยืนยัน",
+      "source_page_url": "https://kruwandee.com/news-id58810.html",
+      "approval_evidence_url": null,
+      "approval_date": null,
+      "approval_round": "10/2569",
+      "pdf_url": null,
+      "publication_year": null,
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "name_only",
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "principal-expert"
+      ]
+    },
+    {
+      "id": "P10",
+      "title": "ยังไม่มีชื่อผลงานที่ตรวจสอบได้ — นายสมพงษ์ พนมชัย",
+      "authors": [
+        "นายสมพงษ์ พนมชัย"
+      ],
+      "document_type": "principal_expert_case",
+      "verification_level": "C",
+      "verification_note": "รายชื่อจากข่าว/ฐานเดิม ต้องตรวจเอกสารประกาศ ก.ค.ศ. ต้นฉบับก่อนยืนยัน",
+      "source_page_url": "https://www.kruwandee.com/news-id57842.html",
+      "approval_evidence_url": null,
+      "approval_date": null,
+      "approval_round": "เมษายน 2569",
+      "pdf_url": null,
+      "publication_year": null,
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "name_only",
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "principal-expert"
+      ]
+    },
+    {
+      "id": "P11",
+      "title": "ยังไม่มีชื่อผลงานที่ตรวจสอบได้ — นายธีระศักดิ์ โนชัย",
+      "authors": [
+        "นายธีระศักดิ์ โนชัย"
+      ],
+      "document_type": "principal_expert_case",
+      "verification_level": "C",
+      "verification_note": "รายชื่อจากข่าว/ฐานเดิม ต้องตรวจเอกสารประกาศ ก.ค.ศ. ต้นฉบับก่อนยืนยัน",
+      "source_page_url": "https://www.kruwandee.com/news-id57842.html",
+      "approval_evidence_url": null,
+      "approval_date": null,
+      "approval_round": "เมษายน 2569",
+      "pdf_url": null,
+      "publication_year": null,
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "name_only",
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "principal-expert"
+      ]
+    },
+    {
+      "id": "P12",
+      "title": "ยังไม่มีชื่อผลงานที่ตรวจสอบได้ — นายปรีชา ภู่สมบัติขจร",
+      "authors": [
+        "นายปรีชา ภู่สมบัติขจร"
+      ],
+      "document_type": "principal_expert_case",
+      "verification_level": "C",
+      "verification_note": "รายชื่อจากข่าว/ฐานเดิม ต้องตรวจเอกสารประกาศ ก.ค.ศ. ต้นฉบับก่อนยืนยัน",
+      "source_page_url": "https://www.kruwandee.com/news-id57842.html",
+      "approval_evidence_url": null,
+      "approval_date": null,
+      "approval_round": "เมษายน 2569",
+      "pdf_url": null,
+      "publication_year": null,
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "name_only",
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "principal-expert"
+      ]
+    },
+    {
+      "id": "P13",
+      "title": "ยังไม่มีชื่อผลงานที่ตรวจสอบได้ — นางสาวเสาวภา ประพันธ์",
+      "authors": [
+        "นางสาวเสาวภา ประพันธ์"
+      ],
+      "document_type": "principal_expert_case",
+      "verification_level": "C",
+      "verification_note": "รายชื่อจากข่าว/ฐานเดิม ต้องตรวจเอกสารประกาศ ก.ค.ศ. ต้นฉบับก่อนยืนยัน",
+      "source_page_url": "https://www.kruwandee.com/news-id57842.html",
+      "approval_evidence_url": null,
+      "approval_date": null,
+      "approval_round": "เมษายน 2569",
+      "pdf_url": null,
+      "publication_year": null,
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "name_only",
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "principal-expert"
+      ]
+    },
+    {
+      "id": "P14",
+      "title": "ยังไม่มีชื่อผลงานที่ตรวจสอบได้ — นายวิโรจ หลักมั่น",
+      "authors": [
+        "นายวิโรจ หลักมั่น"
+      ],
+      "document_type": "principal_expert_case",
+      "verification_level": "C",
+      "verification_note": "รายชื่อจากข่าว/ฐานเดิม ต้องตรวจเอกสารประกาศ ก.ค.ศ. ต้นฉบับก่อนยืนยัน",
+      "source_page_url": "https://www.kruwandee.com/news-id57842.html",
+      "approval_evidence_url": null,
+      "approval_date": null,
+      "approval_round": "เมษายน 2569",
+      "pdf_url": null,
+      "publication_year": null,
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "name_only",
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "principal-expert"
+      ]
+    },
+    {
+      "id": "P15",
+      "title": "ยังไม่มีชื่อผลงานที่ตรวจสอบได้ — นางสาวปิยาภรณ์ สร้อยระย้า",
+      "authors": [
+        "นางสาวปิยาภรณ์ สร้อยระย้า"
+      ],
+      "document_type": "principal_expert_case",
+      "verification_level": "C",
+      "verification_note": "รายชื่อจากข่าว/ฐานเดิม ต้องตรวจเอกสารประกาศ ก.ค.ศ. ต้นฉบับก่อนยืนยัน",
+      "source_page_url": "https://www.kruwandee.com/news-id57842.html",
+      "approval_evidence_url": null,
+      "approval_date": null,
+      "approval_round": "เมษายน 2569",
+      "pdf_url": null,
+      "publication_year": null,
+      "publisher": null,
+      "abstract_summary": null,
+      "detail_status": "name_only",
+      "link_status": "unverified",
+      "link_checked_at": null,
+      "access_rights": "unknown",
+      "topics": [
+        "principal-expert"
       ]
     }
   ]
