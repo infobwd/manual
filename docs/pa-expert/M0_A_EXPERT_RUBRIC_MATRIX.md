@@ -1,4 +1,6 @@
 # M0-A — Expert Director Rubric Traceability & Evidence Matrix
+> **Canonical M0-A rubric register (PR #76) — ยังไม่ผ่าน Source Lock:** ทั้ง 60 ช่องด้านล่างเป็น placeholder ที่ยังไม่ได้ถอดถ้อยคำจาก PA 4/บส/ชช ฉบับทางการ; ห้ามใช้เป็นเกณฑ์ประเมินจริงหรือเผยแพร่ e-book. ตรวจ revision/เกณฑ์ตัดสินที่ [source review](PA_EXPERT_RUBRIC_SOURCE_REVIEW.md). แผนแม่บทอยู่ที่ [master plan](../WD_PRINCIPAL_EXPERT_RANK_MASTER_PLAN_2570.md); งานค้นกรณีศึกษาผู้ผ่านอยู่ใน [PR #75](https://github.com/infobwd/manual/pull/75). เมื่อ PR #75 ปรับเสร็จ ให้แทนทะเบียน 60 ช่องที่ซ้ำด้วยลิงก์มายังไฟล์นี้.
+
 สถานะ: Draft for source verification (24 ต.ค. 2569)
 อ้างอิง: [Official source review](PA_EXPERT_RUBRIC_SOURCE_REVIEW.md)
 ## เป้าหมาย
