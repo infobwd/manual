@@ -90,6 +90,24 @@ Use exactly one same-origin approved M4A/MP3/OGG file per book plus time offsets
 
 ---
 
+### UX-P3A-R1 — Chrome Thai voice recovery + TDRS-style listening lock (25 ต.ค. 2569)
+
+**Repo evidence cross-check:**
+- `infobwd/wd-standard/src/lib/speech.ts` warms `speechSynthesis.getVoices()` on `voiceschanged`, selects a matching language and falls back to a public server-produced MP3 when the browser has no Thai voice. Its `backend-php/api.php?endpoint=tts` is a public GET TTS proxy: it retrieves MP3 from the external Google Translate voice service and caches the result. WD Books is **GitHub Pages static**; it cannot run this PHP code locally. The reused remote fallback depends on the WD Growth host being publicly reachable and healthy, which still requires verification from a browser/device; do not claim server QA passed.
+- `infobwd/tdrs/src/components/podcasts/ListeningScreenLock.tsx` implements an **IN-APP touch lock overlay** with hold-to-unlock; `src/hooks/useWakeLock.ts` uses the Screen Wake Lock API to keep the display lit when supported. This is **not** the OS/device Power-button lock, and not proof of background audio.
+
+**Implemented candidate v1.3.39 (subject to QA):**
+1. Browser-native Thai speech: refresh voice list on `voiceschanged`, allow Chrome async discovery; if no Thai voice is available display a specific next action, not silent English voice. Chrome may require installing Thai voices in OS settings.
+2. On-screen opt-in **“ใช้เสียงไทยออนไลน์ของโรงเรียน”**: only for `published` books without approved audio file. Delivers up to 175 characters/chunk from *public* book content through `https://wd.esdc.app/backend-php/api.php?endpoint=tts&lang=th&q=...` via HTML Audio. No request before explicit opt-in; consent resets on book switch. The WD Growth proxy itself forwards text to an external TTS provider; disclose this clearly. Network/reliability/service terms and current CORS/media hosting are **not yet verified** from an actual device. Never send learner/private data, keys or unreviewed manuscripts.
+3. The narrator reads consecutive chunks/chapters while the page stays active, with play/pause/stop, mini-player, speed and error handling. Online chunks are **not** a gapless, single long audiobook; browser suspension after hardware locking can interrupt scheduling. Do **not** advertise this as guaranteed physical lock-screen playback or bulk-cache those requests.
+4. **“ล็อกการสัมผัส”** button while playing opens separate accessible modal dialog over the native Reader, with a deliberate ~1.8s hold to unlock, Escape/keyboard alternative, safe-area layout, clear differentiation from OS lock, optional `navigator.wakeLock.request("screen")` and cleanup on unlock/background. TDRS principle reused, not copied React stack.
+5. Existing approved pre-rendered single-file book audio + `navigator.mediaSession` remains the **only OS lock-screen/background candidate** in WD Books. Media files/rights not supplied here, so the true hardware-lock 10-minute QA gate remains **PENDING**. Full-book audio requires reviewed narration file per public book; avoid TTS chunk chaining when device screen is off.
+6. PWA shell v1.3.39 includes the lock module, but online MP3 is streamed on demand, not cached. Do not modify `wd-manual-reader-v2` or existing saved progress.
+
+**Acceptance / regression:** Chrome Windows with no Thai voice and with newly installed Thai voice; `voiceschanged` loading late, online MP3 success/error/offline, opt-in and public-only guard, uninterrupted in-app overlay lock, hold-to-unlock, Esc, release/reacquire of Wake Lock, Media Session file playback unchanged, mobile Safari/PWA/iPad and Android, announcement contrast/theme. Verify backend URL actually streams MP3, network/privacy consent, throttle/load on school host; no automatic background retry or autoplay. Mark `implementation candidate` until actual browsers validate; distinguish touch-lock PASS from hardware lock PASS.
+
+---
+
 ## MASTER EXECUTION PLAN — ลำดับเดียวสำหรับงานเดิมและงานใหม่ (ปรับ 23 ต.ค. 2569)
 
 **หลักการ:** ใช้เอกสารนี้เป็น Master Roadmap เพียงฉบับเดียว ไม่สร้างแผนคู่ขนาน; แยกสถานะ **Merged (รวมโค้ด)**, **Device QA pending (รอตรวจรับจริง)**, **Planned (ยังไม่ทำ)** และ **Accepted (ตรวจรับแล้ว)** ให้ชัดเจน ห้ามถือว่า Merge = QA ผ่าน
