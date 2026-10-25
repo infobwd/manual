@@ -38,6 +38,9 @@
     if (!isReadable(book) || !book.audio || typeof book.audio !== "object") return null;
     const src = book.audio.src;
     if (typeof src !== "string" || !/^\.\/assets\/audio\/[a-z0-9_-]+(?:\/[a-z0-9_-]+)*\.(?:mp3|m4a|ogg)$/i.test(src)) return null;
+    // Never expose an asset-backed mode without a reviewed rights statement
+    // and a narration/content version so obsolete audio cannot masquerade as current.
+    if (!asText(book.audio.license) || !asText(book.audio.narrationVersion)) return null;
     const chapterOffsets = book.audio.chapterOffsets;
     if (!Array.isArray(chapterOffsets) || chapterOffsets.length !== book.pages.length) return null;
     const offsets = chapterOffsets.map(Number);
