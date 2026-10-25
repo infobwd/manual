@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.41: original Now Playing touch-lock with audio controls;
+   Update 1.3.42: bottom-docked Reader player and explicit local voice recovery;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");
