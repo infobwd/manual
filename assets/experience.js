@@ -380,6 +380,7 @@
     });
     navigator.serviceWorker.register("./sw.js", { scope: "./" }).then(registration => {
       if (registration.waiting) show(registration.waiting);
+      registration.update().catch(() => {});
       registration.addEventListener("updatefound", () => {
         const installing = registration.installing;
         if (!installing) return;

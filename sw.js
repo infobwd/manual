@@ -3,6 +3,7 @@
 importScripts("./assets/app-version.js");
 const CACHE_VERSION = "wd-manual-public-" + self.WD_BOOKS_VERSION;
 const CACHE_PREFIX = "wd-manual-public-";
+// A new version preloads the entire shell atomically before it can activate.
 const APP_SHELL = [
   "./", "./index.html", "./manifest.webmanifest",
   "./assets/app-version.js", "./assets/styles.css", "./assets/app-experience.css", "./assets/mobile-reader.css", "./assets/google-sans-platform.css", "./assets/home-p0a.css", "./assets/toc-p0b.css",
@@ -43,7 +44,7 @@ self.addEventListener("fetch", event => {
     const isNavigation = request.mode === "navigate";
     // Avoid mixing active cached JavaScript with a newer HTML release.
     if (!isNavigation && (url.pathname.endsWith(".js") || url.pathname.endsWith(".css"))) {
-      const stable = await cache.match(request, { ignoreSearch: true });
+      const stable = await cache.match(new Request(url.origin + url.pathname), { ignoreSearch: true });
       if (stable) return stable;
     }
     try {
