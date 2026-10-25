@@ -32,9 +32,16 @@ assert.match(core,/status === "published"/);
 assert.match(player,/audio\.play\(\)/);
 assert.match(player,/mediaSession\.setActionHandler/);
 assert.match(css,/wd-audio-mini/);
+assert.match(html,/id="wdAudioOnline"/);
+assert.match(html,/id="wdAudioLock"/);
+assert.match(html,/id="wdListeningLock"/);
+assert.match(html,/id="wdOnlineTtsMedia"/);
+assert.match(html,/src="\.\/assets\/audio-listening-lock\.js"/);
+assert.match(read("assets/audio-listening-lock.js"),/navigator\.wakeLock\.request\("screen"\)/);
+
 assert.match(css,/@media\(max-width:600px\)/);
-assert.match(version,/WD_BOOKS_VERSION = "1\.3\.38"/);
-for(const asset of ["./assets/audio-reader.css","./assets/audio-reader-core.js","./assets/audio-reader.js"]){
+assert.match(version,/WD_BOOKS_VERSION = "1\.3\.39"/);
+for(const asset of ["./assets/audio-reader.css","./assets/audio-reader-core.js","./assets/audio-reader.js","./assets/audio-listening-lock.js"]){
   assert.ok(sw.includes('"'+asset+'"'),"New static PWA shell asset missing: "+asset);
 }
 assert.ok(!sw.includes('"/assets/audio/'),"No bulk-download of media files during PWA update");
