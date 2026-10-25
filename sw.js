@@ -1,5 +1,6 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.37: recheck imported release manifests without HTTP-cache reuse;
+   Update 1.3.40: refreshed listening controls and per-mode audio progress;
+   release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");
 const CACHE_VERSION = "wd-manual-public-" + self.WD_BOOKS_VERSION;
