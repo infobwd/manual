@@ -130,6 +130,23 @@ Use exactly one same-origin approved M4A/MP3/OGG file per book plus time offsets
 
 ---
 
+### UX-P3A-R4 — Now Playing Listening Lock (25 ต.ค. 2569)
+
+**ที่มา:** ผู้ใช้ขอให้หน้าจอล็อกการสัมผัสของ WD Books มีประสบการณ์คล้ายแอปฟังเพลง Spotify โดยเปลี่ยนจากไอคอนหูฟังขนาดใหญ่และข้อความสั้น ๆ ให้เป็นหน้า **Now Playing** ที่ควบคุมเสียงได้จริง. งานนี้เป็น UX-P3A ต่อเนื่อง ไม่สร้างระบบคู่ขนาน. **P3A-R3 audio-follow reading page ยังเป็นข้อเสนอค้าง ไม่รวมใน PR นี้.**
+
+**ขอบเขต Implementation Candidate v1.3.41**
+- **In-app Now Playing:** สร้างหน้าปกจาก `coverTitle`, `coverTop` และสีที่กำหนดไว้ในข้อมูลหนังสือ `published` (ไม่โหลดภาพจากแหล่งอื่น ไม่ใช้ตราสินค้า/งานภาพของ Spotify) พร้อมชื่อหนังสือ ชื่อตอน แสดงสถานะเล่น/พัก ปุ่มเล่น-พัก ตอนก่อน/ถัดไป และปุ่มปรับความเร็วแบบวนค่า 0.75×, 1×, 1.25×, 1.5×. ใช้ DOM `textContent` เท่านั้น ไม่ประมวลผล HTML จากข้อมูลเล่ม.
+- **Progress เชื่อมตัวเล่นเสียงจริง:** โหมด `asset` ที่มีไฟล์เสียงสมบูรณ์แสดงเวลา/Seek ได้; `online` และ `speech` แสดงเปอร์เซ็นต์โดยประมาณตามตอน/ท่อน ไม่มีแถบ scrub ที่อ้างเป็นเวลาเต็มเล่ม. ใช้ state เดียวกับเครื่องเล่นเสียงใน Reader, ไม่สร้าง audio instance ตัวที่สอง.
+- **Touch lock ที่ไม่กีดขวางเสียง:** ยังคง native `<dialog>` และกดค้าง ~1.8 วินาทีเพื่อกลับไปอ่าน, Escape/Enter/Space สำหรับ accessibility; ตอนอยู่หน้าล็อกให้ควบคุม playback ได้ แต่ป้องกันแตะย้อนเข้า Reader โดยไม่ตั้งใจ. หยุดเสียง/ฟังจบแล้วหน้าฟังยังอยู่จนกดปลดล็อกโดยเจตนา.
+- **Wake Lock มีเงื่อนไข:** ขอ `screen` เฉพาะช่วงที่หน้าฟังเปิดและเสียงกำลังเล่น/ไม่ Pause; release เมื่อ Pause, ซ่อนแอป หรือปลดล็อก; ขอใหม่ได้เมื่อกลับ foreground. ปฏิเสธสิทธิ์ไม่ทำให้เสียงถูกหยุด.
+- **Responsive:** iPhone หน้าปกและเครื่องเล่นจัดเรียงแนวตั้ง, iPad Mini/Pro เป็นสองคอลัมน์ปกและ controls, landscape เตี้ยปรับขนาดปกและ footer, safe-area, touch target ≥44px และ focus ring ชัด. รองรับข้อความไทยยาวและโหมดถนอมสายตาโดยใช้โทนเขียวเข้มอิสระจากธีม Reader.
+- **Versioning:** bump `assets/app-version.js` และ Service Worker release source เป็น **1.3.41**, ไม่แตะ `wd-manual-reader-v2` หรือ `wd-books-audio-v1`; ไม่ pre-cache ไฟล์ MP3.
+- **ข้อจำกัดที่ต้องประกาศ:** เป็นหน้าจอล็อก **ภายในแอป ไม่ใช่ Lock Screen จริงของ iOS/Android**; ไม่สามารถกำหนด UI ระบบปฏิบัติการให้เหมือน Spotify. การควบคุม OS lock screen ผ่าน Media Session จะใช้เฉพาะไฟล์เสียงที่มีจริงและได้รับสิทธิ์; เสียง `speechSynthesis` หรือ Remote TTS ทีละท่อนไม่รับประกันเล่นต่อเมื่อดับจอ.
+
+**Gate ตรวจรับ:** รัน `node tests/listening-now-playing.smoke.cjs`, `node tests/audio-chrome-lock.smoke.cjs` และ audio core/playback/integration tests. ตรวจ iPhone 390/440px, iPad Mini 768px, iPad Pro 1032px, landscape, ลด/เพิ่มฟอนต์และ VoiceOver, เล่น→Pause→Resume, ตอนก่อน/ถัดไป, เร็ว 1.25×, โหมดไม่มี Seek, ไฟล์เต็มเล่มมี Seek, กดค้างปลดล็อก, Escape, Wake Lock deny/release, Theme, PWA upgrade v1.3.41. **Merged ≠ Device QA PASS.** Physical Power-button lock screen playback จะตรวจใน gate ไฟล์เสียงเต็มเล่มแยกต่างหาก.
+
+---
+
 ## MASTER EXECUTION PLAN — ลำดับเดียวสำหรับงานเดิมและงานใหม่ (ปรับ 23 ต.ค. 2569)
 
 **หลักการ:** ใช้เอกสารนี้เป็น Master Roadmap เพียงฉบับเดียว ไม่สร้างแผนคู่ขนาน; แยกสถานะ **Merged (รวมโค้ด)**, **Device QA pending (รอตรวจรับจริง)**, **Planned (ยังไม่ทำ)** และ **Accepted (ตรวจรับแล้ว)** ให้ชัดเจน ห้ามถือว่า Merge = QA ผ่าน
