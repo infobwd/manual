@@ -147,6 +147,22 @@ Use exactly one same-origin approved M4A/MP3/OGG file per book plus time offsets
 
 ---
 
+### UX-P3A-R5 — Mobile audio dock + WD Growth/TDRS login boundary (25 ต.ค. 2569)
+
+**หลักฐานผู้ใช้:** ภาพ iPhone Reader v1.3.41 แสดง Compact Player ลอยอยู่สูงจากขอบล่าง พื้นที่ใต้เครื่องเล่นว่างแต่เนื้อหาถูกบัง; ผู้ใช้รายงานว่าระหว่างล็อกหน้าจอถูกพาไป Login ของ TDRS.
+
+**ตรวจโค้ดก่อนแก้:** `assets/audio-reader.css` มี `position:absolute; inset:auto 12px calc(67px + env(safe-area-inset-bottom))` สำหรับ viewport ≤1100px ทำให้ player ลอยสูงจริง. `infobwd/manual` ไม่ได้มี redirect ไป TDRS หรือเรียก TDRS login API ขณะล็อกการสัมผัส. เสียงออนไลน์เรียก `https://wd.esdc.app/backend-php/api.php?endpoint=tts`; `infobwd/wd-standard/backend-php/api.php` จัด route TTS ก่อน `Auth::requireAuthScoped()` จึง **ตั้งใจให้ public** แม้ส่วนอื่นของ WD Growth ใช้ TDRS SSO. **ยังตรวจ HTTP redirect / หน้า Login จาก host จริงไม่ได้**; ห้ามสรุปว่า API ปลายทาง login หรือยืนยันว่าแก้ redirect สำเร็จโดยไม่มี network evidence.
+
+**แก้ใน candidate v1.3.42:**
+- ที่ **mobile/tablet ≤1100 CSS px**, แทนที่ audio compact แบบ absolute ลอยเหนือ bottom 67px ด้วย flex item `order:3` อยู่ **ล่างสุดของ Reader** พร้อม safe area; `reader-content` `order:2` และมีพื้นที่เลื่อนอ่านของตัวเอง. ระหว่าง compact แสดงซ่อน `reader-bottom` เดิมเพื่อลดแถบซ้อนกัน; compact เพิ่มปุ่ม `✕` ขนาด ≥44px เพื่อปิด Reader ได้ในแตะเดียว ผ่าน handler `readerClose` เดิม (รักษาเสียงต่อหลังปิด Reader ใน external mini-player). เมื่อย่อ/ปิดเครื่องเล่นหรือเปิดแผงละเอียด navigation เดิมกลับมาทำงาน.
+- เพิ่มปุ่ม **กลับมาใช้เสียงในเครื่อง** เมื่อเลือกเสียงออนไลน์ โดยหยุดและยกเลิกไฟล์เสียง remote ก่อน ไม่เปิด redirect, ไม่ล้างข้อมูลผู้ใช้, ไม่ส่งข้อความเพิ่มไปเครือข่าย. แจ้งใน WD Books ชัดว่า **ไม่ต้อง Login TDRS เพื่อฟังหนังสือสาธารณะ** แม้เสียงออนไลน์จาก WD Growth จะขัดข้อง. ข้อความผิดพลาดแยกการล้มเหลวของเสียง remote ออกจากการเข้าสู่ระบบ.
+- Keep `wd-books-audio-v1`, `wd-manual-reader-v2`, consent public-only, published-book checks, mini-player, touch-lock Now Playing และ PWA offline app shell; เปลี่ยนเวอร์ชัน `1.3.41 → 1.3.42`.
+- ไม่แก้ `wd-standard` หรือ SSO โดยคาดเดา และไม่เอา JWT/TDRS token เข้ามาในคลังสาธารณะ. การเล่นเสียงออนไลน์หลัง hardware lock/ความพร้อมของ WD Growth proxy ยัง **QA pending**.
+
+**Regression / acceptance:** Chrome DevTools 320/390/440, iPad Mini 768 และ iPad Pro 1032, Safari/Home Screen PWA จริง; compact ต้องชิดด้านล่างโดยไม่เหลือช่องว่าง 67px และไม่ทับตัวอักษร, ปิด Reader ได้, หน้าเลื่อนได้ถึงบรรทัดสุดท้าย, Safe Area iPhone, landscape, เปิดรายละเอียดแล้ว bottom navigation เดิมกลับมา, หยุดแล้วกลับ reader navigation, progressive reader bar ยังแยกจาก audio bar, สามธีม/เพิ่มฟอนต์, lock panel UI ยังคงเดิม. ตรวจ Network ของคำขอ TTS บนเครื่องจริงโดยดู HTTP status, final URL, Location (ถ้ามี), MIME audio/mpeg หรือ HTML/login และการเปิด TDRS tab; หาก API redirect ต้องแก้ host public route **แยก PR และทดสอบ** ห้ามเปิดบังคับ login. **QA synthetic PASS ≠ Device QA PASS.**
+
+---
+
 ## MASTER EXECUTION PLAN — ลำดับเดียวสำหรับงานเดิมและงานใหม่ (ปรับ 23 ต.ค. 2569)
 
 **หลักการ:** ใช้เอกสารนี้เป็น Master Roadmap เพียงฉบับเดียว ไม่สร้างแผนคู่ขนาน; แยกสถานะ **Merged (รวมโค้ด)**, **Device QA pending (รอตรวจรับจริง)**, **Planned (ยังไม่ทำ)** และ **Accepted (ตรวจรับแล้ว)** ให้ชัดเจน ห้ามถือว่า Merge = QA ผ่าน

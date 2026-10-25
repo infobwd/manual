@@ -174,6 +174,7 @@
     const text = note || (playing ? (paused ? "พักการฟังอยู่" : "กำลังฟัง") : "แตะเล่นเพื่อเริ่มฟัง");
     $("wdAudioStatus").textContent = text;
     $("wdAudioOnline").hidden = !selected || Boolean(asset) || onlineEnabled;
+    $("wdAudioLocal").hidden = !selected || Boolean(asset) || !onlineEnabled;
     $("wdAudioOnlineDisclosure").hidden = !selected || Boolean(asset) || onlineEnabled;
     $("wdAudioLock").disabled = !playing || paused;
 
@@ -304,7 +305,7 @@
     remoteAudio.playbackRate = speed;
     remoteAudio.play().catch(() => {
       if (token !== remoteGeneration) return;
-      failRemoteSegment("โหลดเสียงท่อนนี้ไม่สำเร็จ กดเล่นเพื่อลองท่อนเดิมอีกครั้งเมื่อออนไลน์");
+      failRemoteSegment("โหลดเสียงจาก WD Growth ไม่ได้ · ไม่ต้องเข้าสู่ระบบ TDRS เพื่อฟัง WD Books · เลือกเสียงในเครื่องได้จากตัวเลือกเสียง");
     });
   }
   function beginRemoteSpeech(index) {
@@ -525,12 +526,24 @@
   $("wdAudioCompactPlay").addEventListener("click", togglePlayback);
   $("wdAudioCompactPrev").addEventListener("click", () => jump(-1));
   $("wdAudioCompactNext").addEventListener("click", () => jump(1));
+  // The page footer is replaced by the bottom dock on narrow viewports.
+  // Preserve an explicit one-tap way to leave Reader while the audio bar shows.
+  $("wdAudioCompactReaderClose").addEventListener("click", () => $("readerClose").click());
   $("wdAudioOnline").addEventListener("click", () => {
     if (!core.isReadable(book) || asset || onlineEnabled) return;
     stop();
     onlineEnabled = true; // Explicit per-book consent before sending public text.
     visibleSession = false;
     note = "เลือกเสียงออนไลน์แล้ว กดเล่นเพื่อส่งเฉพาะข้อความหนังสือสาธารณะ";
+    syncUI();
+  });
+  // Public WD Books audio never needs a TDRS account. If the school proxy
+  // fails or redirects to an SSO page, allow immediate local recovery.
+  $("wdAudioLocal").addEventListener("click", () => {
+    if (!book || asset || !onlineEnabled) return;
+    stop();
+    onlineEnabled = false;
+    note = "เปลี่ยนเป็นเสียงในเครื่องแล้ว กดเล่นเพื่อเริ่มฟัง · ไม่ต้องเข้าสู่ระบบ TDRS";
     syncUI();
   });
   $("wdAudioClosePanel").addEventListener("click",closePanel);
@@ -572,7 +585,7 @@
   });
   remoteAudio.addEventListener("error", () => {
     if (!onlineEnabled || !playing) return;
-    failRemoteSegment("โหลดท่อนเสียงออนไลน์ไม่สำเร็จ กดเล่นอีกครั้งเพื่อลองท่อนเดิม");
+    failRemoteSegment("บริการเสียงออนไลน์ไม่พร้อม · ไม่ต้องเข้าสู่ระบบ TDRS · เปลี่ยนเป็นเสียงในเครื่องหรือกดเล่นเพื่อลองใหม่");
   });
   audio.addEventListener("error",() => { if (asset) {playing=false;paused=false;announce("ไม่สามารถโหลดไฟล์เสียงบรรยายได้");} });
   document.addEventListener("visibilitychange",() => {

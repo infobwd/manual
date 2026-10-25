@@ -26,6 +26,7 @@ class Node {
   showModal(){this.open=true;}
   close(){this.open=false;this.fire("close");}
   focus(){this.focused=true;}
+  click(){this.fire("click");}
   setPointerCapture(){}
 }
 function fixture() {
@@ -134,6 +135,11 @@ async function run(){
   assert.equal(a.getState().paused,false);
   f.$("wdAudioStop").fire("click");
   assert.equal(a.getState().playing,false);
+  assert.equal(f.$("wdAudioLocal").hidden,false,"Local voice recovery must be available for online playback");
+  f.$("wdAudioLocal").fire("click");
+  assert.equal(a.getState().mode,"speech","Returning to local speech must not open TDRS");
+  assert.equal(f.$("wdAudioLocal").hidden,true);
+  assert.equal(f.$("wdOnlineTtsMedia").playCalls,4,"No new remote calls when switching to device speech");
   a.selectBook(f.review,0);
   assert.equal(a.getState().bookId,"public","Review book cannot be opened or narrated");
   // Fresh book selection revokes explicit online mode, and voice-list updates recover native TTS.
@@ -147,6 +153,14 @@ async function run(){
   assert.equal(f.synth.spoken.length,1,"Late Thai voiceschanged recovers local Chrome speech");
   assert.equal(f.synth.spoken[0].lang,"th-TH");
   assert.equal(f.$("wdOnlineTtsMedia").playCalls,4,"Native speech must not trigger remote MP3");
+  f.$("readerClose").addEventListener("click",() => {
+    f.$("readerDialog").open=false;
+    f.$("readerDialog").fire("close");
+  });
+  f.$("wdAudioCompactReaderClose").fire("click");
+  assert.equal(f.$("readerDialog").open,false,"Bottom dock X must close Reader");
+  assert.equal(a.getState().playing,true,"Closing Reader must not stop audio");
+  assert.equal(f.$("wdAudioMini").hidden,false,"Mini-player should persist after closing Reader");
   assert.equal(f.memory.data["wd-manual-reader-v2"],undefined);
   console.log("PASS: Chrome Thai voice recovery, online consent, school MP3, touch-lock, wake cleanup, privacy");
 }
