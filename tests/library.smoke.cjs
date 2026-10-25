@@ -109,6 +109,7 @@ const articleCard = nodes.manualGrid.children.find(card =>
 assert.ok(articleCard, 'Homework in AI age article must appear in catalog');
 const articleOpen = articleCard.children[2].children.at(-1).children.find(el => el.tagName === 'button' && el.textContent.includes('เปิดอ่าน'));
 assert.ok(articleOpen, 'Public article must be readable');
+media.matches = false;
 articleOpen.handlers.click();
 assert.equal(nodes.readerDialog.open, true);
 assert.equal(nodes.tocItems.children.length, article.pages.length);
