@@ -351,22 +351,78 @@
     refreshInstallUI();
   }
   function registerWorker() {
-    if (!("serviceWorker" in navigator)) return;
-    const isSecure = location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1";
-    if (!isSecure) return;
     const notice = $("appUpdateNotice"), apply = $("applyAppUpdate"), later = $("laterAppUpdate");
-    let waiting = null, refreshing = false, dismissed = null;
+    const checkButton = $("checkAppUpdate"), status = $("appUpdateStatus");
+    const setStatus = message => { if (status) status.textContent = message; };
+    if (!("serviceWorker" in navigator)) {
+      setStatus("เบราว์เซอร์นี้ยังไม่รองรับการอัปเดต PWA อัตโนมัติ");
+      if (checkButton) checkButton.disabled = true;
+      return;
+    }
+    const isSecure = location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    if (!isSecure) {
+      setStatus("การอัปเดต PWA ต้องเปิดผ่าน HTTPS หรือ localhost");
+      if (checkButton) checkButton.disabled = true;
+      return;
+    }
+    let registrationRef = null, waiting = null, refreshing = false;
+    let dismissed = null, updating = false, checking = false, lastCheck = 0;
+    const hadControllerOnOpen = Boolean(navigator.serviceWorker.controller);
+    const currentVersion = String(window.WD_BOOKS_VERSION || "");
+    setStatus("WD Books v" + currentVersion + " · พร้อมตรวจสอบอัปเดต");
     const show = worker => {
       if (!worker || !navigator.serviceWorker.controller) return;
       waiting = worker;
-      if (dismissed === worker) return;
-      if (notice) notice.hidden = false;
+      setStatus("พบเวอร์ชันใหม่ พร้อมให้อัปเดตโดยไม่ลบหนังสือของฉัน");
+      if (dismissed !== worker && notice) notice.hidden = false;
     };
+    const checkForUpdates = (manual = false) => {
+      if (waiting) {
+        show(waiting);
+        if (manual && notice) {
+          dismissed = null;
+          notice.hidden = false;
+          if ($("settingsDialog")?.open) $("settingsDialog").close();
+          apply?.focus?.();
+        }
+        return Promise.resolve();
+      }
+      if (!registrationRef) {
+        if (manual) setStatus("กำลังเตรียมระบบตรวจสอบอัปเดต…");
+        return Promise.resolve();
+      }
+      if (navigator.onLine === false) {
+        if (manual) setStatus("ออฟไลน์อยู่ กรุณาเชื่อมต่ออินเทอร์เน็ตแล้วลองใหม่");
+        return Promise.resolve();
+      }
+      const now = Date.now();
+      if (checking || (!manual && now - lastCheck < 60000)) return Promise.resolve();
+      checking = true;
+      lastCheck = now;
+      if (manual) {
+        setStatus("กำลังตรวจสอบเวอร์ชันล่าสุด…");
+        if (checkButton) checkButton.disabled = true;
+      }
+      return registrationRef.update().then(() => {
+        if (registrationRef.waiting) show(registrationRef.waiting);
+        else if (manual) setStatus(registrationRef.installing
+          ? "พบไฟล์อัปเดต กำลังติดตั้งให้พร้อมใช้งาน…"
+          : "WD Books v" + currentVersion + " · ยังไม่พบเวอร์ชันใหม่");
+      }).catch(() => {
+        if (manual) setStatus("ตรวจสอบไม่สำเร็จ กรุณาตรวจการเชื่อมต่อแล้วลองอีกครั้ง");
+      }).finally(() => {
+        checking = false;
+        if (checkButton) checkButton.disabled = false;
+      });
+    };
+    checkButton?.addEventListener("click", () => { void checkForUpdates(true); });
     apply?.addEventListener("click", () => {
       if (!waiting) return;
+      updating = true;
       apply.disabled = true;
       apply.textContent = "กำลังอัปเดต…";
-      // Existing localStorage preferences, bookshelf and progress are untouched.
+      setStatus("กำลังเปิดใช้งานเวอร์ชันใหม่…");
+      // Do not clear existing localStorage, favorites, bookmarks or reading progress.
       waiting.postMessage({ type: "SKIP_WAITING" });
     });
     later?.addEventListener("click", () => {
@@ -374,26 +430,41 @@
       if (notice) notice.hidden = true;
     });
     navigator.serviceWorker.addEventListener("controllerchange", () => {
-      if (refreshing) return;
+      // Initial first-visit SW activation is not an update; do not interrupt reading.
+      if (refreshing || (!hadControllerOnOpen && !updating)) return;
       refreshing = true;
       window.location.reload();
     });
-    navigator.serviceWorker.register("./sw.js", { scope: "./" }).then(registration => {
-      if (registration.waiting) show(registration.waiting);
-      registration.update().catch(() => {});
-      registration.addEventListener("updatefound", () => {
-        const installing = registration.installing;
-        if (!installing) return;
-        installing.addEventListener("statechange", () => {
-          if (installing.state === "installed") show(registration.waiting || installing);
+    // "none" bypasses stale HTTP cache for BOTH sw.js and its imported version
+    // manifest (app-version.js). The default "imports" can hide a new release.
+    navigator.serviceWorker.register("./sw.js", {
+      scope: "./",
+      updateViaCache: "none"
+    }).then(registration => {
+      registrationRef = registration;
+      const watchInstalling = worker => {
+        if (!worker) return;
+        if (worker.state === "installed") { show(registration.waiting || worker); return; }
+        worker.addEventListener("statechange", () => {
+          if (worker.state === "installed") show(registration.waiting || worker);
         });
-      });
-      // Check when users return to the app; no aggressive background polling.
+      };
+      // Attach listeners before requesting an update, so short installations
+      // do not race past updatefound. Handle workers already waiting on startup.
+      registration.addEventListener("updatefound", () => watchInstalling(registration.installing));
+      watchInstalling(registration.installing);
+      if (registration.waiting) show(registration.waiting);
+      void checkForUpdates();
+      // Installed iOS/Android PWAs can remain suspended for a long time.
+      // Check again on return (throttled), never assume background timers run.
       document.addEventListener("visibilitychange", () => {
-        if (!document.hidden) registration.update().catch(() => {});
+        if (!document.hidden) void checkForUpdates();
       });
+      window.addEventListener("pageshow", () => { void checkForUpdates(); });
+      window.addEventListener("focus", () => { void checkForUpdates(); });
+      window.addEventListener("online", () => { void checkForUpdates(); });
     }).catch(() => {
-      // Online reading remains available if the worker cannot be registered.
+      setStatus("ไม่สามารถเปิดระบบตรวจอัปเดตได้ (อ่านหนังสือออนไลน์ได้ตามปกติ)");
     });
   }
   window.WD_EXPERIENCE = {

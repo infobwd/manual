@@ -117,3 +117,89 @@ body[data-theme="night"] .discovery-filters button.selected{background:#a9d3b4;c
 .discovery-sort-row select:focus-visible{outline:3px solid #dba852;outline-offset:2px}
 body[data-theme="night"] .discovery-sort-row select{background:#20372c;color:#e6f4e8;border-color:#688773}
 @media(max-width:420px){.discovery-sort-row{justify-content:space-between}}
+/* HOME-IPAD-1032-R1: iPad Pro portrait should use a touch-first bookshelf,
+   not the 235/190px desktop sidebar squeezed beside small cards.
+   Isolated to Home — reader/tablet page breakpoints stay unchanged. */
+@media (min-width:1001px) and (max-width:1100px) {
+  .app-shell {display:block;max-width:1100px}
+  .app-shell > .sidebar {display:none}
+  .app-shell > .main {
+    padding:22px clamp(22px,3vw,36px) calc(112px + env(safe-area-inset-bottom));
+  }
+  .site-header .header-inner {
+    justify-content:space-between;
+    padding:12px clamp(20px,3vw,32px);
+  }
+  .site-header .top-nav,.site-header .header-pill {display:none}
+  .site-header .header-actions {margin-left:auto}
+  .mobile-bottom-nav {
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    position:fixed;
+    z-index:40;
+    inset:auto 0 0;
+    height:calc(70px + env(safe-area-inset-bottom));
+    padding:6px max(18px,env(safe-area-inset-right))
+      calc(6px + env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));
+    border-top:1px solid #e0e9e1;
+    background:rgba(255,255,252,.96);
+    -webkit-backdrop-filter:blur(22px);
+    backdrop-filter:blur(22px);
+    box-shadow:0 -7px 27px #153d3512;
+  }
+  .mobile-bottom-nav .bottom-nav-item {
+    appearance:none;border:0;background:transparent;color:#799087;
+    border-radius:13px;display:flex;flex-direction:column;justify-content:center;
+    align-items:center;text-decoration:none;gap:2px;font-size:13px;
+    font-weight:750;min-height:52px;
+  }
+  .mobile-bottom-nav .bottom-nav-icon{font-family:system-ui,sans-serif;font-size:25px;line-height:1.2}
+  .mobile-bottom-nav .bottom-nav-item.active,
+  .mobile-bottom-nav .bottom-nav-item[aria-current="page"] {background:#edf5eb;color:#215b49}
+  .manual-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+  .section-heading h2{font-size:clamp(24px,2.8vw,29px)}
+  .resume-feature-card{padding:22px}
+  .resume-feature-cover{flex-basis:140px;min-height:165px}
+  .resume-feature-copy h3{font-size:20px}
+  .resume-feature-action{font-size:14px}
+  .summary-strip{gap:22px;margin-bottom:30px}
+}
+/* iPad / landscape tablet reading density and touch size (no mobile phone changes). */
+@media (min-width:851px) and (max-width:1100px) {
+  .manual-card{min-width:0;padding:18px}
+  .book-cover{height:185px}
+  .book-cover strong{font-size:clamp(19px,2.2vw,23px);max-width:75%}
+  .card-body h3{font-size:17px;line-height:1.55}
+  .card-body p{font-size:13px;line-height:1.75}
+  .card-meta,.card-category{font-size:12px}
+  .manual-card .open-book{min-height:44px;font-size:13px}
+  .category-chips button{min-height:44px;font-size:13px}
+  .resume-feature-copy h3{line-height:1.45}
+}
+/* Settings provides a user-invoked update check on mobile PWAs without
+   exposing cache management or clearing reading history. */
+.update-settings {
+  margin:17px 0;
+  padding:15px 17px;
+  border:1px solid #cadfd0;
+  border-radius:15px;
+  background:var(--surface,#fff);
+  color:var(--ink,#244236);
+}
+.update-settings h3{font-size:15px;margin:0 0 7px}
+.update-settings p{font-size:12px;line-height:1.7;margin:0 0 12px}
+.update-settings button {
+  min-height:44px;
+  padding:10px 16px;
+  border:1px solid #9cc0aa;
+  border-radius:11px;
+  background:#e2f0e6;
+  color:#205b42;
+  font-size:13px;
+  font-weight:800;
+}
+.update-settings button:disabled{opacity:.6}
+body[data-theme="night"] .update-settings{background:#20332b;color:#eaf5e9;border-color:#486451}
+body[data-theme="night"] .update-settings button{background:#365a44;color:#f1fbf2;border-color:#62876b}
+body[data-theme="sepia"] .update-settings{background:#f6eddc;color:#634b34;border-color:#ddc9aa}
+body[data-theme="sepia"] .update-settings button{background:#e4d4b6;color:#624a32;border-color:#c8b38e}
