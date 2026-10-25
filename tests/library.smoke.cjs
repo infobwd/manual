@@ -21,6 +21,8 @@ class FakeElement {
   removeAttribute(key) { delete this.attrs[key]; }
   addEventListener(type, fn) { this.handlers[type] = fn; }
   focus() {}
+  querySelector() { return new FakeElement('div'); }
+  querySelectorAll() { return []; }
   showModal() { this.open = true; }
   close() { this.open = false; this.handlers.close?.({}); }
 }
