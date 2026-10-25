@@ -6,11 +6,12 @@
   if (!core) return;
   const $ = id => document.getElementById(id);
   const audio = $("wdNarrationMedia");
+  const remoteAudio = $("wdOnlineTtsMedia");
   const reader = $("readerDialog");
   const panel = $("wdAudioPanel");
   const toggle = $("readerAudioToggle");
   const mini = $("wdAudioMini");
-  if (!audio || !reader || !panel || !toggle || !mini) return;
+  if (!audio || !remoteAudio || !reader || !panel || !toggle || !mini) return;
   const speech = window.speechSynthesis || null;
   const Utterance = window.SpeechSynthesisUtterance || null;
   const mediaSession = navigator.mediaSession || null;
@@ -22,6 +23,10 @@
   })();
   let book = null;
   let asset = null;
+  let onlineEnabled = false;
+  let remoteSegments = [];
+  let remoteIndex = 0;
+  let remoteGeneration = 0;
   let chapter = 0;
   let speed = 1;
   let playing = false;
@@ -31,7 +36,7 @@
   let note = "";
   let lastSaved = 0;
   let audioSeekingOnLoad = null;
-  const mode = () => asset ? "asset" : "speech";
+  const mode = () => asset ? "asset" : onlineEnabled ? "online" : "speech";
   const currentTitle = () => book?.pages?.[chapter]?.title || "เลือกตอน";
   const formatTime = core.formatTime;
   function writePosition(force = false) {
@@ -48,13 +53,22 @@
     }
   }
   function announce(message) { note = message; syncUI(); }
-  function thVoice() {
-    if (!speech?.getVoices) return null;
+  let cachedVoices = [];
+  const refreshVoices = () => {
     try {
-      const voices = speech.getVoices();
-      return voices.find(v => String(v.lang || "").toLowerCase().startsWith("th")) || null;
-    } catch { return null; }
-  }
+      const voices = speech?.getVoices?.() || [];
+      if (voices.length) cachedVoices = [...voices];
+    } catch {}
+    if (book && !asset && !onlineEnabled && !playing && cachedVoices.length) {
+      if (core.pickThaiVoice(cachedVoices)) {
+        note = "พบเสียงภาษาไทยแล้ว กดเล่นเพื่อฟัง";
+        syncUI();
+      }
+    }
+  };
+  try { speech?.addEventListener?.("voiceschanged", refreshVoices); } catch {}
+  refreshVoices();
+  const thVoice = () => core.pickThaiVoice(cachedVoices);
   function resetMediaSession() {
     if (!mediaSession) return;
     try {
@@ -113,11 +127,17 @@
     $("wdAudioMiniTitle").textContent = book?.title || "";
     $("wdAudioMiniChapter").textContent = currentTitle();
     const modeLabel = asset
-      ? "เสียงบรรยายไฟล์ · สามารถทดสอบการควบคุมขณะล็อกจอได้"
-      : "อ่านออกเสียงสด · อาจหยุดเมื่อพักแอปหรือล็อกหน้าจอ";
+      ? "เสียงบรรยายไฟล์ · รองรับการทดสอบล็อกจอจริง"
+      : onlineEnabled
+        ? "เสียงไทยออนไลน์ผ่าน WD Growth · ต้องเปิดจอเพื่อฟังต่อเนื่อง"
+        : "อ่านออกเสียงในเครื่อง · อาจหยุดเมื่อพักแอปหรือล็อกหน้าจอ";
     $("wdAudioMode").textContent = modeLabel;
     const text = note || (playing ? (paused ? "พักการฟังอยู่" : "กำลังฟัง") : "แตะเล่นเพื่อเริ่มฟัง");
     $("wdAudioStatus").textContent = text;
+    $("wdAudioOnline").hidden = !selected || Boolean(asset) || onlineEnabled;
+    $("wdAudioOnlineDisclosure").hidden = !selected || Boolean(asset) || onlineEnabled;
+    $("wdAudioLock").disabled = !playing || paused;
+    window.WD_LISTENING_LOCK?.sync?.({title:book?.title || "", chapter:currentTitle(), playing, paused, note:text});
     const playText = playing && !paused ? "พัก" : "เล่น";
     $("wdAudioPlay").textContent = playText;
     $("wdAudioMiniPlay").textContent = playText;
