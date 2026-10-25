@@ -41,6 +41,11 @@ self.addEventListener("fetch", event => {
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_VERSION);
     const isNavigation = request.mode === "navigate";
+    // Avoid mixing active cached JavaScript with a newer HTML release.
+    if (!isNavigation && (url.pathname.endsWith(".js") || url.pathname.endsWith(".css"))) {
+      const stable = await cache.match(request, { ignoreSearch: true });
+      if (stable) return stable;
+    }
     try {
       // Network-first prevents long-lived stale manuals after a Pages redeploy.
       const response = await fetch(request);
