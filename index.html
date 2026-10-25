@@ -34,6 +34,7 @@
   <script defer src="./assets/app.js"></script>
   <script defer src="./assets/audio-reader-core.js"></script>
   <script defer src="./assets/audio-reader.js"></script>
+  <script defer src="./assets/audio-listening-lock.js"></script>
   <script defer src="./assets/app-zoom-guard.js"></script>
   <script defer src="./assets/home-load-guard.js"></script>
 </head>
@@ -266,6 +267,11 @@
         <input id="wdAudioSeek" type="range" min="0" max="100" step="1" value="0" disabled aria-label="เลื่อนเวลาไฟล์เสียง (ใช้ได้เฉพาะเล่มที่มีไฟล์เสียง)">
         <span id="wdAudioTime">00:00</span>
       </div>
+      <div class="wd-audio-options">
+        <button id="wdAudioOnline" type="button" class="wd-audio-online" aria-describedby="wdAudioOnlineDisclosure">ใช้เสียงไทยออนไลน์ของโรงเรียน</button>
+        <button id="wdAudioLock" type="button" class="wd-audio-lock-button" disabled aria-label="ล็อกการสัมผัสระหว่างฟัง">🔒 ล็อกการสัมผัส</button>
+      </div>
+      <p id="wdAudioOnlineDisclosure" class="wd-audio-privacy">เสียงออนไลน์ส่งเฉพาะข้อความจากหนังสือสาธารณะไปยังเซิร์ฟเวอร์ WD Growth ซึ่งใช้บริการสร้างเสียงภายนอก · ต้องใช้อินเทอร์เน็ต · ไม่ใช่ไฟล์เสียงสำหรับล็อกจอจริง</p>
       <p id="wdAudioStatus" class="wd-audio-status" role="status" aria-live="polite">แตะเล่นเพื่อเริ่มฟัง</p>
     </section>
     <div class="reader-content">
@@ -303,6 +309,22 @@
   </div>
 </dialog>
 <audio id="wdNarrationMedia" preload="metadata" playsinline aria-label="เสียงบรรยายหนังสือ WD Books"></audio>
+<audio id="wdOnlineTtsMedia" preload="none" playsinline aria-label="เสียงไทยออนไลน์ของ WD Books"></audio>
+<dialog id="wdListeningLock" class="wd-listening-lock" aria-modal="true" aria-labelledby="wdLockTitle" aria-describedby="wdLockHint">
+  <div class="wd-lock-content">
+    <span class="wd-lock-label">WD / LISTEN · ล็อกการสัมผัสภายในแอป</span>
+    <div class="wd-lock-icon" aria-hidden="true">🎧</div>
+    <h2 id="wdLockTitle">กำลังฟังหนังสือ</h2>
+    <p id="wdLockChapter">ตอนที่กำลังฟัง</p>
+    <p id="wdLockStatus" role="status" aria-live="polite">ล็อกการสัมผัสแล้ว · เสียงยังทำงานอยู่</p>
+    <p id="wdLockHint">หน้าจอนี้ป้องกันการแตะผิดขณะฟัง ไม่ใช่การล็อกหน้าจอของระบบปฏิบัติการ อาจไม่รองรับการฟังต่อเมื่อกดปุ่ม Power</p>
+    <button id="wdLockUnlock" type="button" aria-label="กดค้างประมาณสองวินาทีเพื่อปลดล็อกการสัมผัส">
+      <span class="wd-lock-unlock-fill" aria-hidden="true"></span>
+      <span>กดค้าง 2 วินาทีเพื่อปลดล็อก</span>
+    </button>
+    <small>ใช้แป้น Esc เพื่อปลดล็อกด้วยคีย์บอร์ด</small>
+  </div>
+</dialog>
 <aside id="wdAudioMini" class="wd-audio-mini" aria-label="เครื่องเล่นเสียงหนังสือ" hidden>
   <div class="wd-audio-mini-info"><strong id="wdAudioMiniTitle">WD Books</strong><small id="wdAudioMiniChapter">กำลังฟังหนังสือ</small></div>
   <button id="wdAudioMiniPlay" type="button" aria-label="เล่นหรือพักเสียงบรรยาย">พัก</button>
