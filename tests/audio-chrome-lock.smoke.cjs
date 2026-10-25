@@ -86,7 +86,7 @@ async function run(){
   f.$("wdAudioPlay").fire("click");await f.flush();
   assert.equal(a.getState().playing,true);
   assert.equal(f.$("wdOnlineTtsMedia").playCalls,1);
-  assert.equal(f.$("wdAudioCompact").hidden,false === f.$("readerDialog").open,
+  assert.equal(f.$("wdAudioCompact").hidden,true,
     "Compact bar remains hidden while detailed panel is active");
   const initialPercent=a.getState().progress.percent;
   f.$("wdOnlineTtsMedia").currentTime=90;
