@@ -24,6 +24,8 @@ assert.equal(a.audioAsset(book),null);
 const good = {...book,audio:{src:"./assets/audio/b1/narration.m4a",chapterOffsets:[0,123],license:"school-approved",narrationVersion:"1"}};
 assert.equal(a.audioAsset(good).offsets.length,2);
 assert.equal(a.audioAsset({...good,audio:{...good.audio,src:"https://third-party.example/track.mp3"}}),null);
+assert.equal(a.audioAsset({...good,audio:{...good.audio,license:""}}),null);
+assert.equal(a.audioAsset({...good,audio:{...good.audio,narrationVersion:""}}),null);
 assert.equal(a.audioAsset({...good,audio:{...good.audio,src:"./assets/audio/../private.mp3"}}),null);
 assert.equal(a.audioAsset({...good,audio:{...good.audio,chapterOffsets:[12,0]}}),null);
 assert.equal(a.audioAsset({...good,audio:{...good.audio,chapterOffsets:[0]}}),null);
