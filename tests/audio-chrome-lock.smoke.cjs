@@ -86,8 +86,11 @@ async function run(){
   f.$("wdAudioPlay").fire("click");await f.flush();
   assert.equal(a.getState().playing,true);
   assert.equal(f.$("wdOnlineTtsMedia").playCalls,1);
-  assert.equal(f.$("wdAudioCompact").hidden,true,
-    "Compact bar remains hidden while detailed panel is active");
+  assert.equal(f.$("wdAudioCompact").hidden,false,
+    "Compact bar is visible during audio playback when detail panel is closed");
+  f.$("wdAudioCompactExpand").fire("click");
+  assert.equal(f.$("wdAudioPanel").hidden,false,"Compact button opens detailed player");
+  assert.equal(f.$("wdAudioCompact").hidden,true,"Compact bar hides under detailed player");
   const initialPercent=a.getState().progress.percent;
   f.$("wdOnlineTtsMedia").currentTime=90;
   f.$("wdOnlineTtsMedia").fire("timeupdate");
