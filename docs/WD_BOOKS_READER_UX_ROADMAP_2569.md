@@ -22,6 +22,36 @@
 
 ---
 
+## ภาพตรวจจริง iPad 13 นิ้ว / UX-P0D-R2 + UX-P0B-R2 — 25 ต.ค. 2569
+
+**หลักฐาน:** ภาพ Chrome Device Emulation iPad Pro 13, viewport 1032×1376 หลัง Merge v1.3.34. หน้ากระดาษขนาดจำกัดชิดซ้าย มีช่องว่างด้านขวาและเลขหน้าขึ้นก่อนสุดกระดาษ; ขาดสารบัญทั้งสองรูปแบบในช่วง 851–1100px. เป็นข้อมูลจำลอง viewport ไม่ใช่การทดสอบบนเครื่อง iPad จริง.
+
+| Defect ID | สาเหตุที่ตรวจจากโค้ด | การแก้ใน candidate | ตรวจรับ |
+| --- | --- | --- | --- |
+| UX-P0D-R2 | `.reader-stage` ใช้ `align-items:stretch` ขณะที่ `.book-spread` / `.reader-bottom` มี `max-width:780px` → ชิดซ้าย, พื้นที่ขวาว่าง | จำกัดความกว้างที่สมดุลและตั้งกึ่งกลาง, คงหน้าเดียวเมื่อกว้างไม่เกิน 1100px, คงพื้นที่ scroll เดิม; เลขหน้าชิดท้ายกระดาษเมื่อเนื้อหาสั้น | iPad 1032×1376: ช่องว่างซ้าย/ขวาใกล้เคียง, ไม่มี overflow ด้านข้าง, ควบคุมหน้า/เลื่อนได้, ฟอนต์ 90–160% ไม่ตัดเนื้อหา — **candidate, device QA pending** |
+| UX-P0B-R2 | JS single-page/mobile TOC ใช้ ≤1100px แต่ `toc-p0b.css` แสดงปุ่ม/overlay เฉพาะ ≤850px; desktop TOC ก็ถูกซ่อนในช่วง iPad → เข้าสารบัญไม่ได้ | ให้ปุ่มสารบัญและ bottom sheet มี breakpoint ≤1100px ตรงกับ JS/reader layout เดิม | กดสารบัญ/เลือกหน้า/ปิด/คืน focus ได้ที่ 851, 1024, 1032, 1100px; iPhone ≤850px และ Desktop ≥1101px ไม่เปลี่ยนพฤติกรรม — **candidate, device QA pending** |
+
+### UX-P3A — Audio Reading / ฟังหนังสือแบบพอดแคสต์ (ขยายขอบเขตแผนเดิม ไม่สร้างโปรเจ็กต์ใหม่)
+
+**เป้าหมาย:** ผู้อ่านเลือกหนังสือสาธารณะที่มีเสียงบรรยายแล้วกด “ฟังหนังสือ” เพื่อฟังต่อเนื่อง ฟังขณะทำงานอื่น หรือกดล็อกหน้าจอและควบคุมจาก Lock Screen/Bluetooth ได้ **เมื่ออุปกรณ์และเบราว์เซอร์รองรับจริง**. ยังไม่มีไฟล์เสียงบรรยายพร้อมใช้ใน repo; **ไม่อ้างว่าเล่นเสียงขณะล็อกได้แล้ว**.
+
+**Architecture decision:** แยกสองระดับอย่างชัดเจน
+- **P3A-0 Feasibility & content approval (ก่อนขึ้น UI):** ตรวจ license/TTS เสียงไทย คุณภาพสำเนียง ต้นทุนขนาดไฟล์ แหล่งผลิตเสียง และสถานะเผยแพร่ `published`. ห้ามส่งเนื้อหาภายใน/ข้อมูลส่วนบุคคลไป TTS ภายนอกโดยไม่ได้อนุมัติ; ไม่ฝัง API key ใน Public PWA.
+- **P3A-1 Foreground proof-of-concept (optional):** ทดลอง `speechSynthesis` แบบเริ่มด้วยการแตะ พร้อมควบคุมหยุด/เล่นใหม่/อัตราอ่านเฉพาะเมื่อรองรับ; แจ้งให้ทราบว่าเสียง TTS สด **อาจหยุดเมื่อหน้าจอล็อก**, ไม่ใช้เป็นเกณฑ์ว่ารองรับ podcast/background.
+- **P3A-2 Real background audio:** ผลิตไฟล์เสียงไทยที่ได้รับอนุญาตของหนังสือ Public Edition (แนะนำเริ่มต้น 1 เล่ม) เป็น **audio resource ที่เล่นผ่าน `<audio>`**, จัดทำ 1 stream/file ต่อเล่มใน pilot เพื่อลดปัญหา autoplay เมื่อข้ามไฟล์หลังล็อก; เพิ่ม chapter cue time offsets สำหรับข้ามบท; `navigator.mediaSession` metadata/title/artwork/play/pause/seek เมื่อรองรับ; รักษาหน้าอ่านเดิมเมื่อสลับกลับ.
+- **P3A-3 Offline & catalog management (หลังผ่าน Gate):** เพิ่ม `audio` metadata แบบ optional เช่น `src`, `durationSeconds`, `chapterOffsets`, `narrationVersion`, `license`; นับ content version ไม่ให้เสียงเก่าไม่ตรงหน้า; ดาวน์โหลดออฟไลน์ *เฉพาะเล่มที่ผู้ใช้เลือก* พร้อม quota/error handling ไม่ pre-cache เสียงทุกเล่มใน Service Worker shell.
+
+**Acceptance gate:** iPhone Safari, PWA Home Screen และ iPad Safari/PWA ทดลองล็อกจอจริง ≥10 นาที; เล่น/พัก/เล่นต่อ, control center, หูฟัง/Bluetooth, รับสาย/สลับแอป, screen reader/VoiceOver, เลือกบทและความเร็ว, audio sync กับ edition, reconnect/network offline, การจำตำแหน่งเสียงโดยไม่ทับ `wd-manual-reader-v2` เดิม; บันทึก **PASS/FAIL แยกอุปกรณ์/เวอร์ชัน iOS** และ fallback เมื่อ lock-screen controls ไม่รองรับ.
+
+**ข้อจำกัดที่ต้องบอกผู้ใช้:** Media Session API รองรับต่างกันในแต่ละ browser และ WebKit มีประวัติปัญหา PWA auto-advance / resume บน lock screen. แค่มี Media Session หรือ Web Speech API ไม่เท่ากับรับรอง background playback.
+- MDN: https://developer.mozilla.org/en-US/docs/Web/API/Media_Session_API
+- MDN: https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API
+- WebKit: https://bugs.webkit.org/show_bug.cgi?id=261858
+
+**สถานะ:** Feasibility planned under existing UX-P3A; **ไม่มีการเพิ่ม player/เสียง/ผู้ให้บริการ TTS ใน PR แก้ iPad นี้**. ตัดสิน Go/No-Go ก่อน PR implementation เพื่อลดผลกระทบ Reader/PWA ปัจจุบัน.
+
+---
+
 ## MASTER EXECUTION PLAN — ลำดับเดียวสำหรับงานเดิมและงานใหม่ (ปรับ 23 ต.ค. 2569)
 
 **หลักการ:** ใช้เอกสารนี้เป็น Master Roadmap เพียงฉบับเดียว ไม่สร้างแผนคู่ขนาน; แยกสถานะ **Merged (รวมโค้ด)**, **Device QA pending (รอตรวจรับจริง)**, **Planned (ยังไม่ทำ)** และ **Accepted (ตรวจรับแล้ว)** ให้ชัดเจน ห้ามถือว่า Merge = QA ผ่าน
