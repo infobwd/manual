@@ -61,6 +61,18 @@
 
 ---
 
+## HOME-IPAD-1032-R1 / PWA-UPDATE-R1 — 25 ต.ค. 2569
+
+**หลักฐาน:** ภาพ Chrome Device Emulation iPad Pro 13 นิ้ว 1032×1376 แสดงหน้า Home ยังเป็น desktop shell (sidebar 190px, navigation header แบบ desktop) เพราะ layout Home เปลี่ยนที่ ≤1000px แต่ Reader เปลี่ยนที่ ≤1100px. ตัวอักษร/การ์ดจึงค่อนข้างเล็กและมีพื้นที่ใช้งานไม่เต็มจอ. เป็นการตรวจจากภาพจำลอง ไม่ใช่ผลทดสอบบน iPad จริง.
+
+- **HOME-IPAD-1032-R1:** ในช่วง **1001–1100 CSS px** ซ่อน sidebar แคบ, เปลี่ยนเป็น Home เต็มกว้างและแสดง navigation 3 แท็บ (หน้าหลัก/หนังสือ/ของฉัน) ซึ่งมี HTML เดิมแล้ว; ให้ filters/category chips ทำงานแทน sidebar และคงการ์ด 2 คอลัมน์. ปรับขนาดข้อความ/ปก/ปุ่มในช่วง 851–1100px เพื่อใช้นิ้วได้สะดวก. **ไม่เปลี่ยน Reader breakpoint/พฤติกรรมการอ่าน.**
+- **PWA-UPDATE-R1:** SW ใช้ `importScripts("./assets/app-version.js")` แต่การลงทะเบียนเดิมใช้ค่าเริ่มต้น `updateViaCache: "imports"` จึงอาจตรวจไม่พบรุ่นใหม่จาก HTTP cache ของ manifest. เปลี่ยนเป็น `updateViaCache:"none"` และเพิ่มการตรวจแบบ throttle เมื่อเปิด/กลับ foreground, pageshow, focus, online พร้อมปุ่มตรวจเองและข้อความสถานะใน Settings. ลงทะเบียน listener `updatefound` ก่อนเรียก `registration.update()`, ตรวจ waiting worker ก่อนเสมอ. ห้าม auto-skipWaiting / auto-reload โดยไม่กด “อัปเดตตอนนี้”; ยกเว้น controllerchange หลังยืนยันหรือกรณีมี controller เดิมถูกเปลี่ยน. ไม่ลบ `wd-manual-reader-v2`, bookmarks/favorites/progress.
+- **เวอร์ชัน candidate:** v1.3.37; บันทึกการเปลี่ยน SW source ให้ตัวสคริปต์หลักเปลี่ยนด้วยในการอัปเดตรอบนี้. แยกผล **static/simulated PASS** ออกจาก **Device QA pending**.
+
+**Acceptance:** iPad 1032 CSS px Home มี 2-column card, no desktop sidebar, 3 แท็บเข้าถึงได้และไม่มี horizontal overflow; viewport 850/1000/1101 ไม่มีการชน breakpoint. Android Chrome PWA และ iPhone Safari/Home Screen PWA รุ่นก่อนหน้าเปิดใหม่ขณะออนไลน์ตรวจพบ waiting v1.3.37 และแสดง notice; ปุ่ม “ไว้ภายหลัง” ยังอ่านต่อได้, “อัปเดตตอนนี้” activate แล้ว reload, favorites/progress/reading mode เดิมคงอยู่; offline/manual check บอกสถานะ ไม่ลบ cache/storage. พิสูจน์บนเครื่องจริง, ตรวจ update ทันที/หลังพักแอป/เปิดใหม่, installation failure, update race, safe area และ theme. **ต้องตรวจอุปกรณ์จริงก่อนปิด QA-DEVICE-GATE**.
+
+---
+
 ## MASTER EXECUTION PLAN — ลำดับเดียวสำหรับงานเดิมและงานใหม่ (ปรับ 23 ต.ค. 2569)
 
 **หลักการ:** ใช้เอกสารนี้เป็น Master Roadmap เพียงฉบับเดียว ไม่สร้างแผนคู่ขนาน; แยกสถานะ **Merged (รวมโค้ด)**, **Device QA pending (รอตรวจรับจริง)**, **Planned (ยังไม่ทำ)** และ **Accepted (ตรวจรับแล้ว)** ให้ชัดเจน ห้ามถือว่า Merge = QA ผ่าน
