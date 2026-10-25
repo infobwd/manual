@@ -27,6 +27,14 @@ for (const book of data.manuals.filter(b => b.status === "published")) {
     assert.ok(Array.isArray(page.paragraphs) && page.paragraphs.every(v => typeof v === "string" && v.trim()), "Book page paragraphs must be nonempty text");
   }
 }
+const thinking = data.manuals.find(book => book.id === "ai-thinking-partner-visible-learning-primary");
+assert.ok(thinking && thinking.category === "academic" && thinking.status === "published", "Thinking partner book must be published");
+assert.equal(thinking.pages.length, 20, "Thinking partner book must have 20 readable chapters");
+const thinkingBody = thinking.pages.map(page => [page.title, ...page.paragraphs, ...(page.bullets || []), page.tip || ""].join(" ")).join(" ");
+assert.ok(thinkingBody.includes("ป.2") && thinkingBody.includes("245 + 178") && thinkingBody.includes("326 + 195"), "P2 math examples must be present");
+assert.ok(thinkingBody.includes("100,000") && thinkingBody.includes("สสวท."), "P3 scope and curriculum references must be present");
+assert.ok(thinkingBody.includes("คิดเอง") && thinkingBody.includes("ยืนยัน"), "Three-stage approach must be visible");
+assert.ok(thinkingBody.includes("เอกสารอ้างอิง"), "Thinking partner book must include sources");
 const essay = data.manuals.find(book => book.id === "homework-in-ai-age-primary-leadership");
 assert.ok(essay && essay.category === "academic" && essay.status === "published", "Homework and AI essay must be published in academic category");
 assert.ok(essay.pages.length >= 20, "Essay must be a substantial reading edition");
