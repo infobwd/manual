@@ -108,6 +108,28 @@ Use exactly one same-origin approved M4A/MP3/OGG file per book plus time offsets
 
 ---
 
+### UX-P3A-R2 — Compact Audio Player, Mode-specific Progress, Mobile Bottom Sheet (25 ต.ค. 2569)
+
+**หลักฐาน:** ภาพ Desktop และ iPhone หลัง v1.3.39 แสดงแผงเสียงแนวตั้งสูงจนบังเนื้อหากระดาษ; ความคืบหน้าของเสียงในเครื่อง/เสียงออนไลน์ไม่เลื่อนตามการเล่น ขณะที่เสียงออนไลน์แบบ MP3 ทีละท่อนอาจโหลดท่อนถัดไปไม่ทันเมื่อผู้ใช้ล็อกหน้าจอ. อาการเหล่านี้ต้องแยกจากความคืบหน้า “หน้าในหนังสือ” ที่มีอยู่แล้ว.
+
+**Implementation candidate v1.3.40 — ปรับ UX ภายใต้ P3A เดิม ไม่แยก Roadmap:**
+
+| รหัส | สิ่งที่แก้ | ข้อจำกัดและเกณฑ์ตรวจรับ |
+| --- | --- | --- |
+| P3A-R2-DESKTOP | แถบฟังแบบ compact บน Desktop แสดงชื่อเล่ม, ตอนที่ฟัง, เล่น/พัก, ตอนก่อน/ถัดไป, แถบความคืบหน้าการฟัง และปุ่ม “ปรับเสียง” | แยกออกจากเครื่องมือ Reader และสถานะเลขหน้าหนังสือ; เมื่อเปิดรายละเอียดแล้วสามารถย่อกลับได้ โดยไม่หยุดเสียง; Reader ยังอ่านได้ |
+| P3A-R2-MOBILE | Compact bar ยึดด้านล่างเหนือแถบนำทาง Reader; รายละเอียดเป็น bottom sheet ที่ปิดด้วยปุ่มย่อหรือ backdrop ได้; ตั้งค่าเสียงออนไลน์/ล็อกการสัมผัสอยู่ใน disclosure “ตัวเลือกเสียงและโหมดฟัง” | มือถือ 320/360/390/430px, iPad 851–1100px, portrait/landscape, Safe Area และ VoiceOver; ไม่มีปุ่มต่ำกว่า ~44px และไม่มี horizontal overflow; ต้องไม่บังทางออกจาก Reader |
+| P3A-R2-PROGRESS | แยก progress เสียงจาก progress หน้าหนังสือ: `asset` ใช้เวลา `currentTime/duration` จริงและ seek ได้; `online` แสดงบท/ท่อนและความคืบหน้าภายในท่อนจาก `timeupdate` เมื่อ duration มี; `speech` ใช้บท/ท่อนที่เริ่มอ่านแล้ว โดยระบุว่าเป็นค่าประมาณ | **ห้ามแสดงเวลาที่ประมาณขึ้นเป็นเวลาจริง หรือเปิด seek bar ในโหมดเสียงท่อน/Web Speech**; mini-player และ compact ใช้ progress เดียวกัน; ปิดจบเล่มแล้วเป็น 100% |
+| P3A-R2-RECOVERY | เมื่อ `online` โหลดท่อน MP3 ผิดพลาด ให้ user กด Play เพื่อลองโหลดท่อนเดิมอีกครั้งแทนเริ่มบทใหม่ พร้อมป้องกัน `error` กับ promise reject นับความล้มเหลวซ้ำ | ไม่ auto-replay เมื่อเพิ่งกลับจาก background/ล็อกจอ; ยังคงต้องได้รับ consent ก่อนส่งข้อความจาก Public Edition ไป WD Growth; ไม่ลบหรือ pre-cache ข้อมูลเสียงนอก SW shell |
+| P3A-R2-PWA | เพิ่ม version 1.3.40 ใน service worker เพื่อให้ HTML/CSS/JS ที่แก้ไขได้รับการอัปเดต | รักษา `wd-manual-reader-v2` และ `wd-books-audio-v1` เดิม; ต้องตรวจ PWA update บนมือถือจริง |
+
+**สถานะ:** โค้ดและ automated synthetic tests พร้อมเข้าสู่ QA แต่ **ยังไม่ใช่ Device QA PASS**; ถ้า Merge ให้บันทึก `Merged / QA pending` จนผ่านผลจากเบราว์เซอร์และอุปกรณ์จริง.
+
+**Lock screen decision:** `speechSynthesis` ไม่มีการรับประกันว่าเสียงเล่นเมื่อจอดับ และ remote TTS `?endpoint=tts` ทีละท่อนต้องกลับมารัน JavaScript เพื่อเปลี่ยนท่อน จึงไม่รับประกันหลัง hardware lock แม้เสียงท่อนที่โหลดแล้วจะเล่นจบได้. **ไม่แก้ด้วย Screen Wake Lock ซึ่งเป็นเพียงการคงหน้าจอสว่าง**. ขั้นต่อไปของ P3A-2 ต้องผลิตไฟล์ MP3/M4A แบบหนึ่งไฟล์ต่อเล่ม Public Edition พร้อมสิทธิ์ใช้เสียงและ `chapterOffsets` ตรวจคุณภาพเสียงไทย และพิสูจน์ Media Session/OS lock-screen ≥10 นาทีบน iPhone Safari/Home Screen PWA, iPad, Android; เก็บ PASS/FAIL แยกอุปกรณ์และไม่อ้างว่าผ่านก่อนมีหลักฐาน.
+
+**Regression ก่อน/หลัง Merge:** `node tests/audio-reader-core.smoke.cjs`, `node tests/audio-reader-playback.smoke.cjs`, `node tests/audio-chrome-lock.smoke.cjs`, `node tests/audio-reader-integration.smoke.cjs` และ smoke ของ Reader/PWA เดิม; ทดสอบ Chrome Windows/Touch, โหมดสามชนิด, progress advance, คั่นหน้า/พลิกหน้า/ตารางสารบัญ, PWA cache update, ธีม 3 แบบ, มี/ไม่มีเสียงไทยใน OS และ network error, pause/resume/stop, in-app lock overlay. ต้องไม่ใช้ข้อมูลนักเรียนหรือหนังสือภายในใน remote TTS.
+
+---
+
 ## MASTER EXECUTION PLAN — ลำดับเดียวสำหรับงานเดิมและงานใหม่ (ปรับ 23 ต.ค. 2569)
 
 **หลักการ:** ใช้เอกสารนี้เป็น Master Roadmap เพียงฉบับเดียว ไม่สร้างแผนคู่ขนาน; แยกสถานะ **Merged (รวมโค้ด)**, **Device QA pending (รอตรวจรับจริง)**, **Planned (ยังไม่ทำ)** และ **Accepted (ตรวจรับแล้ว)** ให้ชัดเจน ห้ามถือว่า Merge = QA ผ่าน
