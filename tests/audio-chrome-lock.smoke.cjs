@@ -53,6 +53,7 @@ function fixture() {
   const window={
     WD_LIBRARY_DATA:{manuals:[published,review]},
     speechSynthesis:synth,SpeechSynthesisUtterance:Utterance,
+    matchMedia(query){return {matches:query === "(max-width:1100px)"}},
     setTimeout(fn,ms){const id=nextTimer++;timers.set(id,{fn,ms});return id;},
     clearTimeout(id){timers.delete(id)}
   };
@@ -91,6 +92,7 @@ async function run(){
   f.$("wdAudioCompactExpand").fire("click");
   assert.equal(f.$("wdAudioPanel").hidden,false,"Compact button opens detailed player");
   assert.equal(f.$("wdAudioCompact").hidden,true,"Compact bar hides under detailed player");
+  assert.equal(f.$("wdAudioBackdrop").hidden,false,"Mobile bottom sheet exposes dismissible backdrop");
   const initialPercent=a.getState().progress.percent;
   f.$("wdOnlineTtsMedia").currentTime=90;
   f.$("wdOnlineTtsMedia").fire("timeupdate");
@@ -98,6 +100,7 @@ async function run(){
   assert.ok(f.$("wdAudioProgress").value>initialPercent);
   f.$("wdAudioClosePanel").fire("click");
   assert.equal(f.$("wdAudioCompact").hidden,false,"Closing the audio detail reveals compact control bar");
+  assert.equal(f.$("wdAudioBackdrop").hidden,true,"Closing mobile sheet removes backdrop");
   f.$("wdAudioCompactExpand").fire("click");
   assert.equal(f.$("wdAudioPanel").hidden,false,"Compact control can reopen detail");
   // Failure does not restart the whole chapter when the user retries.
