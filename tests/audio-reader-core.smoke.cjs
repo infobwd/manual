@@ -21,6 +21,13 @@ assert.equal(chunks.join(""),"ยินดีต้อนรับ".repeat(90));
 assert.equal(a.safeRate(7),1);
 assert.equal(a.safeRate(1.25),1.25);
 assert.equal(a.audioAsset(book),null);
+assert.equal(a.pickThaiVoice([{lang:"en-US"},{lang:"th-TH",name:"Thai"}]).name,"Thai");
+assert.equal(a.pickThaiVoice([{lang:"en-US"}]),null);
+assert.equal(a.schoolTtsUrl("ทดสอบเสียง").startsWith("https://wd.esdc.app/backend-php/api.php?endpoint=tts&lang=th&q="),true);
+assert.equal(a.schoolTtsUrl("ทดสอบเสียง").includes(encodeURIComponent("ทดสอบเสียง")),true);
+assert.equal(a.schoolTtsUrl(""),null);
+assert.equal(a.schoolTtsUrl("ก".repeat(181)),null);
+
 const good = {...book,audio:{src:"./assets/audio/b1/narration.m4a",chapterOffsets:[0,123],license:"school-approved",narrationVersion:"1"}};
 assert.equal(a.audioAsset(good).offsets.length,2);
 assert.equal(a.audioAsset({...good,audio:{...good.audio,src:"https://third-party.example/track.mp3"}}),null);

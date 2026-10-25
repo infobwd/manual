@@ -6,11 +6,12 @@
   if (!core) return;
   const $ = id => document.getElementById(id);
   const audio = $("wdNarrationMedia");
+  const remoteAudio = $("wdOnlineTtsMedia");
   const reader = $("readerDialog");
   const panel = $("wdAudioPanel");
   const toggle = $("readerAudioToggle");
   const mini = $("wdAudioMini");
-  if (!audio || !reader || !panel || !toggle || !mini) return;
+  if (!audio || !remoteAudio || !reader || !panel || !toggle || !mini) return;
   const speech = window.speechSynthesis || null;
   const Utterance = window.SpeechSynthesisUtterance || null;
   const mediaSession = navigator.mediaSession || null;
@@ -22,6 +23,10 @@
   })();
   let book = null;
   let asset = null;
+  let onlineEnabled = false;
+  let remoteSegments = [];
+  let remoteIndex = 0;
+  let remoteGeneration = 0;
   let chapter = 0;
   let speed = 1;
   let playing = false;
@@ -31,7 +36,7 @@
   let note = "";
   let lastSaved = 0;
   let audioSeekingOnLoad = null;
-  const mode = () => asset ? "asset" : "speech";
+  const mode = () => asset ? "asset" : onlineEnabled ? "online" : "speech";
   const currentTitle = () => book?.pages?.[chapter]?.title || "เลือกตอน";
   const formatTime = core.formatTime;
   function writePosition(force = false) {
@@ -48,13 +53,22 @@
     }
   }
   function announce(message) { note = message; syncUI(); }
-  function thVoice() {
-    if (!speech?.getVoices) return null;
+  let cachedVoices = [];
+  const refreshVoices = () => {
     try {
-      const voices = speech.getVoices();
-      return voices.find(v => String(v.lang || "").toLowerCase().startsWith("th")) || null;
-    } catch { return null; }
-  }
+      const voices = speech?.getVoices?.() || [];
+      if (voices.length) cachedVoices = [...voices];
+    } catch {}
+    if (book && !asset && !onlineEnabled && !playing && cachedVoices.length) {
+      if (core.pickThaiVoice(cachedVoices)) {
+        note = "พบเสียงภาษาไทยแล้ว กดเล่นเพื่อฟัง";
+        syncUI();
+      }
+    }
+  };
+  try { speech?.addEventListener?.("voiceschanged", refreshVoices); } catch {}
+  refreshVoices();
+  const thVoice = () => core.pickThaiVoice(cachedVoices);
   function resetMediaSession() {
     if (!mediaSession) return;
     try {
@@ -113,11 +127,17 @@
     $("wdAudioMiniTitle").textContent = book?.title || "";
     $("wdAudioMiniChapter").textContent = currentTitle();
     const modeLabel = asset
-      ? "เสียงบรรยายไฟล์ · สามารถทดสอบการควบคุมขณะล็อกจอได้"
-      : "อ่านออกเสียงสด · อาจหยุดเมื่อพักแอปหรือล็อกหน้าจอ";
+      ? "เสียงบรรยายไฟล์ · รองรับการทดสอบล็อกจอจริง"
+      : onlineEnabled
+        ? "เสียงไทยออนไลน์ผ่าน WD Growth · ต้องเปิดจอเพื่อฟังต่อเนื่อง"
+        : "อ่านออกเสียงในเครื่อง · อาจหยุดเมื่อพักแอปหรือล็อกหน้าจอ";
     $("wdAudioMode").textContent = modeLabel;
     const text = note || (playing ? (paused ? "พักการฟังอยู่" : "กำลังฟัง") : "แตะเล่นเพื่อเริ่มฟัง");
     $("wdAudioStatus").textContent = text;
+    $("wdAudioOnline").hidden = !selected || Boolean(asset) || onlineEnabled;
+    $("wdAudioOnlineDisclosure").hidden = !selected || Boolean(asset) || onlineEnabled;
+    $("wdAudioLock").disabled = !playing || paused;
+    window.WD_LISTENING_LOCK?.sync?.({title:book?.title || "", chapter:currentTitle(), playing, paused, note:text});
     const playText = playing && !paused ? "พัก" : "เล่น";
     $("wdAudioPlay").textContent = playText;
     $("wdAudioMiniPlay").textContent = playText;
@@ -155,7 +175,10 @@
   function selectBook(nextBook, readerPage = 0) {
     if (!core.isReadable(nextBook)) return;
     const changed = book?.id !== nextBook.id;
-    if (changed) stop();
+    if (changed) {
+      stop();
+      onlineEnabled = false; // Consent is per selected public book, never implicit.
+    }
     book = nextBook;
     asset = core.audioAsset(nextBook);
     const saved = positions[book.id];
@@ -181,8 +204,51 @@
     speechGeneration++;
     try { speech?.cancel(); } catch {}
   }
+  function stopRemote() {
+    remoteGeneration++;
+    remoteSegments = [];
+    remoteIndex = 0;
+    try {
+      remoteAudio.pause();
+      remoteAudio.removeAttribute("src");
+      remoteAudio.load();
+    } catch {}
+  }
+  function pumpRemoteSegment() {
+    if (!book || !onlineEnabled || !playing || paused) return;
+    if (remoteIndex >= remoteSegments.length) {
+      if (chapter + 1 >= book.pages.length) {
+        playing = false; paused = false;
+        note = "ฟังจบเล่มแล้ว"; writePosition(true); syncUI();
+      } else beginRemoteSpeech(chapter + 1);
+      return;
+    }
+    const url = core.schoolTtsUrl(remoteSegments[remoteIndex++]);
+    if (!url) { playing = false; paused = false; announce("ข้อความเสียงออนไลน์ไม่ถูกต้อง"); return; }
+    const token = remoteGeneration;
+    remoteAudio.src = url;
+    remoteAudio.playbackRate = speed;
+    remoteAudio.play().catch(() => {
+      if (token !== remoteGeneration) return;
+      playing = false; paused = false;
+      announce("เชื่อมต่อเสียงออนไลน์ของโรงเรียนไม่ได้ กรุณาตรวจอินเทอร์เน็ตหรือใช้เสียงในเครื่อง");
+    });
+  }
+  function beginRemoteSpeech(index) {
+    if (!book || asset || !onlineEnabled) return;
+    cancelSpeech();
+    stopRemote();
+    chapter = core.limitIndex(index,book.pages.length);
+    remoteSegments = core.splitSpeech(core.narrationText(book.pages[chapter]),175);
+    if (!remoteSegments.length) remoteSegments = [book.pages[chapter].title || "ตอนนี้ไม่มีข้อความ"];
+    playing = true; paused = false; visibleSession = true;
+    note = "กำลังฟังเสียงไทยออนไลน์ (หนังสือสาธารณะ)";
+    writePosition(true); syncUI();
+    pumpRemoteSegment();
+  }
   function stop() {
     cancelSpeech();
+    stopRemote();
     if (audio) { audio.pause(); }
     playing = false;
     paused = false;
@@ -193,12 +259,17 @@
     syncUI();
   }
   function selectThaiVoice() {
-    const voices = (() => { try { return speech?.getVoices?.() || []; } catch { return []; } })();
-    if (voices.length && !thVoice()) {
-      announce("ไม่พบเสียงภาษาไทยในอุปกรณ์นี้ โปรดติดตั้งเสียงภาษาไทยในการตั้งค่าระบบ");
+    refreshVoices(); // Chromium loads voice lists asynchronously.
+    if (!cachedVoices.length) {
+      announce("Chrome ยังโหลดรายการเสียงไม่เสร็จ โปรดลองอีกครั้ง หรือเลือกเสียงไทยออนไลน์ของโรงเรียน");
       return {unavailable:true, voice:null};
     }
-    return {unavailable:false, voice:thVoice()};
+    const voice = thVoice();
+    if (!voice) {
+      announce("ไม่พบเสียงภาษาไทยในอุปกรณ์นี้ เลือก “ใช้เสียงไทยออนไลน์ของโรงเรียน” ด้านล่างได้");
+      return {unavailable:true, voice:null};
+    }
+    return {unavailable:false, voice};
   }
   function beginSpeech(index) {
     if (!speech || !Utterance) {
@@ -264,6 +335,10 @@
     if (asset) {
       seek(asset.offsets[chapter]);
       if (playing && !paused) void play();
+    } else if (onlineEnabled && playing && !paused) {
+      beginRemoteSpeech(index);
+    } else if (onlineEnabled) {
+      stopRemote(); playing = false; paused = false; syncUI();
     } else if (playing) {
       beginSpeech(index);
     } else {
@@ -273,6 +348,16 @@
   async function play() {
     if (!book) return;
     visibleSession = true;
+    if (onlineEnabled && !asset) {
+      if (playing && paused) {
+        try {
+          await remoteAudio.play();
+          paused = false;
+          announce("กำลังฟังเสียงไทยออนไลน์");
+        } catch { announce("เล่นเสียงออนไลน์ต่อไม่ได้ กรุณาตรวจอินเทอร์เน็ต"); }
+      } else if (!playing) beginRemoteSpeech(chapter);
+      return;
+    }
     if (asset) {
       cancelSpeech();
       note = "กำลังเปิดเสียงบรรยาย…";
@@ -298,6 +383,7 @@
   function pause() {
     if (!playing || paused) return;
     if (asset) audio.pause();
+    else if (onlineEnabled) remoteAudio.pause();
     else {
       try { speech?.pause(); } catch {}
     }
@@ -312,6 +398,7 @@
   function changeSpeed(value) {
     speed = core.safeRate(value);
     if (asset) { audio.playbackRate = speed;reportPosition(); }
+    else if (onlineEnabled) remoteAudio.playbackRate = speed;
     else if (playing) beginSpeech(chapter); // Web Speech cannot mutate rate mid-utterance.
     writePosition(true);syncUI();
   }
@@ -329,6 +416,14 @@
     syncUI();
   }
   toggle.addEventListener("click",() => panel.hidden ? openPanel() : closePanel());
+  $("wdAudioOnline").addEventListener("click", () => {
+    if (!core.isReadable(book) || asset || onlineEnabled) return;
+    stop();
+    onlineEnabled = true; // Explicit per-book consent before sending public text.
+    visibleSession = false;
+    note = "เลือกเสียงออนไลน์แล้ว กดเล่นเพื่อส่งเฉพาะข้อความหนังสือสาธารณะ";
+    syncUI();
+  });
   $("wdAudioClosePanel").addEventListener("click",closePanel);
   $("wdAudioPlay").addEventListener("click",togglePlayback);
   $("wdAudioMiniPlay").addEventListener("click",togglePlayback);
@@ -356,6 +451,14 @@
   });
   audio.addEventListener("ended",() => {
     playing=false;paused=false;note="ฟังจบเล่มแล้ว";writePosition(true);syncUI();resetMediaSession();
+  });
+  remoteAudio.addEventListener("ended", () => {
+    if (onlineEnabled && playing && !paused) pumpRemoteSegment();
+  });
+  remoteAudio.addEventListener("error", () => {
+    if (!onlineEnabled || !playing) return;
+    playing = false; paused = false;
+    announce("โหลดเสียงไทยออนไลน์ไม่ได้ โปรดลองใหม่หรือตรวจเซิร์ฟเวอร์เสียงของโรงเรียน");
   });
   audio.addEventListener("error",() => { if (asset) {playing=false;paused=false;announce("ไม่สามารถโหลดไฟล์เสียงบรรยายได้");} });
   document.addEventListener("visibilitychange",() => {

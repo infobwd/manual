@@ -44,3 +44,29 @@ body[data-theme="sepia"] .wd-audio-panel :is(small,.wd-audio-status){color:#785d
   .wd-audio-controls button span{display:none}
 }
 @media print{.reader-audio-toggle,.wd-audio-panel,.wd-audio-mini{display:none!important}}
+
+/* UX-P3A-R1: explicit online fallback and accessible in-app listening lock. */
+.wd-audio-options{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.wd-audio-options button{min-height:44px;border:1px solid #a4cab0;border-radius:11px;padding:9px 13px;font-size:12px;font-weight:800}
+.wd-audio-online{background:#d7ecdf;color:#174e37}
+.wd-audio-lock-button{background:#1c543c;color:#fff}
+.wd-audio-lock-button:disabled{opacity:.45;cursor:not-allowed}
+.wd-audio-privacy{font-size:11px;line-height:1.6;max-width:76ch;margin:6px 0;color:#476851}
+.wd-audio-online:focus-visible,.wd-audio-lock-button:focus-visible,.wd-listening-lock button:focus-visible{outline:3px solid #f2be6e;outline-offset:3px}
+body[data-theme="night"] .wd-audio-privacy{color:#cee0d1}
+body[data-theme="sepia"] .wd-audio-privacy{color:#634831}
+.wd-listening-lock{box-sizing:border-box;inset:0;margin:0;width:100vw;height:100dvh;max-width:100vw;max-height:100dvh;border:0;background:radial-gradient(circle at 50% 15%,#244e49,#0b211e 75%);color:#eaf9ea;padding:max(20px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));overflow-y:auto;overscroll-behavior:contain}
+.wd-listening-lock::backdrop{background:#051d19}
+.wd-lock-content{margin:auto;min-height:calc(100dvh - 90px);max-width:560px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;gap:14px}
+.wd-lock-label{font-size:11px;font-weight:850;letter-spacing:.12em;color:#9bd8a8}
+.wd-lock-icon{display:grid;place-items:center;width:120px;height:120px;border-radius:28px;background:linear-gradient(155deg,#40795f,#164536);box-shadow:0 22px 64px #0006;font-size:54px}
+.wd-lock-content h2{font-size:clamp(22px,5vw,32px);max-width:25ch;line-height:1.4;margin:0}
+.wd-lock-content p{margin:0;line-height:1.6}
+#wdLockChapter{font-size:16px;color:#c7ecd0}
+#wdLockStatus{font-size:13px;font-weight:750;color:#aae3b9}
+#wdLockHint{font-size:12px;color:#c5d7cd;max-width:48ch}
+#wdLockUnlock{position:relative;overflow:hidden;width:min(100%,420px);margin-top:18px;min-height:70px;border:1px solid #77a18c;border-radius:18px;background:#234c3b;color:#fff;font-size:15px;font-weight:850;touch-action:none;user-select:none;-webkit-user-select:none}
+#wdLockUnlock>span:last-child{position:relative;z-index:1}
+.wd-lock-unlock-fill{position:absolute;inset:0;transform:scaleX(0);transform-origin:left;background:#357d59}
+.wd-lock-holding .wd-lock-unlock-fill{transform:scaleX(1);transition:transform 1800ms linear}
+.wd-lock-content small{font-size:11px;color:#accbb6}
