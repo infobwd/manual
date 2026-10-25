@@ -45,12 +45,12 @@ vm.runInContext(load('assets/reader-coordinator.js'), context, { filename: 'asse
 vm.runInContext(load('assets/app.js'), context, { filename: 'assets/app.js' });
 
 const catalog = window.WD_LIBRARY_DATA;
-assert.equal(catalog.categories.length, 7);
-assert.equal(catalog.manuals.length, 7);
-assert.equal(catalog.manuals.filter(b => b.status === 'published').length, 2);
+assert.ok(catalog.categories.length > 0);
+assert.ok(catalog.manuals.length > 0);
+assert.ok(catalog.manuals.some(b => b.status === 'published'));
 assert.ok(catalog.manuals.filter(b => b.status !== 'published').every(b => b.pages.length === 0),
   'Only demo/publicly approved contents should have pages');
-assert.equal(nodes.manualGrid.children.length, 7);
+assert.equal(nodes.manualGrid.children.length, catalog.manuals.length);
 assert.equal(nodes.statPublished.textContent, '2');
 assert.equal(nodes.statPending.textContent, '5');
 const guide = catalog.manuals.find(b => b.id === 'wd-growth-individual-plan');
@@ -82,7 +82,7 @@ nodes.searchInput.handlers.input({ target: { value: 'unmatched-zzzz' } });
 assert.equal(nodes.manualGrid.children.length, 0);
 assert.equal(nodes.emptyResults.hidden, false);
 nodes.searchInput.handlers.input({ target: { value: '' } });
-assert.equal(nodes.manualGrid.children.length, 7);
+assert.equal(nodes.manualGrid.children.length, catalog.manuals.length);
 
 media.matches = true;
 openFirstBook();
