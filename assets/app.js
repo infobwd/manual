@@ -394,7 +394,12 @@
     $("readerClose").focus();
   }
   const toolsToggle = $("readerToolsToggle"), extraTools = $("readerExtraTools");
-  const closeTools = () => { extraTools.hidden = true; toolsToggle.setAttribute("aria-expanded","false"); };
+  // Wide readers have no overflow-menu trigger: never hide their always-visible tools.
+  const closeTools = () => {
+    if (!window.matchMedia("(max-width:1100px)").matches) return;
+    extraTools.hidden = true;
+    toolsToggle.setAttribute("aria-expanded","false");
+  };
   // Avoid iOS interpreting two rapid taps on ⋯ as page zoom; preserve pinch zoom elsewhere.
   toolsToggle.addEventListener("dblclick", event => event.preventDefault());
   toolsToggle.addEventListener("touchend", event => {
@@ -867,7 +872,7 @@
   const syncFocus = () => {
     const active = dialog.classList.contains("reader-focus-mode");
     focusToggle?.setAttribute("aria-pressed", String(active));
-    focusToggle?.setAttribute("aria-label", active ? "ปิดโหมดอ่านเต็มตา" : "เปิดโหมดอ่านเต็มตา");
+    focusToggle?.setAttribute("aria-label", active ? "ปิดโหมดอ่านอย่างมีสมาธิ" : "เปิดโหมดอ่านอย่างมีสมาธิ");
   };
   focusToggle?.addEventListener("click", () => {
     dialog.classList.toggle("reader-focus-mode");
