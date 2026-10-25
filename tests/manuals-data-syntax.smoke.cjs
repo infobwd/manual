@@ -20,4 +20,16 @@ for (const book of data.manuals) {
 const ai = data.manuals.find(book => book.id === "ai-school-today-teacher-guide");
 assert.ok(ai && ai.status === "published", "AI & School Today must be published");
 assert.equal(ai.pages.length, 13, "AI & School Today must have 13 pages");
+for (const book of data.manuals.filter(b => b.status === "published")) {
+  assert.ok(book.pages.length > 0, "Published book needs readable pages");
+  for (const page of book.pages) {
+    assert.ok(typeof page.title === "string" && page.title.trim(), "Book page needs title");
+    assert.ok(Array.isArray(page.paragraphs) && page.paragraphs.every(v => typeof v === "string" && v.trim()), "Book page paragraphs must be nonempty text");
+  }
+}
+const essay = data.manuals.find(book => book.id === "homework-in-ai-age-primary-leadership");
+assert.ok(essay && essay.category === "academic" && essay.status === "published", "Homework and AI essay must be published in academic category");
+assert.ok(essay.pages.length >= 20, "Essay must be a substantial reading edition");
+assert.ok(essay.pages.some(page => page.title.includes("สัปดาห์")), "Essay must include proposed school trial");
+assert.ok(essay.pages.some(page => page.title.includes("เอกสารอ้างอิง")), "Essay must cite sources");
 console.log("PASS: manuals-data.js syntax and catalog structure");
