@@ -302,11 +302,13 @@
   function selectThaiVoice() {
     refreshVoices(); // Chromium loads voice lists asynchronously.
     if (!cachedVoices.length) {
+      $("wdAudioMore").open = true;
       announce("Chrome ยังโหลดรายการเสียงไม่เสร็จ โปรดลองอีกครั้ง หรือเลือกเสียงไทยออนไลน์ของโรงเรียน");
       return {unavailable:true, voice:null};
     }
     const voice = thVoice();
     if (!voice) {
+      $("wdAudioMore").open = true;
       announce("ไม่พบเสียงภาษาไทยในอุปกรณ์นี้ เลือก “ใช้เสียงไทยออนไลน์ของโรงเรียน” ด้านล่างได้");
       return {unavailable:true, voice:null};
     }
@@ -469,6 +471,11 @@
     syncUI();
   }
   toggle.addEventListener("click",() => panel.hidden ? openPanel() : closePanel());
+  $("wdAudioBackdrop").addEventListener("click", closePanel);
+  $("wdAudioCompactExpand").addEventListener("click", openPanel);
+  $("wdAudioCompactPlay").addEventListener("click", togglePlayback);
+  $("wdAudioCompactPrev").addEventListener("click", () => jump(-1));
+  $("wdAudioCompactNext").addEventListener("click", () => jump(1));
   $("wdAudioOnline").addEventListener("click", () => {
     if (!core.isReadable(book) || asset || onlineEnabled) return;
     stop();
@@ -505,13 +512,21 @@
   audio.addEventListener("ended",() => {
     playing=false;paused=false;completed=true;note="ฟังจบเล่มแล้ว";writePosition(true);syncUI();resetMediaSession();
   });
+  remoteAudio.addEventListener("timeupdate", () => {
+    if (onlineEnabled && book) syncUI();
+  });
+  remoteAudio.addEventListener("loadedmetadata", () => {
+    if (onlineEnabled && book) syncUI();
+  });
   remoteAudio.addEventListener("ended", () => {
     if (onlineEnabled && playing && !paused) pumpRemoteSegment();
   });
   remoteAudio.addEventListener("error", () => {
     if (!onlineEnabled || !playing) return;
+    remoteIndex = Math.max(0, remoteIndex - 1);
+    remoteRetry = true;
     playing = false; paused = false;
-    announce("โหลดเสียงไทยออนไลน์ไม่ได้ โปรดลองใหม่หรือตรวจเซิร์ฟเวอร์เสียงของโรงเรียน");
+    announce("โหลดท่อนเสียงออนไลน์ไม่สำเร็จ กดเล่นอีกครั้งเพื่อลองท่อนเดิม");
   });
   audio.addEventListener("error",() => { if (asset) {playing=false;paused=false;announce("ไม่สามารถโหลดไฟล์เสียงบรรยายได้");} });
   document.addEventListener("visibilitychange",() => {
@@ -521,6 +536,15 @@
   syncUI();
   window.WD_AUDIO_READER = Object.freeze({
     selectBook, syncPage, openPanel,
-    getState:() => ({bookId:book?.id || null,chapter,mode:mode(),playing,paused,visibleSession})
+    getState:() => ({
+      bookId:book?.id || null,chapter,mode:mode(),playing,paused,visibleSession,
+      progress:core.listeningProgress({
+        mode:mode(),chapters:book?.pages?.length||1,chapter,
+        parts:onlineEnabled && !asset ? remoteSegments.length : speechPartsCount,
+        partIndex:onlineEnabled && !asset ? Math.max(0,remoteIndex-1) : speechPartIndex,
+        position:asset ? audio.currentTime : onlineEnabled ? remoteAudio.currentTime : 0,
+        duration:asset ? audio.duration : onlineEnabled ? remoteAudio.duration : 0,completed
+      })
+    })
   });
 })();
