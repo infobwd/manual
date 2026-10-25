@@ -41,6 +41,34 @@
   const mode = () => asset ? "asset" : onlineEnabled ? "online" : "speech";
   const currentTitle = () => book?.pages?.[chapter]?.title || "เลือกตอน";
   const formatTime = core.formatTime;
+
+  // The in-app Now Playing lock and the compact player share the same
+  // playback state. Only reviewed public-book cover text enters the UI.
+  function getState() {
+    const progress = core.listeningProgress({
+      mode:mode(),chapters:book?.pages?.length || 1,chapter,
+      parts:onlineEnabled && !asset ? remoteSegments.length : speechPartsCount,
+      partIndex:onlineEnabled && !asset ? Math.max(0,remoteIndex-1) : speechPartIndex,
+      position:asset ? audio.currentTime : onlineEnabled ? remoteAudio.currentTime : speechFraction,
+      duration:asset ? audio.duration : onlineEnabled ? remoteAudio.duration : 1,
+      completed
+    });
+    return {
+      bookId:book?.id || null,
+      title:book?.title || "",
+      chapter,chapterTitle:currentTitle(),chapterCount:book?.pages?.length || 0,
+      coverTitle:book?.coverTitle || book?.title || "WD Books",
+      coverTop:book?.coverTop || "WD / LISTEN",
+      coverColor:book?.color || "forest",
+      edition:book?.edition || "",
+      mode:mode(),playing,paused,visibleSession,
+      rate:speed, note,
+      position:asset ? core.safeTime(audio.currentTime) : 0,
+      duration:asset ? audio.duration : null,
+      progress
+    };
+  }
+
   function writePosition(force = false) {
     if (!book) return;
     const now = Date.now();
@@ -148,7 +176,7 @@
     $("wdAudioOnline").hidden = !selected || Boolean(asset) || onlineEnabled;
     $("wdAudioOnlineDisclosure").hidden = !selected || Boolean(asset) || onlineEnabled;
     $("wdAudioLock").disabled = !playing || paused;
-    window.WD_LISTENING_LOCK?.sync?.({title:book?.title || "", chapter:currentTitle(), playing, paused, note:text});
+
     const playText = playing && !paused ? "พัก" : "เล่น";
     $("wdAudioPlay").textContent = playText;
     $("wdAudioMiniPlay").textContent = playText;
@@ -184,6 +212,7 @@
     seekInput.disabled = !progress.seekable;
     seekInput.max = String(Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 100);
     seekInput.value = String(seekInput.disabled ? 0 : Math.min(audio.duration,audio.currentTime));
+    window.WD_LISTENING_LOCK?.sync?.({ ...getState(), note:text });
     if (mediaSession && asset && visibleSession) {
       try { mediaSession.playbackState = !playing ? "paused" : paused ? "paused" : "playing"; } catch {}
     }
@@ -553,15 +582,12 @@
   syncUI();
   window.WD_AUDIO_READER = Object.freeze({
     selectBook, syncPage, openPanel,
-    getState:() => ({
-      bookId:book?.id || null,chapter,mode:mode(),playing,paused,visibleSession,
-      progress:core.listeningProgress({
-        mode:mode(),chapters:book?.pages?.length||1,chapter,
-        parts:onlineEnabled && !asset ? remoteSegments.length : speechPartsCount,
-        partIndex:onlineEnabled && !asset ? Math.max(0,remoteIndex-1) : speechPartIndex,
-        position:asset ? audio.currentTime : onlineEnabled ? remoteAudio.currentTime : speechFraction,
-        duration:asset ? audio.duration : onlineEnabled ? remoteAudio.duration : 1,completed
-      })
-    })
+    getState,
+    togglePlayback,
+    previousChapter:() => jump(-1),
+    nextChapter:() => jump(1),
+    setPlaybackRate:changeSpeed,
+    seekTo:seconds => { if (asset) seek(seconds); },
+    stop
   });
 })();
