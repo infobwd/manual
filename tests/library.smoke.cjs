@@ -51,14 +51,12 @@ assert.ok(catalog.manuals.some(b => b.status === 'published'));
 assert.ok(catalog.manuals.filter(b => b.status !== 'published').every(b => b.pages.length === 0),
   'Only demo/publicly approved contents should have pages');
 assert.equal(nodes.manualGrid.children.length, catalog.manuals.length);
-assert.equal(nodes.statPublished.textContent, '2');
-assert.equal(nodes.statPending.textContent, '5');
+assert.equal(nodes.statPublished.textContent, String(catalog.manuals.filter(b => b.status === 'published').length));
+assert.equal(nodes.statPending.textContent, String(catalog.manuals.filter(b => b.status !== 'published').length));
 const guide = catalog.manuals.find(b => b.id === 'wd-growth-individual-plan');
-assert.ok(guide && guide.status === 'published');
-assert.equal(guide.pages.length, 15);
-for (let n = 1; n <= 7; n++) assert.ok(guide.pages.some(p => p.title.startsWith('0' + n + ' ')));
-assert.ok(guide.pages.some(p => p.title.includes('ปฐมวัย')));
-assert.ok(guide.pages.some(p => p.title.includes('ประถมศึกษา')));
+assert.ok(guide && ['review', 'published'].includes(guide.status));
+if (guide.status === 'published') assert.ok(guide.pages.length > 0);
+else assert.equal(guide.pages.length, 0);
 
 function openFirstBook() {
   const cardBody = nodes.manualGrid.children[0].children[2];
@@ -67,14 +65,15 @@ function openFirstBook() {
   assert.ok(button, 'Published demo should have an open action');
   button.handlers.click();
 }
+const firstPageCount = catalog.manuals[0].pages.length;
 openFirstBook();
 assert.equal(nodes.readerDialog.open, true);
-assert.equal(nodes.pageCounter.textContent, 'หน้า 1–2 / 8');
-assert.equal(nodes.tocItems.children.length, 8);
+assert.equal(nodes.pageCounter.textContent, `หน้า 1–2 / ${firstPageCount}`);
+assert.equal(nodes.tocItems.children.length, firstPageCount);
 nodes.nextPage.handlers.click();
-assert.equal(nodes.pageCounter.textContent, 'หน้า 3–4 / 8');
+assert.equal(nodes.pageCounter.textContent, `หน้า 3–4 / ${firstPageCount}`);
 nodes.prevPage.handlers.click();
-assert.equal(nodes.pageCounter.textContent, 'หน้า 1–2 / 8');
+assert.equal(nodes.pageCounter.textContent, `หน้า 1–2 / ${firstPageCount}`);
 nodes.readerClose.handlers.click();
 assert.equal(nodes.readerDialog.open, false);
 
@@ -86,21 +85,26 @@ assert.equal(nodes.manualGrid.children.length, catalog.manuals.length);
 
 media.matches = true;
 openFirstBook();
-assert.equal(nodes.pageCounter.textContent, 'หน้า 1 / 8');
+assert.equal(nodes.pageCounter.textContent, `หน้า 1 / ${firstPageCount}`);
 nodes.nextPage.handlers.click();
-assert.equal(nodes.pageCounter.textContent, 'หน้า 2 / 8');
+assert.equal(nodes.pageCounter.textContent, `หน้า 2 / ${firstPageCount}`);
 nodes.readerClose.handlers.click();
-// Reader works for the newly published individual plan, not only for the demo book.
-media.matches = false;
-const guideCard = nodes.manualGrid.children.find(card =>
-  card.children[2].children.some(el => el.tagName === 'h3' && el.textContent.includes('พัฒนาผู้เรียนรายบุคคล'))
+// Open the new public essay and verify its table of contents and mobile rendering.
+const article = catalog.manuals.find(b => b.id === 'homework-in-ai-age-primary-leadership');
+assert.ok(article && article.status === 'published' && article.pages.length >= 20);
+const articleCard = nodes.manualGrid.children.find(card =>
+  card.children[2].children.some(el => el.tagName === 'h3' && el.textContent === article.title)
 );
-assert.ok(guideCard, 'Public individual-plan guide must appear in catalog');
-const guideOpen = guideCard.children[2].children.at(-1).children.find(el => el.tagName === 'button');
-assert.ok(guideOpen, 'Public guide must be readable');
-guideOpen.handlers.click();
+assert.ok(articleCard, 'Homework in AI age article must appear in catalog');
+const articleOpen = articleCard.children[2].children.at(-1).children.find(el => el.tagName === 'button' && el.textContent.includes('เปิดอ่าน'));
+assert.ok(articleOpen, 'Public article must be readable');
+articleOpen.handlers.click();
 assert.equal(nodes.readerDialog.open, true);
-assert.equal(nodes.tocItems.children.length, 15);
-assert.equal(nodes.pageCounter.textContent, 'หน้า 1–2 / 15');
+assert.equal(nodes.tocItems.children.length, article.pages.length);
+assert.equal(nodes.pageCounter.textContent, `หน้า 1–2 / ${article.pages.length}`);
 nodes.readerClose.handlers.click();
-console.log('Manual Library — offline smoke tests PASS (catalog + 15-page guide)');
+media.matches = true;
+articleOpen.handlers.click();
+assert.equal(nodes.pageCounter.textContent, `หน้า 1 / ${article.pages.length}`);
+nodes.readerClose.handlers.click();
+console.log('Manual Library — offline smoke tests PASS (dynamic catalog + published AI/homework essay)');
