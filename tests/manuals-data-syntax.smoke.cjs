@@ -66,4 +66,17 @@ for (const [id, expected] of [
   assert.ok(book, "Expected book is missing: " + id);
   assert.equal(book.coverTitle, expected, "Cover should break into two lines: " + id);
 }
+
+// AI Q4 critical inquiry book: check shelf, math, references, privacy, status.
+const inquiry = data.manuals.find(book => book.id === "ai-q4-children-ask-verify-think");
+assert.ok(inquiry && inquiry.status === "published" && inquiry.category === "academic", "AI Q4 must be visible in academic shelf");
+assert.equal(inquiry.pages.length, 22, "AI Q4 must have 22 complete chapters");
+const inquiryText = inquiry.pages.map(page => [page.title, ...page.paragraphs, ...(page.bullets || []), page.tip || ""].join(" ")).join(" ");
+assert.ok(inquiryText.includes("478 + 156") && inquiryText.includes("634") && inquiryText.includes("ป.2"), "AI Q4 P2 math case must be correct");
+for(const word of ["คิดก่อน", "ถามเป็น", "ตรวจสอบ", "ตัดสินใจ", "อธิบายได้", "UNESCO", "OECD", "UNICEF", "doi.org"]) {
+  assert.ok(inquiryText.includes(word), "AI Q4 required topic missing: " + word);
+}
+assert.ok(inquiryText.includes("ข้อมูลส่วนบุคคล") && inquiryText.includes("สถานการณ์สมมติ"), "AI Q4 privacy and fictional case caveats must be present");
+assert.equal(inquiry.edition, "Public Discussion 0.1", "AI Q4 must remain a discussion edition");
+
 console.log("PASS: manuals-data.js syntax and catalog structure");
