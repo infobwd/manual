@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>M4-P3 — WD Books Integration Preview</title>
+<style>body{margin:0;font-family:system-ui,sans-serif;background:#eaf1ed;color:#193f32}header{padding:12px 18px;background:#184f41;color:white}p{margin:5px 0;font-size:.9rem}iframe{width:100%;height:calc(100dvh - 105px);border:0;background:white}.error{padding:20px;color:#8d1f1f}</style></head>
+<body><header><strong>M4-P3 — WD Books Integration Preview</strong><p>ทดสอบตัวอ่านจริงใน iframe แยก · ไม่แก้ชั้นหนังสือ Production · ข้อมูลทดลองไม่ใช่เนื้อหาที่ตรวจรับแล้ว</p></header><div id="status" role="status">กำลังเตรียมหน้าทดสอบ…</div><iframe id="preview" title="WD Books พร้อมหนังสือ AI & School Today ฉบับทดสอบ"></iframe>
+<script>
+(async()=>{
+ const status=document.getElementById("status"),frame=document.getElementById("preview");
+ try{
+  const root=new URL("../../../",location.href);
+  const response=await fetch(new URL("index.html",root),{cache:"no-store"});
+  if(!response.ok)throw new Error("โหลด index.html ไม่สำเร็จ: "+response.status);
+  let source=await response.text();
+  if(!source.includes('src="./assets/manuals-data.js"')||!source.includes('src="./assets/app.js"'))throw new Error("โครง script ของ WD Books เปลี่ยนไป ต้องตรวจใหม่ก่อนทดลอง");
+  // The iframe receives an isolated copy of the real app, not a mutation of the deployed catalog.
+  const base='<base href="'+root.href+'">';
+  const injection='<script defer src="'+new URL("docs/ai-school-today/previews/m4-p3-preview-inject.js",root).href+'"><\/script>';
+  source=source.replace("<head>","<head>"+base).replace('<script defer src="./assets/wd-growth-individual-guide.js"></script>',injection+'<script defer src="./assets/wd-growth-individual-guide.js"></script>');
+  // Disable SW registration in the preview frame to avoid interfering with production PWA lifecycle.
+  source=source.replace('<script defer src="./assets/experience.js"></script>','<script>window.__AI_SCHOOL_PREVIEW_FRAME__=true;<\/script><script defer src="./assets/experience.js"></script>');
+  frame.srcdoc=source;
+  status.textContent="เปิดตัวอ่านจริงในกรอบด้านล่าง: ค้นหา “AI & School Today” แล้วทดสอบเปิดอ่าน 13 หน้า";
+ }catch(error){status.className="error";status.textContent="เปิด Preview ไม่สำเร็จ: "+error.message}
+})();
+</script></body></html>
