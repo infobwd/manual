@@ -4,7 +4,8 @@
 .mobile-toc-trigger,.mobile-toc-overlay{display:none}
 .mobile-toc-overlay[hidden]{display:none!important}
 .mobile-toc-overlay{--toc-panel:#fffefb;--toc-ink:#254d3c;--toc-muted:#718579;--toc-border:#dce7db;--toc-active:#edf5ee;--toc-active-ink:#205842}
-@media(max-width:850px){
+/* UX-P0B-R2: the 851–1100px iPad single-page layout also requires TOC access. */
+@media(max-width:1100px){
   .reader-topbar{gap:8px}
   .mobile-toc-trigger{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:47px;min-height:44px;border:1px solid #dae6dc;border-radius:12px;background:#f2f8f2;color:#285b48;font:800 12px system-ui,-apple-system,"Segoe UI",sans-serif;padding:7px 10px;touch-action:manipulation}
   .mobile-toc-trigger:focus-visible,.mobile-toc-close:focus-visible,.mobile-toc-items button:focus-visible{outline:3px solid #b99b48;outline-offset:2px}

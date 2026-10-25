@@ -427,3 +427,30 @@ body[data-theme="sepia"] .book-page mark.reader-search-highlight{background:#e8c
   .reader-topbar .reader-actions {flex:0 0 auto}
   .book-spread,.reader-bottom {max-width:1000px}
 }
+
+/* UX-P0D-R2 (iPad portrait): the compact reader is one page wide, but the
+   previous max-width combined with align-items:stretch pinned it to the left.
+   Center the existing reading surface without changing paging or scroll APIs. */
+@media (min-width:851px) and (max-width:1100px) {
+  .reader-stage {align-items:center; min-width:0}
+  .reader-stage > .book-spread,
+  .reader-stage > .reader-bottom {
+    width:min(100%,800px);
+    max-width:800px;
+    margin-inline:auto;
+  }
+  .reader-stage > .book-spread.is-continuous {
+    width:min(100%,850px);
+    max-width:850px;
+  }
+  /* A short authored page should look like a book, with its page number at
+     the foot. Long pages still scroll inside the same single scroll surface. */
+  .book-spread:not(.is-continuous) > #pageLeft:not(.blank-page) {
+    display:flex;
+    flex-direction:column;
+  }
+  .book-spread:not(.is-continuous) > #pageLeft .book-page-number {
+    margin-top:auto;
+  }
+  .reader-bottom .page-control {min-height:48px}
+}
