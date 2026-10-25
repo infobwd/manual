@@ -249,6 +249,15 @@
       remoteAudio.load();
     } catch {}
   }
+  function failRemoteSegment(message) {
+    // An HTMLAudioElement may dispatch both "error" and a rejected play()
+    // promise for the same segment. Preserve the exact failed chunk once.
+    if (remoteRetry || !onlineEnabled) return;
+    remoteIndex = Math.max(0, remoteIndex - 1);
+    remoteRetry = true;
+    playing = false; paused = false;
+    announce(message || "โหลดท่อนเสียงไม่ได้ กดเล่นเพื่อลองท่อนเดิมอีกครั้ง");
+  }
   function pumpRemoteSegment() {
     if (!book || !onlineEnabled || !playing || paused) return;
     if (remoteIndex >= remoteSegments.length) {
@@ -265,10 +274,7 @@
     remoteAudio.playbackRate = speed;
     remoteAudio.play().catch(() => {
       if (token !== remoteGeneration) return;
-      remoteIndex = Math.max(0, remoteIndex - 1);
-      remoteRetry = true;
-      playing = false; paused = false;
-      announce("โหลดเสียงท่อนนี้ไม่สำเร็จ กดเล่นเพื่อลองท่อนเดิมอีกครั้งเมื่อออนไลน์");
+      failRemoteSegment("โหลดเสียงท่อนนี้ไม่สำเร็จ กดเล่นเพื่อลองท่อนเดิมอีกครั้งเมื่อออนไลน์");
     });
   }
   function beginRemoteSpeech(index) {
@@ -523,10 +529,7 @@
   });
   remoteAudio.addEventListener("error", () => {
     if (!onlineEnabled || !playing) return;
-    remoteIndex = Math.max(0, remoteIndex - 1);
-    remoteRetry = true;
-    playing = false; paused = false;
-    announce("โหลดท่อนเสียงออนไลน์ไม่สำเร็จ กดเล่นอีกครั้งเพื่อลองท่อนเดิม");
+    failRemoteSegment("โหลดท่อนเสียงออนไลน์ไม่สำเร็จ กดเล่นอีกครั้งเพื่อลองท่อนเดิม");
   });
   audio.addEventListener("error",() => { if (asset) {playing=false;paused=false;announce("ไม่สามารถโหลดไฟล์เสียงบรรยายได้");} });
   document.addEventListener("visibilitychange",() => {
