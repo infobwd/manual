@@ -39,8 +39,18 @@ assert.match(html,/id="wdOnlineTtsMedia"/);
 assert.match(html,/src="\.\/assets\/audio-listening-lock\.js"/);
 assert.match(read("assets/audio-listening-lock.js"),/navigator\.wakeLock\.request\("screen"\)/);
 
+for(const id of ["wdAudioCompact","wdAudioCompactPlay","wdAudioCompactExpand","wdAudioCompactProgress",
+  "wdAudioMiniProgress","wdAudioBackdrop","wdAudioProgress","wdAudioProgressLabel","wdAudioMore"]) {
+  assert.ok(html.includes('id="'+id+'"'),"Missing redesigned audio UI "+id);
+}
+assert.match(css,/\.wd-audio-compact\s*\{/);
+assert.match(css,/\.wd-audio-backdrop:not\(\[hidden\]\)/);
+assert.match(css,/\.wd-audio-mini>progress/);
+assert.match(css,/\.reader-dialog \.wd-audio-panel\s*\{/);
+assert.match(core,/function listeningProgress\(/);
+assert.match(player,/remoteAudio\.addEventListener\("timeupdate"/);
 assert.match(css,/@media\(max-width:600px\)/);
-assert.match(version,/WD_BOOKS_VERSION = "1\.3\.39"/);
+assert.match(version,/WD_BOOKS_VERSION = "1\.3\.40"/);
 for(const asset of ["./assets/audio-reader.css","./assets/audio-reader-core.js","./assets/audio-reader.js","./assets/audio-listening-lock.js"]){
   assert.ok(sw.includes('"'+asset+'"'),"New static PWA shell asset missing: "+asset);
 }
