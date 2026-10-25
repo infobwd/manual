@@ -35,6 +35,14 @@ assert.match(css,/wd-audio-mini/);
 assert.match(html,/id="wdAudioOnline"/);
 assert.match(html,/id="wdAudioLock"/);
 assert.match(html,/id="wdListeningLock"/);
+for(const id of ["wdLockCover","wdLockCoverTitle","wdLockProgress","wdLockSeek",
+  "wdLockPlay","wdLockPrev","wdLockNext","wdLockSpeed","wdLockUnlock"]) {
+  assert.ok(html.includes('id="'+id+'"'),"Now Playing control missing "+id);
+}
+assert.match(read("assets/audio-listening-lock.js"),/previousChapter\?\.\(\)/);
+assert.match(read("assets/audio-listening-lock.js"),/togglePlayback\?\.\(\)/);
+assert.match(player,/setPlaybackRate:changeSpeed/);
+
 assert.match(html,/id="wdOnlineTtsMedia"/);
 assert.match(html,/src="\.\/assets\/audio-listening-lock\.js"/);
 assert.match(read("assets/audio-listening-lock.js"),/navigator\.wakeLock\.request\("screen"\)/);
@@ -50,7 +58,7 @@ assert.match(css,/\.reader-dialog \.wd-audio-panel\s*\{/);
 assert.match(core,/function listeningProgress\(/);
 assert.match(player,/remoteAudio\.addEventListener\("timeupdate"/);
 assert.match(css,/@media\(max-width:600px\)/);
-assert.match(version,/WD_BOOKS_VERSION = "1\.3\.40"/);
+assert.match(version,/WD_BOOKS_VERSION = "1\.3\.41"/);
 for(const asset of ["./assets/audio-reader.css","./assets/audio-reader-core.js","./assets/audio-reader.js","./assets/audio-listening-lock.js"]){
   assert.ok(sw.includes('"'+asset+'"'),"New static PWA shell asset missing: "+asset);
 }

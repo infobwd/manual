@@ -9,7 +9,7 @@ const root = path.join(__dirname, "..");
 const read = name => fs.readFileSync(path.join(root, name), "utf8");
 class Node {
   constructor() {
-    this.events={};this.attrs={};this.hidden=true;this.open=false;
+    this.events={};this.attrs={};this.dataset={};this.hidden=true;this.open=false;
     this.disabled=false;this.textContent="";this.value="";this.src="";
     this.currentTime=0;this.duration=180;this.playbackRate=1;this.playCalls=0;
     const set=new Set();
