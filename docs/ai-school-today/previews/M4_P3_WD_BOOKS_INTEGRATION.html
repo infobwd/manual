@@ -14,9 +14,9 @@
   // The iframe receives an isolated copy of the real app, not a mutation of the deployed catalog.
   const base='<base href="'+root.href+'">';
   const injection='<script defer src="'+new URL("docs/ai-school-today/previews/m4-p3-preview-inject.js",root).href+'"><\/script>';
-  source=source.replace("<head>","<head>"+base).replace('<script defer src="./assets/wd-growth-individual-guide.js"></script>',injection+'<script defer src="./assets/wd-growth-individual-guide.js"></script>');
+  source=source.replace("<head>","<head>"+base).replace('<script defer src="./assets/wd-growth-individual-guide.js"><\/script>',injection+'<script defer src="./assets/wd-growth-individual-guide.js"><\/script>');
   // Disable SW registration in the preview frame to avoid interfering with production PWA lifecycle.
-  source=source.replace('<script defer src="./assets/experience.js"></script>','<script>window.__AI_SCHOOL_PREVIEW_FRAME__=true;<\/script><script defer src="./assets/experience.js"></script>');
+  source=source.replace('<script defer src="./assets/experience.js"><\/script>','<script>window.__AI_SCHOOL_PREVIEW_FRAME__=true;<\/script><script defer src="./assets/experience.js"><\/script>');
   frame.srcdoc=source;
   status.textContent="เปิดตัวอ่านจริงในกรอบด้านล่าง: ค้นหา “AI & School Today” แล้วทดสอบเปิดอ่าน 13 หน้า";
  }catch(error){status.className="error";status.textContent="เปิด Preview ไม่สำเร็จ: "+error.message}
