@@ -1,0 +1,31 @@
+// UX-P0B-R2 / UX-P0D-R2: no dependencies; run on Windows with Node.js.
+// node tests/ipad-reader-layout.smoke.cjs
+"use strict";
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const root = path.join(__dirname, "..");
+const read = (name) => fs.readFileSync(path.join(root, name), "utf8");
+const css = read("assets/mobile-reader.css");
+const tocCss = read("assets/toc-p0b.css");
+const app = read("assets/app.js");
+const html = read("index.html");
+const focusStart = css.indexOf("/* UX-P0D-R2");
+assert.ok(focusStart > 0, "iPad layout fix should be additive at end");
+const block = css.slice(focusStart);
+assert.match(block, /@media \(min-width:851px\) and \(max-width:1100px\)/);
+assert.match(block, /\.reader-stage\s*\{\s*align-items:center/);
+assert.match(block, /\.reader-stage\s*>\s*\.book-spread,/);
+assert.match(block, /\.reader-stage\s*>\s*\.reader-bottom/);
+assert.match(block, /margin-inline:auto/);
+assert.match(block, /#pageLeft:not\(\.blank-page\)/);
+assert.match(block, /\.book-page-number\s*\{\s*margin-top:auto/);
+assert.match(tocCss, /@media\(max-width:1100px\)\s*\{/);
+assert.match(tocCss, /\.mobile-toc-trigger\s*\{[^}]*display:inline-flex/);
+assert.match(tocCss, /\.mobile-toc-overlay\s*\{[^}]*display:block/);
+assert.match(app, /const isMobile = window\.matchMedia\("\(max-width: 1100px\)"\)/);
+assert.match(html, /id="openMobileToc"/);
+assert.match(html, /id="mobileTocSheet"/);
+assert.match(css, /@media \(min-width:1101px\)/);
+assert.ok(!read("assets/app-version.js").includes('"1.3.34"'), "New shell version should invalidate old CSS cache");
+console.log("PASS: iPad reader centering, page footer and 851-1100px TOC parity");
