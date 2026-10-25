@@ -36,6 +36,8 @@
   let note = "";
   let lastSaved = 0;
   let audioSeekingOnLoad = null;
+  let speechPartIndex = 0, speechPartsCount = 0;
+  let completed = false, remoteRetry = false;
   const mode = () => asset ? "asset" : onlineEnabled ? "online" : "speech";
   const currentTitle = () => book?.pages?.[chapter]?.title || "เลือกตอน";
   const formatTime = core.formatTime;
@@ -121,11 +123,20 @@
     toggle.disabled = !selected;
     toggle.setAttribute("aria-expanded",String(!panel.hidden));
     const showMini = visibleSession && selected && !reader.open;
+    const showCompact = visibleSession && selected && reader.open && panel.hidden;
     mini.hidden = !showMini;
+    const compact = $("wdAudioCompact");
+    compact.hidden = !showCompact;
+    const narrow = window.matchMedia?.("(max-width:1100px)")?.matches ?? false;
+    $("wdAudioBackdrop").hidden = panel.hidden || !narrow;
+    reader.classList?.toggle?.("wd-audio-compact-visible", showCompact);
+    $("wdAudioCompactExpand").setAttribute("aria-expanded", String(!panel.hidden));
     $("wdAudioBookTitle").textContent = book?.title || "ยังไม่ได้เลือกหนังสือ";
     $("wdAudioChapterTitle").textContent = currentTitle();
     $("wdAudioMiniTitle").textContent = book?.title || "";
     $("wdAudioMiniChapter").textContent = currentTitle();
+    $("wdAudioCompactTitle").textContent = book?.title || "WD Books";
+    $("wdAudioCompactChapter").textContent = currentTitle();
     const modeLabel = asset
       ? "เสียงบรรยายไฟล์ · รองรับการทดสอบล็อกจอจริง"
       : onlineEnabled
@@ -141,18 +152,38 @@
     const playText = playing && !paused ? "พัก" : "เล่น";
     $("wdAudioPlay").textContent = playText;
     $("wdAudioMiniPlay").textContent = playText;
+    $("wdAudioCompactPlay").textContent = playing && !paused ? "⏸" : "▶";
+    $("wdAudioCompactPlay").setAttribute("aria-label", playText + "เสียงบรรยาย");
     $("wdAudioPlay").setAttribute("aria-label",playText + "เสียงบรรยาย");
     $("wdAudioMiniPlay").setAttribute("aria-label",playText + "เสียงบรรยาย");
     $("wdAudioSpeed").value = String(speed);
     $("wdAudioPrev").disabled = !selected || chapter <= 0;
     $("wdAudioNext").disabled = !selected || chapter >= (book?.pages?.length || 1) - 1;
+    $("wdAudioCompactPrev").disabled = $("wdAudioPrev").disabled;
+    $("wdAudioCompactNext").disabled = $("wdAudioNext").disabled;
+    const progress = core.listeningProgress({
+      mode:mode(), chapters:book?.pages?.length || 1, chapter,
+      parts:onlineEnabled && !asset ? remoteSegments.length : speechPartsCount,
+      partIndex:onlineEnabled && !asset ? Math.max(0,remoteIndex-1) : speechPartIndex,
+      position:asset ? audio.currentTime : onlineEnabled ? remoteAudio.currentTime : 0,
+      duration:asset ? audio.duration : onlineEnabled ? remoteAudio.duration : 0,
+      completed
+    });
+    for (const id of ["wdAudioProgress","wdAudioCompactProgress","wdAudioMiniProgress"]) {
+      const element = $(id);
+      element.value = progress.percent;
+      element.setAttribute("aria-label", progress.detail + " · " + progress.label);
+    }
+    $("wdAudioProgress").hidden = progress.seekable;
+    $("wdAudioSeek").hidden = !progress.seekable;
+    $("wdAudioProgressLabel").textContent = progress.detail;
+    $("wdAudioTime").textContent = progress.label;
+    $("wdAudioCompactChapter").textContent = progress.chapterLabel + " · " + currentTitle();
+    $("wdAudioMiniChapter").textContent = progress.label;
     const seekInput = $("wdAudioSeek");
-    seekInput.disabled = !asset || !Number.isFinite(audio.duration) || audio.duration <= 0;
+    seekInput.disabled = !progress.seekable;
     seekInput.max = String(Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 100);
     seekInput.value = String(seekInput.disabled ? 0 : Math.min(audio.duration,audio.currentTime));
-    $("wdAudioTime").textContent = asset
-      ? formatTime(audio.currentTime) + " / " + (Number.isFinite(audio.duration) ? formatTime(audio.duration) : "--:--")
-      : "ตอน " + (chapter + 1) + " / " + (book?.pages?.length || 0);
     if (mediaSession && asset && visibleSession) {
       try { mediaSession.playbackState = !playing ? "paused" : paused ? "paused" : "playing"; } catch {}
     }
