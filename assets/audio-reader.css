@@ -348,3 +348,77 @@ body[data-theme="sepia"] .wd-audio-more summary{color:#654831}
 @media(prefers-reduced-motion:reduce){
   .wd-audio-compact,.wd-audio-panel{scroll-behavior:auto}
 }
+
+/* UX-P3A-R5 — True bottom-docked compact player.
+   Former "bottom: 67px + safe-area" left a dead strip under the player,
+   overlaying book text while reserving invisible navigation space.
+   Dock it as a flex sibling BELOW the reading surface instead. */
+.wd-audio-compact-actions .wd-audio-compact-close{display:none}
+@media(max-width:1100px){
+  .reader-dialog.wd-audio-compact-visible .reader-shell > .reader-content {
+    order:2;flex:1 1 auto;min-height:0;
+  }
+  .reader-dialog.wd-audio-compact-visible .reader-shell > .wd-audio-compact:not([hidden]){
+    order:3;
+    position:relative;
+    inset:auto;
+    z-index:5;
+    flex:0 0 auto;
+    box-sizing:border-box;
+    width:calc(100% - 16px);
+    min-height:64px;
+    padding:8px 10px 7px;
+    margin:0 8px max(6px,env(safe-area-inset-bottom));
+    border-radius:13px;
+    box-shadow:0 5px 18px #061d1733;
+  }
+  /* While audio is visible, chapter navigation lives in the audio controls.
+     The new X in the dock remains a single-tap Reader exit. */
+  .reader-dialog.wd-audio-compact-visible .reader-bottom{display:none}
+  .reader-dialog.wd-audio-compact-visible .reader-stage{
+    padding-bottom:4px;
+  }
+  .reader-dialog.wd-audio-compact-visible #bookSpread,
+  .reader-dialog.wd-audio-compact-visible #pageLeft{
+    min-height:0;
+  }
+  .reader-dialog .wd-audio-compact-actions .wd-audio-compact-close{
+    display:grid;
+    place-items:center;
+    min-width:44px;min-height:44px;
+    padding:6px;
+    font-size:16px;
+    font-weight:750;
+    color:#365747;
+    background:transparent;
+    border:1px solid #acc6b4;
+  }
+  .wd-audio-compact-copy{max-width:none;min-width:0}
+  .wd-audio-compact-actions{gap:4px}
+  .wd-audio-compact-actions button{flex:0 0 44px;min-width:44px;min-height:44px}
+}
+@media(max-width:420px){
+  .reader-dialog.wd-audio-compact-visible .reader-shell > .wd-audio-compact:not([hidden]){
+    width:calc(100% - 12px);
+    margin-inline:6px;
+    padding-inline:8px;
+    column-gap:6px;
+  }
+  .wd-audio-compact-copy strong{font-size:11px}
+  .wd-audio-compact-copy small{font-size:10px}
+  .wd-audio-compact-actions{gap:2px}
+}
+@media(max-width:350px){
+  .wd-audio-compact-copy small{display:none}
+  .wd-audio-compact-actions{gap:1px}
+}
+.wd-audio-options .wd-audio-local{
+  background:#d9eada;
+  color:#185139;
+}
+body[data-theme="night"] .wd-audio-options .wd-audio-local{
+  background:#355a45;color:#e6f6e9
+}
+body[data-theme="sepia"] .wd-audio-options .wd-audio-local{
+  background:#e5d7bc;color:#62482e
+}
