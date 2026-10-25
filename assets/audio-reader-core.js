@@ -1,0 +1,72 @@
+/* WD Books UX-P3A: pure audio reader helpers, public-only and dependency free. */
+(() => {
+  "use strict";
+  const STORAGE_KEY = "wd-books-audio-v1";
+  const SPEEDS = [0.75, 1, 1.25, 1.5];
+  const limitIndex = (index, count) => Math.max(0, Math.min(Math.max(0, count - 1), Math.floor(Number(index) || 0)));
+  const isReadable = book => Boolean(book?.status === "published" && typeof book.id === "string" && Array.isArray(book.pages) && book.pages.length);
+  const asText = value => typeof value === "string" ? value.trim() : "";
+  function narrationText(page) {
+    if (!page) return "";
+    const lines = [page.title, ...(page.paragraphs || []), ...(page.bullets || []).map(item => "• " + item), page.tip];
+    if (page.insight) lines.push(page.insight.headline, page.insight.primary, page.insight.detail);
+    return lines.map(asText).filter(Boolean).join("\n");
+  }
+  // Web Speech on mobile can stall on a single very long utterance.
+  // Use code points and explicit pauses between small chunks, including Thai text without spaces.
+  function splitSpeech(text, maxLength = 180) {
+    const max = Math.max(40, Math.min(300, Math.floor(Number(maxLength) || 180)));
+    const source = Array.from(asText(text));
+    const chunks = [];
+    while (source.length) {
+      if (source.length <= max) { chunks.push(source.join("").trim()); break; }
+      let cut = max;
+      // Prefer punctuation/whitespace, but never return a zero-length segment.
+      for (let i = max; i >= Math.max(25, max - 70); i--) {
+        if (/[\sฯ.!?;:，。]/u.test(source[i - 1] || "")) { cut = i; break; }
+      }
+      const chunk = source.splice(0, cut).join("").trim();
+      if (chunk) chunks.push(chunk);
+      while (source[0] && /\s/u.test(source[0])) source.shift();
+    }
+    return chunks.filter(Boolean);
+  }
+  const safeRate = value => SPEEDS.includes(Number(value)) ? Number(value) : 1;
+  const safeTime = seconds => Math.max(0, Math.min(24 * 60 * 60, Number.isFinite(Number(seconds)) ? Number(seconds) : 0));
+  // Audio resource must be a same-site, reviewed file. No arbitrary external URLs.
+  function audioAsset(book) {
+    if (!isReadable(book) || !book.audio || typeof book.audio !== "object") return null;
+    const src = book.audio.src;
+    if (typeof src !== "string" || !/^\.\/assets\/audio\/[a-z0-9_-]+(?:\/[a-z0-9_-]+)*\.(?:mp3|m4a|ogg)$/i.test(src)) return null;
+    const chapterOffsets = book.audio.chapterOffsets;
+    if (!Array.isArray(chapterOffsets) || chapterOffsets.length !== book.pages.length) return null;
+    const offsets = chapterOffsets.map(Number);
+    if (!offsets.every((n, i) => Number.isFinite(n) && n >= 0 && (i === 0 || n > offsets[i-1])) || offsets[0] !== 0) return null;
+    return { src, offsets, narrationVersion:asText(book.audio.narrationVersion), license:asText(book.audio.license) };
+  }
+  function restore(raw, validIds) {
+    let value;
+    try { value = typeof raw === "string" ? JSON.parse(raw) : raw; } catch { return {}; }
+    if (!value || value.version !== 1 || !value.positions || typeof value.positions !== "object") return {};
+    const whitelist = new Set(validIds);
+    const output = {};
+    for (const [id, entry] of Object.entries(value.positions).slice(0, 100)) {
+      if (!whitelist.has(id) || !entry || typeof entry !== "object") continue;
+      output[id] = { chapter:Math.max(0,Math.min(999,Math.floor(Number(entry.chapter)||0))), time:safeTime(entry.time), rate:safeRate(entry.rate) };
+    }
+    return output;
+  }
+  function chapterForOffset(offsets, time) {
+    let index = 0;
+    offsets.forEach((offset, i) => { if (time >= offset) index = i; });
+    return index;
+  }
+  const formatTime = value => {
+    const s = Math.max(0, Math.floor(Number(value) || 0));
+    return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+  };
+  window.WD_AUDIO_CORE = Object.freeze({
+    STORAGE_KEY, SPEEDS, isReadable, narrationText, splitSpeech,
+    safeRate, safeTime, limitIndex, audioAsset, restore, chapterForOffset, formatTime
+  });
+})();
