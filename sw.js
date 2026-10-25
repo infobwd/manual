@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.42: bottom-docked Reader player and explicit local voice recovery;
+   Update 1.3.44: Q3 visible-thinking book and refreshed offline catalog;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");

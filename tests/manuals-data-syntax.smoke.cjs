@@ -66,4 +66,11 @@ for (const [id, expected] of [
   assert.ok(book, "Expected book is missing: " + id);
   assert.equal(book.coverTitle, expected, "Cover should break into two lines: " + id);
 }
+const q3 = data.manuals.find(book => book.id === "ai-q3-from-answer-checking-to-visible-thinking");
+assert.ok(q3 && q3.status === "published" && q3.category === "academic", "Q3 thinking book must be published in academic");
+assert.equal(q3.pages.length, 21, "Q3 thinking book must have 21 readable pages");
+const q3Text = q3.pages.map(page => [page.title, ...page.paragraphs, ...(page.bullets || []), page.tip || ""].join(" ")).join(" ");
+for (const phrase of ["650", "275", "375", "ป.2", "ป.3", "อนุบาล", "PLC", "เอกสารอ้างอิง"]) {
+  assert.ok(q3Text.includes(phrase), "Q3 missing essential concept: " + phrase);
+}
 console.log("PASS: manuals-data.js syntax and catalog structure");
