@@ -401,3 +401,29 @@ body[data-theme="sepia"] .book-page mark.reader-search-highlight{background:#e8c
 .reader-search-nav button:disabled{opacity:.45}
 .reader-search-summary button:focus-visible,.reader-search-nav button:focus-visible{outline:3px solid #dba852;outline-offset:2px}
 @media(max-width:480px){.reader-search-panel{max-height:34vh}.reader-search-nav button{padding:6px 8px}}
+
+/* UX-P0D-R: take advantage of tall portrait tablets without altering the
+   existing 1100px single-page/two-page boundary or reader navigation. */
+@media (min-width:851px) and (max-width:1100px) {
+  .reader-dialog {
+    width:calc(100vw - 20px);
+    max-width:calc(100vw - 20px);
+    height:calc(100dvh - 20px);
+    max-height:calc(100dvh - 20px);
+    border-radius:16px;
+  }
+  .reader-stage {padding-bottom:max(12px,env(safe-area-inset-bottom))}
+  .book-spread,.reader-bottom {max-width:780px}
+}
+/* UX-P0D-R: a roomier desktop reading dialog, respecting small windows. */
+@media (min-width:1101px) {
+  .reader-dialog {
+    width:min(1480px,calc(100vw - 32px));
+    max-width:calc(100vw - 32px);
+    height:min(930px,calc(100dvh - 32px));
+    max-height:calc(100dvh - 32px);
+  }
+  .reader-topbar .reader-identity {flex:1 1 auto;min-width:0}
+  .reader-topbar .reader-actions {flex:0 0 auto}
+  .book-spread,.reader-bottom {max-width:1000px}
+}
