@@ -391,6 +391,7 @@
     requestAnimationFrame(() => $("bookSpread").classList.remove("reader-loading"));
     if (!dialog.open) dialog.showModal();
     document.body.classList.add("reader-open");
+    window.WD_AUDIO_READER?.selectBook?.(book, state.page);
     $("readerClose").focus();
   }
   const toolsToggle = $("readerToolsToggle"), extraTools = $("readerExtraTools");
@@ -759,6 +760,7 @@
     renderMobileToc();
     syncBookmarks();
     window.WD_EXPERIENCE?.recordProgress?.(state.manual.id, first);
+    window.WD_AUDIO_READER?.syncPage?.(state.manual.id, first);
   }
   let continuousObserver = null;
   function renderContinuous() {
