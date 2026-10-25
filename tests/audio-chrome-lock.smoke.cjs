@@ -86,6 +86,23 @@ async function run(){
   f.$("wdAudioPlay").fire("click");await f.flush();
   assert.equal(a.getState().playing,true);
   assert.equal(f.$("wdOnlineTtsMedia").playCalls,1);
+  assert.equal(f.$("wdAudioCompact").hidden,false === f.$("readerDialog").open,
+    "Compact bar remains hidden while detailed panel is active");
+  const initialPercent=a.getState().progress.percent;
+  f.$("wdOnlineTtsMedia").currentTime=90;
+  f.$("wdOnlineTtsMedia").fire("timeupdate");
+  assert.ok(a.getState().progress.percent > initialPercent,"Online segment progress must advance while playing");
+  assert.ok(f.$("wdAudioProgress").value>initialPercent);
+  f.$("wdAudioClosePanel").fire("click");
+  assert.equal(f.$("wdAudioCompact").hidden,false,"Closing the audio detail reveals compact control bar");
+  f.$("wdAudioCompactExpand").fire("click");
+  assert.equal(f.$("wdAudioPanel").hidden,false,"Compact control can reopen detail");
+  // Failure does not restart the whole chapter when the user retries.
+  f.$("wdOnlineTtsMedia").fire("error");
+  assert.equal(a.getState().playing,false);
+  f.$("wdAudioPlay").fire("click");await f.flush();
+  assert.equal(a.getState().playing,true);
+  assert.equal(f.$("wdOnlineTtsMedia").playCalls,2,"Retry should replay failed segment");
   assert.match(f.$("wdOnlineTtsMedia").src,/^https:\/\/wd\.esdc\.app\/backend-php\/api\.php\?endpoint=tts&lang=th&q=/);
   assert.ok(f.$("wdOnlineTtsMedia").src.includes(encodeURIComponent("ตอนที่ 1")));
   // Audio lock is independent of Reader top layer, with TDRS-like Wake Lock.
@@ -104,7 +121,7 @@ async function run(){
   assert.equal(a.getState().playing,true,"Unlock does not stop audio");
   f.$("wdOnlineTtsMedia").fire("ended");await f.flush();
   assert.equal(a.getState().chapter,1,"Remote narration advances chapter");
-  assert.equal(f.$("wdOnlineTtsMedia").playCalls,2);
+  assert.equal(f.$("wdOnlineTtsMedia").playCalls,3);
   f.$("wdAudioPlay").fire("click");
   assert.equal(a.getState().paused,true);
   f.$("wdAudioPlay").fire("click");await f.flush();
@@ -123,7 +140,7 @@ async function run(){
   f.$("wdAudioPlay").fire("click");
   assert.equal(f.synth.spoken.length,1,"Late Thai voiceschanged recovers local Chrome speech");
   assert.equal(f.synth.spoken[0].lang,"th-TH");
-  assert.equal(f.$("wdOnlineTtsMedia").playCalls,3,"Native speech must not trigger remote MP3");
+  assert.equal(f.$("wdOnlineTtsMedia").playCalls,4,"Native speech must not trigger remote MP3");
   assert.equal(f.memory.data["wd-manual-reader-v2"],undefined);
   console.log("PASS: Chrome Thai voice recovery, online consent, school MP3, touch-lock, wake cleanup, privacy");
 }
