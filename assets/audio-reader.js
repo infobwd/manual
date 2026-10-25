@@ -36,7 +36,7 @@
   let note = "";
   let lastSaved = 0;
   let audioSeekingOnLoad = null;
-  let speechPartIndex = 0, speechPartsCount = 0;
+  let speechPartIndex = 0, speechPartsCount = 0, speechFraction = 0;
   let completed = false, remoteRetry = false;
   const mode = () => asset ? "asset" : onlineEnabled ? "online" : "speech";
   const currentTitle = () => book?.pages?.[chapter]?.title || "เลือกตอน";
@@ -165,8 +165,8 @@
       mode:mode(), chapters:book?.pages?.length || 1, chapter,
       parts:onlineEnabled && !asset ? remoteSegments.length : speechPartsCount,
       partIndex:onlineEnabled && !asset ? Math.max(0,remoteIndex-1) : speechPartIndex,
-      position:asset ? audio.currentTime : onlineEnabled ? remoteAudio.currentTime : 0,
-      duration:asset ? audio.duration : onlineEnabled ? remoteAudio.duration : 0,
+      position:asset ? audio.currentTime : onlineEnabled ? remoteAudio.currentTime : speechFraction,
+      duration:asset ? audio.duration : onlineEnabled ? remoteAudio.duration : 1,
       completed
     });
     for (const id of ["wdAudioProgress","wdAudioCompactProgress","wdAudioMiniProgress"]) {
@@ -211,6 +211,7 @@
       completed = false;
       speechPartIndex = 0;
       speechPartsCount = 0;
+      speechFraction = 0;
       onlineEnabled = false; // Consent is per selected public book, never implicit.
     }
     book = nextBook;
@@ -296,6 +297,7 @@
     completed = false;
     speechPartIndex = 0;
     speechPartsCount = 0;
+    speechFraction = 0;
     if (audio) { audio.pause(); }
     playing = false;
     paused = false;
@@ -335,6 +337,7 @@
     if (!parts.length) parts = [book.pages[chapter].title || "ไม่มีข้อความในตอนนี้"];
     speechPartsCount = parts.length;
     speechPartIndex = 0;
+    speechFraction = 0;
     const token = speechGeneration;
     let nextPart = 0;
     playing = true;
@@ -357,11 +360,22 @@
       }
       const sentence = new Utterance(parts[nextPart++]);
       speechPartIndex = nextPart - 1;
+      speechFraction = 0;
       sentence.lang = "th-TH";
       sentence.rate = speed;
       if (voiceChoice.voice) sentence.voice = voiceChoice.voice;
       sentence.onstart = () => { if (token === speechGeneration) syncUI(); };
-      sentence.onend = () => { if (token === speechGeneration) pump(); };
+      sentence.onboundary = event => {
+        if (token !== speechGeneration || !playing || paused || !Number.isFinite(event?.charIndex)) return;
+        speechFraction = Math.min(1, Math.max(0, event.charIndex / Math.max(1, sentence.text.length)));
+        syncUI();
+      };
+      sentence.onend = () => {
+        if (token !== speechGeneration) return;
+        speechFraction = 1;
+        syncUI();
+        pump();
+      };
       sentence.onerror = event => {
         if (token !== speechGeneration || event?.error === "interrupted" || event?.error === "canceled") return;
         playing = false; paused = false;
@@ -545,8 +559,8 @@
         mode:mode(),chapters:book?.pages?.length||1,chapter,
         parts:onlineEnabled && !asset ? remoteSegments.length : speechPartsCount,
         partIndex:onlineEnabled && !asset ? Math.max(0,remoteIndex-1) : speechPartIndex,
-        position:asset ? audio.currentTime : onlineEnabled ? remoteAudio.currentTime : 0,
-        duration:asset ? audio.duration : onlineEnabled ? remoteAudio.duration : 0,completed
+        position:asset ? audio.currentTime : onlineEnabled ? remoteAudio.currentTime : speechFraction,
+        duration:asset ? audio.duration : onlineEnabled ? remoteAudio.duration : 1,completed
       })
     })
   });
