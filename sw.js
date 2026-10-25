@@ -7,7 +7,7 @@ const CACHE_PREFIX = "wd-manual-public-";
 // A new version preloads the entire shell atomically before it can activate.
 const APP_SHELL = [
   "./", "./index.html", "./manifest.webmanifest",
-  "./assets/app-version.js", "./assets/styles.css", "./assets/app-experience.css", "./assets/mobile-reader.css", "./assets/google-sans-platform.css", "./assets/home-p0a.css", "./assets/toc-p0b.css",
+  "./assets/app-version.js", "./assets/audio-reader.css", "./assets/audio-reader-core.js", "./assets/audio-reader.js", "./assets/styles.css", "./assets/app-experience.css", "./assets/mobile-reader.css", "./assets/google-sans-platform.css", "./assets/home-p0a.css", "./assets/toc-p0b.css",
   "./assets/home-load-guard.js", "./assets/manuals-data.js", "./assets/wd-growth-individual-guide.js", "./assets/experience.js", "./assets/catalog-core.js", "./assets/catalog-ui.js", "./assets/mybooks-selectors.js", "./assets/reader-coordinator.js", "./assets/app.js", "./assets/app-zoom-guard.js",
   "./icons/icon-192.png", "./icons/icon-512.png"
 ];
