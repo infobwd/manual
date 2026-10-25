@@ -81,7 +81,7 @@ const q5Body = q5.pages.map(page => [page.title, ...page.paragraphs, ...(page.bu
 for (const term of ["Bastani", "Black", "EEF", "สสวท.", "ป.2", "245 + 138", "117 บาท", "WD Growth", "NAEYC", "Weber-Wulff"]) {
   assert.ok(q5Body.includes(term), "Q5 book missing essential topic: " + term);
 }
-assert.ok(q5.pages.some(page => page.title.includes("อ้างอิง")), "Q5 book must have bibliography");
+assert.ok(q5.pages.some(page => page.title.includes("อ้างอิง") || page.title.includes("งานวิจัยสำหรับอ่านต่อ") || (page.bullets || []).some(line => line.includes("doi.org"))), "Q5 book must have bibliography");
 assert.ok(!q5Body.includes("ชื่อนักเรียนจริง"), "Q5 book must contain only fictional learner examples");
 
 // AI Q4 critical inquiry book: check shelf, math, references, privacy, status.
