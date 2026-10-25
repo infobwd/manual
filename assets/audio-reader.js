@@ -133,7 +133,7 @@
     $("wdAudioTime").textContent = asset
       ? formatTime(audio.currentTime) + " / " + (Number.isFinite(audio.duration) ? formatTime(audio.duration) : "--:--")
       : "ตอน " + (chapter + 1) + " / " + (book?.pages?.length || 0);
-    if (mediaSession && asset) {
+    if (mediaSession && asset && visibleSession) {
       try { mediaSession.playbackState = !playing ? "paused" : paused ? "paused" : "playing"; } catch {}
     }
   }
@@ -171,6 +171,9 @@
   }
   function syncPage(bookId, page) {
     if (!book || book.id !== bookId || playing || !panel.hidden) return;
+    // Audio files resume by recorded seconds, not the visual reader page.
+    // Foreground speech can start from the currently visible reading page.
+    if (asset) return;
     chapter = core.limitIndex(page,book.pages.length);
     syncUI();
   }
