@@ -73,4 +73,15 @@ const q3Text = q3.pages.map(page => [page.title, ...page.paragraphs, ...(page.bu
 for (const phrase of ["650", "275", "375", "ป.2", "ป.3", "อนุบาล", "PLC", "เอกสารอ้างอิง"]) {
   assert.ok(q3Text.includes(phrase), "Q3 missing essential concept: " + phrase);
 }
+
+const q5 = data.manuals.find(book => book.id === "ai-q5-assessment-authentic-learning-primary");
+assert.ok(q5 && q5.status === "published" && q5.category === "academic", "Q5 assessment book must be published");
+assert.equal(q5.pages.length, 20, "Q5 assessment book must have 20 readable chapters");
+const q5Body = q5.pages.map(page => [page.title, ...page.paragraphs, ...(page.bullets || []), page.tip || ""].join(" ")).join(" ");
+for (const term of ["Bastani", "Black", "EEF", "สสวท.", "ป.2", "245 + 138", "117 บาท", "WD Growth", "NAEYC", "Weber-Wulff"]) {
+  assert.ok(q5Body.includes(term), "Q5 book missing essential topic: " + term);
+}
+assert.ok(q5.pages.some(page => page.title.includes("อ้างอิง")), "Q5 book must have bibliography");
+assert.ok(!q5Body.includes("ชื่อนักเรียนจริง"), "Q5 book must contain only fictional learner examples");
+
 console.log("PASS: manuals-data.js syntax and catalog structure");

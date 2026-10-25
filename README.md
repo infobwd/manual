@@ -177,3 +177,13 @@ py -m http.server 4173 --bind 127.0.0.1
 - มีหลักฐานวิจัย การสังเกต–ตีความ–ตอบสนอง แบบบันทึกสั้นในแนว WD Growth และแนวทดลอง PLC 4 สัปดาห์
 - สถานะ **Public Discussion 0.1**: ตัวอย่างทั้งหมดเป็นสถานการณ์สมมติ ไม่ใช่ผลผู้เรียนจริงหรือเกณฑ์วัดทางการ; การเผยแพร่ขึ้นหน้าเว็บต้อง Merge และตรวจ Pages/PWA หลัง deploy
 - ทดสอบ `node tests/manuals-data-syntax.smoke.cjs` และทดสอบการเปิดอ่าน การค้นหา สารบัญ ขนาดอักษรและออฟไลน์บนเครื่องจริงหลัง Merge
+
+
+## หนังสือข้อที่ 5 — การประเมินในยุค AI (26 ต.ค. 2569)
+
+- หนังสือออนไลน์หมวดงานวิชาการ: **การประเมินในยุค AI — จากคำตอบที่ถูกต้อง สู่หลักฐานว่าเด็กเรียนรู้จริง** (20 บท; Public Discussion 0.1)
+- Markdown ต้นทาง: [AI_Q5_ASSESSMENT_FOR_AUTHENTIC_LEARNING_25691026.md](docs/ai-assessment/AI_Q5_ASSESSMENT_FOR_AUTHENTIC_LEARNING_25691026.md)
+- รหัสเล่มใน WD Books: `ai-q5-assessment-authentic-learning-primary` · เปิดหน้า [WD Books](https://infobwd.github.io/manual/) แล้วค้นคำว่า “การประเมินในยุค AI”
+- เนื้อหา: วิจัย PNAS/OECD/Black–Wiliam/EEF/Retrieval Practice/NAEYC/AIAS, ตัวอย่างคณิตศาสตร์ **ป.2** ตรง สสวท., ภาษาไทย ป.3, อนุบาล, วิทยาศาสตร์ ป.4–6, กรอบหลักฐานห้ามิติ, แนวคิด WD Growth และ PLC
+- **สถานะ:** ข้อเสนออภิปราย ไม่ใช่นโยบายโรงเรียน ไม่ใช้คะแนนจริง ไม่แก้ข้อมูล/รูบริก/ฐานข้อมูลของ WD Growth
+- QA หลัง merge: `node tests/manuals-data-syntax.smoke.cjs`; เปิด Reader ค้นชื่อเล่ม ตรวจครบ 20 หน้า สารบัญ ปรับตัวอักษร และทดสอบการโหลดบนมือถือ/แท็บเล็ตจริง
