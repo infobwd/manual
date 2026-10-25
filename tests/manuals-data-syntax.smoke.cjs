@@ -40,6 +40,17 @@ assert.ok(essay && essay.category === "academic" && essay.status === "published"
 assert.ok(essay.pages.length >= 20, "Essay must be a substantial reading edition");
 assert.ok(essay.pages.some(page => page.title.includes("สัปดาห์")), "Essay must include proposed school trial");
 assert.ok(essay.pages.some(page => page.title.includes("เอกสารอ้างอิง")), "Essay must cite sources");
+assert.equal(essay.pages.length, 25, "Homework AI book retains 25 readable chapters");
+assert.equal(essay.edition, "Public Discussion 0.2", "Updated book edition must be 0.2");
+const homeLearn = essay.pages[14].paragraphs.join(" ");
+assert.ok(homeLearn.includes("ป.2") && homeLearn.includes("245") && homeLearn.includes("178") && homeLearn.includes("326") && homeLearn.includes("195"), "Home-school confirmation chapter must use P2 mathematics");
+assert.ok(!homeLearn.includes("ตัวอย่าง ป.3 คณิตศาสตร์ ให้เด็กลองทำ 524"), "Old misleading P3 three-digit example must be replaced");
+assert.ok(essay.pages[13].paragraphs.join(" ").includes("ป.2 คณิตศาสตร์"), "P2 example must appear in before-after chapter");
+assert.ok(essay.pages[23].paragraphs.join(" ").includes("AI เป็นผู้ช่วยคิด"), "Books must cross-reference the companion guide");
+assert.ok(essay.pages[24].paragraphs.join(" ").includes("proj14.ipst.ac.th/p2/"), "Updated book must cite IPST P2");
+assert.ok(essay.pages[24].paragraphs.join(" ").includes("proj14.ipst.ac.th/p3/"), "Updated book must cite IPST P3");
+assert.ok(essay.pages[17].paragraphs.join(" ").includes("ปฐมวัย"), "Age-appropriate AI guidance must remain");
+
 // Cover title fields must contain real line breaks, not literal backslash+n text.
 for (const book of data.manuals) {
   if (typeof book.coverTitle !== "string") continue;
