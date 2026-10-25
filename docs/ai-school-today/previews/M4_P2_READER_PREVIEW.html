@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>AI & School Today — Preview | WD Books</title>
+<style>
+:root{font-family:system-ui,"Noto Sans Thai",sans-serif;color:#18372f;background:#eef3ef;font-size:16px}*{box-sizing:border-box}body{margin:0}button{font:inherit;cursor:pointer}header{padding:14px max(16px,calc((100vw - 960px)/2));background:#164d43;color:white;display:flex;align-items:center;justify-content:space-between;gap:12px}header strong{font-size:1rem}header small{display:block;font-size:.75rem;opacity:.8}.tag{border:1px solid #d6e7df;border-radius:99px;padding:4px 9px;font-size:.72rem}main{max-width:980px;margin:auto;display:grid;grid-template-columns:245px 1fr;gap:18px;padding:18px}.toc{background:white;border-radius:16px;padding:16px;align-self:start}.toc h2{font-size:1rem;margin:0 0 12px}.toc button{display:block;width:100%;border:0;background:transparent;padding:11px 9px;text-align:left;border-radius:9px;color:inherit}.toc button[aria-current="page"]{background:#dcece4;font-weight:700}.reader{background:#fffdf7;border:1px solid #e2dfd2;border-radius:16px;min-height:570px;box-shadow:0 8px 28px #18372f12;padding:clamp(20px,5vw,48px);display:flex;flex-direction:column}.reader h1{font-size:1.65em;line-height:1.4;margin:18px 0}.reader .kicker{color:#4b7164;font-size:.8em;letter-spacing:.03em}.reader p,.reader li{line-height:1.9}.reader ul{padding-left:22px}.reader .tip{background:#edf5ec;border-left:4px solid #4b886e;padding:12px 16px;border-radius:6px}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:24px}.toolbar button,.menu{border:1px solid #aac7b8;border-radius:9px;background:white;color:#164d43;padding:10px 14px}.toolbar button:disabled{opacity:.4;cursor:default}.menu{display:none}body.night{background:#16211f;color:#e8f1eb}body.night .reader,body.night .toc{background:#263530;color:#f0f5f0;border-color:#425b50}body.night .tip{background:#344e41}body.night .toc button{color:inherit}body.night .toc button[aria-current="page"]{background:#355e4d}body.night .toolbar button{background:#344e41;color:white}button:focus-visible{outline:3px solid #f1a33e;outline-offset:2px}@media(max-width:720px){main{display:block;padding:10px}.toc{display:none;margin-bottom:12px}.toc.open{display:block}.menu{display:inline-block}.reader{min-height:calc(100dvh - 140px);padding:23px}.reader h1{font-size:1.45em}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><div><strong>WD Books · AI & School Today</strong><small>ตัวอย่างหน้าอ่านเพื่อทดสอบ · ไม่ใช่หนังสือที่เผยแพร่แล้ว</small></div><span class="tag">M4-P2 PREVIEW</span></header>
+<main>
+<nav class="toc" id="toc" aria-label="สารบัญ"><h2>สารบัญ</h2><div id="tocItems"></div></nav>
+<section class="reader" aria-live="polite" aria-atomic="true">
+<div><button class="menu" id="menu" aria-expanded="false" aria-controls="toc">☰ สารบัญ</button></div>
+<div class="kicker" id="kicker"></div><h1 id="heading"></h1><div id="content"></div>
+<div class="toolbar"><button id="prev">← ก่อนหน้า</button><span id="counter"></span><button id="next">ถัดไป →</button></div>
+<div class="toolbar"><button id="smaller" aria-label="ลดขนาดตัวอักษร">A−</button><button id="larger" aria-label="เพิ่มขนาดตัวอักษร">A+</button><button id="theme">โหมดกลางคืน</button></div>
+</section></main>
+<script>
+"use strict";
+// Public-safe editorial preview; no tracking, persistence, external AI calls or answer keys.
+const chapters=[
+["เริ่มต้น: เมื่อ AI เข้ามาในโรงเรียนแล้ว",["คำถามสำคัญไม่ใช่เพียงว่า AI ตอบได้หรือไม่ แต่คือเด็กได้เรียนรู้อะไรด้วยตนเอง","หนังสือฉบับตัวอย่างนี้จัดเพื่อทดลองการอ่าน ไม่ใช่นโยบายทางการหรือคู่มือที่ตรวจรับครบแล้ว"],["ครูยังรับผิดชอบการออกแบบการเรียนรู้และการตรวจสอบความถูกต้อง","เด็กต้องมีโอกาสคิด อธิบาย ตรวจ และนำความรู้ไปใช้เอง"],"อ่านเพื่อทดลอง UX และส่งข้อเสนอแก้ไขก่อนเผยแพร่จริง"],
+["AI ในห้องเรียน",["AI ช่วยครูร่างตัวอย่างคำถาม สื่อ และแนวทางให้ข้อเสนอแนะได้ แต่ครูต้องตรวจทาน","กำหนดระดับการใช้ AI ให้เหมาะกับวัยและทักษะที่ต้องการประเมิน"],["เริ่มจากกิจกรรมที่เด็กคิดเองก่อน","ไม่บังคับเด็กเล็กสมัครบริการ AI"],"เครื่องมือเป็นผู้ช่วย ไม่ใช่ผู้ตัดสินความสามารถของผู้เรียน"],
+["จริยธรรมและความปลอดภัย",["ข้อมูลส่วนบุคคลของเด็กต้องได้รับการคุ้มครอง ไม่ส่งชื่อ ภาพ หรือคะแนนจริงให้ AI สาธารณะ","กำหนดกติกาว่างานใดใช้ AI ช่วยได้และต้องเปิดเผยอย่างไร"],["ให้ทางเลือกเทียบเท่าสำหรับผู้ไม่ใช้ AI","ไม่ใช้ผลจาก AI detector เป็นหลักฐานกล่าวหาเพียงอย่างเดียว"],"ตรวจข้อกำหนดอายุและนโยบายของหน่วยงานก่อนใช้เครื่องมือ"],
+["ออกแบบงานให้เด็กคิดเอง",["เริ่มจากคำถามหรือโจทย์ที่เด็กต้องอธิบายขั้นตอนด้วยตนเอง","ใช้คำตอบจำลองให้เด็กฝึกหาจุดผิดหลังจากลงมือคิดแล้ว"],["คิดก่อน → อธิบาย → ตรวจ → ทำโจทย์ใหม่","เก็บหลักฐานกระบวนการ ไม่ใช่เพียงคำตอบสุดท้าย"],"กิจกรรมที่ดีต้องวัดทักษะเป้าหมายได้แม้ไม่ใช้ AI"],
+["มองเห็นวิธีคิด",["ถามว่าเริ่มคิดอย่างไร เหตุใดจึงเลือกวิธีนี้ และตรวจคำตอบอย่างไร","รับฟังวิธีคิดหลายแบบที่ถูกต้องและอธิบายได้"],["สังเกตความเข้าใจโจทย์","สังเกตการเลือกวิธี การตรวจ และการถ่ายโอน"],"ใช้คำถามเพื่อช่วยเรียนรู้ ไม่ใช่เพื่อจับผิด"],
+["ตรวจคำตอบจาก AI",["AI อาจให้คำตอบที่ฟังดูน่าเชื่อถือแต่ผิดได้","ตรวจชื่อผู้จัดทำ วันที่ ข้ออ้าง และแหล่งข้อมูลต้นฉบับ"],["ตั้งคำถามกับคำว่า ทุกชนิด เสมอ หรือแน่นอน","หากยังไม่มีหลักฐานเพียงพอ ให้ระบุว่ายังสรุปไม่ได้"],"อย่าแต่งแหล่งอ้างอิงขึ้นเพื่อทำให้คำตอบดูน่าเชื่อถือ"],
+["ประเมินการเรียนรู้ในยุค AI",["ใช้หลักฐานหลายช่วง ทั้งก่อนทำ ระหว่างทำ หลังทำ และการยืนยันความเข้าใจ","รูบริกควรอธิบายพฤติกรรมที่สังเกตได้ชัดเจน"],["ประเมินความเข้าใจ วิธีคิด การตรวจ และการนำไปใช้","แยกรูบริกทดลองออกจากเกณฑ์ทางการ"],"คะแนนสูงไม่ได้แปลว่าเด็กสามารถอธิบายได้เสมอ"],
+["กิจกรรมตามช่วงวัย",["ปฐมวัยใช้การเล่นกับสิ่งของจริง โดยครูอาจใช้ AI ช่วยเตรียมกิจกรรม","ป.1–3 ฝึกแสดงวิธีคิดและตรวจคำตอบจำลอง","ป.4–6 ฝึกตรวจข้ออ้างและอ้างหลักฐาน"],["ปรับภาษา จำนวนโจทย์ และเวลาให้เหมาะกับเด็ก","ไม่ใช้ตัวอย่างเดียวแทนทุกชั้น"],"ครูต้องตรวจความเหมาะสมก่อนใช้จริง"],
+["AI กับ PLC",["ครูร่วมวางแผน ทดลองสอน สังเกตหลักฐาน และสะท้อนผล","ปรับกิจกรรมจากสิ่งที่พบ ไม่สรุปว่า AI ทำให้ดีขึ้นเพียงเพราะใช้เครื่องมือ"],["กำหนดปัญหาและเป้าหมาย","ทดลอง เก็บหลักฐาน สะท้อน และปรับ"],"ตัวอย่างวงจรนี้ไม่ทดแทนระบบ PLC ของโรงเรียน"],
+["เครื่องมือครู",["มีแบบข้อตกลงการใช้ AI ใบงานแสดงวิธีคิด รูบริก และแบบสะท้อน PLC","ก่อนใช้จริงควรแก้ให้สอดคล้องกับบริบทชั้นเรียน"],["ตรวจคำสั่งให้เด็กคิดเอง","ตรวจความปลอดภัยและความชัดเจนของเกณฑ์"],"แบบฟอร์มเป็นตัวอย่างสำหรับปรับใช้ ไม่ใช่แบบทางการ"],
+["ตัวอย่างใบงาน",["ป.3: ห้องสมุดมีหนังสือ 245 เล่ม ได้เพิ่ม 138 เล่ม และนำไปจัดมุมอ่าน 96 เล่ม","ให้เด็กคิดเองก่อน แล้วตรวจคำตอบจำลองที่ครูเตรียม"],["แสดงขั้นตอนคำนวณ","อธิบายจุดที่สงสัยและทำโจทย์ใหม่"],"ไม่แสดงเฉลยก่อนเด็กลงมือทำ"],
+["อบรมครู 180 นาที",["อบรม 6 ช่วง: เปิดประเด็น จริยธรรม ออกแบบใบงาน ตรวจข้อมูล ประเมิน และ PLC","ให้ครูผลิตใบงานหนึ่งชิ้นและแผนทดลองสอน"],["20 + 30 + 40 + 30 + 40 + 20 = 180 นาที","ต้องซ้อมเวลาและแยกเอกสารเฉลยก่อนจัดจริง"],"แผนอบรมยังรอการซ้อมและตรวจรับ"],
+["ทบทวนและก้าวต่อไป",["ใช้ AI อย่างรับผิดชอบ โดยให้เด็กยังเป็นเจ้าของการเรียนรู้","ก่อนเผยแพร่ฉบับจริง ต้องตรวจเนื้อหา อ้างอิง ความเป็นส่วนตัว และการอ่านบนอุปกรณ์"],["ตรวจรับโดยครูและผู้ดูแลข้อมูล","ทดสอบ Preview ก่อนอนุมัติลงทะเบียนหนังสือจริง"],"Preview นี้ไม่เชื่อมกับชั้นหนังสือหลักและไม่แก้ข้อมูลการอ่านต่อ"]
+];
+let page=0,size=16;const $=id=>document.getElementById(id);
+function el(tag,text){const node=document.createElement(tag);node.textContent=text;return node}
+function render(){const item=chapters[page];$("kicker").textContent="AI & SCHOOL TODAY  /  "+String(page+1).padStart(2,"0");$("heading").textContent=item[0];const area=$("content");area.replaceChildren();for(const p of item[1])area.append(el("p",p));const ul=el("ul","");for(const b of item[2])ul.append(el("li",b));area.append(ul);const tip=el("p",item[3]);tip.className="tip";area.append(tip);$("counter").textContent=(page+1)+" / "+chapters.length;$("prev").disabled=page===0;$("next").disabled=page===chapters.length-1;$("tocItems").replaceChildren(...chapters.map((c,i)=>{const b=el("button",(i+1)+". "+c[0]);if(i===page)b.setAttribute("aria-current","page");b.addEventListener("click",()=>go(i));return b}));}
+function go(i){page=Math.max(0,Math.min(chapters.length-1,i));render();$("toc").classList.remove("open");$("menu").setAttribute("aria-expanded","false");window.scrollTo({top:0,behavior:"instant"})}
+$("prev").addEventListener("click",()=>go(page-1));$("next").addEventListener("click",()=>go(page+1));
+$("menu").addEventListener("click",()=>{const open=$("toc").classList.toggle("open");$("menu").setAttribute("aria-expanded",String(open))});
+$("smaller").addEventListener("click",()=>{size=Math.max(14,size-2);document.querySelector(".reader").style.fontSize=size+"px"});
+$("larger").addEventListener("click",()=>{size=Math.min(26,size+2);document.querySelector(".reader").style.fontSize=size+"px"});
+$("theme").addEventListener("click",()=>{const night=document.body.classList.toggle("night");$("theme").textContent=night?"โหมดสว่าง":"โหมดกลางคืน"});
+document.addEventListener("keydown",e=>{if(e.target.closest("button,input,textarea"))return;if(e.key==="ArrowRight")go(page+1);if(e.key==="ArrowLeft")go(page-1)});
+render();
+</script>
+</body></html>
