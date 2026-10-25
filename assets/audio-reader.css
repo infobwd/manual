@@ -55,21 +55,151 @@ body[data-theme="sepia"] .wd-audio-panel :is(small,.wd-audio-status){color:#785d
 .wd-audio-online:focus-visible,.wd-audio-lock-button:focus-visible,.wd-listening-lock button:focus-visible{outline:3px solid #f2be6e;outline-offset:3px}
 body[data-theme="night"] .wd-audio-privacy{color:#cee0d1}
 body[data-theme="sepia"] .wd-audio-privacy{color:#634831}
-.wd-listening-lock{box-sizing:border-box;inset:0;margin:0;width:100vw;height:100dvh;max-width:100vw;max-height:100dvh;border:0;background:radial-gradient(circle at 50% 15%,#244e49,#0b211e 75%);color:#eaf9ea;padding:max(20px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));overflow-y:auto;overscroll-behavior:contain}
-.wd-listening-lock::backdrop{background:#051d19}
-.wd-lock-content{margin:auto;min-height:calc(100dvh - 90px);max-width:560px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;gap:14px}
-.wd-lock-label{font-size:11px;font-weight:850;letter-spacing:.12em;color:#9bd8a8}
-.wd-lock-icon{display:grid;place-items:center;width:120px;height:120px;border-radius:28px;background:linear-gradient(155deg,#40795f,#164536);box-shadow:0 22px 64px #0006;font-size:54px}
-.wd-lock-content h2{font-size:clamp(22px,5vw,32px);max-width:25ch;line-height:1.4;margin:0}
-.wd-lock-content p{margin:0;line-height:1.6}
-#wdLockChapter{font-size:16px;color:#c7ecd0}
-#wdLockStatus{font-size:13px;font-weight:750;color:#aae3b9}
-#wdLockHint{font-size:12px;color:#c5d7cd;max-width:48ch}
-#wdLockUnlock{position:relative;overflow:hidden;width:min(100%,420px);margin-top:18px;min-height:70px;border:1px solid #77a18c;border-radius:18px;background:#234c3b;color:#fff;font-size:15px;font-weight:850;touch-action:none;user-select:none;-webkit-user-select:none}
-#wdLockUnlock>span:last-child{position:relative;z-index:1}
-.wd-lock-unlock-fill{position:absolute;inset:0;transform:scaleX(0);transform-origin:left;background:#357d59}
+/* UX-P3A-R4 — Spotify-inspired, original WD Books Now Playing touch-lock.
+   This styles the IN-APP dialog only. OS lock screen remains platform-controlled. */
+.wd-listening-lock {
+  box-sizing:border-box;position:fixed;inset:0;margin:0;
+  width:100%;height:100dvh;max-width:100%;max-height:100dvh;
+  padding:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right))
+    max(18px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));
+  border:0;border-radius:0;overflow-y:auto;overscroll-behavior:contain;
+  background:radial-gradient(ellipse at 45% 10%,#2d6250 0,#15392e 37%,#0c211b 78%);
+  color:#f2f9f2;color-scheme:dark;
+}
+.wd-listening-lock::backdrop{background:#071a14}
+.wd-lock-content {
+  box-sizing:border-box;display:grid;grid-template-rows:auto minmax(0,1fr) auto;
+  align-items:stretch;gap:clamp(12px,2.2vh,24px);
+  width:min(100%,940px);min-height:100%;margin:0 auto;
+}
+.wd-lock-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:36px}
+.wd-lock-brand{font-size:clamp(11px,1.4vw,13px);font-weight:900;letter-spacing:.13em;color:#d7ecde}
+.wd-lock-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;
+  border:1px solid #6fa48277;border-radius:999px;background:#ffffff0e;
+  font-size:12px;font-weight:750;color:#d0f0d9}
+.wd-lock-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:#78df98}
+.wd-lock-badge[data-state="paused"]::before{background:#ffc982}
+.wd-lock-badge[data-state="stopped"]::before{background:#9db8a8}
+.wd-lock-main{display:grid;grid-template-columns:minmax(0,1fr);align-items:center;
+  justify-items:center;gap:clamp(18px,3vh,32px);min-width:0}
+.wd-lock-artwork-wrap{display:flex;align-items:center;justify-content:center;width:100%;min-width:0}
+.wd-lock-cover {
+  box-sizing:border-box;position:relative;isolation:isolate;display:flex;flex-direction:column;
+  justify-content:space-between;overflow:hidden;width:min(100%,clamp(185px,31vh,315px));
+  aspect-ratio:1;border:1px solid #ffffff3d;border-radius:24px;
+  padding:clamp(22px,3.2vh,33px);
+  background:linear-gradient(145deg,#367d66,#174537);
+  box-shadow:0 18px 36px #0005,0 5px 10px #05150f55;
+}
+.wd-lock-cover::before,.wd-lock-cover::after{
+  content:"";pointer-events:none;position:absolute;z-index:-1;
+  aspect-ratio:1;border:1px solid #ffffff33;border-radius:50%;
+  width:62%;right:-16%;top:-17%;
+}
+.wd-lock-cover::after{width:84%;right:-26%;top:-30%}
+.wd-lock-cover[data-cover-color="blue"]{background:linear-gradient(145deg,#3b7c91,#163c54)}
+.wd-lock-cover[data-cover-color="sage"]{background:linear-gradient(145deg,#63886f,#2a4b43)}
+.wd-lock-cover[data-cover-color="clay"]{background:linear-gradient(145deg,#a57460,#573f39)}
+.wd-lock-cover[data-cover-color="dark"]{background:linear-gradient(145deg,#475f66,#162b36)}
+.wd-lock-cover-eyebrow{font-size:11px;font-weight:850;letter-spacing:.13em;color:#e4faeb}
+.wd-lock-cover-title{font-size:clamp(22px,3.1vh,31px);line-height:1.22;white-space:pre-line;
+  overflow-wrap:anywhere;max-width:100%;color:#f5fff4;text-shadow:0 1px 2px #0003}
+.wd-lock-cover-footer{font-size:11px;font-weight:750;color:#e0f2e4}
+.wd-lock-track{width:min(100%,560px);min-width:0}
+.wd-lock-track-heading{min-width:0;margin:0 0 20px}
+.wd-lock-overline{margin:0 0 6px;font-size:12px;font-weight:800;letter-spacing:.05em;color:#a8d9b6}
+.wd-lock-track h2{margin:0 0 8px;font-size:clamp(18px,2.3vw,25px);
+  line-height:1.4;font-weight:850;overflow-wrap:anywhere}
+.wd-lock-chapter{margin:0;color:#c0dcc8;font-size:clamp(13px,1.6vw,16px);line-height:1.5;overflow-wrap:anywhere}
+.wd-lock-progress-wrap{width:100%;min-width:0}
+.wd-lock-progress-wrap progress,.wd-lock-progress-wrap input[type=range]{
+  box-sizing:border-box;display:block;width:100%;height:7px;margin:0;padding:0;
+  border:0;border-radius:99px;accent-color:#adf2bd;background:#496e57}
+.wd-lock-progress-wrap progress{-webkit-appearance:none;appearance:none;overflow:hidden}
+.wd-lock-progress-wrap progress::-webkit-progress-bar{background:#496e57;border-radius:99px}
+.wd-lock-progress-wrap progress::-webkit-progress-value{background:#b8edc5;border-radius:99px}
+.wd-lock-progress-wrap progress::-moz-progress-bar{background:#b8edc5;border-radius:99px}
+.wd-lock-progress-wrap input[type=range]{height:24px;cursor:pointer}
+.wd-lock-progress-wrap [hidden]{display:none!important}
+.wd-lock-progress-labels{display:flex;justify-content:space-between;gap:12px;margin-top:9px;
+  color:#c4decd;font-size:12px;font-variant-numeric:tabular-nums}
+.wd-lock-progress-labels span{min-width:0;overflow-wrap:anywhere}
+.wd-lock-progress-labels span:last-child{text-align:right}
+.wd-lock-controls{display:flex;align-items:center;justify-content:center;gap:clamp(20px,6vw,48px);
+  margin:clamp(16px,3vh,29px) 0}
+.wd-lock-controls button{appearance:none;border:0;min-width:56px;min-height:56px;
+  border-radius:50%;display:grid;place-items:center;
+  font-size:27px;cursor:pointer;background:transparent;color:#eaf7ef}
+.wd-lock-controls button:disabled{opacity:.3;cursor:default}
+.wd-lock-controls .wd-lock-play{min-width:78px;min-height:78px;background:#e8faec;color:#154633;
+  font-size:36px;box-shadow:0 6px 20px #0003}
+.wd-lock-controls button:focus-visible,.wd-lock-secondary button:focus-visible,
+#wdLockUnlock:focus-visible,.wd-lock-progress-wrap input:focus-visible{
+  outline:3px solid #b5f7cd;outline-offset:4px
+}
+.wd-lock-secondary{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  min-height:43px;color:#c4dfcd}
+.wd-lock-mode{font-size:12px;font-weight:750;line-height:1.4}
+.wd-lock-secondary button{min-width:58px;min-height:44px;padding:8px 12px;
+  border:1px solid #88ad95;border-radius:999px;background:#ffffff12;color:#e9f7e9;
+  font-size:13px;font-weight:850;cursor:pointer}
+.wd-lock-status{min-height:20px;margin:8px 0 0;color:#b9d7c4;
+  font-size:12px;line-height:1.55}
+.wd-lock-footer{display:flex;align-items:center;flex-direction:column;gap:10px;width:100%}
+#wdLockHint{max-width:580px;text-align:center;margin:0;color:#b9d5c2;
+  font-size:11px;line-height:1.55}
+#wdLockUnlock{position:relative;display:grid;place-items:center;isolation:isolate;
+  overflow:hidden;box-sizing:border-box;
+  width:min(100%,390px);min-height:57px;padding:12px 16px;margin-top:5px;
+  border:1px solid #789b85;border-radius:999px;background:#ffffff19;
+  color:#f7fff7;font-size:13px;font-weight:850;touch-action:none;
+  -webkit-user-select:none;user-select:none;cursor:pointer}
+.wd-lock-unlock-fill{position:absolute;inset:0;z-index:-1;
+  transform:scaleX(0);transform-origin:left;background:#37865b}
 .wd-lock-holding .wd-lock-unlock-fill{transform:scaleX(1);transition:transform 1800ms linear}
-.wd-lock-content small{font-size:11px;color:#accbb6}
+.wd-lock-unlock-label{position:relative;z-index:1}
+.wd-lock-keyboard-hint{color:#a9ccba;font-size:10px;text-align:center}
+@media(min-width:720px){
+  .wd-lock-content{width:min(100%,1000px)}
+  .wd-lock-main{grid-template-columns:minmax(250px,.9fr) minmax(0,1.1fr);
+    align-items:center;justify-items:stretch;column-gap:clamp(32px,6vw,84px)}
+  .wd-lock-cover{width:min(100%,390px);margin:auto;padding:clamp(25px,4vw,34px)}
+  .wd-lock-track{max-width:540px}
+  .wd-lock-cover-title{font-size:clamp(27px,3vw,38px)}
+}
+@media(max-width:719px){
+  .wd-listening-lock{padding-inline:max(16px,env(safe-area-inset-left)) max(16px,env(safe-area-inset-right))}
+  .wd-lock-content{gap:14px}
+  .wd-lock-cover{width:min(72vw,29dvh,300px);border-radius:20px;padding:23px}
+  .wd-lock-cover-title{font-size:clamp(20px,5.5vw,30px)}
+  .wd-lock-main{gap:18px}
+  .wd-lock-track-heading{margin-bottom:17px}
+  .wd-lock-track h2{font-size:clamp(17px,4.4vw,23px)}
+  .wd-lock-controls{margin:13px 0;gap:clamp(17px,6vw,35px)}
+  .wd-lock-controls .wd-lock-play{min-width:70px;min-height:70px}
+  .wd-lock-footer{gap:8px}
+}
+@media(max-height:690px){
+  .wd-lock-content{gap:10px}
+  .wd-lock-cover{width:min(38vw,28dvh,185px);padding:17px}
+  .wd-lock-cover-title{font-size:clamp(17px,3.6vh,24px)}
+  .wd-lock-main{gap:13px}
+  .wd-lock-track-heading{margin-bottom:10px}
+  .wd-lock-controls{margin:7px 0}
+  .wd-lock-controls .wd-lock-play{min-width:62px;min-height:62px}
+  .wd-lock-footer{gap:6px}
+}
+@media(max-height:520px) and (min-width:600px){
+  .wd-lock-content{grid-template-rows:auto 1fr auto;gap:5px}
+  .wd-lock-main{grid-template-columns:clamp(120px,28vw,215px) minmax(0,1fr);gap:18px}
+  .wd-lock-cover{width:min(30vw,44dvh,190px)}
+  .wd-lock-footer{flex-direction:row;justify-content:space-between;gap:14px}
+  #wdLockHint{max-width:240px;text-align:left}
+  #wdLockUnlock{max-width:250px;min-height:48px}
+  .wd-lock-keyboard-hint{display:none}
+}
+@media(prefers-reduced-motion:reduce){.wd-lock-unlock-fill{transition:none}}
+
 
 /* UX-P3A-R2 — Reader-first audio design: compact bar by default and a
    deliberate details surface. Audio progress is independent of page progress. */
