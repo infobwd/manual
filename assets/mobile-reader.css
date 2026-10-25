@@ -454,3 +454,69 @@ body[data-theme="sepia"] .book-page mark.reader-search-highlight{background:#e8c
   }
   .reader-bottom .page-control {min-height:48px}
 }
+
+/* UX-P0D-R3: use the iPad Pro portrait viewport more fully without
+   changing the established single-page breakpoint, touch gestures or sheets. */
+@media screen and (min-width:851px) and (max-width:1100px) {
+  .reader-stage {align-items:center;padding-inline:clamp(10px,1.8vw,18px)}
+  .reader-stage > .book-spread,
+  .reader-stage > .reader-bottom {
+    width:min(100%,960px);
+    max-width:960px;
+    margin-inline:auto;
+  }
+  .reader-stage > .book-spread.is-continuous {
+    width:min(100%,920px);
+    max-width:920px;
+  }
+  /* Keep long pages scrollable when the page-number footer is pushed down. */
+  .book-spread:not(.is-continuous) > #pageLeft:not(.blank-page) > * {
+    flex-shrink:0;
+  }
+}
+/* UX-DESKTOP-TOC-PIN: pin the TOC in the reader grid and keep its own scroll
+   position while page panels scroll independently. Prevent scroll chaining
+   into the blurred background when reaching the end of a chapter. */
+@media screen and (min-width:1101px) {
+  body.reader-open {overflow:hidden;overscroll-behavior:none}
+  .reader-dialog {
+    width:min(1740px,calc(100vw - 24px));
+    max-width:calc(100vw - 24px);
+    height:min(960px,calc(100dvh - 24px));
+    max-height:calc(100dvh - 24px);
+  }
+  .reader-content {
+    grid-template-columns:clamp(190px,13vw,235px) minmax(0,1fr);
+    min-height:0;
+    overflow:hidden;
+  }
+  .reader-toc {
+    position:sticky;
+    top:0;
+    align-self:stretch;
+    block-size:100%;
+    min-height:0;
+    overflow-y:auto;
+    overscroll-behavior-y:contain;
+    scrollbar-gutter:stable;
+  }
+  .reader-stage {
+    min-width:0;
+    min-height:0;
+    align-items:center;
+    padding:12px clamp(12px,1.5vw,24px) 16px;
+  }
+  .reader-stage > .book-spread,
+  .reader-stage > .reader-bottom {
+    width:min(100%,1320px);
+    max-width:1320px;
+    margin-inline:auto;
+  }
+  .reader-stage > .book-spread.is-continuous {
+    width:min(100%,960px);
+    max-width:960px;
+  }
+  .reader-stage > .book-spread > .book-page {
+    overscroll-behavior-y:contain;
+  }
+}
