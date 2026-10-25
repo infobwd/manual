@@ -244,34 +244,57 @@
       <label>ระยะขอบ<select id="readerPageMargin"><option value="normal">ปกติ</option><option value="compact">แคบ</option><option value="wide">กว้าง</option></select></label>
       <button id="readerResetTypography" type="button">คืนค่ารูปแบบเริ่มต้น</button>
     </section>
+    <div id="wdAudioCompact" class="wd-audio-compact" role="group" aria-label="แถบควบคุมการฟังหนังสือแบบย่อ" hidden>
+      <div class="wd-audio-compact-copy">
+        <strong id="wdAudioCompactTitle">WD Books · ฟังหนังสือ</strong>
+        <small id="wdAudioCompactChapter">เลือกตอนที่กำลังฟัง</small>
+      </div>
+      <div class="wd-audio-compact-actions">
+        <button id="wdAudioCompactPrev" type="button" aria-label="เสียงตอนก่อนหน้า">⏮</button>
+        <button id="wdAudioCompactPlay" class="wd-audio-compact-primary" type="button" aria-label="เล่นหรือพักเสียง">▶</button>
+        <button id="wdAudioCompactNext" type="button" aria-label="เสียงตอนถัดไป">⏭</button>
+        <button id="wdAudioCompactExpand" type="button" aria-label="ขยายเครื่องฟังหนังสือ" aria-controls="wdAudioPanel" aria-expanded="false">ปรับเสียง <span aria-hidden="true">⌃</span></button>
+      </div>
+      <progress id="wdAudioCompactProgress" class="wd-audio-compact-progress" max="100" value="0" aria-label="ความคืบหน้าการฟังหนังสือ"></progress>
+    </div>
+    <button id="wdAudioBackdrop" class="wd-audio-backdrop" type="button" aria-label="ย่อแผงฟังหนังสือ" hidden></button>
     <section id="wdAudioPanel" class="wd-audio-panel" aria-label="เครื่องฟังหนังสือ" hidden>
       <header class="wd-audio-heading">
-        <div><strong id="wdAudioBookTitle">หนังสือที่กำลังฟัง</strong>
-          <small id="wdAudioMode">อ่านออกเสียงสด</small></div>
-        <button id="wdAudioClosePanel" type="button" aria-label="ปิดแผงฟังหนังสือ (ไม่หยุดเสียง)">✕</button>
+        <div class="wd-audio-heading-copy">
+          <span class="wd-audio-eyebrow">WD BOOKS · LISTEN</span>
+          <strong id="wdAudioBookTitle">หนังสือที่กำลังฟัง</strong>
+          <small id="wdAudioMode">อ่านออกเสียงในเครื่อง</small>
+        </div>
+        <button id="wdAudioClosePanel" type="button" aria-label="ย่อแผงฟังหนังสือ (ไม่หยุดเสียง)">⌄ <span>ย่อ</span></button>
       </header>
       <p class="wd-audio-chapter" id="wdAudioChapterTitle">เลือกตอน</p>
       <div class="wd-audio-controls" role="group" aria-label="ควบคุมเสียงอ่านหนังสือ">
         <button id="wdAudioPrev" type="button" aria-label="ตอนก่อนหน้า">⏮ <span>ตอนก่อน</span></button>
         <button id="wdAudioPlay" class="wd-audio-primary" type="button">เล่น</button>
         <button id="wdAudioNext" type="button" aria-label="ตอนถัดไป"><span>ตอนถัดไป</span> ⏭</button>
-        <button id="wdAudioStop" type="button">หยุด</button>
-        <label for="wdAudioSpeed">ความเร็ว
+        <label for="wdAudioSpeed" class="wd-audio-speed-label">ความเร็ว
           <select id="wdAudioSpeed" aria-label="ความเร็วเสียงบรรยาย">
             <option value="0.75">0.75×</option><option value="1" selected>1×</option>
             <option value="1.25">1.25×</option><option value="1.5">1.5×</option>
           </select>
         </label>
+        <button id="wdAudioStop" type="button">หยุด</button>
       </div>
       <div class="wd-audio-seek">
-        <input id="wdAudioSeek" type="range" min="0" max="100" step="1" value="0" disabled aria-label="เลื่อนเวลาไฟล์เสียง (ใช้ได้เฉพาะเล่มที่มีไฟล์เสียง)">
-        <span id="wdAudioTime">00:00</span>
+        <input id="wdAudioSeek" type="range" min="0" max="100" step="1" value="0" disabled aria-label="เลื่อนเวลาเสียงเต็มเล่ม" hidden>
+        <progress id="wdAudioProgress" max="100" value="0" aria-label="ความคืบหน้าการฟัง"></progress>
+        <span id="wdAudioTime">ตอน 1 / 1</span>
       </div>
-      <div class="wd-audio-options">
-        <button id="wdAudioOnline" type="button" class="wd-audio-online" aria-describedby="wdAudioOnlineDisclosure">ใช้เสียงไทยออนไลน์ของโรงเรียน</button>
-        <button id="wdAudioLock" type="button" class="wd-audio-lock-button" disabled aria-label="ล็อกการสัมผัสระหว่างฟัง">🔒 ล็อกการสัมผัส</button>
-      </div>
-      <p id="wdAudioOnlineDisclosure" class="wd-audio-privacy">เสียงออนไลน์ส่งเฉพาะข้อความจากหนังสือสาธารณะไปยังเซิร์ฟเวอร์ WD Growth ซึ่งใช้บริการสร้างเสียงภายนอก · ต้องใช้อินเทอร์เน็ต · ไม่ใช่ไฟล์เสียงสำหรับล็อกจอจริง</p>
+      <p id="wdAudioProgressLabel" class="wd-audio-progress-label">ความคืบหน้าการฟังจะแสดงตามรูปแบบเสียง</p>
+      <details id="wdAudioMore" class="wd-audio-more">
+        <summary>ตัวเลือกเสียงและโหมดฟัง <span aria-hidden="true">⌄</span></summary>
+        <div class="wd-audio-options">
+          <button id="wdAudioOnline" type="button" class="wd-audio-online" aria-describedby="wdAudioOnlineDisclosure">ใช้เสียงไทยออนไลน์ของโรงเรียน</button>
+          <button id="wdAudioLock" type="button" class="wd-audio-lock-button" disabled aria-label="ล็อกการสัมผัสระหว่างฟัง">🔒 ล็อกการสัมผัส</button>
+        </div>
+        <p id="wdAudioOnlineDisclosure" class="wd-audio-privacy">เสียงออนไลน์ส่งเฉพาะข้อความจากหนังสือสาธารณะไปยังเซิร์ฟเวอร์ WD Growth ซึ่งใช้บริการสร้างเสียงภายนอก · ต้องใช้อินเทอร์เน็ต · ไม่ใช่ไฟล์เสียงสำหรับล็อกจอจริง</p>
+        <p id="wdAudioFormatHint" class="wd-audio-format-hint">เสียงในเครื่องและเสียงออนไลน์อาจหยุดเมื่อดับจอ · ไฟล์เสียงเต็มเล่มเป็นโหมดที่เหมาะกับการทดสอบหน้าจอล็อก</p>
+      </details>
       <p id="wdAudioStatus" class="wd-audio-status" role="status" aria-live="polite">แตะเล่นเพื่อเริ่มฟัง</p>
     </section>
     <div class="reader-content">
@@ -329,6 +352,7 @@
   <div class="wd-audio-mini-info"><strong id="wdAudioMiniTitle">WD Books</strong><small id="wdAudioMiniChapter">กำลังฟังหนังสือ</small></div>
   <button id="wdAudioMiniPlay" type="button" aria-label="เล่นหรือพักเสียงบรรยาย">พัก</button>
   <button id="wdAudioMiniStop" type="button" aria-label="หยุดการฟังและซ่อนแถบเสียง">✕</button>
+  <progress id="wdAudioMiniProgress" max="100" value="0" aria-label="ความคืบหน้าการฟัง"></progress>
 </aside>
 </body>
 </html>

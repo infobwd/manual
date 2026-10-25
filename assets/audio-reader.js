@@ -36,6 +36,8 @@
   let note = "";
   let lastSaved = 0;
   let audioSeekingOnLoad = null;
+  let speechPartIndex = 0, speechPartsCount = 0, speechFraction = 0;
+  let completed = false, remoteRetry = false;
   const mode = () => asset ? "asset" : onlineEnabled ? "online" : "speech";
   const currentTitle = () => book?.pages?.[chapter]?.title || "เลือกตอน";
   const formatTime = core.formatTime;
@@ -121,11 +123,20 @@
     toggle.disabled = !selected;
     toggle.setAttribute("aria-expanded",String(!panel.hidden));
     const showMini = visibleSession && selected && !reader.open;
+    const showCompact = visibleSession && selected && reader.open && panel.hidden;
     mini.hidden = !showMini;
+    const compact = $("wdAudioCompact");
+    compact.hidden = !showCompact;
+    const narrow = window.matchMedia?.("(max-width:1100px)")?.matches ?? false;
+    $("wdAudioBackdrop").hidden = panel.hidden || !narrow;
+    reader.classList?.toggle?.("wd-audio-compact-visible", showCompact);
+    $("wdAudioCompactExpand").setAttribute("aria-expanded", String(!panel.hidden));
     $("wdAudioBookTitle").textContent = book?.title || "ยังไม่ได้เลือกหนังสือ";
     $("wdAudioChapterTitle").textContent = currentTitle();
     $("wdAudioMiniTitle").textContent = book?.title || "";
     $("wdAudioMiniChapter").textContent = currentTitle();
+    $("wdAudioCompactTitle").textContent = book?.title || "WD Books";
+    $("wdAudioCompactChapter").textContent = currentTitle();
     const modeLabel = asset
       ? "เสียงบรรยายไฟล์ · รองรับการทดสอบล็อกจอจริง"
       : onlineEnabled
@@ -141,18 +152,38 @@
     const playText = playing && !paused ? "พัก" : "เล่น";
     $("wdAudioPlay").textContent = playText;
     $("wdAudioMiniPlay").textContent = playText;
+    $("wdAudioCompactPlay").textContent = playing && !paused ? "⏸" : "▶";
+    $("wdAudioCompactPlay").setAttribute("aria-label", playText + "เสียงบรรยาย");
     $("wdAudioPlay").setAttribute("aria-label",playText + "เสียงบรรยาย");
     $("wdAudioMiniPlay").setAttribute("aria-label",playText + "เสียงบรรยาย");
     $("wdAudioSpeed").value = String(speed);
     $("wdAudioPrev").disabled = !selected || chapter <= 0;
     $("wdAudioNext").disabled = !selected || chapter >= (book?.pages?.length || 1) - 1;
+    $("wdAudioCompactPrev").disabled = $("wdAudioPrev").disabled;
+    $("wdAudioCompactNext").disabled = $("wdAudioNext").disabled;
+    const progress = core.listeningProgress({
+      mode:mode(), chapters:book?.pages?.length || 1, chapter,
+      parts:onlineEnabled && !asset ? remoteSegments.length : speechPartsCount,
+      partIndex:onlineEnabled && !asset ? Math.max(0,remoteIndex-1) : speechPartIndex,
+      position:asset ? audio.currentTime : onlineEnabled ? remoteAudio.currentTime : speechFraction,
+      duration:asset ? audio.duration : onlineEnabled ? remoteAudio.duration : 1,
+      completed
+    });
+    for (const id of ["wdAudioProgress","wdAudioCompactProgress","wdAudioMiniProgress"]) {
+      const element = $(id);
+      element.value = progress.percent;
+      element.setAttribute("aria-label", progress.detail + " · " + progress.label);
+    }
+    $("wdAudioProgress").hidden = progress.seekable;
+    $("wdAudioSeek").hidden = !progress.seekable;
+    $("wdAudioProgressLabel").textContent = progress.detail;
+    $("wdAudioTime").textContent = progress.label;
+    $("wdAudioCompactChapter").textContent = progress.chapterLabel + " · " + currentTitle();
+    $("wdAudioMiniChapter").textContent = progress.label;
     const seekInput = $("wdAudioSeek");
-    seekInput.disabled = !asset || !Number.isFinite(audio.duration) || audio.duration <= 0;
+    seekInput.disabled = !progress.seekable;
     seekInput.max = String(Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 100);
     seekInput.value = String(seekInput.disabled ? 0 : Math.min(audio.duration,audio.currentTime));
-    $("wdAudioTime").textContent = asset
-      ? formatTime(audio.currentTime) + " / " + (Number.isFinite(audio.duration) ? formatTime(audio.duration) : "--:--")
-      : "ตอน " + (chapter + 1) + " / " + (book?.pages?.length || 0);
     if (mediaSession && asset && visibleSession) {
       try { mediaSession.playbackState = !playing ? "paused" : paused ? "paused" : "playing"; } catch {}
     }
@@ -177,6 +208,10 @@
     const changed = book?.id !== nextBook.id;
     if (changed) {
       stop();
+      completed = false;
+      speechPartIndex = 0;
+      speechPartsCount = 0;
+      speechFraction = 0;
       onlineEnabled = false; // Consent is per selected public book, never implicit.
     }
     book = nextBook;
@@ -208,17 +243,27 @@
     remoteGeneration++;
     remoteSegments = [];
     remoteIndex = 0;
+    remoteRetry = false;
     try {
       remoteAudio.pause();
       remoteAudio.removeAttribute("src");
       remoteAudio.load();
     } catch {}
   }
+  function failRemoteSegment(message) {
+    // An HTMLAudioElement may dispatch both "error" and a rejected play()
+    // promise for the same segment. Preserve the exact failed chunk once.
+    if (remoteRetry || !onlineEnabled) return;
+    remoteIndex = Math.max(0, remoteIndex - 1);
+    remoteRetry = true;
+    playing = false; paused = false;
+    announce(message || "โหลดท่อนเสียงไม่ได้ กดเล่นเพื่อลองท่อนเดิมอีกครั้ง");
+  }
   function pumpRemoteSegment() {
     if (!book || !onlineEnabled || !playing || paused) return;
     if (remoteIndex >= remoteSegments.length) {
       if (chapter + 1 >= book.pages.length) {
-        playing = false; paused = false;
+        playing = false; paused = false; completed = true;
         note = "ฟังจบเล่มแล้ว"; writePosition(true); syncUI();
       } else beginRemoteSpeech(chapter + 1);
       return;
@@ -230,8 +275,7 @@
     remoteAudio.playbackRate = speed;
     remoteAudio.play().catch(() => {
       if (token !== remoteGeneration) return;
-      playing = false; paused = false;
-      announce("เชื่อมต่อเสียงออนไลน์ของโรงเรียนไม่ได้ กรุณาตรวจอินเทอร์เน็ตหรือใช้เสียงในเครื่อง");
+      failRemoteSegment("โหลดเสียงท่อนนี้ไม่สำเร็จ กดเล่นเพื่อลองท่อนเดิมอีกครั้งเมื่อออนไลน์");
     });
   }
   function beginRemoteSpeech(index) {
@@ -239,6 +283,7 @@
     cancelSpeech();
     stopRemote();
     chapter = core.limitIndex(index,book.pages.length);
+    completed = false;
     remoteSegments = core.splitSpeech(core.narrationText(book.pages[chapter]),175);
     if (!remoteSegments.length) remoteSegments = [book.pages[chapter].title || "ตอนนี้ไม่มีข้อความ"];
     playing = true; paused = false; visibleSession = true;
@@ -249,6 +294,10 @@
   function stop() {
     cancelSpeech();
     stopRemote();
+    completed = false;
+    speechPartIndex = 0;
+    speechPartsCount = 0;
+    speechFraction = 0;
     if (audio) { audio.pause(); }
     playing = false;
     paused = false;
@@ -261,11 +310,13 @@
   function selectThaiVoice() {
     refreshVoices(); // Chromium loads voice lists asynchronously.
     if (!cachedVoices.length) {
+      $("wdAudioMore").open = true;
       announce("Chrome ยังโหลดรายการเสียงไม่เสร็จ โปรดลองอีกครั้ง หรือเลือกเสียงไทยออนไลน์ของโรงเรียน");
       return {unavailable:true, voice:null};
     }
     const voice = thVoice();
     if (!voice) {
+      $("wdAudioMore").open = true;
       announce("ไม่พบเสียงภาษาไทยในอุปกรณ์นี้ เลือก “ใช้เสียงไทยออนไลน์ของโรงเรียน” ด้านล่างได้");
       return {unavailable:true, voice:null};
     }
@@ -280,9 +331,13 @@
     if (voiceChoice.unavailable) return;
     cancelSpeech();
     chapter = core.limitIndex(index,book.pages.length);
+    completed = false;
     writePosition(true);
     let parts = core.splitSpeech(core.narrationText(book.pages[chapter]),180);
     if (!parts.length) parts = [book.pages[chapter].title || "ไม่มีข้อความในตอนนี้"];
+    speechPartsCount = parts.length;
+    speechPartIndex = 0;
+    speechFraction = 0;
     const token = speechGeneration;
     let nextPart = 0;
     playing = true;
@@ -295,6 +350,7 @@
       if (nextPart >= parts.length) {
         if (chapter + 1 >= book.pages.length) {
           playing = false; paused = false;
+          completed = true;
           note = "ฟังจบเล่มแล้ว";
           writePosition(true); syncUI();
           return;
@@ -303,10 +359,23 @@
         return;
       }
       const sentence = new Utterance(parts[nextPart++]);
+      speechPartIndex = nextPart - 1;
+      speechFraction = 0;
       sentence.lang = "th-TH";
       sentence.rate = speed;
       if (voiceChoice.voice) sentence.voice = voiceChoice.voice;
-      sentence.onend = () => { if (token === speechGeneration) pump(); };
+      sentence.onstart = () => { if (token === speechGeneration) syncUI(); };
+      sentence.onboundary = event => {
+        if (token !== speechGeneration || !playing || paused || !Number.isFinite(event?.charIndex)) return;
+        speechFraction = Math.min(1, Math.max(0, event.charIndex / Math.max(1, sentence.text.length)));
+        syncUI();
+      };
+      sentence.onend = () => {
+        if (token !== speechGeneration) return;
+        speechFraction = 1;
+        syncUI();
+        pump();
+      };
       sentence.onerror = event => {
         if (token !== speechGeneration || event?.error === "interrupted" || event?.error === "canceled") return;
         playing = false; paused = false;
@@ -331,6 +400,7 @@
     const index = core.limitIndex(chapter + step,book.pages.length);
     if (index === chapter) return;
     chapter = index;
+    completed = false;
     writePosition(true);
     if (asset) {
       seek(asset.offsets[chapter]);
@@ -355,11 +425,16 @@
           paused = false;
           announce("กำลังฟังเสียงไทยออนไลน์");
         } catch { announce("เล่นเสียงออนไลน์ต่อไม่ได้ กรุณาตรวจอินเทอร์เน็ต"); }
+      } else if (!playing && remoteRetry && remoteSegments.length) {
+        playing = true; paused = false; remoteRetry = false;
+        note = "กำลังลองโหลดท่อนเสียงเดิมอีกครั้ง";
+        syncUI(); pumpRemoteSegment();
       } else if (!playing) beginRemoteSpeech(chapter);
       return;
     }
     if (asset) {
       cancelSpeech();
+      completed = false;
       note = "กำลังเปิดเสียงบรรยาย…";
       syncUI();
       setupMediaSession();
@@ -416,6 +491,11 @@
     syncUI();
   }
   toggle.addEventListener("click",() => panel.hidden ? openPanel() : closePanel());
+  $("wdAudioBackdrop").addEventListener("click", closePanel);
+  $("wdAudioCompactExpand").addEventListener("click", openPanel);
+  $("wdAudioCompactPlay").addEventListener("click", togglePlayback);
+  $("wdAudioCompactPrev").addEventListener("click", () => jump(-1));
+  $("wdAudioCompactNext").addEventListener("click", () => jump(1));
   $("wdAudioOnline").addEventListener("click", () => {
     if (!core.isReadable(book) || asset || onlineEnabled) return;
     stop();
@@ -450,15 +530,20 @@
     writePosition();syncUI();reportPosition();
   });
   audio.addEventListener("ended",() => {
-    playing=false;paused=false;note="ฟังจบเล่มแล้ว";writePosition(true);syncUI();resetMediaSession();
+    playing=false;paused=false;completed=true;note="ฟังจบเล่มแล้ว";writePosition(true);syncUI();resetMediaSession();
+  });
+  remoteAudio.addEventListener("timeupdate", () => {
+    if (onlineEnabled && book) syncUI();
+  });
+  remoteAudio.addEventListener("loadedmetadata", () => {
+    if (onlineEnabled && book) syncUI();
   });
   remoteAudio.addEventListener("ended", () => {
     if (onlineEnabled && playing && !paused) pumpRemoteSegment();
   });
   remoteAudio.addEventListener("error", () => {
     if (!onlineEnabled || !playing) return;
-    playing = false; paused = false;
-    announce("โหลดเสียงไทยออนไลน์ไม่ได้ โปรดลองใหม่หรือตรวจเซิร์ฟเวอร์เสียงของโรงเรียน");
+    failRemoteSegment("โหลดท่อนเสียงออนไลน์ไม่สำเร็จ กดเล่นอีกครั้งเพื่อลองท่อนเดิม");
   });
   audio.addEventListener("error",() => { if (asset) {playing=false;paused=false;announce("ไม่สามารถโหลดไฟล์เสียงบรรยายได้");} });
   document.addEventListener("visibilitychange",() => {
@@ -468,6 +553,15 @@
   syncUI();
   window.WD_AUDIO_READER = Object.freeze({
     selectBook, syncPage, openPanel,
-    getState:() => ({bookId:book?.id || null,chapter,mode:mode(),playing,paused,visibleSession})
+    getState:() => ({
+      bookId:book?.id || null,chapter,mode:mode(),playing,paused,visibleSession,
+      progress:core.listeningProgress({
+        mode:mode(),chapters:book?.pages?.length||1,chapter,
+        parts:onlineEnabled && !asset ? remoteSegments.length : speechPartsCount,
+        partIndex:onlineEnabled && !asset ? Math.max(0,remoteIndex-1) : speechPartIndex,
+        position:asset ? audio.currentTime : onlineEnabled ? remoteAudio.currentTime : speechFraction,
+        duration:asset ? audio.duration : onlineEnabled ? remoteAudio.duration : 1,completed
+      })
+    })
   });
 })();
