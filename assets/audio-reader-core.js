@@ -78,9 +78,46 @@
     const s = Math.max(0, Math.floor(Number(value) || 0));
     return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
   };
+  // Mode-specific listening progress. For chunked voices the book percentage is
+  // an APPROXIMATION of chapter/chunk completion, never invented elapsed time.
+  // Only an approved audio file provides a seekable seconds-based timeline.
+  function listeningProgress(input = {}) {
+    const chapters = Math.max(1, Math.floor(Number(input.chapters) || 1));
+    const chapter = Math.max(0, Math.min(chapters - 1, Math.floor(Number(input.chapter) || 0)));
+    const mode = input.mode === "asset" ? "asset" : input.mode === "online" ? "online" : "speech";
+    const position = Number(input.position);
+    const duration = Number(input.duration);
+    const validMedia = mode === "asset" && Number.isFinite(duration) && duration > 0;
+    const clamp = value => Math.min(1, Math.max(0, value));
+    if (validMedia) {
+      const time = Number.isFinite(position) ? Math.max(0, Math.min(duration, position)) : 0;
+      const percent = Math.round(clamp(time / duration) * 100);
+      return {
+        percent, seekable:true, approximate:false,
+        label:formatTime(time) + " / " + formatTime(duration),
+        detail:"ไฟล์เสียงเต็มเล่ม · เวลาจริง",
+        chapterLabel:"ตอน " + (chapter + 1) + " / " + chapters
+      };
+    }
+    const parts = Math.max(0, Math.floor(Number(input.parts) || 0));
+    const activePart = parts > 0 ? Math.max(0, Math.min(parts - 1, Math.floor(Number(input.partIndex) || 0))) : 0;
+    const partFraction = Number.isFinite(position) && Number.isFinite(duration) && duration > 0
+      ? clamp(position / duration) : 0;
+    const withinChapter = parts > 0 ? (activePart + partFraction) / parts : 0;
+    const percent = input.completed ? 100 : Math.round(clamp((chapter + withinChapter) / chapters) * 100);
+    const chapterLabel = "ตอน " + (chapter + 1) + " / " + chapters;
+    const partLabel = parts > 0 ? " · ท่อน " + (activePart + 1) + " / " + parts : "";
+    return {
+      percent, seekable:false, approximate:true,
+      label:input.completed ? "ฟังจบเล่มแล้ว" : chapterLabel + partLabel,
+      detail:(mode === "online" ? "เสียงออนไลน์" : mode === "speech" ? "อ่านออกเสียงในเครื่อง" : "รอเวลาไฟล์เสียง")
+        + " · ความคืบหน้าประมาณตามตอน/ท่อน",
+      chapterLabel
+    };
+  }
   window.WD_AUDIO_CORE = Object.freeze({
     STORAGE_KEY, SPEEDS, isReadable, narrationText, splitSpeech,
     safeRate, safeTime, limitIndex, audioAsset, restore, chapterForOffset, formatTime,
-    pickThaiVoice, schoolTtsUrl
+    pickThaiVoice, schoolTtsUrl, listeningProgress
   });
 })();
