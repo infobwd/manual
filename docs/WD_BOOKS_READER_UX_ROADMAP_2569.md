@@ -15,8 +15,8 @@
 | Defect ID | หลักฐานปัญหา | ขอบเขตการแก้ | Gate |
 | --- | --- | --- | --- |
 | CARD-NEWLINE-FIX | ปก 4 เล่ม (AI & School Today, M1, M0, SAR 2568) มีอักขระ `\\n` แทนการขึ้นบรรทัด | แก้ `coverTitle` ใน `assets/manuals-data.js` เป็น newline จริง; ทดสอบทั้งคลัง ปก, อ่านต่อ, ไม่เปลี่ยน ID/เนื้อหา | หนังสือเปิดได้ทุกเล่ม; ทดสอบ syntax + literal backslash-n; ตรวจ iPhone/iPad/Desktop และ cache หลังปล่อย — **implementation candidate / QA pending** |
-| UX-P0C-R | ปุ่ม “เต็มจอ” ในปัจจุบันเป็น Focus Mode, ผู้ใช้เข้าใจว่าเครื่องมือหาย | คง Focus Mode, ตั้งชื่อให้ตรงกับพฤติกรรม, เรียกเมนู/สารบัญ/เครื่องมือกลับได้เสมอ; ยังไม่เพิ่ม browser Fullscreen API | Desktop/iPad เข้าและออก Focus Mode แล้ว ค้นหา, Aa, Theme, TOC, close, page controls ยังทำงาน; Esc/focus ไม่ค้าง — **follow-up to UX-P0C** |
-| UX-P0D-R | iPad 1032×1376 modal เตี้ยและเสียพื้นที่; Desktop มีขอบว่างมาก | ปรับ reader dialog ให้เหมาะกับ viewport, ใช้จอแนวตั้งหน้าเดียวและจอกว้างหน้าคู่ตาม threshold ที่มีอยู่; คง safe area | iPad portrait/landscape/Split View, Desktop 1366/1712px, typography 90–160%, orientation/progress ไม่สูญหาย — **follow-up to UX-P0D** |
+| UX-P0C-R | ปุ่ม “เต็มจอ” ในปัจจุบันเป็น Focus Mode, ผู้ใช้เข้าใจว่าเครื่องมือหาย | คง Focus Mode, ตั้งชื่อให้ตรงกับพฤติกรรม, เรียกเมนู/สารบัญ/เครื่องมือกลับได้เสมอ; ยังไม่เพิ่ม browser Fullscreen API | Desktop/iPad เข้าและออก Focus Mode แล้ว ค้นหา, Aa, Theme, TOC, close, page controls ยังทำงาน; Esc/focus ไม่ค้าง — **implementation candidate / device QA pending (UX-P0C-R)** |
+| UX-P0D-R | iPad 1032×1376 modal เตี้ยและเสียพื้นที่; Desktop มีขอบว่างมาก | ปรับ reader dialog ให้เหมาะกับ viewport, ใช้จอแนวตั้งหน้าเดียวและจอกว้างหน้าคู่ตาม threshold ที่มีอยู่; คง safe area | iPad portrait/landscape/Split View, Desktop 1366/1712px, typography 90–160%, orientation/progress ไม่สูญหาย — **implementation candidate / device QA pending (UX-P0D-R)** |
 
 **ลำดับ:** CARD-NEWLINE-FIX → UX-P0C-R → UX-P0D-R → QA-DEVICE-GATE ที่มีแล้ว ตรวจ regression `wd-manual-reader-v2`, การเข้าถึง, ออฟไลน์ และ Service Worker cache. ใช้ภาพและผลเครื่องจริงเท่านั้นในการปิด Device QA; เก็บ PR/commit แยกตาม defect เพื่อป้องกันงานซ้อนทับ.
 
