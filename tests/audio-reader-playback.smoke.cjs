@@ -64,6 +64,11 @@ async function run(){
   assert.equal(f.utterances().length,1,"Play starts Thai voice");
   assert.equal(f.utterances()[0].lang,"th-TH");
   assert.equal(a.getState().playing,true);
+  const speechProgressBefore=a.getState().progress.percent;
+  const firstSpeech=f.utterances()[0];
+  firstSpeech.onboundary?.({charIndex:Math.floor(firstSpeech.text.length*0.7)});
+  assert.ok(a.getState().progress.percent>speechProgressBefore,
+    "Speech boundary event should move listening progress while the same chunk is speaking");
   f.$("wdAudioPlay").fire("click");assert.equal(f.synth.paused,true);
   f.$("wdAudioPlay").fire("click");assert.equal(f.synth.paused,false);
   f.utterances()[0].onend();
