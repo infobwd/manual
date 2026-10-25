@@ -73,6 +73,23 @@
 
 ---
 
+### UX-P3A development candidate — Audio Reader Pilot v1.3.38 (25 ต.ค. 2569)
+
+**Scope:** Implement an accessible audiobook-style UI in WD Books without replacing the visual reader. Public, published books only. This is an implementation candidate, not device acceptance; it does not claim successful locked-screen playback.
+
+**P3A-1 foreground now:** Tapping 🎧 inside a published Reader reveals play/pause, previous/next chapter, speed (0.75×–1.5×), stop, Thai status, and mini-player after closing Reader. Browser Web Speech API reads text in small Thai-language chunks; falls back to a clear status if unavailable/no Thai voice. Foreground TTS may stop while screen is locked. No external TTS API, credentials, or learner data; OS-provided speech engines may themselves use cloud resources depending on device settings.
+
+**P3A-2 media-backed player foundation (no narration file shipped):** The same controls select media playback **only** when a published book has reviewed optional metadata:
+\`audio: {src:"./assets/audio/<book-id>/narration.m4a", chapterOffsets:[0,...], narrationVersion:"...", license:"..."}\`.
+Use exactly one same-origin approved M4A/MP3/OGG file per book plus time offsets covering all pages. HTML Audio + guarded Media Session metadata/actions, timeline seek, paused/resume. Playback on lock screen is **a device/browser acceptance goal**, not a current capability claim. Files not included in the offline app shell (prevent oversized updates). Do not enable offline downloads or publish audio until rights and Thai narration quality approved.
+
+**Data and privacy:** New isolated storage key \`wd-books-audio-v1\` holds only the public book ID, chapter index, time, speed; validate inputs on restore. Do not modify or clear \`wd-manual-reader-v2\`, favorites or student data. Only one book may play at a time, no automatic play/voice activation.
+
+**QA Gate:** Existing reader/PWA smoke suites plus P3A core, Web Speech lifecycle and media-backed synthetic tests; mobile 320–430px touch/VoiceOver, iPad 1032px, Desktop 1440px, theme contrast, book switch, stop and close, speed, chapter queue, large Thai chapters, reader/resume unchanged. Pilot lock test only after uploading approved narration: iOS Safari, Home Screen PWA, iPad and Android installed PWA for ≥10 min with locked screen, headset/Bluetooth, call interruptions, return/resume and Media Session controls. Record actual PASS/FAIL by device. **Do not mark UX-P3A Accepted at merge.**
+
+
+---
+
 ## MASTER EXECUTION PLAN — ลำดับเดียวสำหรับงานเดิมและงานใหม่ (ปรับ 23 ต.ค. 2569)
 
 **หลักการ:** ใช้เอกสารนี้เป็น Master Roadmap เพียงฉบับเดียว ไม่สร้างแผนคู่ขนาน; แยกสถานะ **Merged (รวมโค้ด)**, **Device QA pending (รอตรวจรับจริง)**, **Planned (ยังไม่ทำ)** และ **Accepted (ตรวจรับแล้ว)** ให้ชัดเจน ห้ามถือว่า Merge = QA ผ่าน
