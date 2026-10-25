@@ -128,7 +128,7 @@ window.WD_LIBRARY_DATA = {
             "จุดติดขัด: การแยกจำนวน 275",
             "การสอนต่อ: ตรวจผลรวมของส่วนที่แยก ก่อนคำนวณต่อ"
           ],
-          "tip": "ตัวอย่างสมมติ ไม่ใช่ผลจริงของนักเรียน; เรื่องบวก–ลบจำนวนไม่เกิน 1,000 อิงเนื้อหา สสวท. ป.2 ตามหลักสูตรที่ใช้กับชุดสื่อ [10]"
+          "tip": "ตัวอย่างสมมติ ไม่ใช่ผลจริงของนักเรียน; เรื่องบวก–ลบจำนวนไม่เกิน 1,000 อิงเนื้อหา สสวท. ป.2 ตามหลักสูตรที่ใช้กับชุดสื่อ [9]"
         },
         {
           "title": "บทสนทนาสั้น ๆ ที่ช่วยให้เด็กพบข้อผิดพลาดเอง",
@@ -240,7 +240,7 @@ window.WD_LIBRARY_DATA = {
           "kicker": "14 / งานวิจัย",
           "paragraphs": [
             "งานของ Chi และคณะ (1994) พบว่าการกระตุ้นให้นักเรียนอธิบายสิ่งที่อ่านด้วยตนเองช่วยสร้างความเข้าใจในบริบทที่ศึกษา [4] สำหรับประถม ครูอาจเปลี่ยนเป็นคำถามสั้น ๆ “หนูรู้อะไรอยู่แล้ว” “ทำไมถึงเลือกวิธีนี้” “มีอะไรที่หนูเปลี่ยนใจ”",
-            "รายงาน EEF ฉบับปรับปรุงปี 2025 สนับสนุนการพัฒนาทักษะกำกับการเรียนรู้ผ่านการวางแผน ติดตาม และประเมินตนเองที่ผูกกับเนื้อหาวิชาจริง [8]",
+            "รายงาน EEF ฉบับปรับปรุงปี 2025 สนับสนุนการพัฒนาทักษะกำกับการเรียนรู้ผ่านการวางแผน ติดตาม และประเมินตนเองที่ผูกกับเนื้อหาวิชาจริง [7]",
             "สามจังหวะที่ครูสาธิตแล้วให้เด็กฝึกคือ ก่อนทำ “จะเริ่มอย่างไร” ระหว่างทำ “กำลังมาถูกทางไหม” หลังทำ “จะเปลี่ยนอะไรครั้งหน้า” ไม่จำเป็นต้องเป็นแบบฟอร์มยาวทุกคาบ"
           ],
           "bullets": [
@@ -263,7 +263,7 @@ window.WD_LIBRARY_DATA = {
             "อย่าให้คำใบ้ละเอียดจนกลายเป็นทำแทน",
             "ให้โอกาสแสดงความสามารถอิสระอย่างเหมาะสม"
           ],
-          "tip": "Bastani และคณะ (2025) พบว่าการใช้ AI แบบเฉลยง่ายอาจทำให้การทำโจทย์ระหว่างฝึกดีขึ้น แต่ผลสอบโดยไม่มี AI แย่ลงในบริบทนักเรียนมัธยมปลายที่ศึกษา [9]"
+          "tip": "Bastani และคณะ (2025) พบว่าการใช้ AI แบบเฉลยง่ายอาจทำให้การทำโจทย์ระหว่างฝึกดีขึ้น แต่ผลสอบโดยไม่มี AI แย่ลงในบริบทนักเรียนมัธยมปลายที่ศึกษา [8]"
         },
         {
           "title": "เกณฑ์สังเกต 3 ระดับ เพื่อพัฒนา ไม่ใช่ติดป้ายเด็ก",
@@ -350,8 +350,8 @@ window.WD_LIBRARY_DATA = {
             "[1] Black, P., & Wiliam, D. (1998). Assessment and Classroom Learning. https://doi.org/10.1080/0969595980050102  |  [2] National Research Council. (2001). Adding It Up. https://doi.org/10.17226/9822",
             "[3] Jacobs, V. R., Lamb, L. L. C., & Philipp, R. A. (2010). Professional Noticing of Children’s Mathematical Thinking. https://eric.ed.gov/?id=EJ878863  |  [4] Chi, M. T. H., et al. (1994). Eliciting Self-Explanations Improves Understanding. https://doi.org/10.1207/s15516709cog1803_3",
             "[5] Rittle-Johnson, B., & Star, J. R. (2007). Does Comparing Solution Methods Facilitate Conceptual and Procedural Knowledge? https://doi.org/10.1037/0022-0663.99.3.561  |  [6] Hattie, J., & Timperley, H. (2007). The Power of Feedback. https://doi.org/10.3102/003465430298487",
-            "[8] Education Endowment Foundation. (2025). Metacognition and Self-Regulated Learning, 2nd edition. https://educationendowmentfoundation.org.uk/education-evidence/guidance-reports/metacognition  |  [9] Bastani, H., et al. (2025). Generative AI without guardrails can harm learning. https://doi.org/10.1073/pnas.2422633122",
-            "[10] สสวท. Project 14 คณิตศาสตร์ ป.2 เรื่องการบวกและการลบจำนวนนับไม่เกิน 1,000. https://proj14.ipst.ac.th/p2/p2-math-book-1/math-p2b1-024/  งานวิจัยระดับ ม.ต้น/ม.ปลายที่อ้างเป็นข้อชี้แนะเชิงออกแบบ ไม่ใช่หลักฐานว่าผลขนาดเดียวกันจะเกิดกับเด็กประถม"
+            "[7] Education Endowment Foundation. (2025). Metacognition and Self-Regulated Learning, 2nd edition. https://educationendowmentfoundation.org.uk/education-evidence/guidance-reports/metacognition  |  [8] Bastani, H., et al. (2025). Generative AI without guardrails can harm learning. https://doi.org/10.1073/pnas.2422633122",
+            "[9] สสวท. Project 14 คณิตศาสตร์ ป.2 เรื่องการบวกและการลบจำนวนนับไม่เกิน 1,000. https://proj14.ipst.ac.th/p2/p2-math-book-1/math-p2b1-024/  งานวิจัยระดับ ม.ต้น/ม.ปลายที่อ้างเป็นข้อชี้แนะเชิงออกแบบ ไม่ใช่หลักฐานว่าผลขนาดเดียวกันจะเกิดกับเด็กประถม"
           ],
           "bullets": [
             "สถานะเล่ม: ข้อเสนอเชิงวิชาชีพและตัวอย่างสมมติ",
