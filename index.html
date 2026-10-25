@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="./assets/home-p0a.css">
   <link rel="stylesheet" href="./assets/google-sans-platform.css">
   <link rel="stylesheet" href="./assets/toc-p0b.css">
+  <link rel="stylesheet" href="./assets/audio-reader.css">
   <script defer src="./assets/app-version.js"></script>
   <script defer src="./assets/manuals-data.js"></script>
   <script defer src="./assets/wd-growth-individual-guide.js"></script>
@@ -31,6 +32,8 @@
   <script defer src="./assets/mybooks-selectors.js"></script>
   <script defer src="./assets/reader-coordinator.js"></script>
   <script defer src="./assets/app.js"></script>
+  <script defer src="./assets/audio-reader-core.js"></script>
+  <script defer src="./assets/audio-reader.js"></script>
   <script defer src="./assets/app-zoom-guard.js"></script>
   <script defer src="./assets/home-load-guard.js"></script>
 </head>
@@ -205,6 +208,7 @@
       <div class="reader-identity"><span class="reader-mark">WD / READ</span><div><strong id="readerTitle"></strong><small id="readerCategory"></small></div></div>
       <div id="readerMobileBookTitle" class="reader-mobile-book-title" aria-label="คู่มือที่กำลังอ่าน" title=""></div>
       <div class="reader-actions">
+        <button id="readerAudioToggle" class="icon-button reader-audio-toggle" type="button" aria-label="ฟังหนังสือ" aria-controls="wdAudioPanel" aria-expanded="false" title="ฟังหนังสือ">🎧 <span class="audio-toggle-label">ฟังหนังสือ</span></button>
         <button id="readerToolsToggle" class="icon-button reader-tools-toggle" type="button" aria-label="เครื่องมืออ่านเพิ่มเติม" aria-controls="readerExtraTools" aria-expanded="false">⋯</button>
         <div id="readerExtraTools" class="reader-extra-tools" hidden>
         <button id="readerFocusToggle" class="icon-button reader-focus-toggle" type="button" aria-label="เปิดโหมดอ่านอย่างมีสมาธิ" aria-pressed="false" title="ลดสิ่งรบกวนและเพิ่มพื้นที่อ่าน (ไม่ใช่เต็มจอเบราว์เซอร์)"><span class="tool-symbol" aria-hidden="true">⛶</span><span class="tool-label">โหมดอ่าน</span></button>
@@ -238,6 +242,31 @@
       <label>ระยะบรรทัด<select id="readerLineSpacing"><option value="normal">ปกติ</option><option value="relaxed">สบายตา</option><option value="wide">กว้าง</option></select></label>
       <label>ระยะขอบ<select id="readerPageMargin"><option value="normal">ปกติ</option><option value="compact">แคบ</option><option value="wide">กว้าง</option></select></label>
       <button id="readerResetTypography" type="button">คืนค่ารูปแบบเริ่มต้น</button>
+    </section>
+    <section id="wdAudioPanel" class="wd-audio-panel" aria-label="เครื่องฟังหนังสือ" hidden>
+      <header class="wd-audio-heading">
+        <div><strong id="wdAudioBookTitle">หนังสือที่กำลังฟัง</strong>
+          <small id="wdAudioMode">อ่านออกเสียงสด</small></div>
+        <button id="wdAudioClosePanel" type="button" aria-label="ปิดแผงฟังหนังสือ (ไม่หยุดเสียง)">✕</button>
+      </header>
+      <p class="wd-audio-chapter" id="wdAudioChapterTitle">เลือกตอน</p>
+      <div class="wd-audio-controls" role="group" aria-label="ควบคุมเสียงอ่านหนังสือ">
+        <button id="wdAudioPrev" type="button" aria-label="ตอนก่อนหน้า">⏮ <span>ตอนก่อน</span></button>
+        <button id="wdAudioPlay" class="wd-audio-primary" type="button">เล่น</button>
+        <button id="wdAudioNext" type="button" aria-label="ตอนถัดไป"><span>ตอนถัดไป</span> ⏭</button>
+        <button id="wdAudioStop" type="button">หยุด</button>
+        <label for="wdAudioSpeed">ความเร็ว
+          <select id="wdAudioSpeed" aria-label="ความเร็วเสียงบรรยาย">
+            <option value="0.75">0.75×</option><option value="1" selected>1×</option>
+            <option value="1.25">1.25×</option><option value="1.5">1.5×</option>
+          </select>
+        </label>
+      </div>
+      <div class="wd-audio-seek">
+        <input id="wdAudioSeek" type="range" min="0" max="100" step="1" value="0" disabled aria-label="เลื่อนเวลาไฟล์เสียง (ใช้ได้เฉพาะเล่มที่มีไฟล์เสียง)">
+        <span id="wdAudioTime">00:00</span>
+      </div>
+      <p id="wdAudioStatus" class="wd-audio-status" role="status" aria-live="polite">แตะเล่นเพื่อเริ่มฟัง</p>
     </section>
     <div class="reader-content">
       <aside class="reader-toc" aria-label="สารบัญ">
@@ -273,5 +302,11 @@
     </section>
   </div>
 </dialog>
+<audio id="wdNarrationMedia" preload="metadata" playsinline aria-label="เสียงบรรยายหนังสือ WD Books"></audio>
+<aside id="wdAudioMini" class="wd-audio-mini" aria-label="เครื่องเล่นเสียงหนังสือ" hidden>
+  <div class="wd-audio-mini-info"><strong id="wdAudioMiniTitle">WD Books</strong><small id="wdAudioMiniChapter">กำลังฟังหนังสือ</small></div>
+  <button id="wdAudioMiniPlay" type="button" aria-label="เล่นหรือพักเสียงบรรยาย">พัก</button>
+  <button id="wdAudioMiniStop" type="button" aria-label="หยุดการฟังและซ่อนแถบเสียง">✕</button>
+</aside>
 </body>
 </html>
