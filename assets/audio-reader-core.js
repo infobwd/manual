@@ -31,6 +31,16 @@
     }
     return chunks.filter(Boolean);
   }
+  // WD Growth's existing public Thai MP3 proxy. The user must opt in before
+  // any public-book text leaves WD Books. Never accept arbitrary endpoints.
+  const SCHOOL_TTS_PROXY = "https://wd.esdc.app/backend-php/api.php";
+  const pickThaiVoice = voices => (Array.isArray(voices) ? voices : Array.from(voices || []))
+    .find(voice => /^th(?:-|_|$)/i.test(String(voice?.lang || ""))) || null;
+  function schoolTtsUrl(text) {
+    const source = asText(text);
+    if (!source || Array.from(source).length > 180) return null;
+    return SCHOOL_TTS_PROXY + "?endpoint=tts&lang=th&q=" + encodeURIComponent(source);
+  }
   const safeRate = value => SPEEDS.includes(Number(value)) ? Number(value) : 1;
   const safeTime = seconds => Math.max(0, Math.min(24 * 60 * 60, Number.isFinite(Number(seconds)) ? Number(seconds) : 0));
   // Audio resource must be a same-site, reviewed file. No arbitrary external URLs.
@@ -70,6 +80,7 @@
   };
   window.WD_AUDIO_CORE = Object.freeze({
     STORAGE_KEY, SPEEDS, isReadable, narrationText, splitSpeech,
-    safeRate, safeTime, limitIndex, audioAsset, restore, chapterForOffset, formatTime
+    safeRate, safeTime, limitIndex, audioAsset, restore, chapterForOffset, formatTime,
+    pickThaiVoice, schoolTtsUrl
   });
 })();
