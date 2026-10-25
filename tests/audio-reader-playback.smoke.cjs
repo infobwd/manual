@@ -80,6 +80,8 @@ async function run(){
   f.reader.open=true;
   a.selectBook(audioBook,0);
   assert.equal(a.getState().mode,"asset");
+  a.syncPage(audioBook.id,1);
+  assert.equal(a.getState().chapter,0,"Visual paging cannot overwrite saved media timeline");
   f.$("readerAudioToggle").fire("click");
   f.$("wdAudioPlay").fire("click");
   await Promise.resolve();
@@ -98,6 +100,7 @@ async function run(){
   assert.equal(a.getState().paused,true);
   f.$("wdAudioStop").fire("click");
   assert.equal(a.getState().playing,false);
+  assert.equal(f.session.playbackState,"none","Stopped media must release lock-screen playback status");
 
   // Guard against a device missing Thai voices (no fallback English narration).
   a.selectBook(published,0);
