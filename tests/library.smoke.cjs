@@ -13,11 +13,12 @@ class FakeElement {
     this.style = { setProperty() {} }; this.className = ''; this.textContent = '';
     this.hidden = false; this.open = false; this.disabled = false;
     this.attrs = {}; this.isConnected = true; this.scrollTop = 0;
-    this.classList = { toggle() {}, add() {}, remove() {} };
+    this.classList = { toggle() {}, add() {}, remove() {}, contains() { return false; } };
   }
   append(...children) { this.children.push(...children); }
   replaceChildren(...children) { this.children = children; }
   setAttribute(key, value) { this.attrs[key] = value; }
+  removeAttribute(key) { delete this.attrs[key]; }
   addEventListener(type, fn) { this.handlers[type] = fn; }
   focus() {}
   showModal() { this.open = true; }
@@ -32,10 +33,18 @@ const ids = [
 ];
 const nodes = Object.fromEntries(ids.map(id => [id, new FakeElement('div')]));
 nodes.readerDialog = new FakeElement('dialog');
-const document = { createElement: tag => new FakeElement(tag), getElementById: id => nodes[id] };
+const document = {
+  createElement: tag => new FakeElement(tag),
+  createElementNS: (_ns, tag) => new FakeElement(tag),
+  getElementById: id => nodes[id] ?? (nodes[id] = new FakeElement('div')),
+  querySelector: () => new FakeElement('div'),
+  querySelectorAll: () => [],
+  body: new FakeElement('body'),
+  activeElement: null
+};
 const media = { matches: false, addEventListener() {} };
-const window = { matchMedia: () => media, setTimeout: callback => callback() };
-const context = vm.createContext({ window, document });
+const window = { matchMedia: () => media, setTimeout: callback => callback(), clearTimeout() {}, innerWidth: 390 };
+const context = vm.createContext({ window, document, requestAnimationFrame: callback => callback(), NodeFilter: { SHOW_TEXT: 4 } });
 vm.runInContext(load('assets/manuals-data.js'), context, { filename: 'assets/manuals-data.js' });
 vm.runInContext(load('assets/wd-growth-individual-guide.js'), context, { filename: 'assets/wd-growth-individual-guide.js' });
 vm.runInContext(load('assets/catalog-core.js'), context, { filename: 'assets/catalog-core.js' });
