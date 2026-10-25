@@ -54,11 +54,16 @@ for(const id of ["wdAudioCompact","wdAudioCompactPlay","wdAudioCompactExpand","w
 assert.match(css,/\.wd-audio-compact\s*\{/);
 assert.match(css,/\.wd-audio-backdrop:not\(\[hidden\]\)/);
 assert.match(css,/\.wd-audio-mini>progress/);
+assert.match(html,/id="wdAudioCompactReaderClose"/);
+assert.match(html,/id="wdAudioLocal"/);
+assert.match(player,/wdAudioCompactReaderClose"\)\.addEventListener/);
+assert.match(player,/wdAudioLocal"\)\.addEventListener/);
+
 assert.match(css,/\.reader-dialog \.wd-audio-panel\s*\{/);
 assert.match(core,/function listeningProgress\(/);
 assert.match(player,/remoteAudio\.addEventListener\("timeupdate"/);
 assert.match(css,/@media\(max-width:600px\)/);
-assert.match(version,/WD_BOOKS_VERSION = "1\.3\.41"/);
+assert.match(version,/WD_BOOKS_VERSION = "1\.3\.42"/);
 for(const asset of ["./assets/audio-reader.css","./assets/audio-reader-core.js","./assets/audio-reader.js","./assets/audio-listening-lock.js"]){
   assert.ok(sw.includes('"'+asset+'"'),"New static PWA shell asset missing: "+asset);
 }
