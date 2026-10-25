@@ -6,6 +6,12 @@
   const retry = document.getElementById("homeRetry");
   if (!grid || !recovery || !retry) return;
   let timer;
+  const showRecovery = () => {
+    if (grid.getAttribute("aria-busy") !== "false" && grid.querySelector(".wd-skeleton")) {
+      recovery.hidden = false;
+      recovery.removeAttribute("aria-hidden");
+    }
+  };
   const observe = new MutationObserver(() => {
     if (grid.getAttribute("aria-busy") === "false" || !grid.querySelector(".wd-skeleton")) {
       recovery.hidden = true;
@@ -14,9 +20,12 @@
     }
   });
   observe.observe(grid, {attributes:true,childList:true,subtree:true});
-  timer = setTimeout(() => {
-    if (grid.getAttribute("aria-busy") === "true" && grid.querySelector(".wd-skeleton")) recovery.hidden = false;
-  }, 6500);
+  timer = setTimeout(showRecovery, 6500);
+  // iOS can suspend timers while an installed PWA is backgrounded.
+  // Re-check on return without clearing saved reading preferences.
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) showRecovery();
+  });
   retry.addEventListener("click", () => {
     const url = new URL(window.location.href);
     url.searchParams.set("wd-retry", String(Date.now()));
