@@ -335,17 +335,52 @@
 <audio id="wdOnlineTtsMedia" preload="none" playsinline aria-label="เสียงไทยออนไลน์ของ WD Books"></audio>
 <dialog id="wdListeningLock" class="wd-listening-lock" aria-modal="true" aria-labelledby="wdLockTitle" aria-describedby="wdLockHint">
   <div class="wd-lock-content">
-    <span class="wd-lock-label">WD / LISTEN · ล็อกการสัมผัสภายในแอป</span>
-    <div class="wd-lock-icon" aria-hidden="true">🎧</div>
-    <h2 id="wdLockTitle">กำลังฟังหนังสือ</h2>
-    <p id="wdLockChapter">ตอนที่กำลังฟัง</p>
-    <p id="wdLockStatus" role="status" aria-live="polite">ล็อกการสัมผัสแล้ว · เสียงยังทำงานอยู่</p>
-    <p id="wdLockHint">หน้าจอนี้ป้องกันการแตะผิดขณะฟัง ไม่ใช่การล็อกหน้าจอของระบบปฏิบัติการ อาจไม่รองรับการฟังต่อเมื่อกดปุ่ม Power</p>
-    <button id="wdLockUnlock" type="button" aria-label="กดค้างประมาณสองวินาทีเพื่อปลดล็อกการสัมผัส">
-      <span class="wd-lock-unlock-fill" aria-hidden="true"></span>
-      <span>กดค้าง 2 วินาทีเพื่อปลดล็อก</span>
-    </button>
-    <small>ใช้แป้น Esc เพื่อปลดล็อกด้วยคีย์บอร์ด</small>
+    <header class="wd-lock-topbar">
+      <span class="wd-lock-brand">WD BOOKS <span aria-hidden="true">·</span> NOW PLAYING</span>
+      <span id="wdLockBadge" class="wd-lock-badge">กำลังฟัง</span>
+    </header>
+    <main class="wd-lock-main">
+      <div class="wd-lock-artwork-wrap">
+        <div id="wdLockCover" class="wd-lock-cover" data-cover-color="forest" aria-label="หน้าปกหนังสือที่กำลังฟัง">
+          <span id="wdLockCoverTop" class="wd-lock-cover-eyebrow">WD / LISTEN</span>
+          <strong id="wdLockCoverTitle" class="wd-lock-cover-title">หนังสือเสียง WD Books</strong>
+          <span class="wd-lock-cover-footer">โรงเรียนบ้านวังด้ง</span>
+        </div>
+      </div>
+      <div class="wd-lock-track">
+        <div class="wd-lock-track-heading">
+          <p class="wd-lock-overline">กำลังฟังหนังสือ</p>
+          <h2 id="wdLockTitle">หนังสือที่กำลังฟัง</h2>
+          <p id="wdLockChapter" class="wd-lock-chapter">ตอนปัจจุบัน</p>
+        </div>
+        <section class="wd-lock-progress-wrap" aria-label="ตำแหน่งการฟัง">
+          <progress id="wdLockProgress" value="0" max="100" aria-label="ความคืบหน้าการฟัง"></progress>
+          <input id="wdLockSeek" type="range" min="0" max="100" step="1" value="0" hidden disabled aria-label="เลื่อนเวลาไฟล์เสียงบรรยาย">
+          <div class="wd-lock-progress-labels">
+            <span id="wdLockPositionLabel">ตอน 1 / 1</span>
+            <span id="wdLockPercent">0%</span>
+          </div>
+        </section>
+        <div class="wd-lock-controls" role="group" aria-label="ควบคุมการฟังหนังสือ">
+          <button id="wdLockPrev" type="button" aria-label="ฟังตอนก่อนหน้า"><span aria-hidden="true">⏮</span></button>
+          <button id="wdLockPlay" class="wd-lock-play" type="button" aria-label="เล่นหรือพักเสียงบรรยาย"><span id="wdLockPlayIcon" aria-hidden="true">⏸</span></button>
+          <button id="wdLockNext" type="button" aria-label="ฟังตอนถัดไป"><span aria-hidden="true">⏭</span></button>
+        </div>
+        <div class="wd-lock-secondary">
+          <span id="wdLockMode" class="wd-lock-mode">อ่านออกเสียงในเครื่อง</span>
+          <button id="wdLockSpeed" type="button" aria-label="เปลี่ยนความเร็วเสียง">1×</button>
+        </div>
+        <p id="wdLockStatus" class="wd-lock-status" role="status" aria-live="polite">กำลังฟัง · ล็อกการนำทางอยู่</p>
+      </div>
+    </main>
+    <footer class="wd-lock-footer">
+      <p id="wdLockHint">หน้าจอนี้ล็อกการนำทางเพื่อป้องกันการแตะผิด แต่ยังควบคุมเสียงได้ ไม่ใช่หน้าจอล็อกของ iOS หรือ Android</p>
+      <button id="wdLockUnlock" type="button" aria-label="กดค้างประมาณสองวินาทีเพื่อออกจากหน้าจอฟัง">
+        <span class="wd-lock-unlock-fill" aria-hidden="true"></span>
+        <span class="wd-lock-unlock-label"> <span aria-hidden="true">⌃</span> กดค้างเพื่อกลับไปอ่าน</span>
+      </button>
+      <small class="wd-lock-keyboard-hint">กด Esc หรือ Enter เมื่อเลือกปุ่มปลดล็อก เพื่อออกจากหน้าจอฟัง</small>
+    </footer>
   </div>
 </dialog>
 <aside id="wdAudioMini" class="wd-audio-mini" aria-label="เครื่องเล่นเสียงหนังสือ" hidden>
