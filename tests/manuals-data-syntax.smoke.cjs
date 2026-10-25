@@ -32,4 +32,19 @@ assert.ok(essay && essay.category === "academic" && essay.status === "published"
 assert.ok(essay.pages.length >= 20, "Essay must be a substantial reading edition");
 assert.ok(essay.pages.some(page => page.title.includes("สัปดาห์")), "Essay must include proposed school trial");
 assert.ok(essay.pages.some(page => page.title.includes("เอกสารอ้างอิง")), "Essay must cite sources");
+// Cover title fields must contain real line breaks, not literal backslash+n text.
+for (const book of data.manuals) {
+  if (typeof book.coverTitle !== "string") continue;
+  assert.ok(!book.coverTitle.includes("\\n"), "Literal backslash-n in cover title: " + book.id);
+}
+for (const [id, expected] of [
+  ["ai-school-today-teacher-guide", "AI & School\nToday"],
+  ["principal-expert-m1-evidence-review", "M1\nตรวจหลักฐาน"],
+  ["principal-expert-m0-review", "วิทยฐานะ\nเชี่ยวชาญ"],
+  ["sar-2568-basic-education", "SAR 2568\nสารสนเทศสถานศึกษา"]
+]) {
+  const book = data.manuals.find(item => item.id === id);
+  assert.ok(book, "Expected book is missing: " + id);
+  assert.equal(book.coverTitle, expected, "Cover should break into two lines: " + id);
+}
 console.log("PASS: manuals-data.js syntax and catalog structure");
