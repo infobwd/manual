@@ -701,6 +701,10 @@
   }
   function renderToc() {
     const toc = $("tocItems");
+    // Keep the desktop TOC where the reader left it; rebuilding buttons on each
+    // page turn must not jump the independent sidebar back to its beginning.
+    const tocScroller = toc.closest?.(".reader-toc");
+    const savedTocScroll = tocScroller?.scrollTop ?? 0;
     toc.replaceChildren(...state.manual.pages.map((page, i) => {
       const b = create("button", "", "");
       const displayed = state.readingMode === "continuous" || isMobile.matches ? state.page === i : state.page <= i && i < state.page + 2;
@@ -711,6 +715,7 @@
       b.addEventListener("click", () => jumpTo(i));
       return b;
     }));
+    if (tocScroller) tocScroller.scrollTop = savedTocScroll;
   }
   function renderMobileToc() {
     const mobileItems = $("mobileTocItems");
