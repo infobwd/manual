@@ -19,6 +19,18 @@
 
 ---
 
+## UI-TECH-01 — เปลี่ยนสถาปัตยกรรม UI สู่ Tailwind CSS + shadcn/ui (แผน 26 ต.ค. 2569)
+
+**สถานะ:** เพิ่มแผนศึกษาและย้ายแบบมี Gates — **Documentation only / Production unchanged**
+
+- แผนย่อยที่เป็น Source of Truth ด้านเทคนิค: **[WD Books — UI Technology Migration Plan](WD_BOOKS_UI_TECH_MIGRATION_TAILWIND_SHADCN_2569.md)** (Plan ID `WD-BOOKS-UI-TECH-01`).
+- **ทิศทาง:** React + TypeScript + Vite + Tailwind CSS v4 + shadcn/ui สำหรับ UI รุ่นถัดไป เริ่มจาก **UI-M0 Discovery → UI-M1 Design System → UI-M2 Isolated Preview** และพิจารณา M3–M7 เฉพาะเมื่อผ่าน QA และรับรอง.
+- **คิวเดียว:** อยู่ใต้ Master Roadmap นี้ ไม่ทดแทน UX-P0–P3, ARCH-01 หรือ CAT-01; ไม่สลับ Reader, Audio, PWA, localStorage หรือ Production ตอนวางแผน.
+- **เงื่อนไขสำคัญ:** ต้องทดสอบบน iPhone/iPad จริง, รักษา `wd-manual-reader-v2`, เลี่ยง cache version ซ้ำ, ไม่มี custom GitHub Actions, build static preview locally และมีแผน rollback ก่อน cutover.
+- **ขั้นถัดไปที่อนุญาตให้เตรียม:** ทำ baseline/test inventory และ visual prototype แบบไม่แตะ production runtime. **ห้ามตีความการ Merge เอกสารว่าอนุมัติ Migration หรือ Production Deploy**.
+
+---
+
 ## Hotfix reconciliation — 25 ต.ค. 2569 (ภายใต้ Master Roadmap เดิม)
 
 **ข้อสรุป:** ไม่สร้าง roadmap คู่ขนาน; เพิ่ม defect follow-up ของ UX-P0C, UX-P0D และ QA-DEVICE-GATE เดิมเท่านั้น ห้ามถือว่า Merge = Device QA ผ่าน.
