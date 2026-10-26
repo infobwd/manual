@@ -176,6 +176,10 @@ Smoke เดิมจำนวนมากจำลอง DOM แบบ vanilla 
 - กฎความสำคัญ: งาน incident/readability/accessibility ของระบบเดิมมาก่อน feature framework ใหม่ หากซ้อน branch ให้ rebase/rebuild spike จาก main ล่าสุดแทนแก้ production พร้อมกัน
 - **Next action ที่เสนอ:** UI-MIG-00 baseline และ UI-MIG-01 visual comparisons (Docs/Preview only), จากนั้นขอ Go/No-Go ก่อน UI-MIG-02. การมีแผนนี้ไม่ได้เริ่มติดตั้ง React, Tailwind หรือ shadcn/ui ใน Production
 
+## UI-MIG-00 Execution Runbook — พร้อมเริ่มเก็บ Baseline (เพิ่ม 26 ต.ค. 2569)
+
+อ่าน [WD Books UI-MIG-00 Baseline & Read-Only Inspection Runbook](WD_BOOKS_UI_MIG00_BASELINE_RUNBOOK_2569.md) สำหรับคำสั่ง Windows/PowerShell แบบไม่แตะ Production, Device QA matrix, ตารางบันทึกผล PASS/FAIL/NOT TESTED และ Gate 0 checklist. **การเพิ่ม runbook ไม่ได้ทำให้ Gate 0 ผ่าน** — ยังต้องเก็บหลักฐานจริงบน Windows/iPhone/iPad ก่อนเริ่ม UI-MIG-01.
+
 ## 10. References / provenance
 
 - Repository baseline: \`index.html\`, \`assets/styles.css\`, \`assets/mobile-reader.css\`, \`assets/app.js\`, \`assets/experience.js\`, \`assets/manuals-data.js\`, \`sw.js\`, \`tests/*\`, \`docs/WD_BOOKS_ARCH01_BASELINE_2569.md\`, \`docs/WD_BOOKS_READER_UX_ROADMAP_2569.md\`.
