@@ -30,6 +30,8 @@
 
 **[อ่านแผน UI Stack Migration ปี 2569](docs/WD_BOOKS_UI_STACK_MIGRATION_TAILWIND_SHADCN_2569.md)** — วิเคราะห์ทางเลือกและกำหนด React + TypeScript + Vite + Tailwind CSS v4 + shadcn/ui เป็นเป้าหมายแบบ **ต้องผ่านการทดลอง/Go-No-Go** โดยเริ่มจาก Design Tokens และ isolated prototype ก่อน, แยก PR ตาม UI-MIG-00–06, เก็บ baseline และรักษา Reader, Audio, localStorage และ PWA เดิม. แผนนี้เชื่อมอยู่ใต้ Reader UX Master Roadmap ไม่ใช่ roadmap ขนาน. **สถานะ: เอกสารแผนเท่านั้น ไม่เปลี่ยน Production, ไม่เพิ่ม package/build, ไม่ bump PWA version.**
 
+- **[คู่มือปฏิบัติ UI-MIG-00: เก็บ Baseline แบบ Read-Only](docs/WD_BOOKS_UI_MIG00_BASELINE_RUNBOOK_2569.md)** — คำสั่ง Windows/VS Code, จด SHA/เวอร์ชัน, Device Matrix, เกณฑ์วัด performance และ Gate 0 แบบไม่เปลี่ยน Production (สถานะ NOT STARTED จนกว่าจะทดสอบจริง)
+
 ## แผนพัฒนา Reader UX (P0–P3)
 
 **[WD Books — Reader Experience Roadmap ปี 2569](docs/WD_BOOKS_READER_UX_ROADMAP_2569.md)** คือเอกสารกำกับการปรับประสบการณ์อ่านหนังสือบน iPhone/iPad/Android/PC โดยอ้างอิง Apple Books, Kindle และ Kobo ครอบคลุมการจัดหน้าแรก, สารบัญมือถือ, Swipe, โหมดอ่านเต็มจอ, การตั้งค่าข้อความ, Continuous Scroll, ค้นในหนังสือ และ Bookmark พร้อม Work Packages **UX-00, UX-P0A–P0D, UX-P1A–P1B, UX-P2A–P2B, UX-P3A** และ Release/QA gates
