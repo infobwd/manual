@@ -1,0 +1,29 @@
+/* Script teleprompter — only shown for the five-question speaking handbook. */
+#readerTeleprompterOpen[hidden]{display:none!important}
+.reader-prompter-open{font-size:19px;white-space:nowrap;gap:4px}
+.reader-prompter-open .reader-prompter-caption{font-size:11px;font-weight:800}
+.wd-prompter-dialog{position:fixed;inset:0;margin:0;padding:0;width:100vw;max-width:none;height:100dvh;max-height:none;border:0;border-radius:0;background:#0d1012;color:#f5f4ed;overscroll-behavior:contain}
+.wd-prompter-dialog::backdrop{background:#07090b}
+.wd-prompter-shell{display:flex;flex-direction:column;height:100%;min-height:0;font-family:system-ui,-apple-system,"Noto Sans Thai",sans-serif}
+.wd-prompter-header{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:calc(12px + env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 11px max(14px,env(safe-area-inset-left));background:#1b2225;border-bottom:1px solid #374447}
+.wd-prompter-header-copy{min-width:0;flex:1}.wd-prompter-eyebrow{display:block;color:#b8cfc5;font-size:11px;font-weight:750;letter-spacing:.08em}
+.wd-prompter-header h2{font-size:clamp(13px,2.5vw,19px);line-height:1.45;margin:4px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wd-prompter-dialog button,.wd-prompter-dialog select,.wd-prompter-dialog input{font:inherit}
+.wd-prompter-close,.wd-prompter-controls button{min-height:46px;border:1px solid #748584;border-radius:12px;padding:10px 13px;background:#263339;color:#fafaf2;font-size:15px;font-weight:750;cursor:pointer}
+.wd-prompter-close{flex:0 0 auto}
+.wd-prompter-close:focus-visible,.wd-prompter-controls :focus-visible{outline:3px solid #e7ba62;outline-offset:2px}
+.wd-prompter-stage{position:relative;min-height:0;flex:1 1 auto;background:#0d1012;isolation:isolate}
+.wd-prompter-viewport{height:100%;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scroll-behavior:auto;touch-action:pan-y}
+.wd-prompter-script{max-width:920px;margin:0 auto;padding:23vh clamp(20px,5vw,70px) 55vh;box-sizing:border-box;font-size:var(--wd-prompter-font,36px);font-weight:650;line-height:1.8;letter-spacing:.012em;text-wrap:pretty}
+.wd-prompter-script p{margin:0 0 .94em;white-space:pre-wrap;overflow-wrap:anywhere}
+.wd-prompter-guideline{position:absolute;top:38%;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(243,199,103,.26) 20%,rgba(243,199,103,.26) 80%,transparent);pointer-events:none}
+.wd-prompter-controls{flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:9px;padding:12px max(12px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));background:#1b2225;border-top:1px solid #394547}
+.wd-prompter-controls .wd-prompter-primary{background:#a9e2b9;color:#10241c;border-color:#a9e2b9;min-width:130px;font-size:16px}
+.wd-prompter-controls button:disabled{opacity:.35;cursor:not-allowed}
+.wd-prompter-controls label{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#e6eee8}
+.wd-prompter-controls select{max-width:230px;min-height:46px;padding:7px;border:1px solid #748584;border-radius:10px;background:#263339;color:#fff}
+.wd-prompter-controls input[type="range"]{width:110px;accent-color:#a9e2b9}
+.wd-prompter-controls output{font-size:12px;color:#dcebe1;min-width:52px}
+.wd-prompter-status{width:100%;text-align:center;font-size:12px;color:#ccddd3;margin:0;line-height:1.5}
+@media(max-width:660px){.reader-prompter-open .reader-prompter-caption{display:none}.reader-prompter-open{min-width:44px;min-height:44px;padding:6px}.wd-prompter-script{font-size:var(--wd-prompter-font,30px);padding-top:24vh;padding-bottom:55vh;line-height:1.7}.wd-prompter-controls{gap:8px}.wd-prompter-controls label{flex:1 1 calc(50% - 12px);justify-content:center}.wd-prompter-controls input[type="range"]{width:min(24vw,100px)}.wd-prompter-controls select{max-width:min(70vw,220px)}.wd-prompter-controls .wd-prompter-primary{flex:1 0 auto}}
+@media(prefers-reduced-motion:reduce){.wd-prompter-viewport{scroll-behavior:auto}}

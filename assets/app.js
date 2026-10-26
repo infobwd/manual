@@ -385,6 +385,11 @@
     $("readerMobileBookTitle").title = book.title;
     $("readerBookmarksBookTitle").textContent = book.title;
     $("readerCategory").textContent = (lookup[book.category]?.label || "คู่มือ") + " · " + book.edition;
+    const prompterButton = $("readerTeleprompterOpen");
+    if (prompterButton) {
+      prompterButton.hidden = book.id !== "ai-five-questions-speaking-handbook-25691026";
+      prompterButton.onclick = prompterButton.hidden ? null : () => window.WD_TELEPROMPTER?.open?.(book, state.page);
+    }
     $("bookSpread").classList.add("reader-loading");
     renderReader();
     syncBookmarks();

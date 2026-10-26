@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="./assets/google-sans-platform.css">
   <link rel="stylesheet" href="./assets/toc-p0b.css">
   <link rel="stylesheet" href="./assets/audio-reader.css">
+  <link rel="stylesheet" href="./assets/teleprompter.css">
   <script defer src="./assets/app-version.js"></script>
   <script defer src="./assets/manuals-data.js"></script>
   <script defer src="./assets/wd-growth-individual-guide.js"></script>
@@ -32,6 +33,8 @@
   <script defer src="./assets/mybooks-selectors.js"></script>
   <script defer src="./assets/reader-coordinator.js"></script>
   <script defer src="./assets/app.js"></script>
+  <script defer src="./assets/teleprompter-core.js"></script>
+  <script defer src="./assets/teleprompter.js"></script>
   <script defer src="./assets/audio-reader-core.js"></script>
   <script defer src="./assets/audio-reader.js"></script>
   <script defer src="./assets/audio-listening-lock.js"></script>
@@ -47,7 +50,7 @@
     <h1>WD Books</h1>
     <p>คลังคู่มือโรงเรียนบ้านวังด้ง</p>
     <div class="splash-track"><span></span></div>
-    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.3.1</small>
+    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.3.49</small>
   </div>
 </div>
 <div id="pullRefresh" class="pull-refresh" role="status" aria-live="polite" aria-hidden="true"><span class="pull-refresh-icon">↻</span><span id="pullRefreshText">ดึงลงเพื่อรีเฟรช</span></div>
@@ -209,6 +212,7 @@
       <div class="reader-identity"><span class="reader-mark">WD / READ</span><div><strong id="readerTitle"></strong><small id="readerCategory"></small></div></div>
       <div id="readerMobileBookTitle" class="reader-mobile-book-title" aria-label="คู่มือที่กำลังอ่าน" title=""></div>
       <div class="reader-actions">
+        <button id="readerTeleprompterOpen" class="icon-button reader-prompter-open" type="button" hidden title="เปิดหน้าจอเลื่อนบทพูดแบบผู้ประกาศข่าว" aria-label="เปิดหน้าจอเลื่อนบทพูด">🎙 <span class="reader-prompter-caption">บทพูด</span></button>
         <button id="readerAudioToggle" class="icon-button reader-audio-toggle" type="button" aria-label="ฟังหนังสือ" aria-controls="wdAudioPanel" aria-expanded="false" title="ฟังหนังสือ">🎧 <span class="audio-toggle-label">ฟังหนังสือ</span></button>
         <button id="readerToolsToggle" class="icon-button reader-tools-toggle" type="button" aria-label="เครื่องมืออ่านเพิ่มเติม" aria-controls="readerExtraTools" aria-expanded="false">⋯</button>
         <div id="readerExtraTools" class="reader-extra-tools" hidden>
@@ -333,6 +337,32 @@
     </section>
   </div>
 </dialog>
+<!-- A second native modal preserves the existing Reader state underneath. -->
+<dialog id="wdTeleprompterDialog" class="wd-prompter-dialog" aria-labelledby="wdPrompterTitle" aria-describedby="wdPrompterStatus">
+  <div class="wd-prompter-shell">
+    <header class="wd-prompter-header">
+      <div class="wd-prompter-header-copy"><span class="wd-prompter-eyebrow">WD BOOKS · TELEPROMPTER</span><h2 id="wdPrompterTitle">บทพูดสำหรับฝึกหน้ากล้อง</h2></div>
+      <button id="wdPrompterClose" class="wd-prompter-close" type="button" aria-label="ปิดโหมดผู้ประกาศและกลับไปอ่านหนังสือ">✕ ปิด</button>
+    </header>
+    <main class="wd-prompter-stage" aria-label="ข้อความบทพูดที่เลื่อนขึ้น">
+      <div id="wdPrompterViewport" class="wd-prompter-viewport" tabindex="0">
+        <div id="wdPrompterScript" class="wd-prompter-script"></div>
+      </div>
+      <div class="wd-prompter-guideline" aria-hidden="true"></div>
+    </main>
+    <footer class="wd-prompter-controls" aria-label="ควบคุมการเลื่อนบทพูด">
+      <label for="wdPrompterChapter">บท <select id="wdPrompterChapter" aria-label="เลือกบทพูด"></select></label>
+      <button id="wdPrompterPrev" type="button" aria-label="บทพูดก่อนหน้า">⏮ ก่อนหน้า</button>
+      <button id="wdPrompterPlay" class="wd-prompter-primary" type="button" aria-pressed="false">▶ เริ่มเลื่อน</button>
+      <button id="wdPrompterNext" type="button" aria-label="บทพูดถัดไป">ถัดไป ⏭</button>
+      <button id="wdPrompterRestart" type="button" aria-label="เริ่มบทนี้ใหม่ตั้งแต่ต้น">↺ เริ่มใหม่</button>
+      <label for="wdPrompterSpeed">ความเร็ว <input id="wdPrompterSpeed" type="range" min="8" max="80" step="2" value="30" aria-label="ปรับความเร็วการเลื่อนข้อความ"><output id="wdPrompterSpeedValue" for="wdPrompterSpeed">30 px/วินาที</output></label>
+      <label for="wdPrompterFont">ตัวอักษร <input id="wdPrompterFont" type="range" min="24" max="64" step="2" value="34" aria-label="ปรับขนาดตัวอักษรบทพูด"><output id="wdPrompterFontValue" for="wdPrompterFont">34 px</output></label>
+      <p id="wdPrompterStatus" class="wd-prompter-status" role="status" aria-live="polite">พร้อมฝึกพูด · เลือกความเร็ว แล้วกดเริ่มเลื่อน</p>
+    </footer>
+  </div>
+</dialog>
+
 <audio id="wdNarrationMedia" preload="metadata" playsinline aria-label="เสียงบรรยายหนังสือ WD Books"></audio>
 <audio id="wdOnlineTtsMedia" preload="none" playsinline aria-label="เสียงไทยออนไลน์ของ WD Books"></audio>
 <dialog id="wdListeningLock" class="wd-listening-lock" aria-modal="true" aria-labelledby="wdLockTitle" aria-describedby="wdLockHint">
