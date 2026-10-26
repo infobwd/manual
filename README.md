@@ -198,3 +198,13 @@ py -m http.server 4173 --bind 127.0.0.1
 - เป็นหนังสือชวนคิด ไม่ใช่นโยบายหรือการปรับ WD Growth Production ไม่มีข้อมูลนักเรียนจริง ไม่เพิ่ม GitHub Actions
 - ปรับ PWA shell version `1.3.46` โดยไม่เปลี่ยนระบบ reader, localStorage หรือประวัติอ่าน
 - ก่อน Merge รัน `node tests/manuals-data-syntax.smoke.cjs`, `node tests/library.smoke.cjs` และ `node tests/pwa-reader.smoke.cjs`; หลัง Merge ตรวจ Reader/PWA จริงบนมือถือและแท็บเล็ต
+
+
+## WD Books — 5 คำถามชวนคิด: ชีทโน้ตผู้บรรยาย (26 ต.ค. 2569)
+
+- หนังสือแยกหมวดงานวิชาการ: **5 คำถามชวนคิด เมื่อ AI เข้ามาในโรงเรียน — ชีทโน้ตผู้บรรยาย** (12 หน้า, Speaker Notes 0.1) รหัส `ai-five-questions-speaker-cheatsheet-25691026`
+- เนื้อหาอ่านสั้นระหว่างบรรยาย: มุกสุภาพ ตัวอย่างใกล้ตัว มุมผู้บริหาร มุมครู งานวิจัยและต่างประเทศประกอบอย่างมีขอบเขต พร้อมสคริปต์เปิด/ปิด
+- [ต้นฉบับหนังสือ Markdown](docs/ai-workshop-notes/AI_FIVE_QUESTIONS_SPEAKER_CHEATSHEET_25691026.md) · [ไฟล์คำสั่ง/Storyboard สำหรับ AI ทำสไลด์ 12 หน้า](docs/ai-workshop-notes/AI_FIVE_QUESTIONS_SLIDE_GENERATION_BRIEF_25691026.md)
+- ไม่มีข้อมูลนักเรียนจริงและไม่มีการแก้ WD Growth Production; สถานะเป็นชีทวิชาการสำหรับอภิปราย ไม่ใช่นโยบายประกาศใช้
+- เพิ่ม smoke assertions ตรวจครบ 12 หน้า / แหล่งอ้างอิง / บทบาทผู้บริหารครู พร้อมปรับหมายเลข PWA ไม่ชนเวอร์ชันเดิม
+- หลัง Merge ให้เปิด [WD Books](https://infobwd.github.io/manual/) ค้นคำว่า “ชีทโน้ตผู้บรรยาย” และตรวจหน้าอ่าน/สารบัญ/ออฟไลน์บนเครื่องจริง
