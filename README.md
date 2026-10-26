@@ -187,3 +187,14 @@ py -m http.server 4173 --bind 127.0.0.1
 - เนื้อหา: วิจัย PNAS/OECD/Black–Wiliam/EEF/Retrieval Practice/NAEYC/AIAS, ตัวอย่างคณิตศาสตร์ **ป.2** ตรง สสวท., ภาษาไทย ป.3, อนุบาล, วิทยาศาสตร์ ป.4–6, กรอบหลักฐานห้ามิติ, แนวคิด WD Growth และ PLC
 - **สถานะ:** ข้อเสนออภิปราย ไม่ใช่นโยบายโรงเรียน ไม่ใช้คะแนนจริง ไม่แก้ข้อมูล/รูบริก/ฐานข้อมูลของ WD Growth
 - QA หลัง merge: `node tests/manuals-data-syntax.smoke.cjs`; เปิด Reader ค้นชื่อเล่ม ตรวจครบ 20 หน้า สารบัญ ปรับตัวอักษร และทดสอบการโหลดบนมือถือ/แท็บเล็ตจริง
+
+
+## WD Books — หนังสือคำถามข้อที่ 4: เด็กที่ตั้งคำถามเป็น
+
+- หนังสือ: **เด็กที่ตั้งคำถามเป็น — จากการเชื่อคำตอบสู่การค้นหาความจริง** — Public Discussion 0.1 (26 ตุลาคม 2569) จำนวน 22 บท หมวด **งานวิชาการ**
+- ต้นฉบับ: [AI_Q4_CHILDREN_ASK_VERIFY_AND_THINK_25691026.md](docs/ai-critical-inquiry/AI_Q4_CHILDREN_ASK_VERIFY_AND_THINK_25691026.md) และหนังสือออนไลน์รหัส `ai-q4-children-ask-verify-think`
+- มีงานวิจัย King, Rosenshine, McGrew และ Bastani พร้อมกรอบ UNESCO/OECD/UNICEF โดยแยกข้อค้นพบวิจัยออกจากข้อเสนอทดลอง
+- ตัวอย่างสมมติ: ต้นมะพร้าว ข่าวน้ำท่วม การอ่านที่บ้าน คณิตศาสตร์ ป.2 (478 + 156 = 634), กิจกรรม อ.–ป.6, แผน 50 นาที, รูบริกร่าง และ PLC/WD Growth
+- เป็นหนังสือชวนคิด ไม่ใช่นโยบายหรือการปรับ WD Growth Production ไม่มีข้อมูลนักเรียนจริง ไม่เพิ่ม GitHub Actions
+- ปรับ PWA shell version `1.3.46` โดยไม่เปลี่ยนระบบ reader, localStorage หรือประวัติอ่าน
+- ก่อน Merge รัน `node tests/manuals-data-syntax.smoke.cjs`, `node tests/library.smoke.cjs` และ `node tests/pwa-reader.smoke.cjs`; หลัง Merge ตรวจ Reader/PWA จริงบนมือถือและแท็บเล็ต

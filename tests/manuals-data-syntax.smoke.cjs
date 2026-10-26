@@ -81,7 +81,19 @@ const q5Body = q5.pages.map(page => [page.title, ...page.paragraphs, ...(page.bu
 for (const term of ["Bastani", "Black", "EEF", "สสวท.", "ป.2", "245 + 138", "117 บาท", "WD Growth", "NAEYC", "Weber-Wulff"]) {
   assert.ok(q5Body.includes(term), "Q5 book missing essential topic: " + term);
 }
-assert.ok(q5.pages.some(page => page.title.includes("อ้างอิง")), "Q5 book must have bibliography");
+assert.ok(q5.pages.some(page => page.title.includes("อ้างอิง") || page.title.includes("งานวิจัยสำหรับอ่านต่อ") || (page.bullets || []).some(line => line.includes("doi.org"))), "Q5 book must have bibliography");
 assert.ok(!q5Body.includes("ชื่อนักเรียนจริง"), "Q5 book must contain only fictional learner examples");
+
+// AI Q4 critical inquiry book: check shelf, math, references, privacy, status.
+const inquiry = data.manuals.find(book => book.id === "ai-q4-children-ask-verify-think");
+assert.ok(inquiry && inquiry.status === "published" && inquiry.category === "academic", "AI Q4 must be visible in academic shelf");
+assert.equal(inquiry.pages.length, 22, "AI Q4 must have 22 complete chapters");
+const inquiryText = inquiry.pages.map(page => [page.title, ...page.paragraphs, ...(page.bullets || []), page.tip || ""].join(" ")).join(" ");
+assert.ok(inquiryText.includes("478 + 156") && inquiryText.includes("634") && inquiryText.includes("ป.2"), "AI Q4 P2 math case must be correct");
+for(const word of ["คิดก่อน", "ถามเป็น", "ตรวจสอบ", "ตัดสินใจ", "อธิบายได้", "UNESCO", "OECD", "UNICEF", "doi.org"]) {
+  assert.ok(inquiryText.includes(word), "AI Q4 required topic missing: " + word);
+}
+assert.ok(inquiryText.includes("ข้อมูลส่วนบุคคล") && inquiryText.includes("สถานการณ์สมมติ"), "AI Q4 privacy and fictional case caveats must be present");
+assert.equal(inquiry.edition, "Public Discussion 0.1", "AI Q4 must remain a discussion edition");
 
 console.log("PASS: manuals-data.js syntax and catalog structure");
