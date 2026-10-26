@@ -8,6 +8,17 @@
 **กลุ่มใช้งานหลัก:** ครู/บุคลากรโรงเรียนบน iPhone และ iPad, รองลงมาคือ Android และ Desktop  
 **Source of truth:** เอกสารนี้ใช้กำหนดลำดับงาน, acceptance และ rollout ของการปรับ UX ใน repo นี้ ไม่แก้เนื้อหาวิชาการหรือระบบ WD Growth ต้นทาง
 
+## UI-STACK-01 — Target Stack Migration (แผนลูกภายใต้ Reader UX Roadmap · 26 ต.ค. 2569)
+
+**Decision:** กำหนด React + TypeScript + Vite + Tailwind CSS v4 + shadcn/ui เป็น **สถาปัตยกรรม UI เป้าหมายที่ต้องทดลองก่อน** ไม่ใช่การย้ายระบบจริงทันที. ใช้ [WD Books — UI Stack Migration Plan](WD_BOOKS_UI_STACK_MIGRATION_TAILWIND_SHADCN_2569.md) เป็น technical execution annex สำหรับ UI-MIG-00 ถึง UI-MIG-06, Go/No-Go gates, Compatibility Matrix และแผน rollback.
+
+- **ลำดับที่ผูกกับ master:** สะสาง regression/QA-DEVICE-GATE และเก็บ ARCH-01E baseline → UI-MIG-00/01 (read-only + visual preview) → UI-MIG-02 isolated React/Tailwind/shadcn prototype → ตัดสินใจใช้ target stack หรือคง CSS/Tailwind-only → UI-MIG-03–06 หลังผ่าน gates และอนุมัติแยก
+- **ห้ามข้ามสัญญาเดิม:** CAT-01 book ID/catalog/offline, UX-P3A audio + lock screen, `wd-manual-reader-v2` storage และ PWA update lifecycle; ห้ามลบ reader เดิมระหว่างทดสอบ
+- **Local-First:** ไม่มี GitHub Actions ใหม่หรือ backend; แผน/preview ไม่ bump PWA version; งาน production เท่านั้นจึงใช้เลขเวอร์ชันใหม่หลังเทียบ main ล่าสุดเพื่อกันชนกับแชทอื่น
+- **สถานะ:** PLAN ONLY, Gate 0–6 ยังไม่ตรวจรับ; การ merge เอกสารนี้ไม่ใช่การอนุมัติเปลี่ยน UI/Reader/Production
+
+---
+
 ## Hotfix reconciliation — 25 ต.ค. 2569 (ภายใต้ Master Roadmap เดิม)
 
 **ข้อสรุป:** ไม่สร้าง roadmap คู่ขนาน; เพิ่ม defect follow-up ของ UX-P0C, UX-P0D และ QA-DEVICE-GATE เดิมเท่านั้น ห้ามถือว่า Merge = Device QA ผ่าน.
