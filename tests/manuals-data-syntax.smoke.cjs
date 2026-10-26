@@ -96,4 +96,14 @@ for(const word of ["คิดก่อน", "ถามเป็น", "ตรว�
 assert.ok(inquiryText.includes("ข้อมูลส่วนบุคคล") && inquiryText.includes("สถานการณ์สมมติ"), "AI Q4 privacy and fictional case caveats must be present");
 assert.equal(inquiry.edition, "Public Discussion 0.1", "AI Q4 must remain a discussion edition");
 
+
+const speaking = data.manuals.find(book => book.id === "ai-five-questions-speaker-cheatsheet-25691026");
+assert.ok(speaking && speaking.status === "published" && speaking.category === "academic", "AI speaker cheatsheet must be published");
+assert.equal(speaking.pages.length, 12, "Speaker cheatsheet must have 12 pages");
+const speakingText = speaking.pages.map(page => [page.title, ...page.paragraphs, ...(page.bullets || []), page.tip || ""].join(" ")).join(" ");
+for (const phrase of ["2499", "2565", "Bastani", "Project Zero", "UNESCO", "ผู้บริหาร", "ครู", "ป.2", "WD Growth", "PLC", "AI ช่วย"]) {
+  assert.ok(speakingText.includes(phrase), "Speaker cheatsheet missing: " + phrase);
+}
+assert.ok(speaking.pages.every(page => Array.isArray(page.paragraphs) && page.paragraphs.length >= 2 && page.tip), "Speaker page must be readable");
+assert.equal(speaking.edition, "Speaker Notes 0.1");
 console.log("PASS: manuals-data.js syntax and catalog structure");
