@@ -14,7 +14,6 @@
   const font = $("wdPrompterFont");
   let chapters = [], chapterIndex = 0, playing = false, frameId = null, lastFrame = 0;
   let returnFocus = null;
-  const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function status(message) { $("wdPrompterStatus").textContent = message; }
   function syncPlay() {
@@ -86,13 +85,6 @@
     play.focus();
   }
   function close() { pause(); if (dialog.open) dialog.close(); }
-  openButton.addEventListener("click", () => {
-    // The Reader supplies its current book and exact chapter; no global guessing.
-    if (window.WD_TELEPROMPTER_REQUEST) {
-      const request = window.WD_TELEPROMPTER_REQUEST;
-      open(request.book, request.pageIndex);
-    }
-  });
   $("wdPrompterClose").addEventListener("click", close);
   play.addEventListener("click", togglePlay);
   $("wdPrompterRestart").addEventListener("click", () => {
