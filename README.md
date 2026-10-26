@@ -212,3 +212,12 @@ py -m http.server 4173 --bind 127.0.0.1
 - ไม่มีข้อมูลนักเรียนจริงและไม่มีการแก้ WD Growth Production; สถานะเป็นชีทวิชาการสำหรับอภิปราย ไม่ใช่นโยบายประกาศใช้
 - เพิ่ม smoke assertions ตรวจครบ 12 หน้า / แหล่งอ้างอิง / บทบาทผู้บริหารครู พร้อมปรับหมายเลข PWA ไม่ชนเวอร์ชันเดิม
 - หลัง Merge ให้เปิด [WD Books](https://infobwd.github.io/manual/) ค้นคำว่า “ชีทโน้ตผู้บรรยาย” และตรวจหน้าอ่าน/สารบัญ/ออฟไลน์บนเครื่องจริง
+
+
+## UI-TECH-01 — แผน Tailwind CSS + shadcn/ui (26 ต.ค. 2569)
+
+- **[WD Books UI Technology Migration Plan](docs/WD_BOOKS_UI_TECH_MIGRATION_TAILWIND_SHADCN_2569.md)** — ประเมินสถาปัตยกรรม React/TypeScript/Vite/Tailwind/shadcn, ความเสี่ยงของ Reader/Audio/PWA และขั้นดำเนินการ UI-M0–M7 พร้อม gates/rollback.
+- เชื่อมเข้า **[Master Reader UX Roadmap](docs/WD_BOOKS_READER_UX_ROADMAP_2569.md)** แล้ว; ไม่ตั้งคิวงานแข่งขันกับ UX-P0–P3 หรือ ARCH-01.
+- **เอกสารแผนเท่านั้น**: ยังไม่สร้าง React app, ไม่ปรับ UI Production, ไม่เปลี่ยน SW/cache version, ไม่มีข้อมูลผู้เรียนหรือ GitHub Actions เพิ่ม.
+- Next recommended task: UI-M0 baseline และ M1 design prototypes Home/Books/Settings ก่อนเริ่ม isolated React preview.
+
