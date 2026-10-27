@@ -1,4 +1,4 @@
-// Local-first smoke test for the five-question speaking teleprompter.
+// Local-first smoke test for the seven-question speaking teleprompter.
 // Run: node tests/teleprompter.smoke.cjs
 const fs = require("node:fs");
 const path = require("node:path");
@@ -12,7 +12,14 @@ vm.runInNewContext(read("assets/manuals-data.js"), sandbox, { filename: "assets/
 const book = sandbox.window.WD_LIBRARY_DATA.manuals.find(m => m.id === core.BOOK_ID);
 assert.ok(book && book.status === "published", "Presenter book must exist and be public");
 const chapters = core.getChapters(book);
-assert.equal(chapters.length, 5, "Exactly five speaking chapters");
+assert.equal(chapters.length, 7, "Exactly seven speaking chapters");
+assert.match(book.title, /7 คำถาม/, "Catalog title must reflect the expanded book");
+assert.equal(chapters.at(-2).pageIndex, 6, "AI in Learning is chapter six");
+assert.equal(chapters.at(-1).pageIndex, 7, "Inspirational closing is chapter seven");
+assert.ok(chapters[5].paragraphs.join(" ").includes("การมี AI กับการใช้ AI"), "Chapter 6 preserves the AI in Learning example");
+assert.ok(chapters[6].paragraphs.join(" ").includes("เราไม่จำเป็นต้องรอให้ตัวเองเก่ง AI"), "Closing chapter preserves the original opening");
+assert.ok(read("books/ai-education-five-questions-speaking-scripts-2569.md").includes("## ข้อ 7 —"), "Full source must include the new closing question");
+assert.ok(read("docs/WD_BOOKS_AI_FIVE_QUESTIONS_SPEAKING_GUIDE_2569.md").includes("### ข้อ 7:"), "Practice guide must include the new closing guidance");
 chapters.forEach((chapter, i) => {
   assert.equal(chapter.paragraphs[0], "สวัสดีครับ", "Chapter " + (i + 1) + " starts with greeting");
   assert.equal(chapter.paragraphs.at(-1), "ขอบคุณครับ", "Chapter " + (i + 1) + " ends with thanks");
@@ -35,8 +42,8 @@ for (const asset of ["teleprompter-core.js","teleprompter.js","teleprompter.css"
   assert.ok(sw.includes('./assets/' + asset), "New resource missing from PWA precache");
   assert.ok(html.includes('./assets/' + asset), "New resource missing from page");
 }
-assert.match(version, /1\.3\.49/);
+assert.match(version, /1\.3\.50/);
 assert.match(js, /WD_TELEPROMPTER\?\.open\?\./);
 const ids = Array.from(html.matchAll(/\bid="([^"]+)"/g), match => match[1]);
 assert.equal(new Set(ids).size, ids.length, "HTML must have unique IDs");
-console.log("WD Books — Teleprompter smoke PASS (5 scripts/scroll/clamping/UI/PWA)");
+console.log("WD Books — Teleprompter smoke PASS (7 scripts/scroll/clamping/UI/PWA)");

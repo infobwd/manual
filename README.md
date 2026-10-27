@@ -223,3 +223,12 @@ py -m http.server 4173 --bind 127.0.0.1
 - **เอกสารแผนเท่านั้น**: ยังไม่สร้าง React app, ไม่ปรับ UI Production, ไม่เปลี่ยน SW/cache version, ไม่มีข้อมูลผู้เรียนหรือ GitHub Actions เพิ่ม.
 - Next recommended task: UI-M0 baseline และ M1 design prototypes Home/Books/Settings ก่อนเริ่ม isolated React preview.
 
+## WD Books — ชุดฝึกพูด 7 คำถามการศึกษาในยุค AI (27 ต.ค. 2569)
+
+- หนังสือเดิมรหัส `ai-five-questions-speaking-handbook-25691026` ขยายเป็น **7 คำถาม** โดยไม่เปลี่ยนรหัสหนังสือ เพื่อรักษารายการโปรด ประวัติอ่าน และบุ๊กมาร์กในเครื่อง
+- ข้อที่ 6 **AI in Learning** ว่าด้วยการปรับตัวของครูและผู้บริหารเพื่อใช้ AI อย่างมีคุณภาพ; ข้อที่ 7 เป็น **คำถามปิด** ฝากกำลังใจและแนวทางเริ่มต้น
+- [บทพูดฉบับเต็มและวิเคราะห์ทั้ง 7 ข้อ](books/ai-education-five-questions-speaking-scripts-2569.md) — รักษาบทพูดเดิม 5 ข้อและเพิ่มอีก 2 ข้อพร้อมคำแนะนำ
+- [คู่มือฝึกพูดฉบับขยาย](docs/WD_BOOKS_AI_FIVE_QUESTIONS_SPEAKING_GUIDE_2569.md) — แผนที่เนื้อหา 7 ข้อ, เทคนิคเว้นจังหวะ, แนวทางใช้ Teleprompter
+- [คู่มือ Teleprompter](docs/WD_BOOKS_TELEPROMPTER_2569.md) — เลือกได้ 7 บท, หยุด/เล่นต่อ/ปรับความเร็ว, อ่านต่อได้โดยไม่ใช้บริการภายนอก
+- PWA เวอร์ชัน **1.3.50** ใช้ service worker cache version ใหม่สำหรับทะเบียนหนังสือ; การ Merge โค้ดยังต้องตรวจการเผยแพร่ Pages และทดสอบบนอุปกรณ์จริง
+- ทดสอบแบบ Local-First: `node tests/teleprompter.smoke.cjs`, `node tests/library.smoke.cjs`, `node tests/pwa-reader.smoke.cjs` (ไม่เพิ่ม GitHub Actions)
