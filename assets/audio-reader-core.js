@@ -9,7 +9,8 @@
   const cleanInlineMarkdown = value => typeof value === "string" ? value
     .replace(/(\*\*|__)([^\n]+?)\1/g, "$2")
     .replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, "$1")
-    .replace(/(?<!_)_([^_\n]+?)_(?!_)/g, "$1") : value;
+    .replace(/(?<!_)_([^_\n]+?)_(?!_)/g, "$1")
+    .replace(/^[ \t]*\*{1,2}[ \t]*$/gm, "") : value;
   const asText = value => typeof value === "string" ? cleanInlineMarkdown(value).trim() : "";
   function narrationText(page) {
     if (!page) return "";
