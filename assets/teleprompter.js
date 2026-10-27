@@ -2,6 +2,12 @@
    No external service or microphone access. Does not change Reader progress. */
 (() => {
   "use strict";
+  // Presentation-only: remove paired Markdown emphasis delimiters, preserving source data.
+  const cleanInlineMarkdown = value => typeof value === "string" ? value
+    .replace(/(\*\*|__)([^\n]+?)\1/g, "$2")
+    .replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, "$1")
+    .replace(/(?<!_)_([^_\n]+?)_(?!_)/g, "$1") : value;
+
   const core = window.WD_TELEPROMPTER_CORE;
   const dialog = document.getElementById("wdTeleprompterDialog");
   const openButton = document.getElementById("readerTeleprompterOpen");
@@ -60,7 +66,7 @@
     $("wdPrompterNext").disabled = chapterIndex === chapters.length - 1;
     script.replaceChildren(...chapter.paragraphs.map(line => {
       const paragraph = document.createElement("p");
-      paragraph.textContent = line;
+      paragraph.textContent = cleanInlineMarkdown(line);
       return paragraph;
     }));
     viewport.scrollTop = 0;
