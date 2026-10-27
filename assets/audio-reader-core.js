@@ -5,7 +5,12 @@
   const SPEEDS = [0.75, 1, 1.25, 1.5];
   const limitIndex = (index, count) => Math.max(0, Math.min(Math.max(0, count - 1), Math.floor(Number(index) || 0)));
   const isReadable = book => Boolean(book?.status === "published" && typeof book.id === "string" && Array.isArray(book.pages) && book.pages.length);
-  const asText = value => typeof value === "string" ? value.trim() : "";
+  // Presentation-only: remove paired Markdown emphasis delimiters, preserving source data.
+  const cleanInlineMarkdown = value => typeof value === "string" ? value
+    .replace(/(\*\*|__)([^\n]+?)\1/g, "$2")
+    .replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, "$1")
+    .replace(/(?<!_)_([^_\n]+?)_(?!_)/g, "$1") : value;
+  const asText = value => typeof value === "string" ? cleanInlineMarkdown(value).trim() : "";
   function narrationText(page) {
     if (!page) return "";
     const lines = [page.title, ...(page.paragraphs || []), ...(page.bullets || []).map(item => "• " + item), page.tip];
