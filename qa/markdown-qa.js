@@ -35,4 +35,25 @@ u.onerror=()=>{$("speechStatus").textContent="เสียงอ่านไม�
 speechSynthesis.speak(u);
 });
 $("stop").addEventListener("click",()=>{if("speechSynthesis" in window)speechSynthesis.cancel();$("speechStatus").textContent="หยุดเสียงแล้ว";});
+const audio=$("onlineAudio");
+const status=$("onlineStatus");
+$("onlineListen").addEventListener("click",()=>{
+  const source=clean($("sample").value).trim();
+  if(!source){status.textContent="กรุณาใส่ข้อความ";return;}
+  // Same endpoint and 180-character limit as the production online TTS helper.
+  const segments=window.WD_AUDIO_CORE.splitSpeech(source,175);
+  const first=segments[0];
+  const url=window.WD_AUDIO_CORE.schoolTtsUrl(first);
+  if(!url){status.textContent="ข้อความยาวเกินขีดจำกัด";return;}
+  if("speechSynthesis" in window)speechSynthesis.cancel();
+  audio.pause();audio.removeAttribute("src");audio.load();
+  status.textContent="กำลังโหลดเสียงออนไลน์ (ท่อนแรก "+segments.length+" ท่อน)…";
+  audio.src=url;
+  const promise=audio.play();
+  if(promise&&typeof promise.catch==="function")promise.catch(()=>{status.textContent="ไม่สามารถเริ่มเล่นได้ กรุณากด Play ที่เครื่องเล่น หรือตรวจเครือข่าย";});
+});
+audio.addEventListener("playing",()=>{status.textContent="กำลังเล่นเสียงออนไลน์ของโรงเรียน";});
+audio.addEventListener("ended",()=>{status.textContent="เล่นเสียงออนไลน์ท่อนแรกจบแล้ว";});
+audio.addEventListener("error",()=>{status.textContent="โหลดเสียงออนไลน์ไม่สำเร็จ (อาจเป็นบริการเสียงหรือการเชื่อมต่อ)";});
+$("onlineStop").addEventListener("click",()=>{audio.pause();audio.removeAttribute("src");audio.load();status.textContent="หยุดเสียงออนไลน์แล้ว";});
 })();
