@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.51: AI in Learning and closing speech added to seven-question handbook;
+   Update 1.3.52: audio mini-player opens the currently narrated book page;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");
