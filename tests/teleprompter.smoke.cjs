@@ -13,6 +13,13 @@ const book = sandbox.window.WD_LIBRARY_DATA.manuals.find(m => m.id === core.BOOK
 assert.ok(book && book.status === "published", "Presenter book must exist and be public");
 const chapters = core.getChapters(book);
 assert.equal(chapters.length, 7, "Exactly seven speaking chapters");
+assert.match(book.title, /7 คำถาม/, "Catalog title must reflect the expanded book");
+assert.equal(chapters.at(-2).pageIndex, 6, "AI in Learning is chapter six");
+assert.equal(chapters.at(-1).pageIndex, 7, "Inspirational closing is chapter seven");
+assert.ok(chapters[5].paragraphs.join(" ").includes("การมี AI กับการใช้ AI"), "Chapter 6 preserves the AI in Learning example");
+assert.ok(chapters[6].paragraphs.join(" ").includes("เราไม่จำเป็นต้องรอให้ตัวเองเก่ง AI"), "Closing chapter preserves the original opening");
+assert.ok(read("books/ai-education-five-questions-speaking-scripts-2569.md").includes("## ข้อ 7 —"), "Full source must include the new closing question");
+assert.ok(read("docs/WD_BOOKS_AI_FIVE_QUESTIONS_SPEAKING_GUIDE_2569.md").includes("### ข้อ 7:"), "Practice guide must include the new closing guidance");
 chapters.forEach((chapter, i) => {
   assert.equal(chapter.paragraphs[0], "สวัสดีครับ", "Chapter " + (i + 1) + " starts with greeting");
   assert.equal(chapter.paragraphs.at(-1), "ขอบคุณครับ", "Chapter " + (i + 1) + " ends with thanks");
