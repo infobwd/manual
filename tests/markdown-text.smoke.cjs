@@ -1,0 +1,15 @@
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const context = { window: {} };
+vm.runInNewContext(fs.readFileSync("assets/markdown-text.js", "utf8"), context);
+const clean = context.window.WD_MARKDOWN_TEXT.clean;
+assert.equal(clean("*เป้าหมายประมาณ 2 นาที*"), "เป้าหมายประมาณ 2 นาที");
+assert.equal(clean("**ถ้าวันนี้โรงเรียนของเรามี AI**"), "ถ้าวันนี้โรงเรียนของเรามี AI");
+assert.equal(clean("**\nคำถามชวนคิด\n**"), "\nคำถามชวนคิด\n");
+assert.equal(clean("ข้อความ\n**\nต่อไป"), "ข้อความ\n\nต่อไป");
+assert.equal(clean("2 * 3 = 6"), "2 * 3 = 6");
+assert.equal(clean("### หัวข้อ"), "หัวข้อ");
+assert.equal(clean("> คำพูด"), "คำพูด");
+assert.equal(clean("ไม่มี Markdown"), "ไม่มี Markdown");
+console.log("Markdown text cleanup smoke PASS");
