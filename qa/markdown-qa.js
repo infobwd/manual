@@ -47,13 +47,16 @@ $("onlineListen").addEventListener("click",()=>{
   if(!url){status.textContent="ข้อความยาวเกินขีดจำกัด";return;}
   if("speechSynthesis" in window)speechSynthesis.cancel();
   audio.pause();audio.removeAttribute("src");audio.load();
+  $("onlineDirect").href=url;$("onlineDirect").hidden=false;
+  $("onlineDiagnostic").textContent="ท่อนแรก "+Array.from(first).length+" ตัวอักษร · รอข้อมูลเสียงจากเซิร์ฟเวอร์";
   status.textContent="กำลังโหลดเสียงออนไลน์ (ท่อนแรก "+segments.length+" ท่อน)…";
   audio.src=url;
   const promise=audio.play();
-  if(promise&&typeof promise.catch==="function")promise.catch(()=>{status.textContent="ไม่สามารถเริ่มเล่นได้ กรุณากด Play ที่เครื่องเล่น หรือตรวจเครือข่าย";});
+  if(promise&&typeof promise.catch==="function")promise.catch(error=>{status.textContent="ไม่สามารถเริ่มเล่นได้: "+(error?.name||"ไม่ทราบสาเหตุ");$("onlineDiagnostic").textContent=error?.message||"ลองเปิด URL เสียงโดยตรง";});
 });
+audio.addEventListener("loadedmetadata",()=>{$("onlineDiagnostic").textContent="ได้รับข้อมูลเสียง · ระยะเวลา "+(Number.isFinite(audio.duration)?audio.duration.toFixed(1)+" วินาที":"ไม่ทราบ");});
 audio.addEventListener("playing",()=>{status.textContent="กำลังเล่นเสียงออนไลน์ของโรงเรียน";});
 audio.addEventListener("ended",()=>{status.textContent="เล่นเสียงออนไลน์ท่อนแรกจบแล้ว";});
-audio.addEventListener("error",()=>{status.textContent="โหลดเสียงออนไลน์ไม่สำเร็จ (อาจเป็นบริการเสียงหรือการเชื่อมต่อ)";});
+audio.addEventListener("error",()=>{const code=audio.error?.code||0;status.textContent="โหลดเสียงออนไลน์ไม่สำเร็จ (รหัส MediaError "+code+")";$("onlineDiagnostic").textContent=({1:"การโหลดถูกยกเลิก",2:"เครือข่ายหรือเซิร์ฟเวอร์ส่งข้อมูลไม่ครบ",3:"ถอดรหัสไฟล์เสียงไม่ได้",4:"URL ตอบกลับไม่ใช่ไฟล์เสียงที่รองรับ หรือถูกปฏิเสธ"})[code]||"ไม่ทราบสาเหตุ";});
 $("onlineStop").addEventListener("click",()=>{audio.pause();audio.removeAttribute("src");audio.load();status.textContent="หยุดเสียงออนไลน์แล้ว";});
 })();
