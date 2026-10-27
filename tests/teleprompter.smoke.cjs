@@ -42,7 +42,7 @@ for (const asset of ["teleprompter-core.js","teleprompter.js","teleprompter.css"
   assert.ok(sw.includes('./assets/' + asset), "New resource missing from PWA precache");
   assert.ok(html.includes('./assets/' + asset), "New resource missing from page");
 }
-assert.match(version, /1\.3\.50/);
+assert.match(version, /1\.3\.51/);
 assert.match(js, /WD_TELEPROMPTER\?\.open\?\./);
 const ids = Array.from(html.matchAll(/\bid="([^"]+)"/g), match => match[1]);
 assert.equal(new Set(ids).size, ids.length, "HTML must have unique IDs");
