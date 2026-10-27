@@ -1,5 +1,5 @@
-/* WD Books: conservative, text-only Markdown emphasis cleanup.
-   Keep source unchanged. Never interpret HTML or remove arithmetic operators. */
+/* WD Books: text-only Markdown normalization for reading and speech.
+   Source book data is never modified; preserve literal arithmetic operators. */
 (() => {
   "use strict";
   function clean(value) {
@@ -11,6 +11,8 @@
       .replace(/^[ \t]*\*{1,2}[ \t]*$/gm, "")
       .replace(/^[ \t]*#{1,6}[ \t]+/gm, "")
       .replace(/^[ \t]*>[ \t]?/gm, "")
+      .replace(/^\s*\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)+\|?\s*$/gm, "")
+      .replace(/^\s*\|(.+)\|\s*$/gm, (_, cells) => cells.split("|").map(cell => cell.trim()).filter(Boolean).join(" — "))
       .replace(/\n{3,}/g, "\n\n");
   }
   window.WD_MARKDOWN_TEXT = Object.freeze({ clean });
