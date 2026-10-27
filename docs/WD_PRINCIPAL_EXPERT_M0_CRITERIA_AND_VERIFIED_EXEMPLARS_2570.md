@@ -155,3 +155,20 @@
 **Division of responsibility:** PR #75 owns official-criteria research, expert-rank academic-work analysis, approved-exemplar verification and research notes. PR #76 owns the canonical D1/D2 rubric and source precedence. The master plan in main owns M0–M6 roadmap. M1 will be separate.
 
 **Before review/merge:** inspect official PA 4/บส/ชช for สพฐ. page by page, verify each rubric subitem and its scoring, reconcile ล 679/2566, ล 1144/2567, ล 1933/2567 and subsequent amendments; record PDF page, printed page, reviewer and date. Keep PR #75 and #76 unmerged until explicit review. Do not publish e-book.
+
+
+## 9. M0-C provisional delta: เอกสารด้าน 3 ลงวันที่ 26 ต.ค. 2569 (ตรวจ 28 ต.ค.)
+
+**สำคัญ:** ตาราง A3-05 ใน §8 อ้างจาก **ล 1222/2568** ซึ่งตรวจเมื่อ 24 ต.ค. 2569 จึงเป็น *historical verified baseline* ไม่ใช่เมทริกซ์คะแนนที่ยืนยันว่าใช้สำหรับวันยื่นหลังจากมีหนังสือใหม่. ผู้ใช้ส่งสำเนาสแกน 5 หน้า อ้างหนังสือ ศธ 0206.3/555 ลงวันที่ 26 ต.ค. 2569; **ยังไม่มี official source lock อิสระ**.
+
+| รายการด้าน 3 (ผอ.เชี่ยวชาญ) | §8 / ล 1222/2568 | สแกนหน้า 1–2 / 26 ต.ค. 2569 |
+|---|---:|---:|
+| 1.1 ถูกต้องตามหลักวิชาการ | 20 | **25** |
+| 1.2 คิดค้น/ปรับเปลี่ยน | 15 | **20** |
+| 1.3 สมบูรณ์เนื้อหา | 10 | **10** |
+| 1.4 จัดพิมพ์/เผยแพร่ | 5 | **5** |
+| 2.1 ประโยชน์ต่อผู้เรียน/ครู/สถานศึกษา/ชุมชน | 25 | **20** |
+| 2.2 ความก้าวหน้าวิชาการ/เป็นแบบอย่าง | 25 | **20** |
+| **รวมคุณภาพ : ประโยชน์** | **50 : 50** | **60 : 40** |
+
+ด้าน 3 ของ **เชี่ยวชาญพิเศษ** หน้า 3–5 รวม 60:40 เช่นกัน แต่ 1.2 เป็น “การสร้างการเปลี่ยนแปลง” และหน้า 4 เพิ่มเงื่อนไขตีพิมพ์วิจัย TCI 1/2 หรือวารสารระดับนานาชาติสำหรับเชี่ยวชาญพิเศษ; **ไม่ย้ายเงื่อนไขนี้มาใช้กับเชี่ยวชาญ**. เอกสาร 5 หน้า **ไม่ระบุเกณฑ์ตัดสินผ่าน** จึงไม่ยืนยันความต่อเนื่องของ A3-06 (≥75%) จนตรวจฉบับรวม. รายละเอียด/แผนหลักฐานอยู่ใน [M0-C review](pa-expert/M0_C_DOMAIN3_20261026_SCAN_REVIEW_AND_EVIDENCE_PREP.md).
