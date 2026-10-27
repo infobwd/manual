@@ -403,7 +403,7 @@
   // The audio mini-player opens the exact chapter currently being narrated.
   window.addEventListener("wd:audio-open-current-page", event => {
     const { bookId, chapter } = event.detail || {};
-    const target = manuals.find(item => item.id === bookId);
+    const target = data.manuals.find(item => item.id === bookId);
     if (!target) return;
     if (!dialog.open || state.manual?.id !== bookId) openBook(target, document.getElementById("wdAudioMini"), chapter);
     else jumpTo(chapter);
