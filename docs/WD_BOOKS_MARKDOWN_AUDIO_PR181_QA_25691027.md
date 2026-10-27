@@ -20,3 +20,11 @@ Status: implementation candidate; device QA pending. Production unchanged.
 
 ## Gate
 Do not merge until multiline edge cases, automated regression and real-device audio checks are resolved. No claims of QA PASS are made by this document.
+
+
+## QA preview page (27 Oct)
+- Branch-only route: `/markdown-qa.html`; requires local branch preview, not available on production Pages until a separately approved merge.
+- Assets: `assets/markdown-qa.js`, `assets/markdown-text.js`.
+- Local preview: `git fetch origin && git switch fix/reader-audio-markdown-20261027 && python -m http.server 4173`; open `http://localhost:4173/markdown-qa.html`.
+- Automatic checks and comparison are client-side; spoken voice test uses local Web Speech only. School online TTS must be checked manually in Reader.
+- No device PASS or deployment claimed.
