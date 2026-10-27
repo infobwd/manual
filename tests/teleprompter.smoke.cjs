@@ -1,4 +1,4 @@
-// Local-first smoke test for the five-question speaking teleprompter.
+// Local-first smoke test for the seven-question speaking teleprompter.
 // Run: node tests/teleprompter.smoke.cjs
 const fs = require("node:fs");
 const path = require("node:path");
@@ -12,7 +12,7 @@ vm.runInNewContext(read("assets/manuals-data.js"), sandbox, { filename: "assets/
 const book = sandbox.window.WD_LIBRARY_DATA.manuals.find(m => m.id === core.BOOK_ID);
 assert.ok(book && book.status === "published", "Presenter book must exist and be public");
 const chapters = core.getChapters(book);
-assert.equal(chapters.length, 5, "Exactly five speaking chapters");
+assert.equal(chapters.length, 7, "Exactly seven speaking chapters");
 chapters.forEach((chapter, i) => {
   assert.equal(chapter.paragraphs[0], "สวัสดีครับ", "Chapter " + (i + 1) + " starts with greeting");
   assert.equal(chapter.paragraphs.at(-1), "ขอบคุณครับ", "Chapter " + (i + 1) + " ends with thanks");
@@ -35,8 +35,8 @@ for (const asset of ["teleprompter-core.js","teleprompter.js","teleprompter.css"
   assert.ok(sw.includes('./assets/' + asset), "New resource missing from PWA precache");
   assert.ok(html.includes('./assets/' + asset), "New resource missing from page");
 }
-assert.match(version, /1\.3\.49/);
+assert.match(version, /1\.3\.50/);
 assert.match(js, /WD_TELEPROMPTER\?\.open\?\./);
 const ids = Array.from(html.matchAll(/\bid="([^"]+)"/g), match => match[1]);
 assert.equal(new Set(ids).size, ids.length, "HTML must have unique IDs");
-console.log("WD Books — Teleprompter smoke PASS (5 scripts/scroll/clamping/UI/PWA)");
+console.log("WD Books — Teleprompter smoke PASS (7 scripts/scroll/clamping/UI/PWA)");
