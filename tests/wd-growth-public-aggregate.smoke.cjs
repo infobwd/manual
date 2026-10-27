@@ -13,7 +13,7 @@ vm.runInNewContext(read('assets/manuals-data.js') + '\n' +
   read('assets/wd-growth-plc-information-guide.js'), {window:win});
 const book = win.WD_LIBRARY_DATA.manuals.find(b=>b.id==='wd-growth-plc-information-to-action-2569');
 assert.ok(book,'PLC book exists');
-assert.equal(book.pages.length,16,'add exactly one public aggregate page');
+assert.equal(book.pages.length,28,'add exactly one public aggregate page');
 const matches=book.pages.filter(p=>p.title.includes('สารสนเทศคะแนนเฉลี่ย'));
 assert.equal(matches.length,1);
 const page=matches[0], summary=[...page.paragraphs,...page.bullets,page.tip].join(' ');
@@ -32,7 +32,7 @@ assert.ok(!/เลขที่\s*\d+|student_id|roll_no|national_id|birth_date|t
 const src=read('assets/wd-growth-plc-information-guide.js');
 assert.ok(!/baseline_A1_draft\.json|private-baseline\/2569|wd_growth_paper_review_rows/.test(src),
   'no restricted private data source in public book');
-assert.ok(read('assets/app-version.js').includes('"1.3.54"'));
+assert.ok(read('assets/app-version.js').includes('"1.3.55"'));
 assert.ok(read('index.html').includes('เวอร์ชัน 1.3.54'));
 assert.ok(read('sw.js').includes('1.3.54'));
-console.log('PASS WD Books 1.3.54: authorized provisional grade-only aggregates; no learner rows');
+console.log('PASS WD Books 1.3.54: authorized provisional grade aggregates and public safe skill descriptions; no learner rows');
