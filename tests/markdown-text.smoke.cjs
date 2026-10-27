@@ -12,4 +12,7 @@ assert.equal(clean("2 * 3 = 6"), "2 * 3 = 6");
 assert.equal(clean("### หัวข้อ"), "หัวข้อ");
 assert.equal(clean("> คำพูด"), "คำพูด");
 assert.equal(clean("ไม่มี Markdown"), "ไม่มี Markdown");
+assert.equal(clean("| ช่วง | วิธีพูดที่แนะนำ |"), "ช่วง — วิธีพูดที่แนะนำ");
+assert.equal(clean("|---|---|"), "");
+assert.equal(clean("| “มองกล้อง” | เว้น 2 วินาที |"), "“มองกล้อง” — เว้น 2 วินาที");
 console.log("Markdown text cleanup smoke PASS");
