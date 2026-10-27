@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.53: add public-safe teacher PLC information guide;
+   Update 1.3.54: teacher PLC guide includes director-approved provisional grade aggregates;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");
