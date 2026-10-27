@@ -548,6 +548,15 @@
   });
   $("wdAudioClosePanel").addEventListener("click",closePanel);
   $("wdAudioPlay").addEventListener("click",togglePlayback);
+  const openNarratedPage = () => {
+    if (!book) return;
+    window.dispatchEvent(new CustomEvent("wd:audio-open-current-page", {detail:{bookId:book.id,chapter}}));
+  };
+  const miniOpenReader = $("wdAudioMiniOpenReader");
+  miniOpenReader?.addEventListener("click",openNarratedPage);
+  miniOpenReader?.addEventListener("keydown",event => {
+    if (event.key === "Enter" || event.key === " ") {event.preventDefault();openNarratedPage();}
+  });
   $("wdAudioMiniPlay").addEventListener("click",togglePlayback);
   $("wdAudioStop").addEventListener("click",stop);
   $("wdAudioMiniStop").addEventListener("click",stop);

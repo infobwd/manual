@@ -368,14 +368,15 @@
   dialog.addEventListener("cancel", event => {
     if (isTocOpen()) { event.preventDefault(); closeMobileToc(); }
   });
-  function openBook(book, opener) {
+  function openBook(book, opener, requestedPage = null) {
     if (book.status !== "published" || !book.pages?.length) return;
     state.manual = book;
     searchInput.value = "";
     closeReaderSearch();
     closeBookmarks(false);
     const remembered = window.WD_EXPERIENCE?.getProgress?.(book.id) || 0;
-    state.page = isMobile.matches ? remembered : Math.floor(remembered / 2) * 2;
+    const targetPage = requestedPage === null ? remembered : Math.max(0, Math.min(Number(requestedPage) || 0, book.pages.length - 1));
+    state.page = isMobile.matches ? targetPage : Math.floor(targetPage / 2) * 2;
     state.readingMode = window.WD_EXPERIENCE?.getReadingMode?.() || "paged";
     state.scale = window.WD_EXPERIENCE?.getScale?.() || 1;
     state.opener = opener;
@@ -399,6 +400,14 @@
     window.WD_AUDIO_READER?.selectBook?.(book, state.page);
     $("readerClose").focus();
   }
+  // The audio mini-player opens the exact chapter currently being narrated.
+  window.addEventListener("wd:audio-open-current-page", event => {
+    const { bookId, chapter } = event.detail || {};
+    const target = data.manuals.find(item => item.id === bookId);
+    if (!target) return;
+    if (!dialog.open || state.manual?.id !== bookId) openBook(target, document.getElementById("wdAudioMini"), chapter);
+    else jumpTo(chapter);
+  });
   const toolsToggle = $("readerToolsToggle"), extraTools = $("readerExtraTools");
   // Wide readers have no overflow-menu trigger: never hide their always-visible tools.
   const closeTools = () => {
