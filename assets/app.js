@@ -1,5 +1,7 @@
 (() => {
   "use strict";
+  const cleanInlineMarkdown = value => window.WD_MARKDOWN_TEXT.clean(value);
+
   const data = window.WD_LIBRARY_DATA;
   if (!data || !Array.isArray(data.manuals) || !Array.isArray(data.categories)) return;
 
@@ -663,7 +665,7 @@
     target.setAttribute("aria-label", "หน้า " + (index + 1) + " " + page.title);
     target.append(create("div", "page-kicker", page.kicker || "WD SCHOOL MANUAL"));
     target.append(create("h2", "page-heading", page.title));
-    (page.paragraphs || []).forEach((text) => target.append(create("p", "page-copy", text)));
+    (page.paragraphs || []).forEach((text) => target.append(create("p", "page-copy", cleanInlineMarkdown(text))));
     if (["target-result", "year-comparison"].includes(page.chart?.kind) && Array.isArray(page.chart.rows)) {
       const figure = create("figure", "sar-chart");
       figure.setAttribute("aria-label", page.chart.title || "เปรียบเทียบเป้าหมายกับผลประเมิน");
@@ -697,10 +699,10 @@
     }
     if (page.bullets?.length) {
       const ul = create("ul", "page-list");
-      page.bullets.forEach((text) => ul.append(create("li", "", text)));
+      page.bullets.forEach((text) => ul.append(create("li", "", cleanInlineMarkdown(text))));
       target.append(ul);
     }
-    if (page.tip) target.append(create("div", "page-callout", page.tip));
+    if (page.tip) target.append(create("div", "page-callout", cleanInlineMarkdown(page.tip)));
     target.append(create("div", "book-page-number", "WD MANUAL LIBRARY  ·  " + (index + 1)));
     highlightPage(target);
     target.scrollTop = 0;

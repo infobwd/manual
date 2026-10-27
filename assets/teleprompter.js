@@ -2,6 +2,8 @@
    No external service or microphone access. Does not change Reader progress. */
 (() => {
   "use strict";
+  const cleanInlineMarkdown = value => window.WD_MARKDOWN_TEXT.clean(value);
+
   const core = window.WD_TELEPROMPTER_CORE;
   const dialog = document.getElementById("wdTeleprompterDialog");
   const openButton = document.getElementById("readerTeleprompterOpen");
@@ -60,7 +62,7 @@
     $("wdPrompterNext").disabled = chapterIndex === chapters.length - 1;
     script.replaceChildren(...chapter.paragraphs.map(line => {
       const paragraph = document.createElement("p");
-      paragraph.textContent = line;
+      paragraph.textContent = cleanInlineMarkdown(line);
       return paragraph;
     }));
     viewport.scrollTop = 0;
