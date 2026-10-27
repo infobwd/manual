@@ -1,4 +1,4 @@
-/* WD Books — on-device teleprompter for the five-question AI speaking book.
+/* WD Books — on-device teleprompter for the seven-question AI speaking book.
    No external service or microphone access. Does not change Reader progress. */
 (() => {
   "use strict";
