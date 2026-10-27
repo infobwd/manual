@@ -7,7 +7,7 @@
   function getChapters(book) {
     if (!book || book.id !== BOOK_ID || !Array.isArray(book.pages)) return [];
     return book.pages.flatMap((page, pageIndex) => {
-      if (!/^ข้อ\s*[1-5]\s*[—–-]/u.test(page.title || "") || !String(page.kicker || "").startsWith("บทพูด")) return [];
+      if (!/^ข้อ\s*[1-7]\s*[—–-]/u.test(page.title || "") || !String(page.kicker || "").startsWith("บทพูด")) return [];
       const paragraphs = [];
       let recording = false;
       let finished = false;
