@@ -39,7 +39,7 @@ assert(app.includes('data.bookId !== flipSession.bookId') &&
   app.includes('Number.isInteger(data.chapter)'), "message scoped to book and valid chapter");
 assert(app.includes('jumpTo(pending.lastChapter)') && app.includes('flipChoice.focus()'),
   "return to Reader and restore focus and chapter");
-assert(app.includes('dialog.addEventListener("close", () => {\\n    if (flipDialog.open) flipDialog.close();'),
+assert(app.includes('dialog.addEventListener("close", () => {\n    if (flipDialog.open) flipDialog.close();'),
   "close nested modal if original Reader closes");
 assert(!app.includes('state.readingMode = "flipbook"') && experience.includes('readingMode: "paged"'),
   "never change legacy persisted reading mode schema");
