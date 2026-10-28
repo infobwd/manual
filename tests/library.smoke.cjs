@@ -86,7 +86,9 @@ assert.equal($("manualGrid").children[0].id,core.select(state,[])[0].id);
 
 // My Books must resolve only published IDs, and bookmarks must retain source page indices.
 const selectors=window.WD_MYBOOKS_SELECTORS.createMyBooksSelectors(data.manuals);
-const ids=data.manuals.filter(b=>b.status==="published").slice(0,2).map(b=>b.id);
+// Materialize the expected IDs as a host-realm array, not a VM-realm array.
+// Keep deepStrictEqual exact: book order and IDs must still match.
+const ids=Array.from(data.manuals.filter(b=>b.status==="published").slice(0,2),b=>b.id);
 const unpublished=data.manuals.find(b=>b.status!=="published").id;
 assert.equal(selectors.resume([unpublished,ids[0]]),null,"recent must reject unpublished book");
 assert.equal(selectors.resume([ids[0],unpublished]).id,ids[0],"recent published book resumes");
