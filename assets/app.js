@@ -379,9 +379,20 @@
   flipChoice.hidden = true;
   const eligibleFlipbook = book => flip05Enabled && book?.id === FLIP05_BOOK &&
     book.status === "published" && Boolean(book.pages?.length);
+  const isFlipOnline = () => window.navigator?.onLine !== false;
+  const syncFlipConnectivity = () => {
+    const disabled = !isFlipOnline();
+    flipChoice.disabled = disabled;
+    flipChoice.title = disabled ?
+      "โหมดพลิกกระดาษต้องใช้อินเทอร์เน็ต · อ่านแบบเดิมต่อได้" :
+      "ทดลองพลิกมุมกระดาษ (ออนไลน์)";
+  };
+  window.addEventListener("online", syncFlipConnectivity);
+  window.addEventListener("offline", syncFlipConnectivity);
+  syncFlipConnectivity();
   flipChoice.addEventListener("click", () => {
     const book = state.manual;
-    if (!dialog.open || !eligibleFlipbook(book) || flipDialog.open) return;
+    if (!dialog.open || !eligibleFlipbook(book) || flipDialog.open || !isFlipOnline()) return;
     closeMobileToc(false);
     closeReaderSubpanels();
     const startPage = state.page;
