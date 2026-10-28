@@ -233,6 +233,10 @@
     el("next").disabled = cornerModel.adjacent(index, 1, total, state.renderSingle) === null;
     const chapter = state.pages[readable] && readable > 0 ? state.pages[readable].dataset.chapter : "-1";
     chapterSelect.value = chapter === undefined ? "-1" : String(chapter);
+    el("flipTocItems").querySelectorAll(".flip-toc-item").forEach(button => {
+      if (button.dataset.chapter === String(chapter)) button.setAttribute("aria-current","true");
+      else button.removeAttribute("aria-current");
+    });
     stage.dataset.dragState = "ready";
     // Optional same-origin host can sync chapter on exit without mutating reader state here.
     if (state.hasInteracted && window.parent !== window && Number(chapter) >= 0) {
@@ -371,6 +375,50 @@
       chapter
     }, window.location.origin);
   }
+  // FLIP-10: native-reader-style TOC and settings sheets inside the same iframe.
+  // The parent owns the header; no duplicate scrollable toolbar on mobile/tablet.
+  function closeReaderSheets() {
+    el("flipTocSheet").hidden = true;
+    el("flipToolsDismiss").hidden = true;
+    document.body.classList.remove("flip-toc-open", "flip-tools-open");
+    return {toc:false,tools:false};
+  }
+  function openReaderToc() {
+    const wasOpen = !el("flipTocSheet").hidden;
+    closeReaderSheets();
+    if (!wasOpen) {
+      el("flipTocSheet").hidden = false;
+      document.body.classList.add("flip-toc-open");
+      el("flipTocClose").focus();
+    }
+    return {toc:!wasOpen,tools:false};
+  }
+  function openReaderTools() {
+    const wasOpen = document.body.classList.contains("flip-tools-open");
+    closeReaderSheets();
+    if (!wasOpen) {
+      document.body.classList.add("flip-tools-open");
+      el("flipToolsDismiss").hidden = false;
+      fontSelect.focus();
+    }
+    return {toc:false,tools:!wasOpen};
+  }
+  function navigateToChapter(chapterIndex) {
+    const page = chapterIndex < 0 ? 0 : (state.chapters[chapterIndex]?.page ?? 0);
+    if (!state.engine) return;
+    chapterSelect.value = String(chapterIndex);
+    state.engine.turnToPage(cornerModel.sourceToEngine(page, state.renderSingle));
+    state.hasInteracted = true;
+    stage.classList.add("has-interacted");
+    closeReaderSheets();
+    renderStatus();
+  }
+  if (book && document.body.classList.contains("flip-embedded")) {
+    window.WD_BOOKS_FLIP_CONTROLS = Object.freeze({
+      toggleToc: openReaderToc, toggleTools: openReaderTools,
+      closeSheets: closeReaderSheets
+    });
+  }
   // Make the meaning of aria-pressed and visible label identical in all themes.
   function syncMotionButton() {
     motionButton.setAttribute("aria-pressed", String(state.motionOff));
@@ -395,14 +443,27 @@
     el("prev").addEventListener("click", () => move(-1));
     el("next").addEventListener("click", () => move(1));
     el("returnToReader").addEventListener("click", requestReturnToReader);
-    chapterSelect.addEventListener("change", () => {
-      const i = Number(chapterSelect.value);
-      const sourcePage = i < 0 ? 0 : (state.chapters[i]?.page || 0);
-      const enginePage = cornerModel.sourceToEngine(sourcePage, state.renderSingle);
-      state.engine?.turnToPage(enginePage);
-      state.hasInteracted = true;
-      stage.classList.add("has-interacted");
-      renderStatus();
+    chapterSelect.addEventListener("change", () => navigateToChapter(Number(chapterSelect.value)));
+    const tocItems = el("flipTocItems");
+    book.pages.forEach((item,index) => {
+      const button = element("button","flip-toc-item",(index + 1) + ". " + (item.title || "บทที่ " + (index + 1)));
+      button.type = "button";
+      button.dataset.chapter = String(index);
+      button.addEventListener("click", () => navigateToChapter(index));
+      tocItems.append(button);
+    });
+    el("flipTocClose").addEventListener("click", closeReaderSheets);
+    el("flipToolsDismiss").addEventListener("click", closeReaderSheets);
+    stage.addEventListener("pointerdown", () => {
+      if (document.body.classList.contains("flip-tools-open")) closeReaderSheets();
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" &&
+          (document.body.classList.contains("flip-toc-open") ||
+           document.body.classList.contains("flip-tools-open"))) {
+        event.preventDefault();
+        closeReaderSheets();
+      }
     });
     fontSelect.addEventListener("change", () => {
       state.font = Number(fontSelect.value);
