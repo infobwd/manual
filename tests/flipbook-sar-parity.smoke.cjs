@@ -62,5 +62,84 @@ assert(flipCss.includes("FLIP-14: compact") &&
   flipCss.includes('body[data-flip-theme="night"] .page-content .flip-sar-chart') &&
   flipCss.includes('body[data-flip-theme="sepia"] .page-content .flip-sar-chart'),
   "all three paper themes support SAR figures");
+/* Regression: measure a heading and its first chart row/insight line as one pair.
+   Execute the live helper against a deterministic measured DOM fixture, not
+   only a text-pattern check. These cases cover spare room, page breaks and
+   an oversized pair fallback without losing the existing source nodes. */
+const open = flipJs.indexOf("    function appendPaired(first, second) {");
+const end = flipJs.indexOf("\n    function appendChart(", open);
+assert(open > 0 && end > open, "keep-with-next paginator helper is present");
+const pairedBody = flipJs.slice(open, end);
+const buildPair = new Function("controls", `
+  let current = controls.initial;
+  const section = 2;
+  const contentFits = paper =>
+    paper.area.children.reduce((sum, node) => sum + node.height, 0) <= paper.limit;
+  function freshPage() { current = controls.freshPage(); }
+  ${pairedBody}
+  return (first, second) => ({ok:appendPaired(first, second), current});
+`);
+function fakeNode(height) {
+  return {height, parent:null, remove() {
+    if (!this.parent) return;
+    const i = this.parent.children.indexOf(this);
+    if (i >= 0) this.parent.children.splice(i, 1);
+    this.parent = null;
+  }};
+}
+function fakePage(limit, ...nodes) {
+  const area = {children:[],append(...items) {
+    for (const item of items) { item.remove(); item.parent=this; this.children.push(item); }
+  }};
+  const page = {limit,area,querySelector:name=>name===".page-content"?area:null};
+  area.append(...nodes);
+  return page;
+}
+{
+  const old = fakeNode(30), title=fakeNode(15), chart=fakeNode(35);
+  const initial=fakePage(100,old);
+  let created=0;
+  const outcome=buildPair({initial,freshPage:()=>{created++;return fakePage(100)}})(title,chart);
+  assert(outcome.ok && outcome.current === initial && created===0,
+    "heading and chart stay on an existing page when both fit");
+  assert.deepEqual(initial.area.children.map(n=>n.height),[30,15,35]);
+}
+{
+  const old=fakeNode(75), title=fakeNode(20), chart=fakeNode(35);
+  const initial=fakePage(100,old);
+  let created=0;
+  const outcome=buildPair({initial,freshPage:()=>{created++;return fakePage(100)}})(title,chart);
+  assert(outcome.ok && outcome.current!==initial && created===1,
+    "keep-with-next moves BOTH nodes to the new page");
+  assert.deepEqual(initial.area.children.map(n=>n.height),[75],
+    "no orphaned heading on prior page");
+  assert.deepEqual(outcome.current.area.children.map(n=>n.height),[20,35]);
+}
+{
+  const title=fakeNode(65), chart=fakeNode(50);
+  const initial=fakePage(100);
+  let created=0;
+  const outcome=buildPair({initial,freshPage:()=>{created++;return fakePage(100)}})(title,chart);
+  assert(!outcome.ok && created===0 && initial.area.children.length===0,
+    "oversized pair falls back on same blank page without an extra blank sheet");
+  assert(!title.parent && !chart.parent, "fallback receives both original nodes detached");
+}
+{
+  const old=fakeNode(40), label=fakeNode(15), headline=fakeNode(20);
+  const initial=fakePage(60,old);
+  const outcome=buildPair({initial,freshPage:()=>fakePage(60)})(label,headline);
+  assert(outcome.ok && outcome.current!==initial &&
+    outcome.current.area.children[0]===label &&
+    outcome.current.area.children[1]===headline,
+    "insight label and headline move as a single readable pair");
+}
+assert(flipJs.includes("if (!appendPaired(heading, figure))") &&
+  flipJs.includes("appendWhole(headingText, \"chart-heading\")") &&
+  flipJs.includes("appendAtomic(figure)"),
+  "chart headings pair with first figure and retain split-safe fallback");
+assert(flipJs.includes("if (!appendPaired(label, headline))") &&
+  flipJs.includes('appendWhole("สรุปสารสนเทศ", "insight-label")'),
+  "insight heading pairs with its first headline and retains fallback");
+
 assert(!flipJs.includes("localStorage.setItem("), "no duplicated reader storage");
-console.log("FLIP-14 PASS: 18/18 published manuals incl. 3 module-loaded, 4 SAR charts and 5 insights; strict fallback preserved.");
+console.log("FLIP-14 PASS: 18/18 manuals, 4 SAR charts, 5 insights, page-fit keep-with-next measured fixtures, strict fallback.");
