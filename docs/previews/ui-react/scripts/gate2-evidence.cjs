@@ -15,6 +15,8 @@ function run(label,command,args,timeout=60000){
   const now=Date.now();
   const result=spawnSync(command,args,{
     cwd:root,encoding:"utf8",timeout,maxBuffer:512*1024,
+    // npm.cmd is a batch wrapper on Windows; only fixed npm commands use a shell.
+    shell:process.platform==="win32"&&command===npm,
     env:{...process.env,CI:"1"}
   });
   const status=result.status===0&&!result.error?"PASS":"FAIL";
