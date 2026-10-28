@@ -8,6 +8,17 @@
 **กลุ่มใช้งานหลัก:** ครู/บุคลากรโรงเรียนบน iPhone และ iPad, รองลงมาคือ Android และ Desktop  
 **Source of truth:** เอกสารนี้ใช้กำหนดลำดับงาน, acceptance และ rollout ของการปรับ UX ใน repo นี้ ไม่แก้เนื้อหาวิชาการหรือระบบ WD Growth ต้นทาง
 
+## FLIP-06 — เปิดปุ่มพลิกกระดาษใน PWA โดยไม่ต้องใช้ Query Flag (28 ต.ค. 2569)
+
+**Status:** SINGLE-BOOK EARLY ACCESS; ค่าเริ่มต้นยังเป็น Reader แบบเดิม และรองรับเฉพาะเล่มที่เคยทดลอง FLIP-03/04. รายละเอียดการแก้และรายการตรวจบนมือถือ: [FLIP-06 PWA Visible Choice](WD_BOOKS_FLIP06_PWA_VISIBLE_CHOICE_2569.md).
+
+- ภาพทดสอบจาก iPhone ยืนยัน v1.3.56 แต่ไม่เห็นปุ่มในเมนู ⋯ เพราะเปิด PWA โดยไม่มี `?flip05=1`; เป็นข้อผิดพลาดด้าน discoverability/gating ไม่ใช่แคชเก่า
+- ตัดการพึ่ง query flag, จำกัดเฉพาะหนังสือสาธารณะ `ai-five-questions-speaker-cheatsheet-25691026`, แสดงปุ่มแรกในเมนู ⋯ และคง offline fallback
+- รุ่น `1.3.57` อัปเดต PWA shell/version โดยไม่เปลี่ยนโหมดที่บันทึกใน `wd-manual-reader-v2`, Podcast หรือโครงสร้าง Reader
+- รับรอง static/behavior bridge ผ่าน แต่ **ต้องตรวจหน้า PWA จริงหลัง deploy** ก่อนขยายไปหนังสืออื่น; FLIP-05 gate ที่ต้องใช้ flag ถือว่าถูก supersede เฉพาะการแสดงปุ่มแล้ว
+
+---
+
 ## FLIP-05 — ทดลองเปิดโหมดพลิกกระดาษจาก Reader เดิม (28 ต.ค. 2569)
 
 **Status:** LIMITED GATED RELEASE (`?flip05=1`, only tested public book); real-device integration QA pending — ไม่เปลี่ยนค่าเริ่มต้นหรือเปิดแก่ผู้ใช้ทั้งหมด. แผนและ acceptance: [FLIP-05 Reader Choice Integration](WD_BOOKS_FLIP05_READER_CHOICE_INTEGRATION_2569.md).

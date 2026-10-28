@@ -19,3 +19,27 @@
  .wd-flip-eyebrow{font-size:9px}
  #wdFlipbookClose{font-size:12px;min-width:108px}
 }
+
+/* FLIP-06: invite a pilot reader to use the gesture, without obscuring other tools. */
+.reader-extra-tools .reader-flipbook-choice:not([hidden]){
+  border:1px solid #aed5bc;
+  background:#dceee0;
+  color:#183f32;
+  font-weight:750;
+}
+.reader-extra-tools .reader-flipbook-choice:disabled{
+  opacity:.52;
+  cursor:not-allowed;
+}
+@media(max-width:1100px){
+  .reader-extra-tools .reader-flipbook-choice:not([hidden]){
+    grid-column:span 2;
+    flex-direction:row;
+    gap:8px;
+    min-height:68px;
+  }
+  .reader-extra-tools .reader-flipbook-choice .tool-label{
+    font-size:13px;
+    font-weight:750;
+  }
+}

@@ -24,8 +24,11 @@ const pilotId = "ai-five-questions-speaker-cheatsheet-25691026";
 const eligible = books.filter(x => x.id === pilotId && x.status === "published" && x.pages?.length);
 assert.equal(eligible.length, 1, "test book exists as published, public-only");
 assert.equal(eligible[0].pages.length, 12, "12 source chapters retained");
-assert(app.includes('const flip05Enabled = new URLSearchParams(window.location.search).get("flip05") === "1"'),
-  "Reader choice is opt-in, OFF by default");
+assert(!app.includes("flip05Enabled") && !app.includes('get("flip05")'),
+  "Home Screen PWA must not require a URL query flag");
+assert(html.indexOf('id="readerFlipbookChoice"') > html.indexOf('id="readerExtraTools"') &&
+  html.indexOf('id="readerFlipbookChoice"') < html.indexOf('id="readerFocusToggle"'),
+  "Flipbook first in tools menu");
 assert(app.includes('book?.id === FLIP05_BOOK') && app.includes('book.status === "published"'),
   "only the tested published book is eligible");
 assert(app.includes('flipChoice.hidden = !eligibleFlipbook(book)'), "hidden for other books");
@@ -55,9 +58,9 @@ assert(corner.includes('type: "wd:flip05:chapter"') &&
 assert(corner.includes('document.body.classList.add("flip-embedded")') &&
   style.includes("wd-flip-dialog") && html.includes('reader-flip-choice.css'),
   "scoped embedded layout is present");
-assert(sw.includes('reader-flip-choice.css') && /WD_BOOKS_VERSION = "1\.3\.56"/.test(version) &&
-  html.includes("เวอร์ชัน 1.3.56"), "PWA version and app-shell cache updated together");
+assert(sw.includes('reader-flip-choice.css') && /WD_BOOKS_VERSION = "1\.3\.57"/.test(version) &&
+  html.includes("เวอร์ชัน 1.3.57"), "PWA version and app-shell cache updated together");
 assert(!sw.includes('corner.js') && !sw.includes("page-flip.browser.min.js"),
   "heavy preview not precached for all app installs");
 assert(!/<script[^>]+src=["']https?:/i.test(preview), "preview no runtime CDN");
-console.log("FLIP-05 static PASS: opt-in, public-only, modal lifecycle, safe bridge, schema parity and PWA cache/version.");
+console.log("FLIP-06 static PASS: visible PWA choice, book gate, safe bridge and 1.3.57.");

@@ -6,7 +6,7 @@ const path = require("node:path");
 const assert = require("node:assert/strict");
 const {URLSearchParams} = require("node:url");
 const app = fs.readFileSync(path.join(__dirname, "..", "assets/app.js"), "utf8");
-const start = app.indexOf("  // FLIP-05: the original Reader remains the owner");
+const start = app.indexOf("  // FLIP-06: PWA launches do not preserve");
 const end = app.indexOf("  function openBook(book, opener, requestedPage = null) {", start);
 assert(start > 0 && end > start, "isolated bridge block exists in Reader");
 const bridgeSource = app.slice(start, end);
@@ -50,7 +50,7 @@ function setup(search = "?flip05=1", online = true) {
   return {bridge, elements, win, handlers, state, dialog, book, calls};
 }
 const pilot = setup();
-assert.equal(pilot.bridge.eligibleFlipbook(pilot.book), true, "flag allows this published book");
+assert.equal(pilot.bridge.eligibleFlipbook(pilot.book), true, "published book is eligible");
 assert.equal(pilot.bridge.eligibleFlipbook({...pilot.book,id:"other"}), false, "unapproved book blocked");
 assert.equal(pilot.bridge.eligibleFlipbook({...pilot.book,status:"planned"}), false, "unpublished book blocked");
 pilot.bridge.flipChoice.fire("click");
@@ -88,10 +88,18 @@ pilot.dialog.close();
 assert.equal(pilot.bridge.flipDialog.open,false,"nested modal closes with parent");
 assert.equal(pilot.bridge.flipFrame.src,"about:blank","frame cleared on parent close");
 
-const noFlag=setup("");
-assert.equal(noFlag.bridge.eligibleFlipbook(noFlag.book),false,"default flag stays off");
-noFlag.bridge.flipChoice.fire("click");
-assert.equal(noFlag.bridge.flipDialog.open,false,"cannot open without flag");
+const homeScreen=setup("");
+assert.equal(homeScreen.bridge.eligibleFlipbook(homeScreen.book),true,
+  "Home Screen PWA must show the tested book without query params");
+homeScreen.bridge.flipChoice.fire("click");
+assert.equal(homeScreen.bridge.flipDialog.open,true,
+  "PWA without query params opens the approved public book");
+homeScreen.bridge.flipDialog.close();
+const notApproved=setup("");
+notApproved.state.manual={...notApproved.book,id:"another-book"};
+notApproved.bridge.flipChoice.fire("click");
+assert.equal(notApproved.bridge.flipDialog.open,false,
+  "Another book remains blocked");
 
 const offline=setup("?flip05=1",false);
 assert.equal(offline.bridge.flipChoice.disabled,true,"offline control disabled");
@@ -100,4 +108,4 @@ assert.equal(offline.bridge.flipDialog.open,false,"no offline blank overlay");
 offline.win.navigator.onLine=true;
 (offline.handlers.online||[]).forEach(fn=>fn());
 assert.equal(offline.bridge.flipChoice.disabled,false,"reconnected control is usable");
-console.log("FLIP-05 behavior PASS: modal lifecycle, origin/frame/book/chapter rejection, progress/focus, opt-in and offline fallback.");
+console.log("FLIP-06 behavior PASS: PWA access, book-only gate, modal, origin and offline fallback.");
