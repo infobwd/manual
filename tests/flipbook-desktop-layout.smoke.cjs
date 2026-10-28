@@ -28,7 +28,8 @@ assert(dialog.includes(".wd-flip-dialog[open] .wd-flip-return-overlay") &&
   dialog.includes("touch-action:manipulation"),
   "parent return overlays the bottom-right navigation cell");
 assert(host.includes('window.WD_BOOKS_FLIP_EXIT = closeFlipbook') &&
-  host.includes('flipReturnBottom.addEventListener("click", returnFromParentButton)'),
+  host.includes('flipReturnBottom.addEventListener("click", () => {') &&
+  host.includes('flipExitIntent = "close"'),
   "synchronous parent-owned return bypasses iframe messaging");
 assert(child.includes('window.parent.WD_BOOKS_FLIP_EXIT(window, book.id, chapter)') &&
   child.includes('type: "wd:flip08b:exit"'),
