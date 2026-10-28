@@ -55,8 +55,12 @@ for (const [id, golden] of Object.entries(expected)) {
     rows: page.chart.rows.map(row => [row.label, row.target, row.result]),
   }));
   const realHeadlines = book.pages.filter(page => page.insight).map(page => page.insight.headline);
-  assert.deepEqual(realCharts, golden.charts, id + " chart values/title changed");
-  assert.deepEqual(realHeadlines, golden.headlines, id + " insight headlines changed");
+  // vm.runInNewContext returns arrays with a different realm/prototype.
+  // Normalise only the container; values, order, titles and percentages stay exact.
+  assert.deepEqual(JSON.parse(JSON.stringify(realCharts)), golden.charts,
+    id + " chart values/title changed");
+  assert.deepEqual(JSON.parse(JSON.stringify(realHeadlines)), golden.headlines,
+    id + " insight headlines changed");
   charts += realCharts.length;
   rows += realCharts.reduce((sum, chart) => sum + chart.rows.length, 0);
   insights += realHeadlines.length;
