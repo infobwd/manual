@@ -35,7 +35,7 @@ assert(!app.includes("localStorage.setItem(") &&
        !app.includes("navigator.serviceWorker"), "no new data writes or SW");
 
 const start = app.indexOf("  function repaginate() {");
-const end = app.indexOf("  function init() {", start);
+const end = app.indexOf("  // The flipbook starts in the Reader", start);
 assert(start >= 0 && end > start, "retry function can be isolated");
 const code = app.slice(start,end);
 const factory = new Function("state", "window", "paginate", "el", "document",
