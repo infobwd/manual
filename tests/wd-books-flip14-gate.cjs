@@ -45,6 +45,14 @@ for(const name of targets){
     stderr:(result.stderr||"").slice(-3000),
   });
   console.log(status.padEnd(4),name);
+  if(status==="FAIL"){
+    // Keep stderr visible on Windows without requiring users to locate a temp JSON.
+    const detail=[result.error?.message,result.stderr,result.stdout]
+      .filter(Boolean).join("\n").trim();
+    console.error("----- "+name+" failure detail -----");
+    console.error(detail ? detail.slice(-2400) : "No stderr/stdout captured");
+    console.error("----- end -----");
+  }
 }
 const pass=entries.filter(item=>item.status==="PASS").length;
 const report={
