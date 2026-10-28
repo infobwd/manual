@@ -175,6 +175,43 @@
       }
     }
 
+    // Chart rows are measured atomically, so changing font or orientation never
+    // clips a comparison or silently drops its values. Each row remains readable
+    // even when a chapter's chart must continue onto a new physical page.
+    function appendAtomic(node) {
+      if (tryAppend(node)) return;
+      freshPage(section);
+      if (!tryAppend(node)) throw new Error("แถวกราฟสูงเกินพื้นที่หน้ากระดาษ");
+    }
+    function appendChart(chart) {
+      appendWhole(chart.title || "เปรียบเทียบข้อมูล", "chart-heading");
+      const labels = chart.labels || ["เป้าหมาย", "ผลประเมิน"];
+      chart.rows.forEach(row => {
+        const figure = element("figure", "flip-sar-chart");
+        figure.setAttribute("role", "group");
+        figure.setAttribute("aria-label", row.label);
+        figure.append(element("figcaption", "flip-sar-label", row.label));
+        [["target", labels[0], row.target], ["result", labels[1], row.result]].forEach(([kind, label, value]) => {
+          const line = element("div", "flip-sar-line");
+          line.append(element("span", "flip-sar-legend", label));
+          const track = element("span", "flip-sar-track");
+          track.setAttribute("aria-hidden", "true");
+          const bar = element("span", "flip-sar-bar flip-sar-" + kind);
+          bar.style.width = value + "%";
+          track.append(bar);
+          line.append(track, element("strong", "flip-sar-value", value + "%"));
+          figure.append(line);
+        });
+        appendAtomic(figure);
+      });
+    }
+    function appendInsight(insight) {
+      appendWhole("สรุปสารสนเทศ", "insight-label");
+      appendWhole(insight.headline, "insight-headline");
+      if (insight.primary) appendWhole(insight.primary, "insight-primary");
+      if (insight.detail) appendWhole(insight.detail, "insight-detail");
+    }
+
     book.pages.forEach((source, index) => {
       section = index;
       freshPage(section);
@@ -182,6 +219,8 @@
       if (source.kicker) appendWhole(source.kicker, "chapter-label");
       if (source.title) appendWhole(source.title, "title");
       (source.paragraphs || []).forEach(text => appendWhole(text, "paragraph"));
+      if (source.chart) appendChart(source.chart);
+      if (source.insight) appendInsight(source.insight);
       (source.bullets || []).forEach(text => appendWhole(text, "bullet"));
       if (source.tip) appendWhole(source.tip, "tip");
       // This schema is verified for every supported public book before rendering.
