@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.65: FLIP-10 unified phone and tablet reader controls;
+   Update 1.3.66: FLIP-11 default book view and realistic paper for compatible books;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");
