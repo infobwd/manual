@@ -3,3 +3,14 @@
 @media(max-width:690px){:root{--page-h:clamp(390px,calc(100dvh - 330px),590px)}.topbar{height:66px;padding:0 14px}.brand{font-size:12px}.brand-symbol{height:33px;width:33px}.pilot-tag{display:none}.back-link{font-size:11px}.workspace{padding:14px 10px 30px}.intro{padding:8px 9px 16px}.intro p{font-size:12px}.intro-icon{display:none}.reading-surface{border-radius:17px}.toolbar{padding:13px 15px}.book-information strong{max-width:calc(100vw - 46px);font-size:12px}.settings{gap:5px}.settings .control-label{font-size:10px;margin-left:0}.settings select{max-width:135px;padding:7px}.text-btn{padding:7px 9px;font-size:11px}.book-stage{padding:18px 12px 12px;min-height:calc(var(--page-h) + 35px)}.book{width:min(420px,100%)}.left-slot{display:none}.right-slot{width:100%;border-radius:5px;box-shadow:none}.spine{display:none}.paper{padding:25px 24px 20px}.paper.cover{padding:33px 30px 26px}.cover-title{font-size:24px}.cover-design{font-size:95px}.turn-sheet{width:100%}.turn-sheet.next,.turn-sheet.prev{left:0}.navigator{padding:13px 12px;gap:9px}.nav-button{min-width:94px;padding:9px 10px;font-size:12px}.progress-wrap{width:42%}.progress-text{font-size:10px}.site-note{flex-direction:column;align-items:flex-start;font-size:10px}.help{padding:0 13px 16px}}
 @media(max-width:360px){.paper{padding:18px 16px}.settings{gap:4px}.settings .control-label{display:none}}
 @media(prefers-reduced-motion:reduce){.turn-sheet,.fill{transition:none!important}}
+
+/* Match WD Books' portrait tablet single-page threshold while keeping wide iPad landscape spreads. */
+@media (min-width:691px) and (max-width:1100px){
+  :root{--page-h:min(720px,calc(100dvh - 310px))}
+  .book{width:min(590px,100%)}
+  .left-slot{display:none}
+  .right-slot{width:100%;border-radius:6px;box-shadow:none}
+  .spine{display:none}
+  .turn-sheet{width:100%}
+  .turn-sheet.next,.turn-sheet.prev{left:0}
+}
