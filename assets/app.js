@@ -374,6 +374,11 @@
   const flipChoice = $("readerFlipbookChoice");
   const flipDialog = $("wdFlipbookDialog"), flipFrame = $("wdFlipbookFrame");
   const flipClose = $("wdFlipbookClose"), flipReturnBottom = $("wdFlipbookReturnBottom");
+  const flipTocTrigger = $("wdFlipbookTocTrigger");
+  const flipToolsTrigger = $("wdFlipbookToolsTrigger");
+  const flipAudioTrigger = $("wdFlipbookAudioTrigger");
+  const flipMobileTitle = $("wdFlipbookMobileTitle");
+  let flipAudioRequested = false;
   let flipSession = null;
   flipChoice.hidden = true;
   const eligibleFlipbook = book => book?.id === FLIP05_BOOK &&
@@ -396,6 +401,12 @@
     closeReaderSubpanels();
     const startPage = state.page;
     flipSession = {bookId: book.id, originalPage: startPage, lastChapter: null};
+    flipMobileTitle.textContent = book.title;
+    flipMobileTitle.title = book.title;
+    flipTocTrigger.disabled = true;
+    flipToolsTrigger.disabled = true;
+    flipTocTrigger.setAttribute("aria-expanded","false");
+    flipToolsTrigger.setAttribute("aria-expanded","false");
     const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1", v: String(window.WD_BOOKS_VERSION || "1.3.63"), theme: document.body?.dataset?.theme || "light"});
     // The flipbook runs in an iframe whose width may not match the host desktop.
     if (document.documentElement.classList.contains("wd-google-sans") &&
@@ -426,9 +437,43 @@
       flipDialog.close(); // Existing close handler restores Reader/focus/progress.
       return;
     }
+    if (data.type === "wd:flip10:sheet") {
+      flipTocTrigger.setAttribute("aria-expanded",String(data.toc === true));
+      flipToolsTrigger.setAttribute("aria-expanded",String(data.tools === true));
+      return;
+    }
     if (data.type !== "wd:flip05:chapter" || !Number.isInteger(data.chapter)) return;
     if (data.chapter >= 0 && data.chapter < (state.manual?.pages?.length || 0))
       flipSession.lastChapter = data.chapter;
+  });
+  // FLIP-10: the mobile/tablet header delegates only to the active
+  // same-origin Flipbook. The standard Reader remains owner of audio.
+  const invokeFlipControl = method => {
+    if (!flipDialog.open || !flipSession) return;
+    try {
+      const controls = flipFrame.contentWindow?.WD_BOOKS_FLIP_CONTROLS;
+      if (typeof controls?.[method] === "function") {
+        const state = controls[method]();
+        flipTocTrigger.setAttribute("aria-expanded",String(Boolean(state?.toc)));
+        flipToolsTrigger.setAttribute("aria-expanded",String(Boolean(state?.tools)));
+      }
+    } catch (error) {
+      // Never touch an unrelated window or throw on an iframe that is reloading.
+    }
+  };
+  flipTocTrigger.addEventListener("click", () => invokeFlipControl("toggleToc"));
+  flipToolsTrigger.addEventListener("click", () => invokeFlipControl("toggleTools"));
+  flipFrame.addEventListener("load", () => {
+    let ready = false;
+    try { ready = Boolean(flipFrame.contentWindow?.WD_BOOKS_FLIP_CONTROLS); }
+    catch (error) { /* no child controls yet */ }
+    flipTocTrigger.disabled = !flipDialog.open || !ready;
+    flipToolsTrigger.disabled = !flipDialog.open || !ready;
+  });
+  flipAudioTrigger.addEventListener("click", () => {
+    if (!flipDialog.open || !flipSession) return;
+    flipAudioRequested = true;
+    returnFromParentButton();
   });
   // FLIP-09: a synchronous same-origin return avoids a lost postMessage when
   // Mobile Safari freezes or unloads a nested iframe during a tap.
@@ -461,11 +506,19 @@
     flipSession = null;
     // Avoid retaining another copy of the book in a hidden iframe.
     flipFrame.src = "about:blank";
+    flipTocTrigger.disabled = true;
+    flipToolsTrigger.disabled = true;
+    flipTocTrigger.setAttribute("aria-expanded","false");
+    flipToolsTrigger.setAttribute("aria-expanded","false");
     if (pending && dialog.open && state.manual?.id === pending.bookId) {
       if (pending.lastChapter !== null && pending.lastChapter !== state.page)
         jumpTo(pending.lastChapter);
-      flipChoice.focus();
+      if (flipAudioRequested) {
+        // Open the real audio panel; never autoplay or duplicate TTS in iframe.
+        $("readerAudioToggle")?.click();
+      } else flipChoice.focus();
     }
+    flipAudioRequested = false;
   });
   dialog.addEventListener("close", () => {
     if (flipDialog.open) flipDialog.close();
