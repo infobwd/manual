@@ -472,6 +472,17 @@
     catch (error) { /* no child controls yet */ }
     flipTocTrigger.disabled = !flipDialog.open || !ready;
     flipToolsTrigger.disabled = !flipDialog.open || !ready;
+    if (flipDialog.open && flipSession && !ready) {
+      // A network error may load an HTML error page with no Flipbook scripts.
+      // The underlying Reader remains fully usable without resetting progress.
+      let isFlipPage = false;
+      try {
+        const url = new URL(flipFrame.contentWindow.location.href);
+        isFlipPage = url.origin === window.location.origin &&
+          url.pathname.endsWith("/experiments/flipbook-pilot/corner.html");
+      } catch (error) {}
+      if (isFlipPage) flipDialog.close();
+    }
   });
   flipAudioTrigger.addEventListener("click", () => {
     if (!flipDialog.open || !flipSession) return;
