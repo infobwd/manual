@@ -54,6 +54,31 @@ node tests/wd-books-flip14-gate.cjs
 
 **Evidence in this chat:** the module-manifest test body was executed against live branch text using a JavaScript-compatible harness and **PASS** (4 book-source scripts, 23 catalog titles, 18 published, 18 eligible); the runner's JavaScript syntax parsed and its **18 listed test filenames** were verified present. The 18-file runner itself has **not** been run against a local checkout and must not be marked passed until command logs exist. Browser visuals and real-device QA remain open.
 
+## Windows Node 24 field report — 29 Oct 2026
+
+**User Windows baseline (before fixes):** `node tests/wd-books-flip14-gate.cjs` on Node **v24.13.1** returned **13/18 PASS**, 5 FAIL. User supplied exact error output from `%TEMP%\wd-books-flip14-node-gate.json`.
+
+| Failed test | Observed issue | Fix in this PR |
+|---|---|---|
+| `flipbook-sar-values.smoke.cjs` | `deepStrictEqual` rejected visually identical nested arrays created in a foreign `vm` realm | Normalise plain data via JSON round trip for exact value comparison |
+| `flipbook-corner.smoke.cjs` | `deepStrictEqual` rejected cross-realm page arrays | Compare `Array.from(...)` to host arrays |
+| `pwa-reader.smoke.cjs` | Legacy fake document returned `null` for `.reader-stage`; old 7-item fixture and removed close-thumb target | Replace with executable current `assets/experience.js` integration test: full 4-module public catalog (23/18), favorites, bookmarks, progress/history, persisted Continue callback, native Reader pull-refresh gating. Also check `app.js` binding contracts. **Does not claim to simulate actual Reader DOM/UI** |
+| `audio-reader-integration.smoke.cjs` | Hard-coded version `1.3.42` while release was `1.3.68` | Validate shared version contract between HTML, Service Worker and app-version script, independent of future number |
+| `library.smoke.cjs` | Legacy DOM fixture lacked `window.addEventListener`; assumed old layout | Replace with public runtime `catalog-core.js` + `catalog-ui.js` + `mybooks-selectors.js` checks for 23/18 source content, search/reset/filter, rejected unpublished reading, bookmarking and bridge contracts. **Does not claim a full Reader UI test** |
+
+All five revised test bodies were evaluated against the branch's source in a JS compatibility harness: **5/5 PASS**. This is preliminary source/runtime simulation; **not a confirmed full Windows Node execution**. The tests only change QA files, not current production Reader, Service Worker, content or release version.
+
+### Windows retest (pending)
+
+```powershell
+cd D:\wd-books-manual
+git status --short
+git pull --ff-only
+node tests/wd-books-flip14-gate.cjs
+```
+
+Only consider the Node regression gate **PASS** if the command prints **18/18 PASS**, the saved report has `fail: 0`, and Windows exit code is 0. Any remaining failure requires real stderr analysis. Device/browser and SAR visual page-fitting QA remain **NOT TESTED**, even if Node passes.
+
 ## Required QA before merge / version bump
 1. `node tests/flipbook-sar-parity.smoke.cjs`, `node tests/flipbook-default-paper.smoke.cjs`, `node tests/flipbook-close-book-label.smoke.cjs`, `node tests/flipbook-corner.smoke.cjs` and complete prior FLIP-08–13 suites: report actual logs.
 2. On iPhone Safari + installed PWA: open **เตรียมรับนิเทศเปิดภาคเรียน 2**, WD Growth individual plan and PLC guide through shelf and verify every chapter, previous/next, bottom close, classic mode and audio handoff.
