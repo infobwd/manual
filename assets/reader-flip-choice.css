@@ -54,31 +54,20 @@
 }
 
 
-/* FLIP-08A: reserve a real touch target in the bottom-right of the parent PWA
-   dialog, not on top of paper or the inner Previous/Next buttons. On short
-   landscape displays keep the previous header placement. */
-@media screen and (max-width:690px) and (min-height:501px){
-  .wd-flip-shell{
-    position:relative;
-    padding-bottom:calc(62px + env(safe-area-inset-bottom,0px));
-  }
-  .wd-flip-shell::after{
-    content:"";pointer-events:none;position:absolute;z-index:1;
-    inset:auto 0 0 0;height:calc(62px + env(safe-area-inset-bottom,0px));
-    background:#fff;border-top:1px solid #d7e3dc;
-  }
-  .wd-flip-header{justify-content:flex-start}
+/* FLIP-08B: the labeled "กลับไปอ่าน" is inside the iframe bottom nav.
+   Keep a small parent-level X as a reliable escape if iframe fails to load.
+   Remove the old second bottom row to return height to the paper. */
+@media screen and (max-width:690px) {
+  .wd-flip-shell{position:relative;padding-bottom:0}
+  .wd-flip-shell::after{content:none}
+  .wd-flip-header{justify-content:space-between}
   .wd-flip-header #wdFlipbookClose{
-    position:absolute;z-index:2;
-    right:calc(12px + env(safe-area-inset-right,0px));
-    bottom:calc(8px + env(safe-area-inset-bottom,0px));
-    min-height:46px;min-width:134px;padding:10px 15px;
-    box-shadow:0 4px 12px #062c2330;
+    position:static;flex:0 0 44px;
+    width:44px;height:44px;min-height:44px;min-width:44px;
+    padding:0;box-shadow:none;display:grid;place-items:center;
     touch-action:manipulation;
   }
-  body[data-theme="night"] .wd-flip-shell::after{
-    background:#20332b;border-color:#354d40;
-  }
+  .wd-flip-close-label{display:none}
 }
 body[data-theme="night"] .wd-flip-dialog{
   background:#14251d;color:#e5efe6;
