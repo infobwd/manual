@@ -36,7 +36,7 @@
 @media(max-width:999px){.catalog-sidebar{padding:14px}.catalog-sidebar h2{font-size:.9rem}}
 
 </style></head><body><div class="shell"><header class="top"><div class="logo">✳ WD Books</div><span class="muted tag">Design preview · UI-MIG-01</span></header><p class="note">ต้นแบบแยกจากเว็บจริง: ข้อมูลหนังสือตัวอย่างเท่านั้น ไม่อ่านหรือเขียนข้อมูลบนเครื่อง ไม่ใช่ Reader หรือ shadcn/ui ที่ติดตั้งแล้ว</p>
-<main><section id="home" class="view"><div class="hero"><p class="tag muted">คลังคู่มือโรงเรียนบ้านวังด้ง</p><h1>หนังสือดี ๆ อ่านต่อได้ทุกวัน</h1><p class="muted">ค้นหา เรียนรู้ และกลับมาอ่านต่อได้ง่าย</p><input class="search" type="search" placeholder="ค้นหาหนังสือหรือหัวข้อ…" aria-label="ค้นหาหนังสือตัวอย่าง"></div><section class="section panel"><p class="tag muted">อ่านต่อ</p><div class="continue"><div><h2>คู่มือครู · ตัวอย่าง</h2><p class="muted">แสดงตำแหน่งความคืบหน้าในระบบจริง</p></div><button class="primary" type="button" disabled>อ่านต่อ</button></div></section><section class="section"><h2>หนังสือใหม่</h2><div class="grid" id="homeGrid"></div></section><section class="section"><h2>หมวดหมู่</h2><div class="tabs"><button data-category="การจัดการเรียนรู้">การจัดการเรียนรู้</button><button data-category="คู่มือระบบ">คู่มือระบบ</button><button data-category="งานบริหาร">งานบริหาร</button></div></section></section>
+<main><section id="home" class="view"><div class="hero"><p class="tag muted">คลังคู่มือโรงเรียนบ้านวังด้ง</p><h1>หนังสือดี ๆ อ่านต่อได้ทุกวัน</h1><p class="muted">ค้นหา เรียนรู้ และกลับมาอ่านต่อได้ง่าย</p><input class="search" id="homeSearch" type="search" placeholder="ค้นหาหนังสือหรือหัวข้อ…" aria-label="ค้นหาหนังสือตัวอย่าง"></div><section class="section panel"><p class="tag muted">อ่านต่อ</p><div class="continue"><div><h2>คู่มือครู · ตัวอย่าง</h2><p class="muted">แสดงตำแหน่งความคืบหน้าในระบบจริง</p></div><button class="primary" type="button" disabled>อ่านต่อ</button></div></section><section class="section"><h2>หนังสือใหม่</h2><div class="grid" id="homeGrid"></div></section><section class="section"><h2>หมวดหมู่</h2><div class="tabs"><button data-category="การจัดการเรียนรู้">การจัดการเรียนรู้</button><button data-category="คู่มือระบบ">คู่มือระบบ</button><button data-category="งานบริหาร">งานบริหาร</button></div></section></section>
 <section id="books" class="view" hidden>
   <div class="catalog-layout">
     <aside class="catalog-sidebar" aria-label="ตัวกรองหมวดหมู่">
@@ -126,8 +126,20 @@ document.querySelectorAll("[data-cat]").forEach(button=>button.addEventListener(
   categoryFilter=button.dataset.cat;updateCategory();renderBooks();
 }));
 document.querySelectorAll("[data-category]").forEach(button=>button.addEventListener("click",()=>{
-  categoryFilter=button.dataset.category;updateCategory();renderBooks();showView("books");
+  categoryFilter=button.dataset.category;statusFilter="all";
+  document.querySelectorAll(".filter").forEach(node=>
+    node.setAttribute("aria-pressed",String(node.dataset.filter==="all")));
+  byId("bookSearch").value="";
+  updateCategory();renderBooks();showView("books");
 }));
+byId("homeSearch").addEventListener("input",()=>{
+  const search=byId("homeSearch").value;
+  if (!search.trim()) return;
+  categoryFilter="all";statusFilter="all";byId("bookSearch").value=search;
+  document.querySelectorAll(".filter").forEach(node=>
+    node.setAttribute("aria-pressed",String(node.dataset.filter==="all")));
+  updateCategory();renderBooks();showView("books");
+});
 document.querySelectorAll("[data-view]").forEach(button=>button.addEventListener("click",()=>showView(button.dataset.view)));
 document.querySelectorAll(".theme").forEach(button=>button.addEventListener("click",()=>{
   document.documentElement.className=button.dataset.theme==="light"?"":button.dataset.theme;
