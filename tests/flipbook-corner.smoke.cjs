@@ -20,6 +20,8 @@ new vm.Script(vendor, { filename: "page-flip.browser.min.js" });
 const scope = { window: {} };
 vm.runInNewContext(modelSource, scope, { timeout: 2000 });
 const model = scope.window.WD_CORNER_MODEL;
+// Values returned by vm contexts use a foreign Array prototype; normalise the
+// container before assert/strict without weakening actual page/order checks.
 vm.runInNewContext(positionSource, scope, { timeout: 2000 });
 const position = scope.window.WD_CORNER_POSITION;
 assert(position && typeof position.capture === "function" && typeof position.restore === "function",
@@ -59,13 +61,13 @@ for (const single of [false, true]) {
     assert.equal(pages[0], 0, "front cover first");
     assert.equal(pages.at(-1), -2, "back cover last");
     const content = pages.filter(i => i > 0);
-    assert.deepEqual(content, Array.from({ length: count - 1 }, (_, i) => i + 1), "every source page exactly once");
+    assert.deepEqual(Array.from(content), Array.from({ length: count - 1 }, (_, i) => i + 1), "every source page exactly once");
     if (!single) {
       assert.equal(pages[1], -1, "inside cover blank left");
       assert.equal(pages[2], 1, "first content right");
       assert.equal(pages.length % 2, 0, "hard back cover on right");
       assert.equal(model.status(1, pages, single).label, "หน้า 1 / " + (count - 1), "first page counted correctly");
-      if (count > 3) assert.deepEqual(model.visiblePages(3, pages, false), [2, 3], "second spread must be 2–3");
+      if (count > 3) assert.deepEqual(Array.from(model.visiblePages(3, pages, false)), [2, 3], "second spread must be 2–3");
     } else {
       assert.equal(pages[1], 1, "portrait shows text immediately after cover");
     }
