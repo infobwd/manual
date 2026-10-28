@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.56: opt-in FLIP-05 reader choice, gated pilot only;
+   Update 1.3.57: FLIP-06 PWA-visible choice for one verified public book;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");
