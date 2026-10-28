@@ -52,6 +52,7 @@ function setup(search = "?flip05=1", online = true) {
   };
   const book = {
     id:"ai-five-questions-speaker-cheatsheet-25691026",
+    title:"5 คำถามชวนคิด เมื่อ AI เข้ามาในโรงเรียน",
     status:"published", pages:Array.from({length:12}, (_, i) => ({title:"Chapter " + i}))
   };
   const state = { manual: book, page: 3 };
