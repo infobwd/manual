@@ -14,3 +14,12 @@
   .turn-sheet{width:100%}
   .turn-sheet.next,.turn-sheet.prev{left:0}
 }
+
+/* FLIP-02: a closed front cover belongs to the RIGHT side of a real book.
+   The left half is empty until the reader turns the cover. */
+@media (min-width:1101px) {
+  .book.cover-closed .left-slot { background:transparent;box-shadow:none }
+  .book.cover-closed .right-slot { border-radius:7px }
+  .book.cover-closed .right-slot .paper.cover { border-radius:7px }
+  .book.cover-closed .spine { display:none }
+}
