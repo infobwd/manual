@@ -396,7 +396,7 @@
     closeReaderSubpanels();
     const startPage = state.page;
     flipSession = {bookId: book.id, originalPage: startPage, lastChapter: null};
-    const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1", v: String(window.WD_BOOKS_VERSION || "1.3.60")});
+    const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1", v: String(window.WD_BOOKS_VERSION || "1.3.61"), theme: document.body?.dataset?.theme || "light"});
     // The flipbook runs in an iframe whose width may not match the host desktop.
     if (document.documentElement.classList.contains("wd-google-sans") &&
         window.matchMedia("(min-width: 1101px) and (hover: hover) and (pointer: fine)").matches)
@@ -410,8 +410,15 @@
     if (!flipDialog.open || !flipSession || event.origin !== window.location.origin ||
         event.source !== flipFrame.contentWindow) return;
     const data = event.data;
-    if (!data || data.type !== "wd:flip05:chapter" || data.bookId !== flipSession.bookId ||
-        !Number.isInteger(data.chapter)) return;
+    if (!data || data.bookId !== flipSession.bookId) return;
+    // FLIP-08A: only this active same-origin book frame can change Reader theme.
+    // WD_EXPERIENCE owns the saved preference; the iframe never writes storage.
+    if (data.type === "wd:flip08a:theme") {
+      if (["light", "night"].includes(data.theme))
+        window.WD_EXPERIENCE?.setTheme?.(data.theme);
+      return;
+    }
+    if (data.type !== "wd:flip05:chapter" || !Number.isInteger(data.chapter)) return;
     if (data.chapter >= 0 && data.chapter < (state.manual?.pages?.length || 0))
       flipSession.lastChapter = data.chapter;
   });
