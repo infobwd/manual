@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.66: FLIP-11 default book view and realistic paper for compatible books;
+   Update 1.3.67: FLIP-12 single closed back cover and desktop category results focus;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");
