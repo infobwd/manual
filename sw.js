@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.67: FLIP-12 single closed back cover and desktop category results focus;
+   Update 1.3.68: FLIP-13 close-book semantics and clean title line breaks;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");
