@@ -14,7 +14,10 @@ assert(version, "central PWA version exists");
 const start = app.indexOf("  // FLIP-11: a supported published book opens as a real Flipbook by default.");
 const end = app.indexOf("  function openBook(book, opener, requestedPage = null, options = {}) {", start);
 assert(start > 0 && end > start, "isolated bridge block exists in Reader");
-const bridgeSource = app.slice(start, end);
+const displayStart = app.indexOf("  // Normalize real/newline-escape");
+const displayEnd = app.indexOf("  const state = {",displayStart);
+assert(displayStart>0 && displayEnd>displayStart,"display-only title formatter exists");
+const bridgeSource = app.slice(displayStart, displayEnd) + "\n" + app.slice(start,end);
 const factory = new Function("$", "window", "document", "dialog", "state", "closeMobileToc",
   "closeReaderSubpanels", "jumpTo", "URLSearchParams", bridgeSource +
     "\nreturn { eligibleFlipbook, flipChoice, flipDialog, flipFrame, getSession: () => flipSession };\n");
