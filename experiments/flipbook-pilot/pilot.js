@@ -7,6 +7,7 @@
   const left = el("leftSlot"), right = el("rightSlot"), turnLayer = el("turnLayer");
   const chapterSelect = el("chapter"), fontSelect = el("fontSize");
   const motionButton = el("motionButton");
+  const spread = window.WD_FLIPBOOK_SPREAD_MODEL;
   const reducedSystem = window.matchMedia("(prefers-reduced-motion: reduce)");
   const mobileQuery = window.matchMedia("(max-width: 1100px)");
   const state = { pages: [], current: 0, chapters: [], busy: false, motionOff: reducedSystem.matches, font: 100 };
@@ -30,7 +31,7 @@
 
   function isSingle() { return mobileQuery.matches; }
   function step() { return isSingle() ? 1 : 2; }
-  function pageAt(index) { return state.pages[index] ? state.pages[index].cloneNode(true) : blank(); }
+  function pageAt(index) { return index != null && state.pages[index] ? state.pages[index].cloneNode(true) : blank(); }
   function createSheet(chapterIndex, withCover) {
     const paper = element("div", "paper" + (withCover ? " cover" : ""));
     paper.dataset.chapter = String(chapterIndex);
@@ -83,7 +84,10 @@
   }
 
   function paginate() {
-    const oldChapter = Number(state.pages[state.current]?.dataset.chapter ?? -1);
+    // A two-page spread is anchored to the RIGHT page, including the cover.
+    const oldSides = spread.slots(state.current, state.pages.length, isSingle());
+    const visiblePage = oldSides.left != null && oldSides.left > 0 ? oldSides.left : oldSides.right;
+    const oldChapter = Number(state.pages[visiblePage]?.dataset.chapter ?? -1);
     measure.replaceChildren();
     const w = bookNode.getBoundingClientRect().width;
     const h = bookNode.getBoundingClientRect().height;
@@ -162,35 +166,38 @@
     let target = state.chapters.find(ch => ch.page > 0 && Number(state.pages[ch.page].dataset.chapter) === oldChapter);
     if (oldChapter === -1) target = { page: 0 };
     state.current = target ? target.page : 0;
-    state.current = Math.floor(state.current / step()) * step();
+    state.current = spread.positionForPage(state.current, state.pages.length, isSingle());
     render();
   }
 
   function render() {
     const count = state.pages.length;
-    const start = state.current;
+    const position = state.current;
+    const sides = spread.slots(position, count, isSingle());
+    bookNode.classList.toggle("cover-closed", !isSingle() && sides.closed);
     if (isSingle()) {
       left.replaceChildren();
-      right.replaceChildren(pageAt(start));
+      right.replaceChildren(pageAt(sides.right));
     } else {
-      left.replaceChildren(pageAt(start));
-      right.replaceChildren(pageAt(start + 1));
+      left.replaceChildren(pageAt(sides.left));
+      right.replaceChildren(pageAt(sides.right));
     }
     turnLayer.replaceChildren();
-    const shown = Math.min(count, start + step());
-    const label = isSingle() ? "หน้า " + (start + 1) + " / " + count : "หน้า " + (start + 1) + "–" + shown + " / " + count;
-    el("progress").textContent = label;
-    el("progressFill").style.width = Math.round(shown / count * 100) + "%";
-    el("prev").disabled = state.busy || start === 0;
-    el("next").disabled = state.busy || start + step() >= count;
-    const chapterIndex = Number(state.pages[start]?.dataset.chapter ?? -1);
+    const indicator = spread.status(position, count, isSingle());
+    el("progress").textContent = indicator.label;
+    el("progressFill").style.width = (indicator.total ? Math.round(indicator.shown / indicator.total * 100) : 0) + "%";
+    el("prev").disabled = state.busy || spread.adjacent(position, -1, count, isSingle()) === null;
+    el("next").disabled = state.busy || spread.adjacent(position, 1, count, isSingle()) === null;
+    // Select the first actual chapter on the spread (ignore blank inside covers).
+    const visiblePage = sides.left != null && sides.left > 0 ? sides.left : sides.right;
+    const chapterIndex = Number(state.pages[visiblePage]?.dataset.chapter ?? -1);
     chapterSelect.value = String(chapterIndex);
   }
 
   function navigate(direction) {
     if (state.busy || !state.pages.length) return;
-    const amount = step(), nextIndex = state.current + amount * direction;
-    if (nextIndex < 0 || nextIndex >= state.pages.length) return;
+    const nextIndex = spread.adjacent(state.current, direction, state.pages.length, isSingle());
+    if (nextIndex === null) return;
     if (state.motionOff || reducedSystem.matches) {
       state.current = nextIndex;
       render();
@@ -199,14 +206,14 @@
     state.busy = true;
     const from = state.current;
     const single = isSingle();
-    const front = single ? pageAt(from) : pageAt(direction > 0 ? from + 1 : from);
-    const back = single ? pageAt(nextIndex) : pageAt(direction > 0 ? from + 2 : from - 1);
-    if (single) {
-      right.replaceChildren(pageAt(nextIndex));
-    } else if (direction > 0) {
-      right.replaceChildren(pageAt(nextIndex + 1));
+    const fromSides = spread.slots(from, state.pages.length, single);
+    const toSides = spread.slots(nextIndex, state.pages.length, single);
+    const front = pageAt(direction > 0 ? fromSides.right : (single ? fromSides.right : fromSides.left));
+    const back = pageAt(direction > 0 ? (single ? toSides.right : toSides.left) : toSides.right);
+    if (single || direction > 0) {
+      right.replaceChildren(pageAt(toSides.right));
     } else {
-      left.replaceChildren(pageAt(nextIndex));
+      left.replaceChildren(pageAt(toSides.left));
     }
     const leaf = element("div", "turn-sheet " + (direction > 0 ? "next" : "prev"));
     const faceFront = element("div", "face front"), faceBack = element("div", "face back");
@@ -250,7 +257,7 @@
       const selected = Number(chapterSelect.value);
       const chapter = state.chapters[selected];
       state.current = selected < 0 ? 0 : (chapter?.page || 0);
-      state.current = Math.floor(state.current / step()) * step();
+      state.current = spread.positionForPage(state.current, state.pages.length, isSingle());
       render();
       stage.focus({ preventScroll: true });
     });
