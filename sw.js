@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.60: FLIP-08 iPhone PWA embedded mobile nav and viewport layout;
+   Update 1.3.61: FLIP-08A thumb-right exit + flipbook dark mode + distinct motion control;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");
