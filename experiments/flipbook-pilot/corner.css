@@ -171,3 +171,84 @@ html.wd-flip-desktop-font .paper:not(.cover) {
   body.flip-embedded .book-stage{min-height:330px}
   body.flip-embedded .corner-frame{height:310px}
 }
+
+
+/* FLIP-08A: a real moon/sun theme button; a separate labeled motion control.
+   Keep existing chapter and type-size controls in one compact mobile row. */
+.flip-theme-button{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:22px}
+.flip-theme-button[aria-pressed="true"]{background:#315347;color:#f5f8ec;border-color:#315347}
+@media screen and (max-width:690px){
+  body.flip-embedded .settings{
+    grid-template-columns:minmax(0,1fr) 78px 44px 49px;
+    gap:6px;
+  }
+  body.flip-embedded #themeButton{
+    width:44px;min-width:44px;height:44px;min-height:44px;
+    padding:0;font-size:23px;display:grid;place-items:center;
+  }
+  body.flip-embedded #motionButton{
+    width:49px;height:44px;padding:2px 0;display:flex;
+    flex-direction:column;gap:0;align-items:center;justify-content:center;
+  }
+  body.flip-embedded #motionButton::before{content:"↔";display:block;font-size:19px;line-height:1.05}
+  body.flip-embedded #motionButton::after{content:"โมชั่น";display:block;font-size:9px;line-height:1.15}
+}
+@media screen and (max-width:360px){
+  body.flip-embedded .settings{grid-template-columns:minmax(0,1fr) 68px 42px 45px;gap:4px}
+  body.flip-embedded #themeButton{width:42px;min-width:42px}
+  body.flip-embedded #motionButton{width:45px}
+}
+/* Dark mode covers both the onscreen sheet and its pagination measurement
+   clone; no font metrics, chapter mapping or page size changes. */
+body[data-flip-theme="night"]{
+  --paper:#25372f;color-scheme:dark;color:#e4eee7;background:#172920;
+}
+body[data-flip-theme="night"] .reading-surface,
+body[data-flip-theme="night"] .toolbar,
+body[data-flip-theme="night"] .navigator{
+  background:#20332b;color:#e4eee7;border-color:#40594c;
+}
+body[data-flip-theme="night"] .book-stage{
+  background:radial-gradient(ellipse at center,#20362b 0%,#15271f 90%);
+}
+body[data-flip-theme="night"] .corner-sheet{background:#263a31;border-color:#425a4c}
+body[data-flip-theme="night"] .paper:not(.cover),
+body[data-flip-theme="night"] .paper.blank{background:#25372f;color:#e2ebe4}
+body[data-flip-theme="night"] .page-content{color:#e2ebe4}
+body[data-flip-theme="night"] .page-content h2,
+body[data-flip-theme="night"] .page-content strong,
+body[data-flip-theme="night"] .page-content .chapter-label{
+  color:#d2efca;
+}
+body[data-flip-theme="night"] .paper-header,
+body[data-flip-theme="night"] .paper-footer{color:#b4c9bd;border-color:#455e50}
+body[data-flip-theme="night"] .paper-header .series,
+body[data-flip-theme="night"] .paper-footer .folio{color:#a6d7b3}
+body[data-flip-theme="night"] .page-content .bullet:before{color:#a3ddba}
+body[data-flip-theme="night"] .page-content .tip{
+  background:#354d3d;color:#e5f0e2;border-color:#8dc9a2;
+}
+body[data-flip-theme="night"] .toolbar .micro,
+body[data-flip-theme="night"] .control-label,
+body[data-flip-theme="night"] .progress-text,
+body[data-flip-theme="night"] .help{color:#b4c9bd}
+body[data-flip-theme="night"] .settings select,
+body[data-flip-theme="night"] .settings .text-btn,
+body[data-flip-theme="night"] .nav-button:not(.primary){
+  background:#30483a;color:#edf6ed;border-color:#4d6b58;
+}
+body[data-flip-theme="night"] #themeButton[aria-pressed="true"]{
+  background:#436d56;color:#fff4c8;border-color:#6b9274;
+}
+body[data-flip-theme="night"] .nav-button.primary{background:#35684d;color:#fff;border-color:#35684d}
+body[data-flip-theme="night"] .track{background:#46594b}
+body[data-flip-theme="night"] .corner-hint span{background:#253b31e8;color:#d1e5d7}
+body[data-flip-theme="night"] .error{background:#49322d;color:#ffd7cd}
+/* Preserve existing sepia preference when coming from the original Reader. */
+body[data-flip-theme="sepia"]{--paper:#f7efdf;background:#eee5d4;color:#594b3a}
+body[data-flip-theme="sepia"] .reading-surface,
+body[data-flip-theme="sepia"] .toolbar,
+body[data-flip-theme="sepia"] .navigator{background:#f5ead7;border-color:#e0d1b7}
+body[data-flip-theme="sepia"] .paper:not(.cover){background:#f7efdf}
+body[data-flip-theme="sepia"] .page-content{color:#5c4c37}
+body[data-flip-theme="sepia"] .book-stage{background:#e8ddc6}
