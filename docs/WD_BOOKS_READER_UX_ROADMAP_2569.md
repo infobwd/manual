@@ -8,6 +8,17 @@
 **กลุ่มใช้งานหลัก:** ครู/บุคลากรโรงเรียนบน iPhone และ iPad, รองลงมาคือ Android และ Desktop  
 **Source of truth:** เอกสารนี้ใช้กำหนดลำดับงาน, acceptance และ rollout ของการปรับ UX ใน repo นี้ ไม่แก้เนื้อหาวิชาการหรือระบบ WD Growth ต้นทาง
 
+## FLIP-07 — แก้ iPhone embedded Flipbook และเปลี่ยนฟอนต์ไทยแบบมีหัว (28 ต.ค. 2569)
+
+**Status:** Fix implementation; gated rollout one book only / post-deployment mobile QA pending. รายละเอียดและ acceptance: [FLIP-07 iOS Embed + Sarabun](WD_BOOKS_FLIP07_IOS_EMBED_SARABUN_2569.md).
+
+- ภาพ iPhone ยืนยันว่าเข้า dialog FLIP-05 ได้แล้ว แต่หน้ากระดาษว่าง/ขึ้น error; คอมเปิดได้ — ตรวจพบเส้นทาง `iframe.src` ถูกตั้งก่อน `showModal` และ paginate ก่อนตรวจ layout
+- เริ่มโหลด iframe หลังเปิด dialog, รอ 2 animation frames, เช็ก geometry และ retry แบบมีเพดาน, ฟัง ResizeObserver และ fonts.ready
+- ฟอนต์ตัวอักษรใน Flipbook เปลี่ยนเป็น **Sarabun ภาษาไทยมีหัว** พร้อม fallback สำหรับสภาพเครือข่ายไม่พร้อม ไม่เปลี่ยนโหมดอ่านและ Podcast
+- PWA `1.3.58` อัปเดต shell เพื่อดึงไฟล์ใหม่; tests ด้าน logic ผ่านแต่ยังรอ iPhone/iPad/desktop visual gate จริงก่อนขยายหนังสืออื่น
+
+---
+
 ## FLIP-06 — เปิดปุ่มพลิกกระดาษใน PWA โดยไม่ต้องใช้ Query Flag (28 ต.ค. 2569)
 
 **Status:** SINGLE-BOOK EARLY ACCESS; ค่าเริ่มต้นยังเป็น Reader แบบเดิม และรองรับเฉพาะเล่มที่เคยทดลอง FLIP-03/04. รายละเอียดการแก้และรายการตรวจบนมือถือ: [FLIP-06 PWA Visible Choice](WD_BOOKS_FLIP06_PWA_VISIBLE_CHOICE_2569.md).
