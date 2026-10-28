@@ -285,6 +285,28 @@
     el("next").disabled = cornerModel.adjacent(index, 1, total, state.renderSingle) === null;
     const chapter = state.pages[readable] && readable > 0 ? state.pages[readable].dataset.chapter : "-1";
     chapterSelect.value = chapter === undefined ? "-1" : String(chapter);
+    // A desktop spread can display the end of one chapter on the left and
+    // the next chapter's opening on the right. Clarify this without changing
+    // the TOC selection (left/first readable), Reader bridge or saved progress.
+    const spreadHint = el("spreadChapterHint");
+    const boundary = cornerModel.crossChapterSpread(
+      index, state.engineMap, state.renderSingle,
+      source => Number(state.pages[source]?.dataset.chapter ?? -1)
+    );
+    if (spreadHint) {
+      spreadHint.hidden = !boundary;
+      if (boundary) {
+        spreadHint.textContent = "ซ้าย: บท " + (boundary.left + 1) +
+          " · ขวา: บท " + (boundary.right + 1);
+        spreadHint.title = "หน้าซ้าย: " + (book.pages[boundary.left]?.title || "บท " + (boundary.left + 1)) +
+          " / หน้าขวา: " + (book.pages[boundary.right]?.title || "บท " + (boundary.right + 1));
+        spreadHint.setAttribute("aria-label", spreadHint.title);
+      } else {
+        spreadHint.textContent = "";
+        spreadHint.removeAttribute("aria-label");
+        spreadHint.removeAttribute("title");
+      }
+    }
     el("flipTocItems").querySelectorAll(".flip-toc-item").forEach(button => {
       if (button.dataset.chapter === String(chapter)) button.setAttribute("aria-current","true");
       else button.removeAttribute("aria-current");
