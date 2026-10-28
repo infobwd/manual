@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.62: add public term 2 supervision guide with offline support;
+   Update 1.3.63: FLIP-08B inline return navigation and high-contrast motion state;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");
