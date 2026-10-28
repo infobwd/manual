@@ -189,7 +189,7 @@
     if (!single) sheets.push(makeSheet(blank(), -1));
     for (let i = 1; i < state.pages.length; i++) sheets.push(makeSheet(state.pages[i], i));
     // Ensure the back cover is the final single hard sheet.
-    if (sheets.length % 2 === 1) sheets.push(makeSheet(blank(), -1));
+    if (!single && sheets.length % 2 === 0) sheets.push(makeSheet(blank(), -1));
     sheets.push(makeSheet(makeBackCover(), -2, "hard"));
     return sheets;
   }
@@ -311,6 +311,7 @@
       mountEngine(Math.max(0, sourcePage));
     });
     stage.addEventListener("keydown", event => {
+      if (event.target !== stage) return;
       if (event.key === "ArrowRight") { event.preventDefault(); move(1); }
       if (event.key === "ArrowLeft") { event.preventDefault(); move(-1); }
     });
