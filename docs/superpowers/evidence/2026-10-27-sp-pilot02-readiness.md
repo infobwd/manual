@@ -63,3 +63,17 @@ SP-PILOT-02 = BLOCKED FOR EXECUTION in this runtime due to GitHub DNS access. So
 - Container has Node v22.16.0 and Chromium 144, but GitHub/npm registry DNS unavailable. Full React dependencies/lockfile/build and source checkout for real browser snapshots are still **NOT TESTED**. Do not report Gate P2/P3/P4 or UI-MIG Gate 2 as PASS.
 
 **Dependency chain:** #173 → #207 → #208; #180 documents pilot evidence; #206 is the independent design target. Keep stacked PRs Draft and unmerged until build and visual acceptance.
+
+---
+
+## 29 Oct 2026 — SP-PILOT-05: reproducible offline gate helpers
+
+**Live Draft candidates and their dependency order:** #173 (source) → #207 (pure typed catalog/TDD) → #208 (responsive React category-first). Independent #206 is the HTML-only visual design target. All remain unmerged.
+
+- In #208, added `scripts/gate2-evidence.cjs` (Node built-ins only) to execute both preview-native tests and produce a machine-readable gate report in OS temp. Default is read-only tests; `--install-build` is explicit and invokes `npm ci` then `npm run build` only when a generated committed `package-lock.json` exists.
+- The script's source parsed, and a JavaScript mock harness verified all 3 paths: **default** runs native tests and records build NOT_RUN; **full without lockfile** marks FAIL; **Windows + lockfile** invokes `npm.cmd` through the shell with fixed arguments, then build. Each report keeps `gate2: OPEN` pending browser and real-device QA.
+- Actual local Node 22 catalog filtering tests were re-run in the container: **8/8 PASS**; isolated `tsc --strict --noEmit` for `src/catalog-filter.ts` exited 0.
+- An offline npm lockfile install probe failed `ENOTCACHED` for `@radix-ui/react-slot`. Therefore **no npm lockfile generated**; complete React build, React DOM, nested-path screenshot and iPhone/iPad testing remain NOT_RUN. This is a verified blocker, not an error to conceal with a fabricated lockfile.
+- A corresponding FLIP-14 PR #205 now includes a **four-script book-source parity test** and a one-command **18-test Node regression collector**; the collector is source-validated but NOT EXECUTED against a full checkout due to GitHub DNS. Device QA remains independent.
+
+**Next required local evidence:** Reproducible lockfile + `npm ci`/build on network-enabled Windows worktree; review JSON reports and inspect iPhone/iPad/desktop visual screenshots; only then consider Gate 0/1/2 acceptance and merge sequencing. Production v1.3.68 remains unchanged.
