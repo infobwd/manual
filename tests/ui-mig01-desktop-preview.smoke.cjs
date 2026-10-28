@@ -6,7 +6,7 @@ const text=fs.readFileSync(path.join(__dirname,"../docs/previews/ui-next/index.h
 const script=/<script>([\s\S]*?)<\/script>/.exec(text)?.[1];
 assert(script,"preview inline script is present");
 new vm.Script(script);
-for (const id of ["home","books","settings","homeGrid","bookGrid","bookSearch","homeSearch",
+for (const id of ["home","books","settings","homeGrid","bookGrid","bookSearch","homeSearch","homeSearchForm",
   "categoryChoices","bookResultsCount","bookEmpty","fontSize"]) {
   assert(text.includes('id="'+id+'"'),id+" preserved");
 }
@@ -32,8 +32,10 @@ class MockElement {
   addEventListener(name, callback) { this.listeners[name] = callback; }
   click() { this.listeners.click?.({ target: this }); }
   input() { this.listeners.input?.({ target: this }); }
+  submit() { this.listeners.submit?.({ target: this, preventDefault:()=>{} }); }
+  focus() { this.focused = true; }
 }
-const ids = ["home","books","settings","homeGrid","bookGrid","bookSearch","homeSearch",
+const ids = ["home","books","settings","homeGrid","bookGrid","bookSearch","homeSearch","homeSearchForm",
   "categoryChoices","bookResultsCount","bookEmpty","fontSize","fontOutput","sampleText"];
 const elements = Object.fromEntries(ids.map(id => [id, new MockElement(id)]));
 const filters = ["all","favorite","recent"].map(filter => new MockElement("", {filter}));
@@ -68,8 +70,14 @@ shortcuts[2].click();
 assert.equal(elements.books.hidden,false,"home category shortcut changes view");
 assert.equal(elements.bookGrid.children.length,2,"category shortcut clears unrelated old favorites filter");
 assert.equal(filters[0].attributes["aria-pressed"],"true","all-books filter selected");
+views[0].click();
+assert.equal(elements.home.hidden,false,"home visible before searching");
 elements.homeSearch.value="แนวทาง"; elements.homeSearch.input();
+assert.equal(elements.home.hidden,false,"typing does not navigate away or lose keyboard focus");
+elements.homeSearchForm.submit();
+assert.equal(elements.books.hidden,false,"explicit submit opens bookshelf");
 assert.equal(elements.bookGrid.children.length,1,"home search opens relevant bookshelf result");
+assert.equal(elements.bookSearch.focused,true,"results search receives focus");
 assert.equal(elements.bookGrid.children[0].children[1].textContent,"แนวทาง WD Growth");
 views[2].click();
 assert.equal(elements.settings.hidden,false,"settings view works");
@@ -78,4 +86,4 @@ assert.equal(document.documentElement.className,"night","night theme works");
 elements.fontSize.value="140"; elements.fontSize.input();
 assert.equal(elements.fontOutput.textContent,"140%");
 assert.equal(elements.sampleText.style.fontSize,"140%");
-console.log("UI-MIG-01R2 PASS: static contracts and 15 mock DOM interaction assertions (no browser/device claim).");
+console.log("UI-MIG-01R2 PASS: static contracts and Home submit + filter mock interaction assertions (no browser/device claim).");
