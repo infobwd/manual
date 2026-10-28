@@ -23,7 +23,7 @@
   const state = { pages: [], chapters: [], current: 0, motionOff: reducedSystem.matches, font: 100,
     engine: null, engineMap: [], renderSingle: null, hasInteracted: false,
     initialChapter: startChapter,
-    rebuilding: false, resizeTimer: 0 };
+    rebuilding: false, resizeTimer: 0, layoutRetries: 0, retryTimer: 0 };
   const element = (tag, className, value) => {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -100,11 +100,20 @@
     const oldChapter = Number(state.pages[oldSource]?.dataset.chapter ?? -1);
     const anchor = positionModel.capture(state.chapters, state.pages.length, oldSource, oldChapter);
     measure.replaceChildren();
-    const w = bookNode.getBoundingClientRect().width;
-    const h = bookNode.getBoundingClientRect().height;
-    if (w < 100 || h < 200) throw new Error("ยังไม่ทราบขนาดพื้นที่หน้ากระดาษ");
-    measure.style.width = (w / step()) + "px";
+    const rect = bookNode.getBoundingClientRect();
+    const w = Math.round(rect.width);
+    const h = Math.round(rect.height);
+    // A nested iOS PWA dialog can load its iframe before WebKit assigns layout.
+    // Do not count or render pages until both the frame and its paper have height.
+    if (w < 120 || h < 300) throw new Error("FLIP_LAYOUT_PENDING");
+    measure.style.width = Math.round(w / step()) + "px";
     measure.style.height = h + "px";
+    const probe = createSheet(-1, false);
+    measure.replaceChildren(probe);
+    const area = probe.querySelector(".page-content");
+    if (!area || area.clientHeight < 100 || area.clientWidth < 90)
+      throw new Error("FLIP_LAYOUT_PENDING");
+    measure.replaceChildren();
     state.pages = [createSheet(-1, true)];
     state.chapters = [];
     let current = null;
@@ -305,9 +314,23 @@
   }
   function repaginate() {
     if (state.rebuilding) return;
-    try { paginate(); } catch (error) {
-      console.error(error);
-      fail("จัดหน้ากระดาษไม่สำเร็จ กรุณาลองปรับขนาดหน้าจอใหม่");
+    window.clearTimeout(state.retryTimer);
+    try {
+      paginate();
+      state.layoutRetries = 0;
+      el("error").hidden = true;
+      delete document.querySelector(".reading-surface").dataset.error;
+    } catch (error) {
+      if (error?.message === "FLIP_LAYOUT_PENDING" && state.layoutRetries++ < 20) {
+        // Wait for iframe paint/fonts/viewport to stabilize; never paginate 0px pages.
+        state.retryTimer = window.setTimeout(repaginate, 130);
+        return;
+      }
+      console.error("FLIP-07 page layout", error, {
+        frame: bookNode.getBoundingClientRect().toJSON?.() || null,
+        viewport: { width: window.innerWidth, height: window.innerHeight }
+      });
+      fail("จัดหน้ากระดาษไม่สำเร็จ กรุณากดกลับไปอ่าน แล้วลองเปิดใหม่");
     }
   }
   function init() {
@@ -361,7 +384,25 @@
         }
       });
     }
-    repaginate();
+    // WebKit may report 0-size frames during the initial deferred-script pass.
+    window.requestAnimationFrame(() => window.requestAnimationFrame(repaginate));
+    // Sarabun can arrive after initial layout; reflow once the font becomes ready.
+    if (document.fonts?.ready) document.fonts.ready.then(() => {
+      if (!state.rebuilding && state.engine) repaginate();
+    }).catch(() => {});
+    // iOS iframe/dialog changes are not always accompanied by a window resize.
+    if (typeof window.ResizeObserver === "function") {
+      const observer = new window.ResizeObserver(entries => {
+        const rect = entries[0]?.contentRect;
+        if (!rect || rect.width < 120 || rect.height < 300 || state.rebuilding) return;
+        const next = Math.round(rect.width) + "x" + Math.round(rect.height);
+        if (next === state.lastLayoutSize) return;
+        state.lastLayoutSize = next;
+        window.clearTimeout(state.resizeTimer);
+        state.resizeTimer = window.setTimeout(repaginate, 140);
+      });
+      observer.observe(bookNode);
+    }
   }
   try { init(); } catch (error) { console.error(error); fail("เกิดข้อผิดพลาดระหว่างเปิดตัวทดลอง"); }
 })();
