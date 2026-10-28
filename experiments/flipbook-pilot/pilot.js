@@ -8,7 +8,7 @@
   const chapterSelect = el("chapter"), fontSelect = el("fontSize");
   const motionButton = el("motionButton");
   const reducedSystem = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const mobileQuery = window.matchMedia("(max-width: 690px)");
+  const mobileQuery = window.matchMedia("(max-width: 1100px)");
   const state = { pages: [], current: 0, chapters: [], busy: false, motionOff: reducedSystem.matches, font: 100 };
   const element = (tag, className, value) => {
     const node = document.createElement(tag);
@@ -114,7 +114,7 @@
       freshPage(section);
       if (tryAppend(node)) return;
       // One block may exceed the entire page: split it rather than clipping it.
-      let remaining = splitSegments(String(text), "word");
+      let remaining = splitSegments(String(text).replace(/\*\*/g, ""), "word");
       while (remaining.length) {
         let low = 1, high = remaining.length, best = 0;
         while (low <= high) {
