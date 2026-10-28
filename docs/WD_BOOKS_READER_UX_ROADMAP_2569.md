@@ -8,6 +8,17 @@
 **กลุ่มใช้งานหลัก:** ครู/บุคลากรโรงเรียนบน iPhone และ iPad, รองลงมาคือ Android และ Desktop  
 **Source of truth:** เอกสารนี้ใช้กำหนดลำดับงาน, acceptance และ rollout ของการปรับ UX ใน repo นี้ ไม่แก้เนื้อหาวิชาการหรือระบบ WD Growth ต้นทาง
 
+## FLIP-10 — ปุ่มโหมดพลิกกระดาษเหมือน Reader ปกติบน iPhone/iPad (28 ต.ค. 2569)
+
+**Status:** implemented in isolated feature / browser QA pending. [Specification & acceptance](WD_BOOKS_FLIP10_UNIFIED_MOBILE_CONTROLS_2569.md).
+
+- Top controls: สารบัญ, ชื่อหนังสือ, ฟังหนังสือใน Reader เดิม, เครื่องมืออ่าน ⋯
+- Bottom controls: ก่อนหน้า, หน้าและสถานะ, ถัดไป, ปิดด้วย ✕ จาก parent ที่กดได้แม้ iframe ไม่ตอบสนอง
+- ≤1100px ครอบคลุม iPhone/iPad, >1100px ยังคง FLIP-09 Desktop; mode/storage/Podcast เดิมไม่เปลี่ยน
+- PWA v1.3.65; ทดสอบจริงหลัง deploy ก่อนขยายไปหนังสือเล่มอื่น
+
+---
+
 ## FLIP-09 — ขยายหน้าคู่บน Desktop + ซ่อม “กลับไปอ่าน” บนมือถือ (28 ต.ค. 2569)
 
 **Status:** code implementation / automated gates pending + real-device QA pending. [รายละเอียดและ Rollback](WD_BOOKS_FLIP09_DESKTOP_RETURN_2569.md).

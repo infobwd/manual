@@ -21,12 +21,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&amp;display=swap">
   <link rel="stylesheet" href="./pilot.css">
-  <link rel="stylesheet" href="./corner.css?v=1.3.64">
+  <link rel="stylesheet" href="./corner.css?v=1.3.65">
   <script defer src="../../assets/manuals-data.js"></script>
   <script defer src="./vendor/page-flip.browser.min.js"></script>
-  <script defer src="./corner-model.js?v=1.3.64"></script>
+  <script defer src="./corner-model.js?v=1.3.65"></script>
   <script defer src="./position-model.js"></script>
-  <script defer src="./corner.js?v=1.3.64"></script>
+  <script defer src="./corner.js?v=1.3.65"></script>
 </head>
 <body>
   <a class="skip" href="#bookStage">ข้ามไปยังหนังสือ</a>
@@ -65,7 +65,15 @@
           <button id="themeButton" class="text-btn flip-theme-button" type="button" aria-pressed="false" aria-label="เปิดโหมดมืด" title="เปิดโหมดมืด"><span aria-hidden="true">☾</span></button>
           <button id="motionButton" class="text-btn" type="button" aria-pressed="false" aria-label="เปิดหรือปิดแอนิเมชันพลิกหน้า" title="เปิดหรือปิดแอนิเมชันพลิกหน้า">ลดโมชั่น</button>
         </div>
+        <button id="flipToolsDismiss" class="flip-tools-dismiss" type="button" hidden aria-label="ปิดเครื่องมืออ่าน">✕ ปิดเครื่องมือ</button>
       </div>
+      <aside id="flipTocSheet" class="flip-reader-sheet" aria-label="สารบัญหนังสือ" hidden>
+        <div class="flip-reader-sheet-header">
+          <strong>สารบัญหนังสือ</strong>
+          <button id="flipTocClose" type="button" aria-label="ปิดสารบัญ">✕</button>
+        </div>
+        <nav id="flipTocItems" aria-label="เลือกบทที่ต้องการอ่าน"></nav>
+      </aside>
       <div class="book-stage" id="bookStage" tabindex="0" aria-label="พื้นที่อ่านคู่มือ ลากมุมกระดาษหรือใช้ปุ่มลูกศรเพื่อเปลี่ยนหน้า" aria-describedby="readerHelp">
         <div class="ambient-shadow" aria-hidden="true"></div>
         <div id="cornerFrame" class="corner-frame"><div id="cornerBook" class="corner-book" aria-live="off"></div></div>
@@ -75,10 +83,11 @@
         <button id="prev" class="nav-button" type="button" aria-label="หน้าก่อนหน้า"><span aria-hidden="true">←</span> ก่อนหน้า</button>
         <div class="progress-wrap">
           <p id="progress" class="progress-text" role="status" aria-live="polite">กำลังเตรียมหน้า…</p>
+          <span class="flip-mode-status">พลิกทีละหน้า</span>
           <div class="track" aria-hidden="true"><div id="progressFill" class="fill"></div></div>
         </div>
         <button id="next" class="nav-button primary" type="button" aria-label="หน้าถัดไป">ถัดไป <span aria-hidden="true">→</span></button>
-        <button id="returnToReader" class="nav-button return-reader" type="button" aria-label="ปิดโหมดพลิกกระดาษและกลับไปอ่านแบบเดิม">กลับไปอ่าน</button>
+        <button id="returnToReader" class="nav-button return-reader" type="button" aria-label="ปิดโหมดพลิกกระดาษและกลับไปอ่านแบบเดิม" title="กลับไปอ่าน">✕</button>
       </div>
       <p id="readerHelp" class="help">ลากมุมกระดาษเพื่อพลิกหน้า หรือใช้ปุ่มก่อนหน้า–ถัดไป • ปรับขนาดตัวอักษรและเลือกบทได้ • ไม่บันทึกทับ WD Books เดิม</p>
       <p id="error" class="error" role="alert" hidden></p>

@@ -18,8 +18,10 @@ const factory = new Function("$", "window", "document", "dialog", "state", "clos
 function node() {
   return {
     hidden: true, disabled: false, open: false, title: "", focused: false,
-    handlers: {},
+    handlers: {}, attrs:{}, clicks:0,
     contentWindow: {},
+    setAttribute(name,value){this.attrs[name]=String(value);},
+    click(){this.clicks++;this.fire("click");},
     addEventListener(type, callback) { (this.handlers[type] ||= []).push(callback); },
     fire(type, event = {}) { (this.handlers[type] || []).forEach(callback => callback(event)); },
     showModal() { this.open = true; },
@@ -28,7 +30,7 @@ function node() {
   };
 }
 function setup(search = "?flip05=1", online = true) {
-  const ids = ["readerFlipbookChoice", "wdFlipbookDialog", "wdFlipbookFrame", "wdFlipbookClose", "wdFlipbookReturnBottom"];
+  const ids = ["readerFlipbookChoice", "wdFlipbookDialog", "wdFlipbookFrame", "wdFlipbookClose", "wdFlipbookReturnBottom", "wdFlipbookTocTrigger", "wdFlipbookToolsTrigger", "wdFlipbookAudioTrigger", "wdFlipbookMobileTitle", "readerAudioToggle"];
   const elements = Object.fromEntries(ids.map(id => [id, node()]));
   elements.wdFlipbookFrame.src = "about:blank";
   const handlers = {};
@@ -169,6 +171,39 @@ const activeFrame=directFrameRequest.elements.wdFlipbookFrame.contentWindow;
 assert.equal(directFrameRequest.win.WD_BOOKS_FLIP_EXIT(activeFrame,directFrameRequest.book.id,4),true,
   "a trusted synchronous iframe exit closes immediately");
 assert.deepEqual(directFrameRequest.calls.jumps,[4],"trusted exit carries last chapter");
+
+// FLIP-10: iPhone/iPad header exposes real TOC, reading tools and native audio.
+const header=setup("");
+header.bridge.flipChoice.fire("click");
+assert.equal(header.elements.wdFlipbookMobileTitle.textContent,header.book.title,
+  "header displays current book title");
+assert.equal(header.elements.wdFlipbookTocTrigger.disabled,true,
+  "TOC stays disabled before embedded engine is ready");
+const called=[];
+header.bridge.flipFrame.contentWindow.WD_BOOKS_FLIP_CONTROLS={
+  toggleToc(){called.push("toc");return {toc:true,tools:false};},
+  toggleTools(){called.push("tools");return {toc:false,tools:true};}
+};
+header.bridge.flipFrame.fire("load");
+assert.equal(header.elements.wdFlipbookTocTrigger.disabled,false);
+assert.equal(header.elements.wdFlipbookToolsTrigger.disabled,false);
+header.elements.wdFlipbookTocTrigger.click();
+header.elements.wdFlipbookToolsTrigger.click();
+assert.deepEqual(called,["toc","tools"],"native toolbar delegates to live frame controls");
+assert.equal(header.elements.wdFlipbookTocTrigger.attrs["aria-expanded"],"false");
+assert.equal(header.elements.wdFlipbookToolsTrigger.attrs["aria-expanded"],"true");
+(header.handlers.message||[]).forEach(fn=>fn({
+ origin:header.win.location.origin,source:header.bridge.flipFrame.contentWindow,
+ data:{type:"wd:flip10:sheet",bookId:header.book.id,toc:false,tools:false}
+}));
+assert.equal(header.elements.wdFlipbookToolsTrigger.attrs["aria-expanded"],"false",
+  "child can announce a closed sheet");
+header.elements.wdFlipbookAudioTrigger.click();
+assert.equal(header.bridge.flipDialog.open,false,"audio returns to legacy Reader");
+assert.equal(header.elements.readerAudioToggle.clicks,1,
+  "actual Reader audio panel opens, not duplicate iframe TTS");
+assert.equal(header.elements.wdFlipbookTocTrigger.disabled,true,
+  "parent Reader controls reset after closing the flipbook");
 
 const homeScreen=setup("");
 assert.equal(homeScreen.bridge.eligibleFlipbook(homeScreen.book),true,
