@@ -58,9 +58,9 @@ assert(corner.includes('type: "wd:flip05:chapter"') &&
 assert(corner.includes('document.body.classList.add("flip-embedded")') &&
   style.includes("wd-flip-dialog") && html.includes('reader-flip-choice.css'),
   "scoped embedded layout is present");
-assert(sw.includes('reader-flip-choice.css') && /WD_BOOKS_VERSION = "1\.3\.57"/.test(version) &&
-  html.includes("เวอร์ชัน 1.3.57"), "PWA version and app-shell cache updated together");
+assert(sw.includes('reader-flip-choice.css') && /WD_BOOKS_VERSION = "1\.3\.58"/.test(version) &&
+  html.includes("เวอร์ชัน 1.3.58"), "PWA version and app-shell cache updated together");
 assert(!sw.includes('corner.js') && !sw.includes("page-flip.browser.min.js"),
   "heavy preview not precached for all app installs");
 assert(!/<script[^>]+src=["']https?:/i.test(preview), "preview no runtime CDN");
-console.log("FLIP-06 static PASS: visible PWA choice, book gate, safe bridge and 1.3.57.");
+console.log("FLIP-07 static PASS: visible PWA choice, book gate, safe bridge and 1.3.58.");
