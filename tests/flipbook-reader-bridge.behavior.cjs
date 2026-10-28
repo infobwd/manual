@@ -4,13 +4,14 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
+const {URLSearchParams} = require("node:url");
 const app = fs.readFileSync(path.join(__dirname, "..", "assets/app.js"), "utf8");
 const start = app.indexOf("  // FLIP-05: the original Reader remains the owner");
 const end = app.indexOf("  function openBook(book, opener, requestedPage = null) {", start);
 assert(start > 0 && end > start, "isolated bridge block exists in Reader");
 const bridgeSource = app.slice(start, end);
 const factory = new Function("$", "window", "dialog", "state", "closeMobileToc",
-  "closeReaderSubpanels", "jumpTo", bridgeSource +
+  "closeReaderSubpanels", "jumpTo", "URLSearchParams", bridgeSource +
     "\nreturn { eligibleFlipbook, flipChoice, flipDialog, flipFrame, getSession: () => flipSession };\n");
 function node() {
   return {
@@ -45,7 +46,7 @@ function setup(search = "?flip05=1", online = true) {
   const bridge = factory(id => elements[id], win, dialog, state,
     () => { calls.toc++; },
     () => { calls.panels++; },
-    page => { calls.jumps.push(page); state.page=page; });
+    page => { calls.jumps.push(page); state.page=page; }, URLSearchParams);
   return {bridge, elements, win, handlers, state, dialog, book, calls};
 }
 const pilot = setup();
