@@ -396,7 +396,7 @@
     closeReaderSubpanels();
     const startPage = state.page;
     flipSession = {bookId: book.id, originalPage: startPage, lastChapter: null};
-    const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1", v: String(window.WD_BOOKS_VERSION || "1.3.61"), theme: document.body?.dataset?.theme || "light"});
+    const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1", v: String(window.WD_BOOKS_VERSION || "1.3.63"), theme: document.body?.dataset?.theme || "light"});
     // The flipbook runs in an iframe whose width may not match the host desktop.
     if (document.documentElement.classList.contains("wd-google-sans") &&
         window.matchMedia("(min-width: 1101px) and (hover: hover) and (pointer: fine)").matches)
@@ -416,6 +416,14 @@
     if (data.type === "wd:flip08a:theme") {
       if (["light", "night"].includes(data.theme))
         window.WD_EXPERIENCE?.setTheme?.(data.theme);
+      return;
+    }
+    if (data.type === "wd:flip08b:exit") {
+      // The active same-origin iframe may request return, never an unrelated page.
+      if (Number.isInteger(data.chapter) && data.chapter >= 0 &&
+          data.chapter < (state.manual?.pages?.length || 0))
+        flipSession.lastChapter = data.chapter;
+      flipDialog.close(); // Existing close handler restores Reader/focus/progress.
       return;
     }
     if (data.type !== "wd:flip05:chapter" || !Number.isInteger(data.chapter)) return;
