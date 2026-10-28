@@ -252,3 +252,63 @@ body[data-flip-theme="sepia"] .navigator{background:#f5ead7;border-color:#e0d1b7
 body[data-flip-theme="sepia"] .paper:not(.cover){background:#f7efdf}
 body[data-flip-theme="sepia"] .page-content{color:#5c4c37}
 body[data-flip-theme="sepia"] .book-stage{background:#e8ddc6}
+
+
+/* FLIP-08B: a one-row four-control navigator inside the iframe eliminates the
+   wasteful second footer row, keeps focus/controls together, and stays
+   separate from the fallback X in the parent modal header. */
+.return-reader{display:none}
+@media screen and (max-width:690px){
+  body.flip-embedded .navigator{
+    display:grid;
+    grid-template-columns:minmax(72px,1.05fr) minmax(51px,.8fr) minmax(66px,1fr) minmax(84px,1.16fr);
+    gap:5px;
+    padding:7px 6px calc(7px + env(safe-area-inset-bottom,0px));
+    align-items:center;
+  }
+  body.flip-embedded .nav-button{
+    width:100%;min-width:0;min-height:48px;
+    padding:8px 3px;font-size:12px;line-height:1.25;
+    border-radius:11px;white-space:nowrap;
+  }
+  body.flip-embedded .progress-wrap{width:100%;min-width:0;max-width:none}
+  body.flip-embedded .progress-text{font-size:10px;white-space:nowrap}
+  body.flip-embedded .return-reader{
+    display:flex;align-items:center;justify-content:center;
+    background:#245c50;border:1px solid #245c50;color:#fff;
+    font-size:11px;font-weight:750;
+    touch-action:manipulation;
+  }
+}
+@media screen and (max-width:360px){
+  body.flip-embedded .navigator{
+    grid-template-columns:minmax(65px,1fr) minmax(47px,.7fr) minmax(58px,.9fr) minmax(78px,1.2fr);
+    gap:4px;
+  }
+  body.flip-embedded .nav-button{font-size:11px;padding-inline:1px}
+  body.flip-embedded .return-reader{font-size:10px}
+}
+/* motion selected ≠ the dark theme toggle: show text + high-contrast border */
+body.flip-embedded #motionButton[aria-pressed="true"]{
+  background:#bfe4d0;color:#153e2b;border:2px solid #297351;
+  box-shadow:inset 0 0 0 1px #e6fff2;
+}
+body.flip-embedded #motionButton[aria-pressed="true"]::before{content:"⏸"}
+body.flip-embedded #motionButton[aria-pressed="true"]::after{content:"ลดแล้ว";font-weight:800}
+body.flip-embedded #motionButton[aria-pressed="false"]::before{content:"↔"}
+body.flip-embedded #motionButton[aria-pressed="false"]::after{content:"โมชั่น"}
+body[data-flip-theme="night"].flip-embedded #motionButton[aria-pressed="false"]{
+  background:#30483a;color:#d8e9dd;border:1px solid #597564;
+  box-shadow:none;
+}
+body[data-flip-theme="night"].flip-embedded #motionButton[aria-pressed="true"]{
+  background:#a9e2bf;color:#102d20;border:2px solid #ecffdf;
+  box-shadow:0 0 0 2px #3e8062;
+}
+body[data-flip-theme="night"] .return-reader{
+  background:#397c61;border-color:#a0d0b2;color:#fff;
+}
+body.flip-embedded #motionButton:focus-visible,
+body.flip-embedded #returnToReader:focus-visible{
+  outline:3px solid #e3b859;outline-offset:2px;
+}
