@@ -1,0 +1,65 @@
+# WD Books — FLIP-14 Visual QA & Release Gate (29 ต.ค. 2569)
+
+**Status:** Node Regression Gate **PASS 18/18** (ผู้ใช้งานยืนยันบน Windows, ไม่ได้ดึงไฟล์ผลทดสอบ JSON รอบสุดท้ายมาอ่านเอง)
+**Production:** ยังใช้ v1.3.68; PR #205 Draft / **ยังไม่ Merge**.
+**Next gate:** Visual/Device acceptance **OPEN / NOT TESTED**. ห้ามนำ Node PASS ไปอ้างว่า Safari, ขนาดหน้า, หรือเสียงอ่านผ่านแล้ว
+
+## A. เริ่มตรวจภาพบนเครื่อง Windows โดยไม่ Merge
+
+เครื่อง Windows มี repo ที่ `D:\wd-books-manual`, branch `test/flip14`. เปิด PowerShell:
+
+```powershell
+cd D:\wd-books-manual
+git status --short
+git pull --ff-only
+node tests/flipbook-visual-qa-server.cjs
+```
+
+หลัง Server ขึ้นข้อความให้เปิด Chrome/Edge อีกหน้าต่างที่ `http://127.0.0.1:8765/`. **อย่าปิด Terminal** เพราะมันเป็นตัวเปิดเว็บทดสอบ; กด `Ctrl+C` เพื่อหยุดหลังตรวจเสร็จ
+
+ลิงก์ตรงใน Server (เลือกจากข้อความที่มันพิมพ์):
+- `http://127.0.0.1:8765/experiments/flipbook-pilot/corner.html?book=sar-2568-basic-education&start=2`
+- `http://127.0.0.1:8765/experiments/flipbook-pilot/corner.html?book=sar-info02-national-assessments-2568&start=1` — RT
+- `http://127.0.0.1:8765/experiments/flipbook-pilot/corner.html?book=sar-info02-national-assessments-2568&start=2` — NT
+- `http://127.0.0.1:8765/experiments/flipbook-pilot/corner.html?book=sar-info02-national-assessments-2568&start=4` — O-NET
+- `http://127.0.0.1:8765/experiments/flipbook-pilot/corner.html?book=wd-growth-plc-information-to-action-2569`
+- `http://127.0.0.1:8765/experiments/flipbook-pilot/corner.html?book=bwd-term2-supervision-readiness-2569`
+
+`start=` เป็น **index บท 0-based** (ไม่ใช่เลขหน้ากระดาษ). ลิงก์นี้ตรวจเฉพาะ Flipbook ไม่ยืนยันว่าการกดจาก Shelf/PWA ทำงานครบ
+
+## B. ตรวจกราฟตัวเลขจริงและหน้ากระดาษ
+
+| หนังสือ / หน้าที่มีกราฟ | ค่าเดิม → ค่าผล/ปัจจุบัน (ตามแหล่งข้อมูลเผยแพร่) | ผล |
+|---|---|---|
+| SAR มาตรฐาน 1 | 83 → 93.63 | NOT TESTED |
+| SAR มาตรฐาน 2 | 81 → 96 | NOT TESTED |
+| SAR มาตรฐาน 3 | 81 → 92.8 | NOT TESTED |
+| RT ป.1 อ่านออกเสียง / อ่านรู้เรื่อง / รวม | 93.16→78.71; 81.5→76; 87.33→77.35 | NOT TESTED |
+| NT ป.3 ไทย / คณิต / รวม | 57.54→53.04; 52.41→42.81; 54.97→47.93 | NOT TESTED |
+| O-NET ป.6 ไทย / คณิต / วิทย์ / อังกฤษ | 49.84→41.70; 26.23→15.25; 38.91→31.83; 25.78→24.38 | NOT TESTED |
+
+ข้อสังเกตที่ต้องตรวจบนภาพจริง:
+1. แถบกราฟ ค่าเปอร์เซ็นต์ และคำอธิบายต้องแสดงครบ **13 แถวใน 4 กลุ่ม**; ข้อความ Insight 5 แห่งต้องไม่หาย
+2. เปลี่ยนฟอนต์ 90%, 100%, 160% แล้วไม่มีข้อความล้นขอบ/ทับกัน; กราฟหนึ่งแถวต้องไม่ถูกหั่นกลางหน้า
+3. เปิดปก → พลิกหน้า → สารบัญ → ย้อนหน้า → ปิดปกหลัง; ปุ่มปิดหนังสือไม่พาไป Reader แบบปกติโดยไม่ตั้งใจ
+4. โหมดสว่าง / ถนอมสายตา / มืด ต้องเห็นสีแถบกราฟและตัวเลขชัด
+5. ตรวจหน้าแนะนำและท้ายเล่มของสองคู่มือที่เพิ่มด้วยสคริปต์ใหม่; หากหน้าว่างหรือแจ้ง "ไม่สามารถเปิดตัวอย่างได้" ให้บันทึกชื่อหนังสือ, ขนาดหน้าจอ, ลิงก์และภาพ
+
+## C. เมทริกซ์อุปกรณ์
+
+| อุปกรณ์ / สถานการณ์ | สถานะ |
+|---|---|
+| Windows Chrome/Edge Desktop 1366×768 | NOT TESTED |
+| Windows Chrome/Edge Desktop 1920×1080 | NOT TESTED |
+| iPad Safari แนวตั้ง/แนวนอน และ Split View | NOT TESTED |
+| iPhone Safari และ PWA ที่ติดตั้งจริง | NOT TESTED |
+| เปิดเสียงอ่าน / สลับ Flipbook ↔ Reader / ปิดหน้าจอ | NOT TESTED |
+| ออฟไลน์ + ตรวจ Service Worker หลังเผยแพร่ | NOT TESTED |
+
+การตรวจ iPhone/iPad แบบยังไม่ Merge ทำได้เฉพาะ **การแสดงผลบน HTTP LAN** โดยใช้คำสั่ง `node tests/flipbook-visual-qa-server.cjs --lan` แล้วเปิด `http://<IPv4-ของ-Windows>:8765/` ผ่าน Wi-Fi เดียวกัน (หา IPv4 ด้วย `ipconfig` และอาจต้องอนุญาต Windows Firewall เฉพาะเครือข่ายส่วนตัว). ให้รัน `--lan` เท่าที่จำเป็นและปิดด้วย Ctrl+C. **HTTP LAN ไม่ใช่ secure context ของ PWA จึงห้ามใช้ยืนยันการติดตั้ง, ล็อกหน้าจอ, Service Worker หรือ Offline.** สิ่งเหล่านี้ต้องตรวจแยกในสภาพแวดล้อม HTTPS/PWA ที่เหมาะสม หลังอนุมัติขั้นเผยแพร่
+
+## D. หลักฐานและเกณฑ์รับงาน
+
+บันทึกสำหรับแต่ละ FAIL: `อุปกรณ์ + OS/Browser + ขนาดจอ + ชื่อหนังสือ + เลขหน้า/บท + ขั้นตอนที่กด + ภาพ/วิดีโอ`. ให้ใช้สถานะ PASS / FAIL / NOT TESTED เท่านั้น
+
+**ยังไม่อนุมัติ Merge/Deploy:** ต้องผ่านภาพ SAR และข้อมูลทุกเล่มหลัก, ไม่พบ clipping, Reader fallback, device/mobile gestures และไม่มีปัญหาเสียง/PWA ที่ตรวจได้ในสภาพจริง จากนั้นจึงวาง Release แยก (เลขเวอร์ชันใหม่ ไม่ใช่ 1.3.68) พร้อมแผน Rollback โดยไม่ลบ `wd-manual-reader-v2`.
