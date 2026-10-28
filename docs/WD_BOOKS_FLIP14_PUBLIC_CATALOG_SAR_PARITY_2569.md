@@ -31,6 +31,12 @@
 
 **Risk / release:** draft PR only. No version bump, merge or production deployment authorised by these checks alone.
 
+## SAR exact-value regression checkpoint
+
+Added `tests/flipbook-sar-values.smoke.cjs`, a golden content guard for both published SAR reports: **4 chart groups, 13 exact public metric rows and 5 insight headlines**. It compares the names and target/result percentages against the published source and checks that Flipbook still renders chart/insight branches and explicit textual percentage labels.
+
+V8 execution of the complete test body against live branch sources through a `fs/vm/assert` compatibility shim: **PASS**. Do not label this as actual Node execution or visual page QA. Run `node tests/flipbook-sar-values.smoke.cjs` locally along with all regression tests before merge; compare chart figures to original Reader in desktop/iPad screenshots. No actual SAR figures were edited.
+
 ## Required QA before merge / version bump
 1. `node tests/flipbook-sar-parity.smoke.cjs`, `node tests/flipbook-default-paper.smoke.cjs`, `node tests/flipbook-close-book-label.smoke.cjs`, `node tests/flipbook-corner.smoke.cjs` and complete prior FLIP-08–13 suites: report actual logs.
 2. On iPhone Safari + installed PWA: open **เตรียมรับนิเทศเปิดภาคเรียน 2**, WD Growth individual plan and PLC guide through shelf and verify every chapter, previous/next, bottom close, classic mode and audio handoff.
