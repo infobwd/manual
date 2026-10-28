@@ -114,6 +114,35 @@ pilot.dialog.close();
 assert.equal(pilot.bridge.flipDialog.open,false,"nested modal closes with parent");
 assert.equal(pilot.bridge.flipFrame.src,"about:blank","frame cleared on parent close");
 
+// FLIP-08B: iframe exit shares the same trusted origin/source/book gate and
+// restores current reading chapter before releasing the iframe.
+const inline=setup("");
+inline.bridge.flipChoice.fire("click");
+const trustedFrame=inline.elements.wdFlipbookFrame.contentWindow;
+function postExit(chapter, origin=inline.win.location.origin, source=trustedFrame, bookId=inline.book.id) {
+  (inline.handlers.message||[]).forEach(fn=>fn({
+    origin, source, data:{type:"wd:flip08b:exit",bookId,chapter}
+  }));
+}
+postExit(5,"https://attacker.example");
+postExit(5,inline.win.location.origin,{});
+postExit(5,inline.win.location.origin,trustedFrame,"another-book");
+assert.equal(inline.bridge.flipDialog.open,true,"untrusted exit cannot close dialog");
+postExit(5);
+assert.equal(inline.bridge.flipDialog.open,false,"trusted inline exit closes flipbook");
+assert.deepEqual(inline.calls.jumps,[5],"inline exit restores last chapter");
+assert.equal(inline.elements.wdFlipbookFrame.src,"about:blank","inline exit unloads iframe");
+assert.equal(inline.bridge.flipChoice.focused,true,"inline exit restores Reader focus");
+const badChapter=setup("");
+badChapter.bridge.flipChoice.fire("click");
+const badSource=badChapter.elements.wdFlipbookFrame.contentWindow;
+(badChapter.handlers.message||[]).forEach(fn=>fn({
+  origin:badChapter.win.location.origin,source:badSource,
+  data:{type:"wd:flip08b:exit",bookId:badChapter.book.id,chapter:999}
+}));
+assert.equal(badChapter.bridge.flipDialog.open,false,"valid exit with invalid chapter still returns");
+assert.deepEqual(badChapter.calls.jumps,[],"invalid exit chapter cannot alter Reader position");
+
 const homeScreen=setup("");
 assert.equal(homeScreen.bridge.eligibleFlipbook(homeScreen.book),true,
   "Home Screen PWA must show the tested book without query params");
