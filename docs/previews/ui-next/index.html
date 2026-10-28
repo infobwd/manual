@@ -153,4 +153,18 @@ byId("fontSize").addEventListener("input",event=>{
   byId("sampleText").style.fontSize=event.target.value+"%";
 });
 renderBooks();
+// Manual QA screenshot options; URL parameters affect this preview only.
+const previewParams=new URLSearchParams(window.location.search);
+const previewTheme=previewParams.get("theme");
+if(["light","sepia","night"].includes(previewTheme)){
+  document.querySelectorAll(".theme").forEach(button=>{
+    if(button.dataset.theme===previewTheme) button.click();
+  });
+}
+const previewCategory=previewParams.get("category");
+if(["all","การจัดการเรียนรู้","คู่มือระบบ","งานบริหาร"].includes(previewCategory)){
+  categoryFilter=previewCategory;updateCategory();renderBooks();
+}
+const previewView=previewParams.get("view");
+if(["home","books","settings"].includes(previewView)) showView(previewView);
 </script></body></html>
