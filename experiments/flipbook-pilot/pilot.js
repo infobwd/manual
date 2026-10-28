@@ -179,7 +179,9 @@
       left.replaceChildren();
       right.replaceChildren(pageAt(sides.right));
     } else {
-      left.replaceChildren(pageAt(sides.left));
+      // No left sheet exists until the front cover is opened.
+      if (sides.closed) left.replaceChildren();
+      else left.replaceChildren(pageAt(sides.left));
       right.replaceChildren(pageAt(sides.right));
     }
     turnLayer.replaceChildren();
