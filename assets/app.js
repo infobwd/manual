@@ -368,16 +368,15 @@
   dialog.addEventListener("cancel", event => {
     if (isTocOpen()) { event.preventDefault(); closeMobileToc(); }
   });
-  // FLIP-05: the original Reader remains the owner of reading state and audio.
-  // Enable only for explicit device QA (?flip05=1) and the single tested public book.
+  // FLIP-06: PWA launches do not preserve ?flip05=1. Show this opt-in tool
+  // for the single verified public book, but keep the legacy reader as default.
   const FLIP05_BOOK = "ai-five-questions-speaker-cheatsheet-25691026";
-  const flip05Enabled = new URLSearchParams(window.location.search).get("flip05") === "1";
   const flipChoice = $("readerFlipbookChoice");
   const flipDialog = $("wdFlipbookDialog"), flipFrame = $("wdFlipbookFrame");
   const flipClose = $("wdFlipbookClose");
   let flipSession = null;
   flipChoice.hidden = true;
-  const eligibleFlipbook = book => flip05Enabled && book?.id === FLIP05_BOOK &&
+  const eligibleFlipbook = book => book?.id === FLIP05_BOOK &&
     book.status === "published" && Boolean(book.pages?.length);
   const isFlipOnline = () => window.navigator?.onLine !== false;
   const syncFlipConnectivity = () => {
