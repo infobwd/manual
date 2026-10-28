@@ -8,6 +8,17 @@
 **กลุ่มใช้งานหลัก:** ครู/บุคลากรโรงเรียนบน iPhone และ iPad, รองลงมาคือ Android และ Desktop  
 **Source of truth:** เอกสารนี้ใช้กำหนดลำดับงาน, acceptance และ rollout ของการปรับ UX ใน repo นี้ ไม่แก้เนื้อหาวิชาการหรือระบบ WD Growth ต้นทาง
 
+## FLIP-11 — เปิดหนังสือเป็นโหมดหลัก + กระดาษสมจริง (28 ต.ค. 2569)
+
+**Status:** implemented; static gates / post-deploy device QA required. [ข้อกำหนดและการทดสอบ](WD_BOOKS_FLIP11_DEFAULT_PAPER_2569.md).
+
+- เปิดหนังสือที่เผยแพร่และ schema รองรับ (13 จาก 15 เล่ม ณ วันนี้) → Flipbook เป็นค่าเริ่มต้นเมื่อออนไลน์; Reader เดิมอยู่หลัง Flipbook เป็นทางเลือกและรองรับออฟไลน์/เสียงอ่าน
+- อีก 2 เล่ม SAR ที่มี `chart` / `insight` เปิด Reader เดิมจน renderer ครอบคลุมเนื้อหาพิเศษ; ใช้ shared fail-closed eligibility gate เพื่อไม่ตัดข้อมูล
+- ปรับพื้นผิวกระดาษ ขอบหน้า ปึกกระดาษ สันกลางด้วย CSS ที่รองรับ theme / reduced motion โดยไม่มีภาพ texture/animation โหลดเพิ่ม
+- PWA v1.3.66; ค่า readingMode เดิมยังไม่เปลี่ยน schema, offline/audio deep links เป็น Reader เดิม, อาจปิด Flipbook กลับ Reader โดยไม่ลบ progress
+
+---
+
 ## FLIP-10 — ปุ่มโหมดพลิกกระดาษเหมือน Reader ปกติบน iPhone/iPad (28 ต.ค. 2569)
 
 **Status:** implemented in isolated feature / browser QA pending. [Specification & acceptance](WD_BOOKS_FLIP10_UNIFIED_MOBILE_CONTROLS_2569.md).
