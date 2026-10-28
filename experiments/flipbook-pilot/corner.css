@@ -1,0 +1,17 @@
+/* FLIP-03: page-flip HTML renderer is self-hosted; original pilot styles provide typography. */
+.corner-frame{height:var(--page-h);width:min(920px,100%);position:relative;display:flex;align-items:center;justify-content:center;isolation:isolate;z-index:2}
+.corner-book{width:100%;height:100%;margin:auto;position:relative;touch-action:none}
+.corner-sheet{width:100%;height:100%;overflow:hidden;background:var(--paper);position:relative;border:1px solid #e3e6df;box-shadow:inset 0 0 1px #9ea59b}
+.corner-sheet .paper{width:100%;height:100%;box-shadow:none;border-radius:0}
+.corner-sheet .paper.blank{background:#f8f7f1}
+.corner-sheet .paper.cover{border-radius:0}
+.corner-sheet .back-cover .cover-title{font-size:26px;text-align:center}
+.corner-sheet .back-cover .cover-design{margin:auto}
+.corner-hint{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:space-between;pointer-events:none;padding:0 18px 20px;z-index:4;color:#46796e;font-size:11px;opacity:.75}
+.corner-hint span{background:#ffffffd4;padding:7px 9px;border-radius:8px;box-shadow:0 2px 8px #123d4220}
+.reading-surface[data-error=true] .corner-frame{display:none}
+.classic-link{color:#196d65;text-decoration:underline;text-underline-offset:3px}
+.corner-sheet .page-content{overflow:hidden}
+@media(max-width:1100px){.corner-frame{width:min(590px,100%)}.corner-hint{padding:0 6px 12px}}
+@media(max-width:690px){.corner-frame{width:min(420px,100%)}.corner-hint{font-size:10px;opacity:.62}.corner-sheet .paper{padding:25px 24px 20px}.corner-sheet .paper.cover{padding:33px 30px 26px}}
+@media(prefers-reduced-motion:reduce){.corner-hint{opacity:.4}}
