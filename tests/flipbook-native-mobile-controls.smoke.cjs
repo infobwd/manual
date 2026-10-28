@@ -13,7 +13,7 @@ const sw=read("sw.js");
 new vm.Script(host);
 new vm.Script(childJs);
 const release=/WD_BOOKS_VERSION = "([^"]+)"/.exec(version)?.[1];
-assert.equal(release,"1.3.67");
+assert.equal(release,"1.3.68");
 assert(html.includes("เวอร์ชัน "+release)&&sw.includes("Update "+release+":"),
   "shell, splash and Service Worker share release");
 for (const id of ["wdFlipbookTocTrigger","wdFlipbookToolsTrigger","wdFlipbookAudioTrigger",
