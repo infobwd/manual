@@ -4,7 +4,7 @@
   const PILOT_ID = "ai-five-questions-speaker-cheatsheet-25691026";
   const query = new URLSearchParams(window.location.search);
   const requestedId = query.get("book") || PILOT_ID;
-  const startChapter = /^\\d{1,3}$/.test(query.get("start") || "") ?
+  const startChapter = /^\d{1,3}$/.test(query.get("start") || "") ?
     Number(query.get("start")) : null;
   const el = id => document.getElementById(id);
   const book = requestedId === PILOT_ID ?
