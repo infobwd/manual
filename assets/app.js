@@ -20,10 +20,22 @@
   function totalFor(id) {
     return data.manuals.filter((book) => id === "all" || book.category === id).length;
   }
-  function selectCategory(id) {
+  function selectCategory(id, origin = "chips") {
     state.category = id;
     renderCategories();
     renderCatalog();
+    // FLIP-12: desktop sidebar results live below the discovery/hero panels.
+    // Move them into view after filtering; mobile chips keep their scroll position.
+    // Full desktop catalog layout remains in the UI migration roadmap.
+    if (origin === "nav" && window.matchMedia("(min-width:1001px)").matches) {
+      const library = $("library");
+      requestAnimationFrame(() => {
+        library?.scrollIntoView({
+          block:"start",
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth"
+        });
+      });
+    }
   }
   function categoryButton(cat, kind) {
     const label = cat.id === "all" ? "ทั้งหมด" : cat.label;
@@ -38,7 +50,7 @@
     } else {
       button.textContent = label;
     }
-    button.addEventListener("click", () => selectCategory(cat.id));
+    button.addEventListener("click", () => selectCategory(cat.id, kind));
     return button;
   }
   function renderCategories() {
