@@ -28,6 +28,22 @@
   function sourceToEngine(sourcePage, single) {
     return sourcePage <= 0 ? 0 : (single ? sourcePage : sourcePage + 1);
   }
+  // Navigation buttons use deterministic page indices. The StPageFlip
+  // animated flipPrev/flipNext path can ignore a tap while WebKit is folding.
+  // Keep user drag gestures animated; programmatic buttons use turnToPage.
+  function adjacent(enginePage, direction, enginePageCount, single) {
+    const last = Math.max(0, Math.trunc(enginePageCount) - 1);
+    const current = Math.min(last, spreadStart(enginePage, single));
+    if (direction < 0) {
+      if (current === 0) return null;
+      return single ? current - 1 : (current <= 1 ? 0 : current - 2);
+    }
+    if (direction > 0) {
+      const next = single ? current + 1 : (current === 0 ? 1 : current + 2);
+      return next <= last ? next : null;
+    }
+    return null;
+  }
   function status(enginePage, pages, single) {
     const current = visiblePages(enginePage, pages, single);
     if (current.includes(COVER)) return { label: "หน้าปก", shown: 0 };
@@ -37,5 +53,5 @@
     const first = reading[0], last = reading[reading.length - 1];
     return { label: "หน้า " + first + (first === last ? "" : "–" + last) + " / " + contentTotal, shown: last };
   }
-  scope.WD_CORNER_MODEL = Object.freeze({ order, spreadStart, visiblePages, firstReadable, sourceToEngine, status });
+  scope.WD_CORNER_MODEL = Object.freeze({ order, spreadStart, visiblePages, firstReadable, sourceToEngine, adjacent, status });
 })(window);
