@@ -53,6 +53,20 @@ Earlier TODO entries in §4 of the Master Roadmap are **historical plans**, not 
 - **Actual Node execution and real browser screenshots: NOT TESTED.** The compatibility harness cannot certify real CSS layout, browser focus, screen reader, iPhone PWA or iPad Split View. Gate 0/1 remain OPEN.
 - No production Reader, Audio, Service Worker, app version or stored user data modified in this draft PR.
 
+## UI-MIG-01R2 screenshot preparation — 29 ต.ค. 2569
+
+- The isolated preview now accepts **preview-only** query switches: `?view=books&theme=night&category=งานบริหาร`. They change only sample UI state, never real catalog or saved preferences.
+- Added `tests/ui-mig01-capture.cjs`, a dependency-free Node/Chromium CLI matrix that captures Phone 390×844 (light/night), Tablet 1024×768, Desktop 1366×768/1920×1080 and Settings sepia screenshots into an OS temporary folder outside Git.
+- On a checked-out repo with Chrome/Chromium:
+  ```powershell
+  node tests/ui-mig01-desktop-preview.smoke.cjs
+  node tests/ui-mig01-capture.cjs
+  ```
+  If Chrome is not found, set `CHROME_BIN` to the installed browser executable (PowerShell: `$env:CHROME_BIN = "C:\Program Files\Google\Chrome\Application\chrome.exe"`).
+- Browser capture test **NOT PASSED in this isolated chat runtime**: although Chromium 144 and Playwright were present, the managed browser blocked navigation to both `file://` and `http://127.0.0.1` with `ERR_BLOCKED_BY_ADMINISTRATOR`. A blank local HTML sanity check via `page.set_content` did render, but it was **not** the PR preview. Do not infer actual responsive QA PASS.
+- JS-preview query configuration was executed in a V8 mocked DOM with `view=books`, `theme=night`, `category=งานบริหาร`: it selected the correct screen, color mode, 2/8 result label and two cards. It does **not** prove CSS sizing, safe area or overflow.
+- New React equivalent design candidate is [Draft PR #208](https://github.com/infobwd/manual/pull/208) stacked on TDD PR #207/#173. None of these preview branches modify Production.
+
 ## 4. Remaining implementation sequence
 
 1. Close FLIP-14 on real devices without losing SAR content or externally loaded public books.
