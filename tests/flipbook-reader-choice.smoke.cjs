@@ -29,8 +29,9 @@ assert(!app.includes("flip05Enabled") && !app.includes('get("flip05")'),
 assert(html.indexOf('id="readerFlipbookChoice"') > html.indexOf('id="readerExtraTools"') &&
   html.indexOf('id="readerFlipbookChoice"') < html.indexOf('id="readerFocusToggle"'),
   "Flipbook first in tools menu");
-assert(app.includes('book?.id === FLIP05_BOOK') && app.includes('book.status === "published"'),
-  "only the tested published book is eligible");
+assert(app.includes('window.WD_FLIP_CAPABILITY?.supports?.(book) === true') &&
+  html.includes('src="./assets/flipbook-capability.js"'),
+  "shared public content gate replaces single-book pilot check");
 assert(app.includes('flipChoice.hidden = !eligibleFlipbook(book)'), "hidden for other books");
 assert(app.includes('flipChoice.disabled = disabled') && app.includes('window.addEventListener("offline", syncFlipConnectivity)'),
   "online-only preview must be disabled while offline, legacy Reader unaffected");
@@ -49,8 +50,9 @@ assert(app.includes('dialog.addEventListener("close", () => {\n    if (flipDialo
 assert(!app.includes('state.readingMode = "flipbook"') && experience.includes('readingMode: "paged"'),
   "never change legacy persisted reading mode schema");
 assert(!app.includes("localStorage.setItem("), "no new direct Reader storage writes");
-assert(corner.includes('requestedId === PILOT_ID') && corner.includes('item.status === "published"'),
-  "preview enforces server-independent public-only book gate");
+assert(corner.includes('window.WD_FLIP_CAPABILITY?.supports?.(requestedBook)') &&
+  preview.includes('src="../../assets/flipbook-capability.js"'),
+  "Flipbook enforces same schema/content gate as Reader");
 assert(corner.includes('state.initialChapter') && corner.includes('query.get("start")'),
   "preview can start at current source chapter");
 assert(corner.includes('type: "wd:flip05:chapter"') &&

@@ -1,17 +1,17 @@
 (() => {
   "use strict";
-  // The integration gate only exposes the single tested public book.
-  const PILOT_ID = "ai-five-questions-speaker-cheatsheet-25691026";
+  // Open any published book whose complete content schema can be rendered.
+  const SAMPLE_ID = "ai-five-questions-speaker-cheatsheet-25691026";
   const query = new URLSearchParams(window.location.search);
-  const requestedId = query.get("book") || PILOT_ID;
+  const requestedId = query.get("book") || SAMPLE_ID;
   const startChapter = /^\d{1,3}$/.test(query.get("start") || "") ?
     Number(query.get("start")) : null;
   if (query.get("embed") === "1" && window.parent !== window)
     document.body.classList.add("flip-embedded");
   const el = id => document.getElementById(id);
-  const book = requestedId === PILOT_ID ?
-    (window.WD_LIBRARY_DATA?.manuals || []).find(item =>
-      item.id === PILOT_ID && item.status === "published" && Array.isArray(item.pages)) : null;
+  const requestedBook = (window.WD_LIBRARY_DATA?.manuals || []).find(item =>
+    item.id === requestedId);
+  const book = window.WD_FLIP_CAPABILITY?.supports?.(requestedBook) ? requestedBook : null;
   const stage = el("bookStage");
   const cornerModel = window.WD_CORNER_MODEL;
   const positionModel = window.WD_CORNER_POSITION;
@@ -42,7 +42,13 @@
     el("progress").textContent = "ไม่สามารถเปิดตัวอย่างได้";
     el("prev").disabled = true;
     el("next").disabled = true;
-    console.error("FLIP-03:", message);
+    console.error("FLIP-11:", message);
+    // For an embedded default view, immediately restore the functioning Reader.
+    if (document.body.classList.contains("flip-embedded") && window.parent !== window) {
+      window.parent.postMessage({
+        type:"wd:flip11:unavailable", bookId:requestedId
+      }, window.location.origin);
+    }
   }
   function createSheet(chapterIndex, withCover) {
     const paper = element("div", "paper" + (withCover ? " cover" : ""));
@@ -176,7 +182,7 @@
       (source.paragraphs || []).forEach(text => appendWhole(text, "paragraph"));
       (source.bullets || []).forEach(text => appendWhole(text, "bullet"));
       if (source.tip) appendWhole(source.tip, "tip");
-      // This selected pilot book uses only title/kicker/paragraphs/bullets/tip.
+      // This schema is verified for every supported public book before rendering.
     });
 
     state.pages.forEach((paper, index) => {

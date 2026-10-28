@@ -505,3 +505,67 @@ body.flip-embedded #returnToReader:focus-visible{
   body.flip-embedded .navigator{gap:4px;grid-template-columns:minmax(70px,1fr) minmax(53px,.75fr) minmax(70px,1fr) 52px}
   body.flip-embedded .navigator .nav-button{padding-inline:2px;font-size:11px}
 }
+
+/* FLIP-11 — restrained tactile paper. Pure CSS; no images, no WebGL textures,
+   no new JS animation or extra network resources. The physical turn stays in
+   StPageFlip, with pointer interactions never intercepted by decoration. */
+.corner-frame::before{
+  content:"";position:absolute;inset:3px 1px -4px;
+  z-index:0;pointer-events:none;
+  border-radius:3px 3px 5px 5px;
+  background:linear-gradient(180deg,#fdf9f0 0%,#e5e0d3 100%);
+  border:1px solid #d8d2c5;
+  box-shadow:0 3px 0 #d4d1c6,0 5px 0 #c4c0b7,
+    0 12px 24px #142f2c32,0 20px 43px #183c3540;
+}
+.corner-book{z-index:1}
+.corner-sheet{
+  border:1px solid #d8d4c7;
+  box-shadow:inset 0 0 0 1px #fffef5c4;
+}
+.corner-sheet .paper:not(.cover):not(.blank){
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(90deg,rgba(78,64,38,.07) 0%,transparent 8%,transparent 91%,rgba(73,60,43,.055) 100%),
+    linear-gradient(180deg,rgba(255,255,255,.37),rgba(239,232,211,.12) 100%),
+    repeating-linear-gradient(0deg,rgba(113,104,84,.013) 0,rgba(113,104,84,.013) 1px,transparent 1px,transparent 7px);
+  box-shadow:
+    inset 1px 0 8px #564a3027,
+    inset -1px 0 8px #67594023,
+    inset 0 0 1px #99876535;
+}
+.corner-sheet .paper.blank{
+  background:linear-gradient(100deg,#f8f5eb,#fffdf5 50%,#f2ede2);
+  box-shadow:inset 2px 0 8px #564a301e,inset -2px 0 6px #6b5c401b;
+}
+.corner-sheet .paper.cover{
+  background-image:linear-gradient(115deg,transparent 0%,#ffffff0d 48%,#ffffff16 53%,transparent 57%);
+  box-shadow:inset -4px 0 14px #001b1b20,inset 2px 1px 2px #ffffff1c;
+}
+@media screen and (min-width:1101px){
+  body.flip-embedded .corner-frame::after{
+    content:"";position:absolute;top:0;bottom:0;left:calc(50% - 8px);
+    width:16px;z-index:2;pointer-events:none;
+    background:linear-gradient(90deg,transparent,rgba(42,40,31,.08) 28%,
+      rgba(255,255,255,.15) 47%,rgba(43,42,33,.11) 68%,transparent);
+  }
+}
+body[data-flip-theme="night"] .corner-frame::before{
+  background:linear-gradient(180deg,#34473a,#1f3027);
+  border-color:#344538;
+  box-shadow:0 3px 0 #24382d,0 5px 0 #1a2c24,0 15px 35px #0008;
+}
+body[data-flip-theme="night"] .corner-sheet .paper:not(.cover):not(.blank){
+  background-color:#25372f;
+  background-image:linear-gradient(90deg,#0a1a1221,transparent 12%,transparent 88%,#0b1b141f),
+    repeating-linear-gradient(0deg,#a5b89a05 0,#a5b89a05 1px,transparent 1px,transparent 9px);
+  box-shadow:inset 1px 0 7px #081f172b,inset -1px 0 7px #091e172e;
+}
+body[data-flip-theme="sepia"] .corner-sheet .paper:not(.cover):not(.blank){
+  background-color:#f7efdf;
+  background-image:linear-gradient(90deg,#73593414,transparent 10%,transparent 90%,#684d3014),
+    repeating-linear-gradient(0deg,#82664905 0,#82664905 1px,transparent 1px,transparent 8px);
+}
+@media(prefers-reduced-motion:reduce){
+  .corner-frame::before{box-shadow:0 3px 0 #c4c0b7,0 10px 22px #14322d2b}
+}

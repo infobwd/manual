@@ -6,10 +6,13 @@ const path = require("node:path");
 const assert = require("node:assert/strict");
 const {URLSearchParams} = require("node:url");
 const app = fs.readFileSync(path.join(__dirname, "..", "assets/app.js"), "utf8");
+const capabilitySource=fs.readFileSync(path.join(__dirname,"..","assets/flipbook-capability.js"),"utf8");
+const capabilityScope={};
+new Function("window",capabilitySource)(capabilityScope);
 const version = fs.readFileSync(path.join(__dirname, "..", "assets/app-version.js"), "utf8").match(/WD_BOOKS_VERSION = "([^"]+)"/)?.[1];
 assert(version, "central PWA version exists");
-const start = app.indexOf("  // FLIP-06: PWA launches do not preserve");
-const end = app.indexOf("  function openBook(book, opener, requestedPage = null) {", start);
+const start = app.indexOf("  // FLIP-11: a supported published book opens as a real Flipbook by default.");
+const end = app.indexOf("  function openBook(book, opener, requestedPage = null, options = {}) {", start);
 assert(start > 0 && end > start, "isolated bridge block exists in Reader");
 const bridgeSource = app.slice(start, end);
 const factory = new Function("$", "window", "document", "dialog", "state", "closeMobileToc",
@@ -40,6 +43,7 @@ function setup(search = "?flip05=1", online = true) {
     location: {search, origin:"https://infobwd.github.io"},
     navigator: {onLine: online},
     WD_BOOKS_VERSION: version,
+    WD_FLIP_CAPABILITY: capabilityScope.WD_FLIP_CAPABILITY,
     matchMedia: () => ({matches:false}),
     addEventListener(type, cb) { (handlers[type] ||= []).push(cb); }
   };
@@ -60,7 +64,8 @@ function setup(search = "?flip05=1", online = true) {
 }
 const pilot = setup();
 assert.equal(pilot.bridge.eligibleFlipbook(pilot.book), true, "published book is eligible");
-assert.equal(pilot.bridge.eligibleFlipbook({...pilot.book,id:"other"}), false, "unapproved book blocked");
+assert.equal(pilot.bridge.eligibleFlipbook({...pilot.book,id:"other"}), true,
+  "other schema-compatible published books qualify");
 assert.equal(pilot.bridge.eligibleFlipbook({...pilot.book,status:"planned"}), false, "unpublished book blocked");
 pilot.bridge.flipChoice.fire("click");
 assert.equal(pilot.bridge.flipDialog.open, true, "flip modal opens");
@@ -213,10 +218,12 @@ assert.equal(homeScreen.bridge.flipDialog.open,true,
   "PWA without query params opens the approved public book");
 homeScreen.bridge.flipDialog.close();
 const notApproved=setup("");
-notApproved.state.manual={...notApproved.book,id:"another-book"};
+notApproved.state.manual={...notApproved.book,id:"unrenderable",pages:[
+  {title:"SAR special",chart:{type:"bar",points:[]}}
+]};
 notApproved.bridge.flipChoice.fire("click");
 assert.equal(notApproved.bridge.flipDialog.open,false,
-  "Another book remains blocked");
+  "Books with unsupported chart remain in legacy Reader");
 
 const offline=setup("?flip05=1",false);
 assert.equal(offline.bridge.flipChoice.disabled,true,"offline control disabled");

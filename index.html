@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="./assets/teleprompter.css">
   <script defer src="./assets/app-version.js"></script>
   <script defer src="./assets/manuals-data.js"></script>
+  <script defer src="./assets/flipbook-capability.js"></script>
   <script defer src="./assets/wd-growth-individual-guide.js"></script>
   <script defer src="./assets/wd-growth-plc-information-guide.js"></script>
   <script defer src="./assets/bwd-term2-supervision-readiness-2569.js"></script>
@@ -55,7 +56,7 @@
     <h1>WD Books</h1>
     <p>คลังคู่มือโรงเรียนบ้านวังด้ง</p>
     <div class="splash-track"><span></span></div>
-    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.3.65</small>
+    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.3.66</small>
   </div>
 </div>
 <div id="pullRefresh" class="pull-refresh" role="status" aria-live="polite" aria-hidden="true"><span class="pull-refresh-icon">↻</span><span id="pullRefreshText">ดึงลงเพื่อรีเฟรช</span></div>
@@ -221,7 +222,7 @@
         <button id="readerAudioToggle" class="icon-button reader-audio-toggle" type="button" aria-label="ฟังหนังสือ" aria-controls="wdAudioPanel" aria-expanded="false" title="ฟังหนังสือ">🎧 <span class="audio-toggle-label">ฟังหนังสือ</span></button>
         <button id="readerToolsToggle" class="icon-button reader-tools-toggle" type="button" aria-label="เครื่องมืออ่านเพิ่มเติม" aria-controls="readerExtraTools" aria-expanded="false">⋯</button>
         <div id="readerExtraTools" class="reader-extra-tools" hidden>
-        <button id="readerFlipbookChoice" class="icon-button reader-flipbook-choice" type="button" hidden aria-label="ทดลองอ่านแบบพลิกกระดาษ" aria-haspopup="dialog" aria-controls="wdFlipbookDialog" title="เปิดตัวทดลองพลิกมุมกระดาษ (ออนไลน์)"><span class="tool-symbol" aria-hidden="true">📖</span><span class="tool-label">พลิกกระดาษ</span></button>
+        <button id="readerFlipbookChoice" class="icon-button reader-flipbook-choice" type="button" hidden aria-label="อ่านแบบพลิกกระดาษ" aria-haspopup="dialog" aria-controls="wdFlipbookDialog" title="เปิดอ่านแบบพลิกกระดาษ (ออนไลน์)"><span class="tool-symbol" aria-hidden="true">📖</span><span class="tool-label">พลิกกระดาษ</span></button>
         <button id="readerFocusToggle" class="icon-button reader-focus-toggle" type="button" aria-label="เปิดโหมดอ่านอย่างมีสมาธิ" aria-pressed="false" title="ลดสิ่งรบกวนและเพิ่มพื้นที่อ่าน (ไม่ใช่เต็มจอเบราว์เซอร์)"><span class="tool-symbol" aria-hidden="true">⛶</span><span class="tool-label">โหมดอ่าน</span></button>
         <div class="reader-theme-picker" role="group" aria-label="ธีมการอ่าน"><button type="button" class="reader-theme-choice" data-reader-theme="light" aria-pressed="false"><span aria-hidden="true">☀</span><span>สว่าง</span></button><button type="button" class="reader-theme-choice" data-reader-theme="night" aria-pressed="false"><span aria-hidden="true">☾</span><span>กลางคืน</span></button><button type="button" class="reader-theme-choice" data-reader-theme="sepia" aria-pressed="false"><span aria-hidden="true">◉</span><span>ถนอมตา</span></button></div>
         <button id="readerBookmarksListToggle" class="icon-button" type="button" aria-label="คั่นหน้าและดูที่คั่นไว้" aria-expanded="false" aria-controls="readerBookmarksPanel"><span class="tool-symbol" aria-hidden="true">🔖</span><span class="tool-label">คั่นหน้า</span></button>
@@ -351,7 +352,7 @@
       <div class="wd-flip-heading">
         <span class="wd-flip-eyebrow">WD BOOKS · FLIPBOOK</span>
         <h2 id="wdFlipbookHeading">อ่านแบบพลิกกระดาษ</h2>
-        <p id="wdFlipbookDescription">เลือกบทหรือพลิกหน้ากระดาษ · กลับสู่ Reader เดิมได้ทุกเมื่อ</p>
+        <p id="wdFlipbookDescription">โหมดอ่านหลักสำหรับหนังสือที่รองรับ · กลับ Reader ปกติได้ทุกเมื่อ</p>
       </div>
       <div class="wd-flip-mobile-controls" aria-label="เครื่องมืออ่านแบบหนังสือ">
         <button id="wdFlipbookTocTrigger" class="wd-flip-mobile-button wd-flip-toc-button" type="button" aria-label="เปิดสารบัญ" aria-expanded="false" disabled>☷ <span>สารบัญ</span></button>
@@ -359,7 +360,7 @@
         <button id="wdFlipbookAudioTrigger" class="wd-flip-mobile-button" type="button" aria-label="กลับไป Reader ปกติและเปิดแผงฟังหนังสือ" title="ฟังหนังสือในโหมดปกติ">🎧</button>
         <button id="wdFlipbookToolsTrigger" class="wd-flip-mobile-button" type="button" aria-label="เครื่องมืออ่านเพิ่มเติม" aria-expanded="false" disabled>⋯</button>
       </div>
-      <button id="wdFlipbookClose" type="button" aria-label="ปิดโหมดพลิกกระดาษและกลับไปอ่านแบบเดิม"><span aria-hidden="true">✕</span><span class="wd-flip-close-label"> กลับไปอ่าน</span></button>
+      <button id="wdFlipbookClose" type="button" aria-label="ปิดโหมดพลิกกระดาษและกลับไปอ่านแบบเดิม"><span aria-hidden="true">✕</span><span class="wd-flip-close-label"> อ่านแบบปกติ</span></button>
     </header>
     <iframe id="wdFlipbookFrame" title="ทดลองพลิกหน้าคู่มือ WD Books" src="about:blank" loading="eager" referrerpolicy="same-origin"></iframe>
     <button id="wdFlipbookReturnBottom" class="wd-flip-return-overlay" type="button" aria-label="ปิดโหมดพลิกกระดาษและกลับไปอ่านแบบเดิม" title="กลับไปอ่าน">✕</button>
