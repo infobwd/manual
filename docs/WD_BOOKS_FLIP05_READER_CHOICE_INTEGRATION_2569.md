@@ -1,6 +1,6 @@
 # WD Books — FLIP-05 Reader Choice / Integration Candidate (28 ตุลาคม 2569)
 
-**Status:** STAGING PR, NOT APPROVED FOR PRODUCTION MERGE  
+**Status:** GATED RELEASE APPROVED FOR PREVIEW · Main Reader remains default; post-deploy QA pending  
 **Repository:** \`infobwd/manual\` · **Branch:** \`feat/flip05-reader-choice-staging\`  
 **Preview once staged PR is merged:** https://infobwd.github.io/manual/?flip05=1  
 **Gated book:** \`ai-five-questions-speaker-cheatsheet-25691026\`  
@@ -21,7 +21,7 @@ A safe **opt-in Reader button** is a lower-risk next step than a third persisten
 3. In Reader extra tools, choose **พลิกกระดาษ**. The existing Reader stays open beneath a **second native dialog** (existing Teleprompter already uses the same modal approach). The iframe lazily loads a same-origin, self-hosted StPageFlip preview. It starts near the selected source chapter.
 4. Drag corners, read, select chapters. The preview sends source-chapter updates with \`window.parent.postMessage\`, restricted in the host by exact origin, iframe contentWindow, book ID and valid integer range.
 5. Select **กลับไปอ่าน**. The iframe is discarded and focus returns to the original Reader. Only if the source chapter actually changed is \`jumpTo\` invoked to sync existing progress and audio UI through existing code.
-6. Other books, private or unpublished content, and readers without \`?flip05=1\` do not see the choice. No automatic mode persistence or new browser-storage key.
+6. While offline, the gated option is disabled, so the legacy Reader remains usable. Other books, private or unpublished content, and readers without \`?flip05=1\` do not see the choice. No automatic mode persistence or new browser-storage key.
 
 ### Architectural constraints
 
@@ -31,17 +31,17 @@ A safe **opt-in Reader button** is a lower-risk next step than a third persisten
 - The 44KB page-turn engine and preview resources are intentionally **not pre-cached**; testing the Flipbook option requires network. This is explicit in the option tooltip and dialog.
 - No TDRS login, user tracking, remote CDN, private data or new GitHub Actions.
 
-## Gates still pending (NO MERGE before review)
+## Gate status (28 October 2026: approval to proceed with gated preview only)
 
 | Gate | Test | Status |
 | --- | --- | --- |
-| Static | Node smoke, syntax, source content, mode/storage, origin validation, version/cache | Candidate, run test |
+| Static | Flipbook source + model, safe bridge behavior, JS parser, source/origin/version/cache | PASS in isolated evaluation; real browser pending |
 | Mobile iPhone | Open main Reader → flip → swipe/drag → close; focus returns, chapter bookmark unchanged or synced correctly | NOT TESTED |
 | Audio & podcast | Play reading audio, open/close flip view, verify playback and currently narrated chapter | NOT TESTED |
 | PWA/Offline | Update prompts/version, reopen offline legacy Reader, online-only preview graceful failure | NOT TESTED |
 | iPad/desktop | Dialog sizing, viewport safe areas, double modal Escape, corner drag, TOC | NOT TESTED |
 | Content fidelity | 12 chapters, headings/paragraphs/bullets/tips all readable with 90–160% zoom | NOT TESTED |
-| Production | Only after all above, explicit approval, new version from latest main | NOT APPROVED |
+| Production | Opt-in flag / one book only; no broad rollout | Approved to publish limited gated feature only; broad rollout pending |
 
 ## Run/check
 
@@ -49,12 +49,17 @@ A safe **opt-in Reader button** is a lower-risk next step than a third persisten
 node tests/flipbook-pilot.smoke.cjs
 node tests/flipbook-corner.smoke.cjs
 node tests/flipbook-reader-choice.smoke.cjs
+node tests/flipbook-reader-bridge.behavior.cjs
 node tests/js-syntax-gate.cjs
 node tests/pwa-reader.smoke.cjs
 \`\`\`
 
-Static checks do not replace manual device QA. If a new version of main arrives concurrently, rebase and rerun tests before considering merge.
+Static checks do not replace manual device QA. The existing \`tests/pwa-reader.smoke.cjs\` has a stale fake DOM that fails already on the pre-FLIP-05 main branch; its failure cannot be attributed to this feature nor counted as full PWA acceptance. FLIP-05 release was separately exercised with a dedicated dynamic bridge lifecycle test. All 17 app scripts were parsed and compared with the SW shell in review. If a new version of main arrives concurrently, rebase and rerun tests before considering merge.
 
 ## Rollback
 
 Revert FLIP-05 PR and restore the prior app version, SW shell list and Reader files. The previous FLIP-04 standalone URL remains available. **Never clear** \`wd-manual-reader-v2\`, browser caches or user progress as a shortcut.
+
+## Deployment / owner verification
+
+For the limited opt-in release, check `https://infobwd.github.io/manual/?flip05=1` after Pages has deployed. Open the eligible speaker-notes book, use `⋯ → พลิกกระดาษ`, turn a page and return via `✕ กลับไปอ่าน`. Confirm the chapter, Reader buttons, and audio still behave correctly. Then reopen without the flag: the Flipbook option must not be visible. Check offline legacy reading. **Do not enable this for other books or make it the default until browser and device checks pass.**
