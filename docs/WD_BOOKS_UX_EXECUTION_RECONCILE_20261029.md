@@ -45,6 +45,14 @@ Earlier TODO entries in §4 of the Master Roadmap are **historical plans**, not 
 - Compare Home hierarchy: search and Continue Reading visible early; avoid duplicating navigation and hero; prioritize single-hand operation on iPhone.
 - Gate 0/1 status stays **OPEN** until owner accepts screenshots and device baseline; **no PWA version bump** or modification to `index.html`, `assets/app.js`, Service Worker, Reader, or state in this PR.
 
+## UI-MIG-01R2 checkpoint — 29 ต.ค. 2569
+
+- **Home search fixed**: typing a nonempty query now opens Bookshelf with matching results instead of an inert search field.
+- **Category shortcut fixed**: selecting a category from Home clears prior unrelated "favorites/recent" and search filters, so all public sample books of that category are visible.
+- Fetched live PR sources and executed `tests/ui-mig01-desktop-preview.smoke.cjs` through a compatible JavaScript source harness: **static contracts + 15 mock DOM interaction assertions PASS** (search, category, favorites, empty state, navigation, theme and typography).
+- **Actual Node execution and real browser screenshots: NOT TESTED.** The compatibility harness cannot certify real CSS layout, browser focus, screen reader, iPhone PWA or iPad Split View. Gate 0/1 remain OPEN.
+- No production Reader, Audio, Service Worker, app version or stored user data modified in this draft PR.
+
 ## 4. Remaining implementation sequence
 
 1. Close FLIP-14 on real devices without losing SAR content or externally loaded public books.
