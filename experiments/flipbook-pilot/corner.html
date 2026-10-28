@@ -78,6 +78,18 @@
       <div class="book-stage" id="bookStage" tabindex="0" aria-label="พื้นที่อ่านคู่มือ ลากมุมกระดาษหรือใช้ปุ่มลูกศรเพื่อเปลี่ยนหน้า" aria-describedby="readerHelp">
         <div class="ambient-shadow" aria-hidden="true"></div>
         <div id="cornerFrame" class="corner-frame"><div id="cornerBook" class="corner-book" aria-live="off"></div></div>
+        <div id="closedBackCover" class="closed-back-cover" hidden aria-label="ปกหลัง หนังสือปิดแล้ว">
+          <div class="closed-back-cover-inner">
+            <span class="closed-back-brand">WD BOOKS / SCHOOL LEARNING LIBRARY</span>
+            <span class="closed-back-mark" aria-hidden="true">W</span>
+            <div class="closed-back-message">
+              <strong>จบเล่มแล้ว</strong>
+              <span>ขอบคุณที่อ่าน</span>
+            </div>
+            <span class="closed-back-publisher">โรงเรียนบ้านวังด้ง</span>
+          </div>
+          <button id="reopenBackCover" class="closed-back-reopen" type="button" aria-label="เปิดหนังสือกลับไปหน้าสุดท้าย">↶ เปิดกลับหน้าสุดท้าย</button>
+        </div>
         <div class="corner-hint" aria-hidden="true"><span class="hint-left">↖ จับมุม</span><span class="hint-right">จับมุม ↙</span></div>
       </div>
       <div class="navigator">
