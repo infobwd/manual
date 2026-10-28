@@ -35,7 +35,11 @@ assert(html.indexOf("page-flip.browser.min.js") < html.indexOf("corner-model.js"
 assert(html.indexOf("corner-model.js") < html.indexOf("corner.js"), "model before adapter");
 assert(html.indexOf("corner-model.js") < html.indexOf("position-model.js") && html.indexOf("position-model.js") < html.indexOf("corner.js"), "reading anchor loads before adapter");
 assert(!/<script[^>]+src=["']https?:/i.test(html), "no CDN dependencies");
-assert(!/<link[^>]+href=["']https?:/i.test(html), "no runtime CDN CSS");
+assert(!/<script[^>]+src=["']https?:/i.test(html), "no runtime CDN JavaScript");
+const remoteStyles = [...html.matchAll(/<link[^>]+rel="stylesheet"[^>]+href="(https?:[^"]+)"/g)].map(x => x[1]);
+assert(remoteStyles.length === 1 &&
+  remoteStyles[0].startsWith("https://fonts.googleapis.com/css2?family=Sarabun:"),
+  "only public Sarabun stylesheet is allowed as a remote CSS dependency");
 assert(vendor.includes("St={}") && vendor.includes("PageFlip"), "StPageFlip browser UMD bundle");
 assert(license.includes("MIT License") && license.includes("Nodlik/StPageFlip"), "MIT attribution included");
 assert(app.includes("new window.St.PageFlip(") && app.includes("loadFromHTML(sheets)"), "real engine initialized with HTML pages");
