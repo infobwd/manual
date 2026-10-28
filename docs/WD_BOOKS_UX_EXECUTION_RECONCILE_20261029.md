@@ -1,0 +1,56 @@
+# WD Books — Execution Reconciliation & UI-MIG-01R2 (29 ต.ค. 2569)
+
+**Parent:** [Master Reader UX Roadmap](WD_BOOKS_READER_UX_ROADMAP_2569.md).
+**Baseline:** `main` at `ce57717e26b46a6ba219807b0b501f70531c5b21`, Production PWA source v1.3.68.
+**Status:** Read-only reconciliation + *isolated* responsive desktop preview. **No Production cutover.**
+
+## 1. Reconciled status — never confuse MERGED with QA PASS
+
+| Workstream | Verified source status | Remaining gate |
+|---|---|---|
+| UX-P0A/B, tablet/desktop and Reader controls | Merged across PR #8 and subsequent UX/FLIP hotfixes through #204 | Full real-device matrix still incomplete |
+| UX-SEARCH-HIGHLIGHT | Merged PR #47–48 | Device and accessibility regression evidence |
+| UX-DISCOVERY P1–P3 | Merged PR #51–53 | Device, large-library and visual QA |
+| ARCH-01B/C/D | Partially modularized/merged PR #55, #57–59 | Full Node suite and browser/device contracts |
+| ARCH-01E | Measurement runbook merged PR #60 | Actual cold/warm/offline and heap results not captured |
+| CAT-01A | Contract script merged PR #62 | Runtime Node suite and offline gate |
+| CAT-01B | **Open PR #63** (opt-in metadata only) | No premature lazy-load runtime migration |
+| FLIP-13 | Merged PR #204, v1.3.68 | Real PWA/iPad/desktop QA, close/esc/title |
+| FLIP-14 | **Draft PR #205** (separate branch) | Enrichment parity and SAR chart visual/device gate; NOT deployed |
+| UI-MIG-00 | Read-only verified interim baseline merged PR #170 | **Gate 0 OPEN**, local logs/screenshots/measurements pending |
+| UI-MIG-01 | Tokens + 3-view preview merged PR #171–172 | **Gate 1 OPEN**, visual/device acceptance pending |
+| UI-MIG-01R2 | This isolated preview branch | Desktop category-first design review and mobile/iPad responsive QA |
+| UI-MIG-02 | **Open PR #173** source-only React/Tailwind/shadcn spike | npm lockfile, reproducible build, a11y/device QA; **Gate 2 OPEN** |
+| SP-PILOT-01 | **Open PR #180** document-only Superpowers pilot for #173 | Verify design/baseline/implementation plan before next stage |
+| UI-MIG-03–05 | Planned, not deployed | Catalog → Reader → Audio/PWA parity, sequential gates |
+| UI-MIG-06 | Blocked | Explicit cutover approval, rollback and full QA |
+
+Earlier TODO entries in §4 of the Master Roadmap are **historical plans**, not the current execution state; use this reconciliation plus subsequent dated updates.
+
+## 2. UI-MIG-01R2 desktop design decision candidate
+
+**Observed issue:** Sidebar category selection in the current desktop Production requires moving to results below other panels. FLIP-12 inserted auto-scroll as a short-term fix. The target Desktop layout should instead show navigation **beside the book results** at first view.
+
+**Isolated visual preview:** [Home / Bookshelf / Settings](previews/ui-next/index.html) (synthetic sample titles).
+- Desktop ≥1000px: category panel at left, search + status filters + book grid at right; category selection updates visible cards in-place, result count announced with `aria-live`, no jump required.
+- Mobile/tablet: category panel collapses above the card results (regular tap targets); Home category selections open the bookshelf already filtered, with no unsafe nested controls.
+- Preserve light/sepia/night, typography settings and three-page navigation; use fixed sample content with **no production storage or runtime**.
+- This preview is not Tailwind, shadcn, React, or a production catalog; it is a visual contract to validate before UI-MIG-02 parity work.
+
+## 3. Test and approval gates
+
+- Static `node tests/ui-mig01-desktop-preview.smoke.cjs` (new, not run in actual repo environment in this chat).
+- Visual screenshots on 390×844 phone; iPad portrait/landscape/Split View; Desktop 1366×768 and 1920×1080, with light/sepia/night and browser zoom 200%.
+- Verify no need to scroll after selecting categories on Desktop at the target width. Buttons and result count usable via keyboard / screen reader.
+- Compare Home hierarchy: search and Continue Reading visible early; avoid duplicating navigation and hero; prioritize single-hand operation on iPhone.
+- Gate 0/1 status stays **OPEN** until owner accepts screenshots and device baseline; **no PWA version bump** or modification to `index.html`, `assets/app.js`, Service Worker, Reader, or state in this PR.
+
+## 4. Remaining implementation sequence
+
+1. Close FLIP-14 on real devices without losing SAR content or externally loaded public books.
+2. Review UI-MIG-01R2 visual comparison and update design-token decision; if accepted, finish Gate 0/1 evidence.
+3. Review #173 + #180 (Superpowers SP-PILOT-01) source, run `npm ci`/build in isolated workspace and audit dependencies/license; do not merge before Gate 2.
+4. UI-MIG-03 preview catalog adapter, UI-MIG-04 Reader integration, UI-MIG-05 audio/offline/PWA, UI-MIG-06 controlled cutover only with separate approvals.
+5. CAT-01 lazy loading separately, after measured ARCH-01E baseline; no simultaneous architectural cutover.
+
+All content in these preview/doc changes is public-safe and does not touch student/teacher private data.
