@@ -66,6 +66,14 @@
           <button id="motionButton" class="text-btn" type="button" aria-pressed="false" aria-label="เปิดหรือปิดแอนิเมชันพลิกหน้า" title="เปิดหรือปิดแอนิเมชันพลิกหน้า">ลดโมชั่น</button>
         </div>
       </div>
+      <aside id="flipTocSheet" class="flip-reader-sheet" aria-label="สารบัญหนังสือ" hidden>
+        <div class="flip-reader-sheet-header">
+          <strong>สารบัญหนังสือ</strong>
+          <button id="flipTocClose" type="button" aria-label="ปิดสารบัญ">✕</button>
+        </div>
+        <nav id="flipTocItems" aria-label="เลือกบทที่ต้องการอ่าน"></nav>
+      </aside>
+      <button id="flipToolsDismiss" class="flip-tools-dismiss" type="button" hidden aria-label="ปิดเครื่องมืออ่าน">✕ ปิดเครื่องมือ</button>
       <div class="book-stage" id="bookStage" tabindex="0" aria-label="พื้นที่อ่านคู่มือ ลากมุมกระดาษหรือใช้ปุ่มลูกศรเพื่อเปลี่ยนหน้า" aria-describedby="readerHelp">
         <div class="ambient-shadow" aria-hidden="true"></div>
         <div id="cornerFrame" class="corner-frame"><div id="cornerBook" class="corner-book" aria-live="off"></div></div>
