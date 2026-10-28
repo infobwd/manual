@@ -33,7 +33,7 @@ class MockElement {
   click() { this.listeners.click?.({ target: this }); }
   input() { this.listeners.input?.({ target: this }); }
 }
-const ids = ["home","books","settings","homeGrid","bookGrid","bookSearch",
+const ids = ["home","books","settings","homeGrid","bookGrid","bookSearch","homeSearch",
   "categoryChoices","bookResultsCount","bookEmpty","fontSize","fontOutput","sampleText"];
 const elements = Object.fromEntries(ids.map(id => [id, new MockElement(id)]));
 const filters = ["all","favorite","recent"].map(filter => new MockElement("", {filter}));
