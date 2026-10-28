@@ -32,7 +32,9 @@ function setup(search = "?flip05=1", online = true) {
   const elements = Object.fromEntries(ids.map(id => [id, node()]));
   elements.wdFlipbookFrame.src = "about:blank";
   const handlers = {};
+  const themeChanges = [];
   const win = {
+    WD_EXPERIENCE: {setTheme(theme) { themeChanges.push(theme); }},
     location: {search, origin:"https://infobwd.github.io"},
     navigator: {onLine: online},
     WD_BOOKS_VERSION: version,
@@ -47,12 +49,12 @@ function setup(search = "?flip05=1", online = true) {
   const dialog = node();
   dialog.open = true;
   const calls = {toc:0,panels:0,jumps:[]};
-  const doc = {documentElement:{classList:{contains:()=>false}}};
+  const doc = {documentElement:{classList:{contains:()=>false}},body:{dataset:{theme:"night"}}};
   const bridge = factory(id => elements[id], win, doc, dialog, state,
     () => { calls.toc++; },
     () => { calls.panels++; },
     page => { calls.jumps.push(page); state.page=page; }, URLSearchParams);
-  return {bridge, elements, win, handlers, state, dialog, book, calls};
+  return {bridge, elements, win, handlers, state, dialog, book, calls, themeChanges};
 }
 const pilot = setup();
 assert.equal(pilot.bridge.eligibleFlipbook(pilot.book), true, "published book is eligible");
@@ -64,6 +66,8 @@ assert.match(pilot.bridge.flipFrame.src, /corner\.html\?/, "loads isolated same-
 assert.match(pilot.bridge.flipFrame.src, /start=3/, "starts at existing reader chapter");
 assert.equal(new URLSearchParams(pilot.bridge.flipFrame.src.split("?")[1]).get("v"),version,
   "iframe receives current PWA release for cache busting");
+assert.equal(new URLSearchParams(pilot.bridge.flipFrame.src.split("?")[1]).get("theme"),"night",
+  "iframe inherits existing Reader night theme");
 assert.equal(pilot.calls.toc, 1);
 assert.equal(pilot.calls.panels, 1);
 const winFrame = pilot.bridge.flipFrame.contentWindow;
@@ -83,6 +87,21 @@ send("7");
 assert.equal(pilot.bridge.getSession().lastChapter,null,"non-numeric chapter rejected");
 send(7);
 assert.equal(pilot.bridge.getSession().lastChapter,7,"valid iframe chapter accepted");
+const sendTheme = (theme, origin = pilot.win.location.origin, source = winFrame, bookId = pilot.book.id) =>
+  (pilot.handlers.message || []).forEach(fn => fn({
+    origin,source,data:{type:"wd:flip08a:theme",bookId,theme}
+  }));
+sendTheme("night","https://attacker.example");
+sendTheme("night",pilot.win.location.origin,{});
+sendTheme("night",pilot.win.location.origin,winFrame,"another-book");
+sendTheme("invalid");
+sendTheme("sepia"); // Flip toggle is intentionally light/night only.
+assert.deepEqual(pilot.themeChanges,[],"invalid or unrelated theme messages are rejected");
+sendTheme("light");
+sendTheme("night");
+assert.deepEqual(pilot.themeChanges,["light","night"],
+  "valid same-origin same-book theme goes through WD_EXPERIENCE");
+assert.equal(pilot.bridge.getSession().lastChapter,7,"theme updates do not change chapter");
 pilot.elements.wdFlipbookClose.fire("click");
 assert.equal(pilot.bridge.flipDialog.open,false);
 assert.deepEqual(pilot.calls.jumps,[7],"return syncs legacy Reader once");

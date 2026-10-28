@@ -83,12 +83,12 @@ assert(html.includes('id="motionButton"')&&html.includes('aria-label="เปิ�
   "icon control retains accessible label");
 assert(css.includes("body.flip-embedded .measure .paper{padding:19px 18px 16px}"),
   "measurement uses exactly the displayed Thai page padding");
-assert(hostApp.includes('v: String(window.WD_BOOKS_VERSION || "1.3.60")') &&
-  html.includes("corner.css?v=1.3.60") &&
-  html.includes("corner-model.js?v=1.3.60") &&
-  html.includes("corner.js?v=1.3.60"),
+const release=/WD_BOOKS_VERSION = "([^"]+)"/.exec(appVersion)?.[1];
+assert(release && hostApp.includes('v: String(window.WD_BOOKS_VERSION || "'+release+'")') &&
+  html.includes("corner.css?v="+release) &&
+  html.includes("corner-model.js?v="+release) &&
+  html.includes("corner.js?v="+release),
   "nested iframe and CSS/JS do not stay on stale PWA releases");
-assert.equal((appVersion.match(/1\.3\.60/g)||[]).length,1);
-assert(shell.includes("เวอร์ชัน 1.3.60")&&sw.includes("Update 1.3.60"),
+assert(shell.includes("เวอร์ชัน "+release)&&sw.includes("Update "+release),
   "versioned PWA update is consistent");
 console.log("FLIP-08 PASS: 12 page-walk scenarios, live button behavior, viewport CSS and PWA version.");
