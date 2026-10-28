@@ -348,15 +348,21 @@
 <dialog id="wdFlipbookDialog" class="wd-flip-dialog" aria-labelledby="wdFlipbookHeading" aria-describedby="wdFlipbookDescription">
   <div class="wd-flip-shell">
     <header class="wd-flip-header">
-      <div>
-        <span class="wd-flip-eyebrow">WD BOOKS · FLIP-05 PILOT</span>
+      <div class="wd-flip-heading">
+        <span class="wd-flip-eyebrow">WD BOOKS · FLIPBOOK</span>
         <h2 id="wdFlipbookHeading">อ่านแบบพลิกกระดาษ</h2>
-        <p id="wdFlipbookDescription">ทดลองออนไลน์เฉพาะหนังสือที่รองรับ · กลับสู่ Reader เดิมได้ทุกเมื่อ</p>
+        <p id="wdFlipbookDescription">เลือกบทหรือพลิกหน้ากระดาษ · กลับสู่ Reader เดิมได้ทุกเมื่อ</p>
+      </div>
+      <div class="wd-flip-mobile-controls" aria-label="เครื่องมืออ่านแบบหนังสือ">
+        <button id="wdFlipbookTocTrigger" class="wd-flip-mobile-button wd-flip-toc-button" type="button" aria-label="เปิดสารบัญ" aria-expanded="false" disabled>☷ <span>สารบัญ</span></button>
+        <span id="wdFlipbookMobileTitle" class="wd-flip-mobile-title"></span>
+        <button id="wdFlipbookAudioTrigger" class="wd-flip-mobile-button" type="button" aria-label="กลับไป Reader ปกติและเปิดแผงฟังหนังสือ" title="ฟังหนังสือในโหมดปกติ">🎧</button>
+        <button id="wdFlipbookToolsTrigger" class="wd-flip-mobile-button" type="button" aria-label="เครื่องมืออ่านเพิ่มเติม" aria-expanded="false" disabled>⋯</button>
       </div>
       <button id="wdFlipbookClose" type="button" aria-label="ปิดโหมดพลิกกระดาษและกลับไปอ่านแบบเดิม"><span aria-hidden="true">✕</span><span class="wd-flip-close-label"> กลับไปอ่าน</span></button>
     </header>
     <iframe id="wdFlipbookFrame" title="ทดลองพลิกหน้าคู่มือ WD Books" src="about:blank" loading="eager" referrerpolicy="same-origin"></iframe>
-    <button id="wdFlipbookReturnBottom" class="wd-flip-return-overlay" type="button" aria-label="กลับไปอ่านหนังสือแบบเดิม">กลับไปอ่าน</button>
+    <button id="wdFlipbookReturnBottom" class="wd-flip-return-overlay" type="button" aria-label="ปิดโหมดพลิกกระดาษและกลับไปอ่านแบบเดิม" title="กลับไปอ่าน">✕</button>
   </div>
 </dialog>
 
