@@ -93,3 +93,6 @@ body.flip-embedded .corner-frame{flex-shrink:0}
     padding:28px 23px 22px;
   }
 }
+
+/* Keep a measurable frame available for retry after a recoverable layout error. */
+.reading-surface[data-error=true] .corner-frame{display:flex}
