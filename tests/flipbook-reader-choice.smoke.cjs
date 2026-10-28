@@ -29,6 +29,8 @@ assert(app.includes('const flip05Enabled = new URLSearchParams(window.location.s
 assert(app.includes('book?.id === FLIP05_BOOK') && app.includes('book.status === "published"'),
   "only the tested published book is eligible");
 assert(app.includes('flipChoice.hidden = !eligibleFlipbook(book)'), "hidden for other books");
+assert(app.includes('flipChoice.disabled = disabled') && app.includes('window.addEventListener("offline", syncFlipConnectivity)'),
+  "online-only preview must be disabled while offline, legacy Reader unaffected");
 assert(html.includes('id="readerFlipbookChoice"') && html.includes('id="wdFlipbookDialog"') &&
   html.includes('id="wdFlipbookFrame"') && html.includes('id="wdFlipbookClose"'), "isolated controls exist");
 assert(html.includes('src="about:blank"'), "iframe unloaded by default");
