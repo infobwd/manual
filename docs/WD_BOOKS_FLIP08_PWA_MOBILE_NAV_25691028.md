@@ -19,6 +19,7 @@
 5. แถบ header ของ modal แม่บนมือถือเหลือชื่อและปุ่มกลับ Reader; เคารพ safe area ขอบจอ iPhone
 6. โหมด standalone preview, desktop spread, แผ่นกระดาษที่ใช้จัดหน้า, ตัวเลือกฟอนต์ของผู้อ่าน และ responsive >690px คงเดิม
 7. Update version `1.3.60` ใน `index.html`, `assets/app-version.js`, `sw.js` เพื่อกระตุ้นอัปเดต PWA โดยไม่ลบ storage
+8. ใส่ query version ให้ iframe, `corner.css`, `corner-model.js`, `corner.js` เพื่อกัน Safari/PWA ค้างไฟล์เดิม และให้ `#measure .paper` ใช้ padding เท่าหน้าจริงเพื่อไม่ให้ผลแบ่งหน้าเพี้ยน
 
 ## QA แบ่งสองชั้น
 
