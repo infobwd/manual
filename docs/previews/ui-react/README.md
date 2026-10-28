@@ -24,7 +24,7 @@ npm run test:catalog
 # or: node --experimental-strip-types --test tests/catalog-filter.test.mjs
 ```
 
-**29 Oct verification, local container (isolated 2-file copy):** first the tests failed with `ERR_MODULE_NOT_FOUND` before the helper existed (RED). After adding the helper, `node --experimental-strip-types --test tests/catalog-filter.test.mjs` passed **8/8 tests (GREEN)**. `tsc --strict --noEmit --target ES2022 --module ESNext --moduleResolution Bundler src/catalog-filter.ts` passed. Covered Thai leading/trailing whitespace, case-insensitive English, exact category, favorites, composing filters, empty result and unchanged input array.
+**29 Oct verification, local container (isolated 2-file copy):** first the tests failed with `ERR_MODULE_NOT_FOUND` before the helper existed; then a temporary *old-style filter* with no query trimming produced a semantic RED failure on `trim surrounding whitespace in Thai queries` (expected `teacher`, got `[]`). Restoring the committed fixed helper produced GREEN. After adding the helper, `node --experimental-strip-types --test tests/catalog-filter.test.mjs` passed **8/8 tests (GREEN)**. `tsc --strict --noEmit --target ES2022 --module ESNext --moduleResolution Bundler src/catalog-filter.ts` passed. Covered Thai leading/trailing whitespace, case-insensitive English, exact category, favorites, composing filters, empty result and unchanged input array.
 
 **Evidence boundary:** This is a local execution of the pure helper and its test file, not `npm ci`, `npm run build`, React rendering, installed PWA or iPhone/iPad QA. Full React Gate 2 remains OPEN. This candidate's tests can run without fetching packages, but the full app build still requires a committed lockfile and installable npm dependencies.
 
