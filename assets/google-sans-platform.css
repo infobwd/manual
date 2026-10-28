@@ -23,3 +23,14 @@ html:not(.wd-google-sans) textarea{font-family:-apple-system,BlinkMacSystemFont,
 /* Preserve user-selected reader typography. */
 html.wd-google-sans .book-spread[data-font-family="serif"] .book-page{font-family:Georgia,"Noto Serif Thai",serif}
 html.wd-google-sans .book-spread[data-font-family="sans"] .book-page{font-family:"Sarabun",Tahoma,system-ui,sans-serif}
+
+/* WD Books desktop reader only. The surrounding library UI remains Sarabun;
+   serif is an explicit reader preference and must not be overridden.
+   The 1101px boundary follows the reader's desktop/two-page contract. */
+@media screen and (min-width:1101px) and (hover:hover) and (pointer:fine) {
+  html.wd-google-sans .reader-dialog .book-spread:not([data-font-family="serif"]) .book-page,
+  html.wd-google-sans .reader-dialog .book-spread:not([data-font-family="serif"]) .book-page .page-kicker,
+  html.wd-google-sans .reader-dialog .book-spread:not([data-font-family="serif"]) .book-page .book-page-number {
+    font-family:"Google Sans","Sarabun",Tahoma,system-ui,sans-serif;
+  }
+}
