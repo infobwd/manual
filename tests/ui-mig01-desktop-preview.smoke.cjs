@@ -13,7 +13,7 @@ for (const id of ["home","books","settings","homeGrid","bookGrid","bookSearch","
 for (const token of ["catalog-layout","catalog-sidebar","grid-template-columns:210px minmax(0,1fr)",
   'data-cat="all"','data-cat="การจัดการเรียนรู้"','data-category="งานบริหาร"',
   "categoryFilter","statusFilter","renderBooks","updateCategory",
-  "showView","aria-live=\"polite\"","prefers-reduced-motion"]) {
+  "showView","previewParams","aria-live=\"polite\"","prefers-reduced-motion"]) {
   assert(text.includes(token),"missing desktop category-first contract: "+token);
 }
 assert(!/localStorage|serviceWorker|wd-manual-reader-v2|\bfetch\s*\(/.test(script),
@@ -53,7 +53,7 @@ const document = {
   createElement:tag => new MockElement(tag),
   querySelectorAll:selector => groups[selector] || []
 };
-vm.runInNewContext(script, {document,window:{scrollTo:()=>{}}}, {timeout:2000});
+vm.runInNewContext(script, {document,window:{scrollTo:()=>{},location:{search:""}},URLSearchParams}, {timeout:2000});
 assert.equal(elements.bookGrid.children.length,8,"initial mock catalog shows all 8 titles");
 assert.equal(elements.bookResultsCount.textContent,"พบ 8 จาก 8 เล่มตัวอย่าง");
 categories[1].click();
