@@ -79,6 +79,14 @@ node tests/wd-books-flip14-gate.cjs
 
 Only consider the Node regression gate **PASS** if the command prints **18/18 PASS**, the saved report has `fail: 0`, and Windows exit code is 0. Any remaining failure requires real stderr analysis. Device/browser and SAR visual page-fitting QA remain **NOT TESTED**, even if Node passes.
 
+## Windows retest 2 — 17/18 and exact remaining fix
+
+User's next Windows Node v24.13.1 run reported **17/18 PASS**. The only failure was `library.smoke.cjs:93`, `ERR_ASSERTION: Values have same structure but are not reference-equal`, displaying identical first-two published IDs. The `ids` *expected* array was itself created by chaining `filter/slice/map` on the `vm`-origin catalog array; even though the *actual* array was normalised with `Array.from`, `deepStrictEqual` still rejected the foreign expected array prototype.
+
+**Fix:** `const ids=Array.from(data.manuals.filter(...).slice(0,2),b=>b.id)`, materialising expected IDs in the host Node realm. The underlying values and strict ordering assertions remain unchanged.
+
+**Verification boundary:** a standalone real Node reproduction verified foreign-realm `deepStrictEqual` failure before and PASS after host `Array.from`; the revised full `library.smoke.cjs` test body also passed in a JavaScript source-compatibility harness. The user's **full Windows 18-file suite has not been rerun yet**, so the Node gate must not be labelled 18/18 PASS.
+
 ## Required QA before merge / version bump
 1. `node tests/flipbook-sar-parity.smoke.cjs`, `node tests/flipbook-default-paper.smoke.cjs`, `node tests/flipbook-close-book-label.smoke.cjs`, `node tests/flipbook-corner.smoke.cjs` and complete prior FLIP-08–13 suites: report actual logs.
 2. On iPhone Safari + installed PWA: open **เตรียมรับนิเทศเปิดภาคเรียน 2**, WD Growth individual plan and PLC guide through shelf and verify every chapter, previous/next, bottom close, classic mode and audio handoff.
