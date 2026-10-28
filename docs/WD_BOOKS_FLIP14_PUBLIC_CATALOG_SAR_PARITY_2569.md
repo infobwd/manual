@@ -21,6 +21,16 @@
 - `new Function` parsed the updated child JavaScript successfully.
 - Added `tests/flipbook-sar-parity.smoke.cjs` (Node; **NOT RUN in repository environment**), and updated the two historical 13/15 assertions to 15/15. Do not confuse these code checks with DOM browser/device QA.
 
+## Execution checkpoint — 29 ต.ค. 2569
+
+**PASS (in-chat V8 source execution, not physical Node/Browser):**
+- Fetched current PR branch sources from GitHub and executed all 4 public catalog scripts plus strict flipbook gate in a JavaScript V8 isolate: **30/30** validation checks PASS.
+- Verified complete runtime data set **23 total / 18 published / 18 eligible**; 4 SAR chart-bearing pages, 5 insight-bearing pages, distinct IDs, and denial of unpublished/unknown/malformed data.
+- Executed unchanged test assertions from `flipbook-sar-parity.smoke.cjs`, updated `flipbook-default-paper.smoke.cjs` and `flipbook-close-book-label.smoke.cjs` using a lightweight `fs/vm/assert` compatibility shim against the live branch sources: all 3 test bodies PASS.
+- This does **not** count as actual `node tests/...` execution or automated browser screenshot/real-device acceptance. The browser pagination, chart clipping, iPhone/iPad/PWA and full regression gates remain **NOT TESTED**.
+
+**Risk / release:** draft PR only. No version bump, merge or production deployment authorised by these checks alone.
+
 ## Required QA before merge / version bump
 1. `node tests/flipbook-sar-parity.smoke.cjs`, `node tests/flipbook-default-paper.smoke.cjs`, `node tests/flipbook-close-book-label.smoke.cjs`, `node tests/flipbook-corner.smoke.cjs` and complete prior FLIP-08–13 suites: report actual logs.
 2. On iPhone Safari + installed PWA: open **เตรียมรับนิเทศเปิดภาคเรียน 2**, WD Growth individual plan and PLC guide through shelf and verify every chapter, previous/next, bottom close, classic mode and audio handoff.
