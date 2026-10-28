@@ -10,13 +10,13 @@
 
 ## FLIP-05 — ทดลองเปิดโหมดพลิกกระดาษจาก Reader เดิม (28 ต.ค. 2569)
 
-**Status:** STAGING PR / gate pending; ไม่เปลี่ยนค่าเริ่มต้นหรือเปิดแก่ผู้ใช้ทั้งหมด. แผนและ acceptance: [FLIP-05 Reader Choice Integration](WD_BOOKS_FLIP05_READER_CHOICE_INTEGRATION_2569.md).
+**Status:** LIMITED GATED RELEASE (`?flip05=1`, only tested public book); real-device integration QA pending — ไม่เปลี่ยนค่าเริ่มต้นหรือเปิดแก่ผู้ใช้ทั้งหมด. แผนและ acceptance: [FLIP-05 Reader Choice Integration](WD_BOOKS_FLIP05_READER_CHOICE_INTEGRATION_2569.md).
 
 - **หลักฐานล่าสุด:** ผู้ใช้ยืนยัน PASS บน iPhone สำหรับ FLIP-04 เฉพาะการลากมุมร่วมกับการเลื่อนหน้าเว็บ และการขยายตัวอักษรระหว่างอ่าน; ไม่ใช่ full-device/audio/PWA gate.
 - **ทางเลือกที่กำลังทดลอง:** \`?flip05=1\` เปิดปุ่ม “พลิกกระดาษ” ใน Reader เฉพาะหนังสือตัวอย่างสาธารณะที่ทดสอบแล้ว; เปิดหน้า self-hosted StPageFlip ใน dialog อีกชั้นโดยไม่แทน DOM Reader เดิม.
 - **การกลับมาอ่าน:** รับตำแหน่ง source chapter จาก iframe เฉพาะ same-origin/source/book/valid integer, เมื่อปิดจึงกลับ Reader เดิมและอัปเดตผ่าน \`jumpTo\` ตามสัญญาปัจจุบัน; ไม่เพิ่ม stored \`readingMode\`, ไม่ลบ bookmark หรือ history.
 - **คิวรับรอง:** Static tests → เปิดทดสอบ URL flag บน Pages หลังอนุมัติปล่อย → ตรวจ iPhone/iPad/Desktop, audio, update/offline, accessibility → ตัดสินใจเปิดแก่หนังสืออื่นเฉพาะเมื่อ renderer ครบเนื้อหา. **FLIP-05 ไม่ใช่การรับรอง UI-MIG-04/06 และไม่ใช่การย้าย React Stack**.
-- **Version candidate:** 1.3.56 ใน branch สำหรับทดสอบเท่านั้น; ตรวจ version และ PR ล่าสุดอีกครั้งก่อน Merge เสมอ.
+- **Version:** 1.3.56 สำหรับ limited flagged preview; ต้องตรวจหน้าเว็บจริงหลังปล่อยและห้ามเปิดแก่ผู้ใช้ทั่วไปจนผ่าน QA.
 
 ---
 
