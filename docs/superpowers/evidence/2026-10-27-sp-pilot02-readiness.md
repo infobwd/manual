@@ -49,3 +49,17 @@ SP-PILOT-02 = BLOCKED FOR EXECUTION in this runtime due to GitHub DNS access. So
 **Blocked/not run:** `npm ci`, `npm run build` (missing lockfile and npm dependencies in execution environment), Vite nested base, React DOM and real-device/browser QA. Gate P2/P3/P4 and overall Gate 2 **OPEN**. This evidence must never be interpreted as React Build PASS.
 
 **Next steps:** Commit a generated lockfile and capture clean npm ci/build output when network-enabled; add React component tests as a separate task and compare Desktop Category-first UX with Draft PR #206. Maintain no new GitHub Actions or changes to real Reader/PWA data.
+
+---
+
+## 29 Oct 2026 — SP-PILOT-04 responsive React UI candidate
+
+**Stacked design candidate:** Draft [PR #208](https://github.com/infobwd/manual/pull/208), based on TDD PR #207 (based on PR #173). Separate from the HTML/CSS-only design PR #206 and Production main.
+
+- React preview adds Desktop category rail (≥1000px) beside live search/results, with mobile category chips.
+- Home's search uses an explicit form submit to avoid navigating during typing. A category shortcut resets unrelated search/favorites state.
+- Accessible labels, `aria-pressed` categories, `aria-live` result count, empty status and visible search focus are in the source.
+- Five Node-native source-contract tests were executed using a JavaScript compatibility harness against live branch text: **5/5 PASS**. Parent helper remains Node **8/8 PASS**. Those test results are **source-level**, not browser/React-rendered UI acceptance.
+- Container has Node v22.16.0 and Chromium 144, but GitHub/npm registry DNS unavailable. Full React dependencies/lockfile/build and source checkout for real browser snapshots are still **NOT TESTED**. Do not report Gate P2/P3/P4 or UI-MIG Gate 2 as PASS.
+
+**Dependency chain:** #173 → #207 → #208; #180 documents pilot evidence; #206 is the independent design target. Keep stacked PRs Draft and unmerged until build and visual acceptance.
