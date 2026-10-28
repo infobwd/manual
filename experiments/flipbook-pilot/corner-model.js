@@ -21,6 +21,17 @@
     return (single || start === 0 ? [pages[start]] : [pages[start], pages[start + 1]])
       .filter(page => typeof page === "number");
   }
+  // Display-only: a desktop spread can straddle two chapters.
+  // Never change reading progress/firstReadable semantics or source page ordering.
+  function crossChapterSpread(enginePage, pages, single, chapterOfSource) {
+    if (single || typeof chapterOfSource !== "function") return null;
+    const visible = visiblePages(enginePage, pages, single).filter(page => page > 0);
+    if (visible.length !== 2) return null;
+    const left = chapterOfSource(visible[0]), right = chapterOfSource(visible[1]);
+    if (!Number.isInteger(left) || !Number.isInteger(right) ||
+        left < 0 || right < 0 || left === right) return null;
+    return {left, right};
+  }
   function firstReadable(enginePage, pages, single) {
     const current = visiblePages(enginePage, pages, single);
     return current.find(page => page >= 0) ?? BACK_COVER;
@@ -53,5 +64,5 @@
     const first = reading[0], last = reading[reading.length - 1];
     return { label: "หน้า " + first + (first === last ? "" : "–" + last) + " / " + contentTotal, shown: last };
   }
-  scope.WD_CORNER_MODEL = Object.freeze({ order, spreadStart, visiblePages, firstReadable, sourceToEngine, adjacent, status });
+  scope.WD_CORNER_MODEL = Object.freeze({ order, spreadStart, visiblePages, crossChapterSpread, firstReadable, sourceToEngine, adjacent, status });
 })(window);
