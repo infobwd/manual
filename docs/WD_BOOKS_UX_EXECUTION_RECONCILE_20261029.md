@@ -47,9 +47,9 @@ Earlier TODO entries in §4 of the Master Roadmap are **historical plans**, not 
 
 ## UI-MIG-01R2 checkpoint — 29 ต.ค. 2569
 
-- **Home search fixed**: typing a nonempty query now opens Bookshelf with matching results instead of an inert search field.
+- **Home search fixed**: typing a query now keeps the user on Home until the search form is submitted (Enter / Search button); submitting opens Bookshelf and focuses its search field with matching results.
 - **Category shortcut fixed**: selecting a category from Home clears prior unrelated "favorites/recent" and search filters, so all public sample books of that category are visible.
-- Fetched live PR sources and executed `tests/ui-mig01-desktop-preview.smoke.cjs` through a compatible JavaScript source harness: **static contracts + 15 mock DOM interaction assertions PASS** (search, category, favorites, empty state, navigation, theme and typography).
+- Fetched live PR sources and executed `tests/ui-mig01-desktop-preview.smoke.cjs` through a compatible JavaScript source harness: **static contracts + mock DOM interaction assertions PASS**, including no navigation while typing, explicit search submission, result focus, category/favorites composition, empty state, navigation, theme and typography.
 - **Actual Node execution and real browser screenshots: NOT TESTED.** The compatibility harness cannot certify real CSS layout, browser focus, screen reader, iPhone PWA or iPad Split View. Gate 0/1 remain OPEN.
 - No production Reader, Audio, Service Worker, app version or stored user data modified in this draft PR.
 
