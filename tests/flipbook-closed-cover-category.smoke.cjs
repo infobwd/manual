@@ -53,6 +53,8 @@ assert(app.includes('function selectCategory(id, origin = "chips")') &&
   app.includes('button.addEventListener("click", () => selectCategory(cat.id, kind))') &&
   app.includes('if (origin === "nav" && window.matchMedia("(min-width:1001px)").matches)') &&
   app.includes('library?.scrollIntoView({'),
+assert(app.includes('$("resultsText")?.focus({preventScroll:true})'),
+  "filtered result announcement retains accessible focus after rerender");
   "desktop sidebar auto-displays filtered library");
 assert(app.includes('prefers-reduced-motion: reduce') &&
   styles.includes('#library{scroll-margin-top:90px}'),
