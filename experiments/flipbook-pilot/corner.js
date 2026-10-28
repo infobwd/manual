@@ -292,8 +292,9 @@
       if (state.hasInteracted) stage.classList.add("has-interacted");
       renderStatus();
     } catch (error) {
-      console.error("FLIP-04 mount:", error);
-      fail("เปิดระบบพลิกหน้าไม่สำเร็จ กรุณาลองรีเฟรชหน้า");
+      console.error("FLIP-07 engine mount:", error);
+      state.engine = null;
+      throw error; // Let the shared retry/error boundary report the failure.
     } finally {
       state.rebuilding = false;
     }
