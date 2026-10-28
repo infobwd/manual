@@ -76,3 +76,58 @@ body[data-theme="night"] .wd-flip-dialog .wd-flip-header{
   background:#20332b;color:#e5efe6;border-color:#354d40;
 }
 body[data-theme="night"] .wd-flip-dialog #wdFlipbookClose{background:#335e4c;color:#fff}
+
+/* FLIP-09: use the desktop monitor, not a tiny modal in a dark backdrop.
+   No change to the legacy Reader or the handset's full-screen dialog. */
+.wd-flip-return-overlay{display:none}
+@media screen and (min-width:1101px) {
+  .wd-flip-dialog{
+    width:min(94vw,1760px);
+    max-width:calc(100vw - 24px);
+    height:min(94dvh,1120px);
+    max-height:calc(100dvh - 18px);
+    border-radius:18px;
+  }
+  .wd-flip-header{
+    padding:10px 18px;
+    min-height:62px;
+  }
+  .wd-flip-header h2{font-size:17px;margin-top:3px}
+  .wd-flip-header p{display:none}
+  #wdFlipbookFrame{min-height:0}
+}
+/* An actual DOM button belonging to the parent dialog overlays the mobile
+   iframe's bottom-right cell. A tap never depends on the iframe postMessage
+   delivery or its JavaScript initialization. The iframe button remains the
+   compatibility fallback, and the parent header X is always available. */
+@media screen and (max-width:690px) {
+  .wd-flip-dialog[open] .wd-flip-return-overlay{
+    display:flex;
+    position:absolute;
+    z-index:10;
+    right:calc(6px + env(safe-area-inset-right,0px));
+    bottom:calc(7px + env(safe-area-inset-bottom,0px));
+    width:clamp(88px,27vw,132px);
+    height:48px;
+    min-height:48px;
+    justify-content:center;
+    align-items:center;
+    border:1px solid #276454;
+    border-radius:11px;
+    background:#245c50;
+    color:#fff;
+    font:750 11px/1.2 "Sarabun",Tahoma,sans-serif;
+    white-space:nowrap;
+    touch-action:manipulation;
+    cursor:pointer;
+    box-shadow:0 1px 3px #102b252b;
+  }
+  .wd-flip-dialog[open] .wd-flip-return-overlay:focus-visible{
+    outline:3px solid #e3b859;
+    outline-offset:2px;
+  }
+  body[data-theme="night"] .wd-flip-return-overlay{
+    background:#397c61;
+    border-color:#a0d0b2;
+  }
+}
