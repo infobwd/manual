@@ -87,6 +87,18 @@ User's next Windows Node v24.13.1 run reported **17/18 PASS**. The only failure 
 
 **Verification boundary:** a standalone real Node reproduction verified foreign-realm `deepStrictEqual` failure before and PASS after host `Array.from`; the revised full `library.smoke.cjs` test body also passed in a JavaScript source-compatibility harness. The user's **full Windows 18-file suite has not been rerun yet**, so the Node gate must not be labelled 18/18 PASS.
 
+## Windows Node Gate — PASS (user confirmed 29 Oct 2026)
+
+**Status: PASS — 18/18.** The user confirmed the local Windows `node tests/wd-books-flip14-gate.cjs` command now reports **18/18 PASS** after the VM cross-realm/library regression fixes. Previous rounds were 13/18 and 17/18. Known test environment: Windows PowerShell, Node v24.13.1 from the supplied failure reports. This pass is **user-reported**, not independently obtained from the final JSON file, so no additional log fields, full SHA, or screenshots are inferred.
+
+- **Node regression gate:** PASS (user-confirmed).
+- **Desktop visual layout / SAR chart clipping:** NOT TESTED.
+- **iPad / iPhone actual Safari and installed PWA:** NOT TESTED.
+- **Audio handoff / service-worker update and offline on actual device:** NOT TESTED.
+- **Merge / production release:** NOT AUTHORISED; PR remains Draft.
+
+The old 13/18 and 17/18 records above remain as historical debugging evidence only. For the next acceptance gate, test the actual rendered Flipbook page and compare source SAR chart values, not just Node schema assertions.
+
 ## Required QA before merge / version bump
 1. `node tests/flipbook-sar-parity.smoke.cjs`, `node tests/flipbook-default-paper.smoke.cjs`, `node tests/flipbook-close-book-label.smoke.cjs`, `node tests/flipbook-corner.smoke.cjs` and complete prior FLIP-08–13 suites: report actual logs.
 2. On iPhone Safari + installed PWA: open **เตรียมรับนิเทศเปิดภาคเรียน 2**, WD Growth individual plan and PLC guide through shelf and verify every chapter, previous/next, bottom close, classic mode and audio handoff.
