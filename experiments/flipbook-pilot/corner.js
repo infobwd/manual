@@ -232,7 +232,7 @@
       usePortrait: isSingle(), drawShadow: !state.motionOff,
       flippingTime: state.motionOff ? 1 : 750, maxShadowOpacity: 0.45,
       mobileScrollSupport: false, useMouseEvents: !state.motionOff,
-      disableFlipByClick: false, swipeDistance: 35,
+      disableFlipByClick: true, swipeDistance: 35,
       startPage: 0
     });
     state.engine = engine;
