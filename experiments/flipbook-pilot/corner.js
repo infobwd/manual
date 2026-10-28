@@ -6,6 +6,8 @@
   const requestedId = query.get("book") || PILOT_ID;
   const startChapter = /^\d{1,3}$/.test(query.get("start") || "") ?
     Number(query.get("start")) : null;
+  if (query.get("embed") === "1" && window.parent !== window)
+    document.body.classList.add("flip-embedded");
   const el = id => document.getElementById(id);
   const book = requestedId === PILOT_ID ?
     (window.WD_LIBRARY_DATA?.manuals || []).find(item =>
