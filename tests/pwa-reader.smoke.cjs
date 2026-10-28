@@ -53,7 +53,10 @@ function launch() {
   const location = { protocol: "https:", hostname: "infobwd.github.io", hash: "",
     reload() { reloads++; } };
   const navigator = { userAgent: "Test", onLine: true };
-  const window = { navigator, location, scrollY: 0, WD_BOOKS_VERSION: "1.3.68",
+  const releaseSource = read("assets/app-version.js");
+  const release = releaseSource.match(/WD_BOOKS_VERSION\s*=\s*"(\d+\.\d+\.\d+)"/);
+  assert(release, "the test must read the published version source");
+  const window = { navigator, location, scrollY: 0, WD_BOOKS_VERSION: release[1],
     matchMedia: query => ({
       matches: /max-width:\s*(?:850|1000)px/.test(query),
       addEventListener() {},
