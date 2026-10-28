@@ -37,6 +37,23 @@ Added `tests/flipbook-sar-values.smoke.cjs`, a golden content guard for both pub
 
 V8 execution of the complete test body against live branch sources through a `fs/vm/assert` compatibility shim: **PASS**. Do not label this as actual Node execution or visual page QA. Run `node tests/flipbook-sar-values.smoke.cjs` locally along with all regression tests before merge; compare chart figures to original Reader in desktop/iPad screenshots. No actual SAR figures were edited.
 
+## FLIP-14 follow-up — prevent the next missing-book regression
+
+**New dependency-free gates in the draft PR (29 Oct 2026):**
+- `tests/flipbook-module-manifest.smoke.cjs` reads `index.html`, finds the **entire book-source script block** between `manuals-data.js` and `experience.js`, verifies the Flipbook iframe loads the **same source files in the same order**, and checks that each is cached by `sw.js`. It also checks unique IDs, public statuses, and current 18/18 capability after evaluating the scripts.
+- `tests/wd-books-flip14-gate.cjs` orchestrates **18 existing/new Node smoke/behavior files**, returns a non-zero exit code if any fail, and saves per-test logs plus a machine-readable report to the OS temp directory (or an explicitly set `WD_QA_REPORT` path). It marks **device/browser QA = NOT_TESTED**, never "PASS" based on static checks.
+
+```powershell
+# From an actual local clone with Node >=22
+node tests/flipbook-module-manifest.smoke.cjs
+node tests/wd-books-flip14-gate.cjs
+# Optional custom report path:
+$env:WD_QA_REPORT = "$env:TEMP\wd-books-flip14-qa.json"
+node tests/wd-books-flip14-gate.cjs
+```
+
+**Evidence in this chat:** the module-manifest test body was executed against live branch text using a JavaScript-compatible harness and **PASS** (4 book-source scripts, 23 catalog titles, 18 published, 18 eligible); the runner's JavaScript syntax parsed and its **18 listed test filenames** were verified present. The 18-file runner itself has **not** been run against a local checkout and must not be marked passed until command logs exist. Browser visuals and real-device QA remain open.
+
 ## Required QA before merge / version bump
 1. `node tests/flipbook-sar-parity.smoke.cjs`, `node tests/flipbook-default-paper.smoke.cjs`, `node tests/flipbook-close-book-label.smoke.cjs`, `node tests/flipbook-corner.smoke.cjs` and complete prior FLIP-08–13 suites: report actual logs.
 2. On iPhone Safari + installed PWA: open **เตรียมรับนิเทศเปิดภาคเรียน 2**, WD Growth individual plan and PLC guide through shelf and verify every chapter, previous/next, bottom close, classic mode and audio handoff.
