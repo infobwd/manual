@@ -8,6 +8,17 @@
 **กลุ่มใช้งานหลัก:** ครู/บุคลากรโรงเรียนบน iPhone และ iPad, รองลงมาคือ Android และ Desktop  
 **Source of truth:** เอกสารนี้ใช้กำหนดลำดับงาน, acceptance และ rollout ของการปรับ UX ใน repo นี้ ไม่แก้เนื้อหาวิชาการหรือระบบ WD Growth ต้นทาง
 
+## FLIP-12 — ปกหลังปิดเล่มเดียว + Category Result Visibility บน Desktop (28 ต.ค. 2569)
+
+**Status:** scoped implementation; device visual QA pending. [แผน/Acceptance](WD_BOOKS_FLIP12_CLOSED_BACK_CATEGORY_2569.md).
+
+- แก้ความไม่สมจริงเมื่อถึงปกหลัง: แสดง *หนึ่งเล่มที่ปิดแล้ว* กลางเวทีแทนหน้าคู่ และเปิดกลับหน้าสุดท้ายได้ โดยรักษา StPageFlip state/position/drag และธีมเดิม
+- เมนูหมวด Desktop sidebar: เมื่อเลือกหมวด กรองข้อมูลแล้วพาไปแสดง `#library` อัตโนมัติ (1001px ขึ้นไป) เคารพ reduced-motion และ header offset; mobile chips ไม่เปลี่ยนพฤติกรรม
+- **งาน UI ใหญ่ยังคงตาม UI-MIG-00–06:** ออกแบบ desktop category-first ที่ไม่ต้อง scroll และทบทวน Home information hierarchy/landing hero ในแผนย้าย Tailwind/shadcn หลังผ่าน compatibility gate. FLIP-12 เป็น bridge fix ไม่ใช่การอนุมัติย้าย stack
+- Release `1.3.67`, ไม่มีการเปลี่ยน catalog IDs, readingMode schema, Podcast หรือ localStorage. ต้องตรวจ iPhone/iPad/desktop จริงหลัง deploy
+
+---
+
 ## FLIP-11 — เปิดหนังสือเป็นโหมดหลัก + กระดาษสมจริง (28 ต.ค. 2569)
 
 **Status:** implemented; static gates / post-deploy device QA required. [ข้อกำหนดและการทดสอบ](WD_BOOKS_FLIP11_DEFAULT_PAPER_2569.md).
