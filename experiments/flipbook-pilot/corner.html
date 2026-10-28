@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#123e41">
+  <meta name="description" content="WD Books Flipbook Pilot — ทดลองพลิกหน้าคู่มือจริงในพื้นที่แยก ไม่เปลี่ยนแอปหลัก">
+  <title>WD Books · Corner Drag Pilot (FLIP-03)</title>
+  <link rel="stylesheet" href="./pilot.css">
+  <link rel="stylesheet" href="./corner.css">
+  <script defer src="../../assets/manuals-data.js"></script>
+  <script defer src="./vendor/page-flip.browser.min.js"></script>
+  <script defer src="./corner.js"></script>
+</head>
+<body>
+  <a class="skip" href="#bookStage">ข้ามไปยังหนังสือ</a>
+  <header class="topbar">
+    <a class="brand" href="../../"><span class="brand-symbol" aria-hidden="true">W</span><span>WD <b>BOOKS</b><small>FLIPBOOK CORNER LAB</small></span></a>
+    <span class="pilot-tag">FLIP-03 · ทดลองแยกส่วน</span>
+    <a class="back-link" href="../../">กลับชั้นหนังสือ <span aria-hidden="true">↗</span></a>
+  </header>
+  <main class="workspace">
+    <div class="intro">
+      <div>
+        <div class="overline">EXPERIMENT 03 / 2569</div>
+        <h1>จับมุมกระดาษ <em>แล้วพลิก</em></h1>
+        <p>จับมุมขวาบนหรือขวาล่าง แล้วลากเหมือนหนังสือจริง · ปล่อยก่อนครึ่งทางเพื่อเด้งกลับ · ใช้ปุ่มลูกศรได้ด้วย</p>
+      </div>
+      <div class="intro-icon" aria-hidden="true"><span>✦</span> WD</div>
+    </div>
+
+    <section class="reading-surface" aria-label="ทดลองอ่านหนังสือแบบพลิกหน้า">
+      <div class="toolbar">
+        <div class="book-information">
+          <span class="micro">หนังสือตัวอย่างจากคลังจริง</span>
+          <strong id="bookTitle">กำลังโหลดหนังสือ…</strong>
+        </div>
+        <div class="settings">
+          <label class="control-label" for="chapter">สารบัญ</label>
+          <select id="chapter" aria-label="ข้ามไปยังบท"></select>
+          <label class="control-label" for="fontSize">ขนาดตัวอักษร</label>
+          <select id="fontSize" aria-label="ปรับขนาดตัวอักษร">
+            <option value="90">90%</option>
+            <option value="100" selected>100%</option>
+            <option value="120">120%</option>
+            <option value="140">140%</option>
+            <option value="160">160%</option>
+          </select>
+          <button id="motionButton" class="text-btn" type="button" aria-pressed="false" title="เปิดหรือปิดแอนิเมชันพลิกหน้า">ลดการเคลื่อนไหว</button>
+        </div>
+      </div>
+      <div class="book-stage" id="bookStage" tabindex="0" aria-label="พื้นที่อ่านคู่มือ ลากมุมกระดาษหรือใช้ปุ่มลูกศรเพื่อเปลี่ยนหน้า" aria-describedby="readerHelp">
+        <div class="ambient-shadow" aria-hidden="true"></div>
+        <div id="cornerFrame" class="corner-frame"><div id="cornerBook" class="corner-book" aria-live="off"></div></div>
+        <div class="corner-hint" aria-hidden="true"><span class="hint-left">↖ จับมุม</span><span class="hint-right">จับมุม ↙</span></div>
+      </div>
+      <div class="navigator">
+        <button id="prev" class="nav-button" type="button" aria-label="หน้าก่อนหน้า"><span aria-hidden="true">←</span> ก่อนหน้า</button>
+        <div class="progress-wrap">
+          <p id="progress" class="progress-text" role="status" aria-live="polite">กำลังเตรียมหน้า…</p>
+          <div class="track" aria-hidden="true"><div id="progressFill" class="fill"></div></div>
+        </div>
+        <button id="next" class="nav-button primary" type="button" aria-label="หน้าถัดไป">ถัดไป <span aria-hidden="true">→</span></button>
+      </div>
+      <p id="readerHelp" class="help">StPageFlip 2.0.7 (MIT) · ลากมุมขวาเพื่อพลิกไปข้างหน้า / มุมซ้ายเพื่อย้อนกลับ · ปรับตัวอักษรและเลือกบทได้ · ไม่บันทึกทับ WD Books เดิม</p>
+      <p id="error" class="error" role="alert" hidden></p>
+    </section>
+    <footer class="site-note"><strong>WD Books — FLIP-03 Corner Lab</strong><span><a href="./" class="classic-link">กลับไปแบบพลิกเดิม</a> · ใช้หนังสือสาธารณะเท่านั้น · ไม่มีเสียงอ่านหรือ Service Worker ของตัวเอง</span></footer>
+  </main>
+  <div id="measure" class="measure" aria-hidden="true"></div>
+</body>
+</html>
