@@ -43,8 +43,7 @@ const server=http.createServer((req,res)=>{
       "Content-Type":target.type,
       "Content-Length":stat.size,
       "Cache-Control":"no-store, max-age=0",
-      "X-Content-Type-Options":"nosniff",
-      "Access-Control-Allow-Origin":"none"
+      "X-Content-Type-Options":"nosniff"
     });
     if(req.method==="HEAD"){res.end();return;}
     const stream=fs.createReadStream(target.file);
