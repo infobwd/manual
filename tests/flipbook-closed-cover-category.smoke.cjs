@@ -59,8 +59,8 @@ assert(app.includes('$("resultsText")?.focus({preventScroll:true})'),
 assert(app.includes('prefers-reduced-motion: reduce') &&
   styles.includes('#library{scroll-margin-top:90px}'),
   "reduced-motion safe and header offset");
-assert(/WD_BOOKS_VERSION = "1\.3\.67"/.test(version) &&
-  main.includes("เวอร์ชัน 1.3.67") && shell.includes("Update 1.3.67:") &&
-  html.includes("corner.js?v=1.3.67"),
+assert(/WD_BOOKS_VERSION = "1\.3\.68"/.test(version) &&
+  main.includes("เวอร์ชัน 1.3.68") && shell.includes("Update 1.3.68:") &&
+  html.includes("corner.js?v=1.3.68"),
   "PWA version/splash/iframe assets synchronized");
 console.log("FLIP-12 PASS: 16 page-parity cases, true closed back cover, safe reopen, desktop category navigation, version parity.");
