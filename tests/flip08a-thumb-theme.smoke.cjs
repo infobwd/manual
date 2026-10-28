@@ -36,12 +36,12 @@ assert(css.includes('body[data-flip-theme="night"] .paper:not(.cover)')&&
   css.includes('body[data-flip-theme="night"] .page-content')&&
   css.includes('body[data-flip-theme="night"] .nav-button.primary'),
   "night mode styles paper, content and navigation");
-assert(parentCss.includes("padding-bottom:calc(62px + env(safe-area-inset-bottom,0px))")&&
-  parentCss.includes(".wd-flip-shell::after")&&
+assert(parentCss.includes(".wd-flip-shell::after{content:none}")&&
   parentCss.includes(".wd-flip-header #wdFlipbookClose{")&&
-  parentCss.includes("bottom:calc(8px + env(safe-area-inset-bottom,0px))")&&
-  parentCss.includes("(min-height:501px)"),
-  "iPhone close has dedicated thumb area below inner navigator; landscape retains fallback");
+  parentCss.includes(".wd-flip-close-label{display:none}")&&
+  css.includes("body.flip-embedded .return-reader{")&&
+  css.includes("grid-template-columns:minmax(72px,1.05fr)"),
+  "iPhone close is now within the same bottom navigation row; fallback X remains");
 assert(html.includes("corner.css?v="+version)&&html.includes("corner.js?v="+version),
   "updated iframe assets bypass stale PWA browser cache");
 
