@@ -1,0 +1,37 @@
+/* Static contract: Google Sans is restricted to WD Books desktop page content. */
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const read = name => fs.readFileSync(path.join(__dirname, "..", name), "utf8");
+const html = read("index.html");
+const platform = read("assets/google-sans-platform.css");
+const mobile = read("assets/mobile-reader.css");
+const app = read("assets/app.js");
+const flipHtml = read("experiments/flipbook-pilot/corner.html");
+const flipCss = read("experiments/flipbook-pilot/corner.css");
+const flipJs = read("experiments/flipbook-pilot/corner.js");
+const version = read("assets/app-version.js");
+const sw = read("sw.js");
+
+assert.match(html, /family=Google\+Sans:ital,opsz,wght@0,17\.\.18,400\.\.700;1,17\.\.18,400\.\.700/);
+assert.match(html, /media="screen and \(min-width: 1101px\) and \(hover: hover\) and \(pointer: fine\)"/);
+assert.match(platform, /@media screen and \(min-width:1101px\) and \(hover:hover\) and \(pointer:fine\)/);
+assert.match(platform, /html\.wd-google-sans \.reader-dialog \.book-spread:not\(\[data-font-family="serif"\]\) \.book-page/);
+assert.match(platform, /\.book-page \.page-kicker/);
+assert.match(platform, /\.book-page \.book-page-number/);
+assert.match(platform, /font-family:"Google Sans","Sarabun",Tahoma,system-ui,sans-serif/);
+assert.match(platform, /\.book-spread\[data-font-family="serif"\] \.book-page/);
+assert.match(mobile, /\.book-spread\[data-font-family="serif"\] \.book-page/);
+assert.match(app, /params\.set\("desktopFont", "1"\)/);
+assert.match(app, /window\.matchMedia\("\(min-width: 1101px\) and \(hover: hover\) and \(pointer: fine\)"\)/);
+assert.match(flipHtml, /get\("desktopFont"\) === "1"/);
+assert.match(flipHtml, /window\.parent !== window/);
+assert.match(flipHtml, /wd-flip-desktop-font/);
+assert.match(flipCss, /html\.wd-flip-desktop-font \.paper:not\(\.cover\)/);
+assert.match(flipJs, /document\.fonts\?\.ready/);
+assert.match(flipJs, /repaginate\(\)/);
+assert.match(version, /WD_BOOKS_VERSION = "1\.3\.59"/);
+assert.match(html, /เวอร์ชัน 1\.3\.59/);
+assert.match(sw, /Update 1\.3\.59:/);
+assert.match(sw, /"\.\/assets\/google-sans-platform\.css"/);
+console.log("PASS desktop Google Sans content scope / serif / mobile / flipbook / PWA version");
