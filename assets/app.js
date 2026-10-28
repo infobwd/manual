@@ -373,7 +373,7 @@
   const FLIP05_BOOK = "ai-five-questions-speaker-cheatsheet-25691026";
   const flipChoice = $("readerFlipbookChoice");
   const flipDialog = $("wdFlipbookDialog"), flipFrame = $("wdFlipbookFrame");
-  const flipClose = $("wdFlipbookClose");
+  const flipClose = $("wdFlipbookClose"), flipReturnBottom = $("wdFlipbookReturnBottom");
   let flipSession = null;
   flipChoice.hidden = true;
   const eligibleFlipbook = book => book?.id === FLIP05_BOOK &&
@@ -430,7 +430,32 @@
     if (data.chapter >= 0 && data.chapter < (state.manual?.pages?.length || 0))
       flipSession.lastChapter = data.chapter;
   });
-  flipClose.addEventListener("click", () => flipDialog.close());
+  // FLIP-09: a synchronous same-origin return avoids a lost postMessage when
+  // Mobile Safari freezes or unloads a nested iframe during a tap.
+  // Only the active frame and its approved public book may request an exit.
+  const closeFlipbook = (sourceWindow, bookId, chapter = null) => {
+    if (!flipDialog.open || !flipSession ||
+        sourceWindow !== flipFrame.contentWindow || bookId !== flipSession.bookId)
+      return false;
+    if (Number.isInteger(chapter) && chapter >= 0 &&
+        chapter < (state.manual?.pages?.length || 0))
+      flipSession.lastChapter = chapter;
+    flipDialog.close(); // Existing close event owns progress and focus restoration.
+    return true;
+  };
+  window.WD_BOOKS_FLIP_EXIT = closeFlipbook;
+  const returnFromParentButton = () => {
+    if (!flipDialog.open || !flipSession) return;
+    let chapter = null;
+    try {
+      chapter = flipFrame.contentWindow?.WD_BOOKS_FLIP_CURRENT_CHAPTER?.() ?? null;
+    } catch (error) {
+      // Embedded reader may have failed or unloaded; closing still works.
+    }
+    closeFlipbook(flipFrame.contentWindow, flipSession.bookId, chapter);
+  };
+  flipClose.addEventListener("click", returnFromParentButton);
+  flipReturnBottom.addEventListener("click", returnFromParentButton);
   flipDialog.addEventListener("close", () => {
     const pending = flipSession;
     flipSession = null;

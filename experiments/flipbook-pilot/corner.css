@@ -312,3 +312,57 @@ body.flip-embedded #motionButton:focus-visible,
 body.flip-embedded #returnToReader:focus-visible{
   outline:3px solid #e3b859;outline-offset:2px;
 }
+
+/* FLIP-09: use the available viewport height in an embedded desktop reader.
+   Avoid nested scrolling; keep paper and pagination-measurement sizes matched. */
+@media screen and (min-width:1101px) {
+  html:has(body.flip-embedded){height:100%;overflow:hidden}
+  body.flip-embedded{
+    height:100dvh;min-height:0;overflow:hidden;
+  }
+  body.flip-embedded .workspace{
+    height:100%;min-height:0;max-width:none;
+    padding:0;display:flex;flex-direction:column;overflow:hidden;
+  }
+  body.flip-embedded .reading-surface{
+    flex:1 1 auto;min-height:0;display:flex;flex-direction:column;
+    border:0;border-radius:0;overflow:hidden;
+  }
+  body.flip-embedded .toolbar{
+    flex:0 0 auto;min-height:55px;
+    padding:9px 20px;gap:15px;
+  }
+  body.flip-embedded .book-information strong{
+    max-width:min(38vw,580px);
+  }
+  body.flip-embedded .book-stage{
+    flex:1 1 auto;min-height:0;overflow:hidden;
+    padding:14px 22px 13px;
+  }
+  body.flip-embedded .corner-frame{
+    flex:0 1 auto;
+    height:100%;max-height:100%;
+    width:min(100%,calc((100dvh - 146px)*1.54),1380px);
+    min-height:0;
+  }
+  body.flip-embedded .navigator{
+    flex:0 0 auto;min-height:60px;
+    padding:9px 22px;gap:18px;
+  }
+  body.flip-embedded .nav-button{min-height:42px;padding:9px 18px}
+  body.flip-embedded .help{display:none}
+  body.flip-embedded .corner-hint{padding-bottom:8px}
+  /* Shared measured and rendered page font: Sarabun has Thai heads. */
+  body .paper:not(.cover) {
+    font-size:calc(18.5px * var(--font-scale));
+  }
+}
+/* On smaller laptops and short windows use remaining height without forcing
+   page content below the fold, while avoiding the desktop/mobile flip threshold. */
+@media screen and (min-width:1101px) and (max-height:650px) {
+  body.flip-embedded .toolbar{min-height:48px;padding:6px 14px}
+  body.flip-embedded .book-stage{padding:6px 14px}
+  body.flip-embedded .navigator{min-height:52px;padding:6px 14px}
+  body.flip-embedded .corner-frame{width:min(100%,calc((100dvh - 120px)*1.54),1380px)}
+  body .paper:not(.cover){font-size:calc(17px * var(--font-scale))}
+}

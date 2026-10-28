@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.63: FLIP-08B inline return navigation and high-contrast motion state;
+   Update 1.3.64: FLIP-09 desktop reading layout and reliable mobile return;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");

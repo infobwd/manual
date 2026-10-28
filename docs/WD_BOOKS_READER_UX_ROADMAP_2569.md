@@ -8,6 +8,16 @@
 **กลุ่มใช้งานหลัก:** ครู/บุคลากรโรงเรียนบน iPhone และ iPad, รองลงมาคือ Android และ Desktop  
 **Source of truth:** เอกสารนี้ใช้กำหนดลำดับงาน, acceptance และ rollout ของการปรับ UX ใน repo นี้ ไม่แก้เนื้อหาวิชาการหรือระบบ WD Growth ต้นทาง
 
+## FLIP-09 — ขยายหน้าคู่บน Desktop + ซ่อม “กลับไปอ่าน” บนมือถือ (28 ต.ค. 2569)
+
+**Status:** code implementation / automated gates pending + real-device QA pending. [รายละเอียดและ Rollback](WD_BOOKS_FLIP09_DESKTOP_RETURN_2569.md).
+
+- Desktop 1101 CSS px ขึ้นไป: dialog 94vw × 94dvh, หนังสือ fit ตามความสูง viewport, navigator ไม่ต้อง scroll ตามหา, ฟอนต์เนื้อหา ~17–18 CSS px ที่ 100% และคง Sarabun แบบมีหัว/Google Sans ตาม desktop preference.
+- Mobile: ปุ่มกลับไปอ่านด้านล่างเป็น parent-owned DOM ทับตำแหน่งเดิมเพื่อแก้ปัญหากดแล้วไม่ทำงาน; child ยังเรียก same-origin direct exit พร้อม postMessage fallback โดยตรวจ sourceWindow/bookId/chapter ก่อนปิดและคืน focus.
+- จำกัดเฉพาะเล่ม public pilot เดิม, ไม่มีการเปลี่ยน Reader mode schema, bookmark, offline, Podcast หรือฟอนต์ global ของแอป; PWA v1.3.64 ต้องตรวจเครื่องจริงก่อนขยายไปหนังสืออื่น.
+
+---
+
 ## FLIP-07 — แก้ iPhone embedded Flipbook และเปลี่ยนฟอนต์ไทยแบบมีหัว (28 ต.ค. 2569)
 
 **Status:** Fix implementation; gated rollout one book only / post-deployment mobile QA pending. รายละเอียดและ acceptance: [FLIP-07 iOS Embed + Sarabun](WD_BOOKS_FLIP07_IOS_EMBED_SARABUN_2569.md).
