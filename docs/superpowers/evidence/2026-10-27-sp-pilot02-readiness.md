@@ -32,3 +32,20 @@ Main: 75ec0f4ee4fff7afd7e2ea6d4d108f90555427af
 
 ## Gate decision
 SP-PILOT-02 = BLOCKED FOR EXECUTION in this runtime due to GitHub DNS access. Source review complete; automated build/TDD/device evidence NOT RUN. No production changes, no code changes, no merge.
+
+---
+
+## 29 Oct 2026 — SP-PILOT-03 TDD follow-up (branch PR #207)
+
+**Scope:** Isolated `docs/previews/ui-react/` code ONLY, based on PR #173's own head; no changes to Production `main`. Stacked Draft [PR #207](https://github.com/infobwd/manual/pull/207) is not merged into PR #173 or Production.
+
+**Executed on local Node v22.16.0, npm v10.9.2, and global TypeScript (pure module):**
+- Created an eight-case Node-native test `tests/catalog-filter.test.mjs` for Thai whitespace, English case, title/category search, favorites, exact category matching, composed filters, empty/no-match and immutable input.
+- **Semantic RED confirmed:** temporary copy of PR #173's former no-trim query behavior caused `trim surrounding whitespace in Thai queries` to fail (expected one book, actual empty result; process exit 1). This was a local fixture, never deployed.
+- **GREEN confirmed:** committed `src/catalog-filter.ts` passed **8/8 tests**, process exit 0 using `node --experimental-strip-types --test tests/catalog-filter.test.mjs`.
+- **Standalone TypeScript PASS:** `tsc --strict --noEmit --target ES2022 --module ESNext --moduleResolution Bundler src/catalog-filter.ts` exited 0.
+- Existing React `src/main.tsx` now consumes `filterCatalog(books,{query,favoritesOnly})`; optional `category` input is available for a later approved category-first UI but is not yet exposed by React buttons. Node native tests do not verify React rendering.
+
+**Blocked/not run:** `npm ci`, `npm run build` (missing lockfile and npm dependencies in execution environment), Vite nested base, React DOM and real-device/browser QA. Gate P2/P3/P4 and overall Gate 2 **OPEN**. This evidence must never be interpreted as React Build PASS.
+
+**Next steps:** Commit a generated lockfile and capture clean npm ci/build output when network-enabled; add React component tests as a separate task and compare Desktop Category-first UX with Draft PR #206. Maintain no new GitHub Actions or changes to real Reader/PWA data.
