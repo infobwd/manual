@@ -347,15 +347,28 @@
     if (notifyParent && window.parent !== window && document.body.classList.contains("flip-embedded"))
       window.parent.postMessage({ type: "wd:flip08a:theme", bookId: book.id, theme }, window.location.origin);
   }
-  // FLIP-08B: the mobile inline exit lives inside the same iframe navigation
-  // row as Previous / Next. Only the existing parent Reader can close itself.
+  // FLIP-09: synchronous same-origin exit first, postMessage as compatibility
+  // fallback for a parent shell with an older cached version.
+  function currentReadingChapter() {
+    const chapter = Number(state.pages[visibleSourceIndex()]?.dataset.chapter);
+    return Number.isInteger(chapter) && chapter >= 0 && chapter < book.pages.length ? chapter : null;
+  }
+  if (book && document.body.classList.contains("flip-embedded"))
+    window.WD_BOOKS_FLIP_CURRENT_CHAPTER = currentReadingChapter;
   function requestReturnToReader() {
     if (!book || !document.body.classList.contains("flip-embedded") || window.parent === window) return;
-    const chapter = Number(state.pages[visibleSourceIndex()]?.dataset.chapter);
+    const chapter = currentReadingChapter();
+    try {
+      if (typeof window.parent.WD_BOOKS_FLIP_EXIT === "function" &&
+          window.parent.WD_BOOKS_FLIP_EXIT(window, book.id, chapter))
+        return;
+    } catch (error) {
+      // Cross-origin or outdated parent: try the existing validated message bridge.
+    }
     window.parent.postMessage({
       type: "wd:flip08b:exit",
       bookId: book.id,
-      chapter: Number.isInteger(chapter) && chapter >= 0 && chapter < book.pages.length ? chapter : null
+      chapter
     }, window.location.origin);
   }
   // Make the meaning of aria-pressed and visible label identical in all themes.
