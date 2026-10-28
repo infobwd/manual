@@ -33,7 +33,7 @@ function node() {
   };
 }
 function setup(search = "?flip05=1", online = true) {
-  const ids = ["readerFlipbookChoice", "wdFlipbookDialog", "wdFlipbookFrame", "wdFlipbookClose", "wdFlipbookReturnBottom", "wdFlipbookTocTrigger", "wdFlipbookToolsTrigger", "wdFlipbookAudioTrigger", "wdFlipbookMobileTitle", "readerAudioToggle"];
+  const ids = ["readerFlipbookChoice", "wdFlipbookDialog", "wdFlipbookFrame", "wdFlipbookClose", "wdFlipbookDismiss", "wdFlipbookReturnBottom", "wdFlipbookTocTrigger", "wdFlipbookToolsTrigger", "wdFlipbookAudioTrigger", "wdFlipbookMobileTitle", "readerAudioToggle"];
   const elements = Object.fromEntries(ids.map(id => [id, node()]));
   elements.wdFlipbookFrame.src = "about:blank";
   const handlers = {};
@@ -139,7 +139,7 @@ postExit(5);
 assert.equal(inline.bridge.flipDialog.open,false,"trusted inline exit closes flipbook");
 assert.deepEqual(inline.calls.jumps,[5],"inline exit restores last chapter");
 assert.equal(inline.elements.wdFlipbookFrame.src,"about:blank","inline exit unloads iframe");
-assert.equal(inline.bridge.flipChoice.focused,true,"inline exit restores Reader focus");
+assert.equal(inline.dialog.open,false,"inline X closes entire book");
 const badChapter=setup("");
 badChapter.bridge.flipChoice.fire("click");
 const badSource=badChapter.elements.wdFlipbookFrame.contentWindow;
@@ -164,7 +164,7 @@ direct.elements.wdFlipbookReturnBottom.fire("click");
 assert.equal(direct.bridge.flipDialog.open,false,"parent-owned bottom button closes the modal");
 assert.deepEqual(direct.calls.jumps,[6],"parent return syncs the last validated chapter");
 assert.equal(direct.bridge.flipFrame.src,"about:blank","return unloads child iframe");
-assert.equal(direct.bridge.flipChoice.focused,true,"return restores focus to Reader");
+assert.equal(direct.dialog.open,false,"bottom X closes entire book");
 const noChapter = setup("");
 noChapter.bridge.flipChoice.fire("click");
 noChapter.elements.wdFlipbookReturnBottom.fire("click");
@@ -209,6 +209,36 @@ assert.equal(header.elements.readerAudioToggle.clicks,1,
   "actual Reader audio panel opens, not duplicate iframe TTS");
 assert.equal(header.elements.wdFlipbookTocTrigger.disabled,true,
   "parent Reader controls reset after closing the flipbook");
+
+// FLIP-13: X closes book; an intentional classic-mode switch keeps Reader.
+const desktopX=setup("");
+desktopX.bridge.flipChoice.fire("click");
+desktopX.elements.wdFlipbookDismiss.fire("click");
+assert.equal(desktopX.dialog.open,false,"desktop X closes whole book");
+const classic=setup("");
+classic.bridge.flipChoice.fire("click");
+classic.elements.wdFlipbookClose.fire("click");
+assert.equal(classic.bridge.flipDialog.open,false,"classic switch closes only Flipbook");
+assert.equal(classic.dialog.open,true,"classic Reader remains available");
+const childClassic=setup("");
+childClassic.bridge.flipChoice.fire("click");
+const fc=childClassic.elements.wdFlipbookFrame.contentWindow;
+assert.equal(childClassic.win.WD_BOOKS_FLIP_CLASSIC({},childClassic.book.id,4),false);
+assert.equal(childClassic.win.WD_BOOKS_FLIP_CLASSIC(fc,childClassic.book.id,4),true);
+assert.equal(childClassic.dialog.open,true,"trusted child classic route keeps Reader open");
+assert.deepEqual(childClassic.calls.jumps,[4],"classic retains chapter");
+const escaped=setup("");
+escaped.bridge.flipChoice.fire("click");
+escaped.bridge.flipDialog.close();
+assert.equal(escaped.dialog.open,false,"Escape/native close exits book");
+const failover=setup("");
+failover.bridge.flipChoice.fire("click");
+(failover.handlers.message||[]).forEach(fn=>fn({
+  origin:failover.win.location.origin,
+  source:failover.elements.wdFlipbookFrame.contentWindow,
+  data:{type:"wd:flip11:unavailable",bookId:failover.book.id}
+}));
+assert.equal(failover.dialog.open,true,"renderer failure falls back to Reader");
 
 const homeScreen=setup("");
 assert.equal(homeScreen.bridge.eligibleFlipbook(homeScreen.book),true,
