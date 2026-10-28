@@ -10,6 +10,10 @@
     if (value !== undefined) el.textContent = value;
     return el;
   };
+  // Normalize real/newline-escape characters only for display, not stored data.
+  const bookLabel = (value, multiline = false) => String(value ?? "")
+    .replace(/\\n|\/n|\r?\n/g, multiline ? "\n" : " ")
+    .replace(multiline ? /[ \t]+/g : /\s+/g, " ").trim();
   const state = { category: "all", availability: "all", sort: "default", query: "", manual: null, page: 0, scale: 1, opener: null, readingMode: "paged" };
   // Reader single-page threshold includes portrait tablets and narrow Split View.
   const isMobile = window.matchMedia("(max-width: 1100px)");
@@ -88,11 +92,11 @@
     }
     const cover = create("div", "book-cover cover-" + (book.color || "forest"));
     cover.append(create("span", "cover-eyebrow", book.coverTop || "MANUAL"));
-    cover.append(create("strong", "", book.coverTitle || book.title));
+    cover.append(create("strong", "", bookLabel(book.coverTitle || book.title, true)));
     cover.append(create("span", "cover-subtitle", book.subtitle));
     const body = create("div", "card-body");
     body.append(create("span", "card-category", lookup[book.category]?.label || "คู่มือ"));
-    body.append(create("h3", "", book.title));
+    body.append(create("h3", "", bookLabel(book.title)));
     body.append(create("p", "", book.description));
     const foot = create("div", "card-footer");
     foot.append(create("span", "card-meta", book.edition + (book.readTime !== "—" ? " · " + book.readTime : "")));
@@ -172,10 +176,10 @@
       const card = create("div", "resume-feature-card");
       const cover = create("div", "resume-feature-cover");
       cover.append(create("span", "resume-feature-cover-kicker", book.coverTop || "WD BOOKS"));
-      cover.append(create("strong", "", book.coverTitle || book.title));
+      cover.append(create("strong", "", bookLabel(book.coverTitle || book.title, true)));
       const copy = create("div", "resume-feature-copy");
       const label = create("span", "resume-feature-label", "หนังสือที่อ่านล่าสุด");
-      const title = create("h3", "", book.title);
+      const title = create("h3", "", bookLabel(book.title));
       const subtitle = create("p", "", book.subtitle || lookup[book.category]?.label || "คู่มือ");
       const progressText = create("span", "resume-feature-progress");
       const track = create("div", "resume-feature-track");
@@ -419,8 +423,8 @@
     flipSession = {bookId: book.id, originalPage: startPage, lastChapter: null};
     flipExitIntent = "close";
     flipAudioRequested = false;
-    flipMobileTitle.textContent = book.title;
-    flipMobileTitle.title = book.title;
+    flipMobileTitle.textContent = bookLabel(book.title);
+    flipMobileTitle.title = bookLabel(book.title);
     flipTocTrigger.disabled = true;
     flipToolsTrigger.disabled = true;
     flipTocTrigger.setAttribute("aria-expanded","false");
@@ -613,10 +617,10 @@
     state.scale = window.WD_EXPERIENCE?.getScale?.() || 1;
     state.opener = opener;
     $("bookSpread").style.setProperty("--readerScale", String(state.scale));
-    $("readerTitle").textContent = book.title;
-    $("readerMobileBookTitle").textContent = book.title;
-    $("readerMobileBookTitle").title = book.title;
-    $("readerBookmarksBookTitle").textContent = book.title;
+    $("readerTitle").textContent = bookLabel(book.title);
+    $("readerMobileBookTitle").textContent = bookLabel(book.title);
+    $("readerMobileBookTitle").title = bookLabel(book.title);
+    $("readerBookmarksBookTitle").textContent = bookLabel(book.title);
     $("readerCategory").textContent = (lookup[book.category]?.label || "คู่มือ") + " · " + book.edition;
     const prompterButton = $("readerTeleprompterOpen");
     if (prompterButton) {
