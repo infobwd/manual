@@ -377,10 +377,16 @@
   }
   // FLIP-10: native-reader-style TOC and settings sheets inside the same iframe.
   // The parent owns the header; no duplicate scrollable toolbar on mobile/tablet.
+  function notifyReaderSheet(toc,tools) {
+    if (window.parent !== window && book && document.body.classList.contains("flip-embedded"))
+      window.parent.postMessage({type:"wd:flip10:sheet",bookId:book.id,
+        toc:Boolean(toc),tools:Boolean(tools)}, window.location.origin);
+  }
   function closeReaderSheets() {
     el("flipTocSheet").hidden = true;
     el("flipToolsDismiss").hidden = true;
     document.body.classList.remove("flip-toc-open", "flip-tools-open");
+    notifyReaderSheet(false,false);
     return {toc:false,tools:false};
   }
   function openReaderToc() {
@@ -391,6 +397,7 @@
       document.body.classList.add("flip-toc-open");
       el("flipTocClose").focus();
     }
+    notifyReaderSheet(!wasOpen,false);
     return {toc:!wasOpen,tools:false};
   }
   function openReaderTools() {
@@ -401,6 +408,7 @@
       el("flipToolsDismiss").hidden = false;
       fontSelect.focus();
     }
+    notifyReaderSheet(false,!wasOpen);
     return {toc:false,tools:!wasOpen};
   }
   function navigateToChapter(chapterIndex) {
