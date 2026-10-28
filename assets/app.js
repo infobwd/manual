@@ -387,12 +387,15 @@
   // The legacy Reader stays underneath for offline, narration and unsupported content.
   const flipChoice = $("readerFlipbookChoice");
   const flipDialog = $("wdFlipbookDialog"), flipFrame = $("wdFlipbookFrame");
-  const flipClose = $("wdFlipbookClose"), flipReturnBottom = $("wdFlipbookReturnBottom");
+  const flipClose = $("wdFlipbookClose"), flipDismiss = $("wdFlipbookDismiss");
+  const flipReturnBottom = $("wdFlipbookReturnBottom");
   const flipTocTrigger = $("wdFlipbookTocTrigger");
   const flipToolsTrigger = $("wdFlipbookToolsTrigger");
   const flipAudioTrigger = $("wdFlipbookAudioTrigger");
   const flipMobileTitle = $("wdFlipbookMobileTitle");
   let flipAudioRequested = false;
+  // A book-close and a mode switch are distinct actions.
+  let flipExitIntent = "close";
   let flipSession = null;
   flipChoice.hidden = true;
   const eligibleFlipbook = book => window.WD_FLIP_CAPABILITY?.supports?.(book) === true;
@@ -414,6 +417,8 @@
     closeReaderSubpanels();
     const startPage = state.page;
     flipSession = {bookId: book.id, originalPage: startPage, lastChapter: null};
+    flipExitIntent = "close";
+    flipAudioRequested = false;
     flipMobileTitle.textContent = book.title;
     flipMobileTitle.title = book.title;
     flipTocTrigger.disabled = true;
@@ -442,6 +447,14 @@
         window.WD_EXPERIENCE?.setTheme?.(data.theme);
       return;
     }
+    if (data.type === "wd:flip13:classic") {
+      flipExitIntent = "classic";
+      if (Number.isInteger(data.chapter) && data.chapter >= 0 &&
+          data.chapter < (state.manual?.pages?.length || 0))
+        flipSession.lastChapter = data.chapter;
+      flipDialog.close();
+      return;
+    }
     if (data.type === "wd:flip08b:exit") {
       // The active same-origin iframe may request return, never an unrelated page.
       if (Number.isInteger(data.chapter) && data.chapter >= 0 &&
@@ -451,7 +464,8 @@
       return;
     }
     if (data.type === "wd:flip11:unavailable") {
-      // A renderer error must return to the usable Reader, never trap the user.
+      // A renderer error leaves the usable Reader visible, not a blank overlay.
+      flipExitIntent = "classic";
       flipDialog.close();
       return;
     }
@@ -502,6 +516,7 @@
   flipAudioTrigger.addEventListener("click", () => {
     if (!flipDialog.open || !flipSession) return;
     flipAudioRequested = true;
+    flipExitIntent = "classic";
     returnFromParentButton();
   });
   // FLIP-09: a synchronous same-origin return avoids a lost postMessage when
@@ -518,6 +533,12 @@
     return true;
   };
   window.WD_BOOKS_FLIP_EXIT = closeFlipbook;
+  window.WD_BOOKS_FLIP_CLASSIC = (sourceWindow, bookId, chapter = null) => {
+    if (!flipDialog.open || !flipSession ||
+        sourceWindow !== flipFrame.contentWindow || bookId !== flipSession.bookId) return false;
+    flipExitIntent = "classic";
+    return closeFlipbook(sourceWindow, bookId, chapter);
+  };
   const returnFromParentButton = () => {
     if (!flipDialog.open || !flipSession) return;
     let chapter = null;
@@ -528,12 +549,32 @@
     }
     closeFlipbook(flipFrame.contentWindow, flipSession.bookId, chapter);
   };
-  flipClose.addEventListener("click", returnFromParentButton);
-  flipReturnBottom.addEventListener("click", returnFromParentButton);
+  flipClose.addEventListener("click", () => {
+    flipExitIntent = "classic";
+    returnFromParentButton();
+  });
+  flipDismiss.addEventListener("click", () => {
+    flipExitIntent = "close";
+    returnFromParentButton();
+  });
+  flipReturnBottom.addEventListener("click", () => {
+    flipExitIntent = "close";
+    returnFromParentButton();
+  });
   flipDialog.addEventListener("close", () => {
     const pending = flipSession;
+    const intent = flipExitIntent;
     flipSession = null;
-    // Avoid retaining another copy of the book in a hidden iframe.
+    // If Escape or native dialog dismissal fires first, retain the last valid
+    // source chapter before unloading the iframe.
+    if (pending && pending.lastChapter === null) {
+      try {
+        const chapter = flipFrame.contentWindow?.WD_BOOKS_FLIP_CURRENT_CHAPTER?.();
+        if (Number.isInteger(chapter) && chapter >= 0 &&
+            chapter < (state.manual?.pages?.length || 0))
+          pending.lastChapter = chapter;
+      } catch (error) { /* Child may be unavailable. */ }
+    }
     flipFrame.src = "about:blank";
     flipTocTrigger.disabled = true;
     flipToolsTrigger.disabled = true;
@@ -542,12 +583,17 @@
     if (pending && dialog.open && state.manual?.id === pending.bookId) {
       if (pending.lastChapter !== null && pending.lastChapter !== state.page)
         jumpTo(pending.lastChapter);
-      if (flipAudioRequested) {
-        // Open the real audio panel; never autoplay or duplicate TTS in iframe.
+      if (intent === "close") {
+        // User exited the book, not merely the Flipbook mode.
+        dialog.close();
+      } else if (flipAudioRequested) {
         $("readerAudioToggle")?.click();
-      } else flipChoice.focus();
+      } else {
+        flipChoice.focus();
+      }
     }
     flipAudioRequested = false;
+    flipExitIntent = "close";
   });
   dialog.addEventListener("close", () => {
     if (flipDialog.open) flipDialog.close();
