@@ -183,10 +183,29 @@
       freshPage(section);
       if (!tryAppend(node)) throw new Error("แถวกราฟสูงเกินพื้นที่หน้ากระดาษ");
     }
+    // Keep section labels with their first content item when both fit.
+    // Measurements use the same hidden page as the visible Flipbook. If an
+    // oversized pair cannot fit even on a blank sheet, fall back to the
+    // existing split-safe text/atomic-row functions; never discard content.
+    function appendPaired(first, second) {
+      const area = current.querySelector(".page-content");
+      area.append(first, second);
+      if (contentFits(current)) return true;
+      first.remove();
+      second.remove();
+      if (!area.children.length) return false;
+      freshPage(section);
+      const next = current.querySelector(".page-content");
+      next.append(first, second);
+      if (contentFits(current)) return true;
+      first.remove();
+      second.remove();
+      return false;
+    }
     function appendChart(chart) {
-      appendWhole(chart.title || "เปรียบเทียบข้อมูล", "chart-heading");
+      const headingText = chart.title || "เปรียบเทียบข้อมูล";
       const labels = chart.labels || ["เป้าหมาย", "ผลประเมิน"];
-      chart.rows.forEach(row => {
+      chart.rows.forEach((row, index) => {
         const figure = element("figure", "flip-sar-chart");
         figure.setAttribute("role", "group");
         figure.setAttribute("aria-label", row.label);
@@ -202,12 +221,22 @@
           line.append(track, element("strong", "flip-sar-value", value + "%"));
           figure.append(line);
         });
-        appendAtomic(figure);
+        if (index === 0) {
+          const heading = contentBlock(headingText, "chart-heading");
+          if (!appendPaired(heading, figure)) {
+            appendWhole(headingText, "chart-heading");
+            appendAtomic(figure);
+          }
+        } else appendAtomic(figure);
       });
     }
     function appendInsight(insight) {
-      appendWhole("สรุปสารสนเทศ", "insight-label");
-      appendWhole(insight.headline, "insight-headline");
+      const label = contentBlock("สรุปสารสนเทศ", "insight-label");
+      const headline = contentBlock(insight.headline, "insight-headline");
+      if (!appendPaired(label, headline)) {
+        appendWhole("สรุปสารสนเทศ", "insight-label");
+        appendWhole(insight.headline, "insight-headline");
+      }
       if (insight.primary) appendWhole(insight.primary, "insight-primary");
       if (insight.detail) appendWhole(insight.detail, "insight-detail");
     }
