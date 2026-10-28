@@ -1,9 +1,17 @@
 (() => {
   "use strict";
-  const BOOK_ID = "ai-five-questions-speaker-cheatsheet-25691026";
+  // The integration gate only exposes the single tested public book.
+  const PILOT_ID = "ai-five-questions-speaker-cheatsheet-25691026";
+  const query = new URLSearchParams(window.location.search);
+  const requestedId = query.get("book") || PILOT_ID;
+  const startChapter = /^\d{1,3}$/.test(query.get("start") || "") ?
+    Number(query.get("start")) : null;
+  if (query.get("embed") === "1" && window.parent !== window)
+    document.body.classList.add("flip-embedded");
   const el = id => document.getElementById(id);
-  const book = (window.WD_LIBRARY_DATA?.manuals || []).find(item =>
-    item.id === BOOK_ID && item.status === "published" && Array.isArray(item.pages));
+  const book = requestedId === PILOT_ID ?
+    (window.WD_LIBRARY_DATA?.manuals || []).find(item =>
+      item.id === PILOT_ID && item.status === "published" && Array.isArray(item.pages)) : null;
   const stage = el("bookStage");
   const cornerModel = window.WD_CORNER_MODEL;
   const positionModel = window.WD_CORNER_POSITION;
@@ -14,6 +22,7 @@
   const mobileQuery = window.matchMedia("(max-width: 1100px)");
   const state = { pages: [], chapters: [], current: 0, motionOff: reducedSystem.matches, font: 100,
     engine: null, engineMap: [], renderSingle: null, hasInteracted: false,
+    initialChapter: startChapter,
     rebuilding: false, resizeTimer: 0 };
   const element = (tag, className, value) => {
     const node = document.createElement(tag);
@@ -165,7 +174,11 @@
       if (folio) folio.textContent = String(index).padStart(2, "0");
     });
     // Preserve approximate reading progress within the current chapter.
-    const target = positionModel.restore(state.chapters, state.pages.length, anchor);
+    let target = positionModel.restore(state.chapters, state.pages.length, anchor);
+    if (state.initialChapter !== null && Number.isInteger(state.initialChapter)) {
+      target = state.chapters[state.initialChapter]?.page ?? 0;
+      state.initialChapter = null;
+    }
     mountEngine(target);
   }
 
@@ -211,6 +224,12 @@
     const chapter = state.pages[readable] && readable > 0 ? state.pages[readable].dataset.chapter : "-1";
     chapterSelect.value = chapter === undefined ? "-1" : String(chapter);
     stage.dataset.dragState = "ready";
+    // Optional same-origin host can sync chapter on exit without mutating reader state here.
+    if (state.hasInteracted && window.parent !== window && Number(chapter) >= 0) {
+      window.parent.postMessage({
+        type: "wd:flip05:chapter", bookId: book.id, chapter: Number(chapter)
+      }, window.location.origin);
+    }
   }
   function mountEngine(sourcePage) {
     if (!window.St || typeof window.St.PageFlip !== "function") {
@@ -292,7 +311,7 @@
     }
   }
   function init() {
-    if (!book || !book.pages.length) return fail("ไม่พบหนังสือสำหรับทดสอบ");
+    if (!book || !book.pages.length) return fail("หนังสือเล่มนี้ยังไม่เปิดให้ทดลองโหมดพลิกกระดาษ");
     el("bookTitle").textContent = book.title;
     chapterSelect.append(element("option", "", "หน้าปก"));
     chapterSelect.lastElementChild.value = "-1";

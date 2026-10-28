@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="./assets/home-p0a.css">
   <link rel="stylesheet" href="./assets/google-sans-platform.css">
   <link rel="stylesheet" href="./assets/toc-p0b.css">
+  <link rel="stylesheet" href="./assets/reader-flip-choice.css">
   <link rel="stylesheet" href="./assets/audio-reader.css">
   <link rel="stylesheet" href="./assets/teleprompter.css">
   <script defer src="./assets/app-version.js"></script>
@@ -51,7 +52,7 @@
     <h1>WD Books</h1>
     <p>คลังคู่มือโรงเรียนบ้านวังด้ง</p>
     <div class="splash-track"><span></span></div>
-    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.3.55</small>
+    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.3.56</small>
   </div>
 </div>
 <div id="pullRefresh" class="pull-refresh" role="status" aria-live="polite" aria-hidden="true"><span class="pull-refresh-icon">↻</span><span id="pullRefreshText">ดึงลงเพื่อรีเฟรช</span></div>
@@ -221,6 +222,7 @@
         <div class="reader-theme-picker" role="group" aria-label="ธีมการอ่าน"><button type="button" class="reader-theme-choice" data-reader-theme="light" aria-pressed="false"><span aria-hidden="true">☀</span><span>สว่าง</span></button><button type="button" class="reader-theme-choice" data-reader-theme="night" aria-pressed="false"><span aria-hidden="true">☾</span><span>กลางคืน</span></button><button type="button" class="reader-theme-choice" data-reader-theme="sepia" aria-pressed="false"><span aria-hidden="true">◉</span><span>ถนอมตา</span></button></div>
         <button id="readerBookmarksListToggle" class="icon-button" type="button" aria-label="คั่นหน้าและดูที่คั่นไว้" aria-expanded="false" aria-controls="readerBookmarksPanel"><span class="tool-symbol" aria-hidden="true">🔖</span><span class="tool-label">คั่นหน้า</span></button>
         <button id="readerSearchToggle" class="icon-button" type="button" aria-label="ค้นหาในหนังสือ" aria-expanded="false" aria-controls="readerSearchPanel"><span class="tool-symbol" aria-hidden="true">⌕</span><span class="tool-label">ค้นหา</span></button>
+        <button id="readerFlipbookChoice" class="icon-button reader-flipbook-choice" type="button" hidden aria-label="ทดลองอ่านแบบพลิกกระดาษ" aria-haspopup="dialog" aria-controls="wdFlipbookDialog" title="เปิดตัวทดลองพลิกมุมกระดาษ (ออนไลน์)"><span class="tool-symbol" aria-hidden="true">📖</span><span class="tool-label">พลิกกระดาษ</span></button>
         <button id="readerModeToggle" class="icon-button" type="button" aria-label="เปลี่ยนเป็นโหมดเลื่อนอ่านต่อเนื่อง" aria-pressed="false" title="เลื่อนอ่านต่อเนื่อง"><span class="tool-symbol" aria-hidden="true">↕</span><span class="tool-label">เลื่อนอ่าน</span></button>
         <button id="readerAaToggle" class="icon-button" type="button" aria-label="ตั้งค่าการอ่าน" aria-expanded="false" aria-controls="readerAaPanel"><span class="tool-symbol" aria-hidden="true">Aa</span><span class="tool-label">ตัวอักษร</span></button>
         <button id="fontDecrease" class="icon-button font-button" type="button" aria-label="ลดขนาดตัวอักษร"><span class="tool-symbol" aria-hidden="true">A−</span><span class="tool-label">ลดขนาด</span></button>
@@ -338,6 +340,21 @@
     </section>
   </div>
 </dialog>
+<!-- FLIP-05: optional, opt-in-only pilot; existing reader stays open underneath. -->
+<dialog id="wdFlipbookDialog" class="wd-flip-dialog" aria-labelledby="wdFlipbookHeading" aria-describedby="wdFlipbookDescription">
+  <div class="wd-flip-shell">
+    <header class="wd-flip-header">
+      <div>
+        <span class="wd-flip-eyebrow">WD BOOKS · FLIP-05 PILOT</span>
+        <h2 id="wdFlipbookHeading">อ่านแบบพลิกกระดาษ</h2>
+        <p id="wdFlipbookDescription">ทดลองออนไลน์เฉพาะหนังสือที่รองรับ · กลับสู่ Reader เดิมได้ทุกเมื่อ</p>
+      </div>
+      <button id="wdFlipbookClose" type="button" aria-label="ปิดโหมดพลิกกระดาษและกลับไปอ่านแบบเดิม">✕ กลับไปอ่าน</button>
+    </header>
+    <iframe id="wdFlipbookFrame" title="ทดลองพลิกหน้าคู่มือ WD Books" src="about:blank" loading="lazy" referrerpolicy="same-origin"></iframe>
+  </div>
+</dialog>
+
 <!-- A second native modal preserves the existing Reader state underneath. -->
 <dialog id="wdTeleprompterDialog" class="wd-prompter-dialog" aria-labelledby="wdPrompterTitle" aria-describedby="wdPrompterStatus">
   <div class="wd-prompter-shell">
