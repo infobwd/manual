@@ -347,6 +347,25 @@
     if (notifyParent && window.parent !== window && document.body.classList.contains("flip-embedded"))
       window.parent.postMessage({ type: "wd:flip08a:theme", bookId: book.id, theme }, window.location.origin);
   }
+  // FLIP-08B: the mobile inline exit lives inside the same iframe navigation
+  // row as Previous / Next. Only the existing parent Reader can close itself.
+  function requestReturnToReader() {
+    if (!book || !document.body.classList.contains("flip-embedded") || window.parent === window) return;
+    const chapter = Number(state.pages[visibleSourceIndex()]?.dataset.chapter);
+    window.parent.postMessage({
+      type: "wd:flip08b:exit",
+      bookId: book.id,
+      chapter: Number.isInteger(chapter) && chapter >= 0 && chapter < book.pages.length ? chapter : null
+    }, window.location.origin);
+  }
+  // Make the meaning of aria-pressed and visible label identical in all themes.
+  function syncMotionButton() {
+    motionButton.setAttribute("aria-pressed", String(state.motionOff));
+    const label = state.motionOff ? "ลดการเคลื่อนไหวแล้ว แตะเพื่อเปิดการพลิกตามปกติ"
+      : "การพลิกตามปกติ แตะเพื่อลดการเคลื่อนไหว";
+    motionButton.setAttribute("aria-label", label);
+    motionButton.title = label;
+  }
   function init() {
     if (!book || !book.pages.length) return fail("หนังสือเล่มนี้ยังไม่เปิดให้ทดลองโหมดพลิกกระดาษ");
     el("bookTitle").textContent = book.title;
@@ -357,11 +376,12 @@
       option.value = String(index); chapterSelect.append(option);
     });
     chapterSelect.value = "-1";
-    motionButton.setAttribute("aria-pressed", String(state.motionOff));
+    syncMotionButton();
     applyTheme(savedTheme);
     themeButton.addEventListener("click", () => applyTheme(document.body.dataset.flipTheme === "night" ? "light" : "night", true));
     el("prev").addEventListener("click", () => move(-1));
     el("next").addEventListener("click", () => move(1));
+    el("returnToReader").addEventListener("click", requestReturnToReader);
     chapterSelect.addEventListener("change", () => {
       const i = Number(chapterSelect.value);
       const sourcePage = i < 0 ? 0 : (state.chapters[i]?.page || 0);
@@ -378,7 +398,7 @@
     });
     motionButton.addEventListener("click", () => {
       state.motionOff = !state.motionOff;
-      motionButton.setAttribute("aria-pressed", String(state.motionOff));
+      syncMotionButton();
       const sourcePage = visibleSourceIndex();
       mountEngine(Math.max(0, sourcePage));
     });
@@ -395,7 +415,7 @@
       reducedSystem.addEventListener("change", event => {
         if (event.matches && !state.motionOff) {
           state.motionOff = true;
-          motionButton.setAttribute("aria-pressed", "true");
+          syncMotionButton();
           mountEngine(Math.max(0, visibleSourceIndex()));
         }
       });
