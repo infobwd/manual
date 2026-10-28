@@ -160,7 +160,7 @@
 
     state.pages.forEach((paper, index) => {
       const folio = paper.querySelector(".folio");
-      if (folio) folio.textContent = String(index + 1).padStart(2, "0");
+      if (folio) folio.textContent = String(index).padStart(2, "0");
     });
     // Preserve the chapter, not the numeric index, when typography changes page count.
     let target = state.chapters.find(ch => ch.page > 0 && Number(state.pages[ch.page].dataset.chapter) === oldChapter);
