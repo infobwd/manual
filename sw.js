@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.57: FLIP-06 PWA-visible choice for one verified public book;
+   Update 1.3.58: FLIP-07 iOS nested flipbook layout and Sarabun typography;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");

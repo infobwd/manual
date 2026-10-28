@@ -397,8 +397,9 @@
     const startPage = state.page;
     flipSession = {bookId: book.id, originalPage: startPage, lastChapter: null};
     const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1"});
-    flipFrame.src = "./experiments/flipbook-pilot/corner.html?" + params.toString();
+    // Give WebKit a visible dialog before navigating the nested reading iframe.
     flipDialog.showModal();
+    flipFrame.src = "./experiments/flipbook-pilot/corner.html?" + params.toString();
     flipClose.focus();
   });
   window.addEventListener("message", event => {

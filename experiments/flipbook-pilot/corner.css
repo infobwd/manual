@@ -55,3 +55,44 @@ body.flip-embedded .corner-hint{padding-bottom:12px}
  body.flip-embedded .book-stage{padding:10px 7px;min-height:calc(var(--page-h) + 20px)}
  body.flip-embedded .navigator{padding:10px}
 }
+
+/* FLIP-07: Thai looped typography and measurable paper on iOS nested dialogs.
+   Sarabun is the preferred public Google Font; system Thai fallback stays readable. */
+.reading-surface .paper,
+.reading-surface .page-content,
+.reading-surface .cover-title,
+.reading-surface .cover-desc{
+  font-family:"Sarabun","TH Sarabun New","Noto Sans Thai",Tahoma,sans-serif;
+}
+.reading-surface .page-content h2{font-weight:700;line-height:1.5}
+.reading-surface .page-content p{font-weight:400;line-height:1.8}
+.reading-surface .page-content strong{font-weight:700}
+.measure .paper{height:100%;min-height:0}
+.measure .page-content{min-height:0}
+body.flip-embedded{min-height:100%;overflow-y:auto}
+body.flip-embedded .corner-frame{flex-shrink:0}
+@media(max-width:690px){
+  body.flip-embedded{
+    --page-h:clamp(385px,calc(100dvh - 230px),640px);
+  }
+  body.flip-embedded .toolbar{
+    gap:7px;
+    padding:9px 10px;
+  }
+  body.flip-embedded .settings{
+    gap:5px 8px;
+  }
+  body.flip-embedded .book-stage{
+    min-height:calc(var(--page-h) + 18px);
+    padding:8px 6px 10px;
+  }
+  body.flip-embedded .corner-sheet .paper{
+    padding:20px 20px 17px;
+  }
+  body.flip-embedded .corner-sheet .paper.cover{
+    padding:28px 23px 22px;
+  }
+}
+
+/* Keep a measurable frame available for retry after a recoverable layout error. */
+.reading-surface[data-error=true] .corner-frame{display:flex}
