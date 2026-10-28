@@ -6,11 +6,13 @@ const path = require("node:path");
 const assert = require("node:assert/strict");
 const {URLSearchParams} = require("node:url");
 const app = fs.readFileSync(path.join(__dirname, "..", "assets/app.js"), "utf8");
+const version = fs.readFileSync(path.join(__dirname, "..", "assets/app-version.js"), "utf8").match(/WD_BOOKS_VERSION = "([^"]+)"/)?.[1];
+assert(version, "central PWA version exists");
 const start = app.indexOf("  // FLIP-06: PWA launches do not preserve");
 const end = app.indexOf("  function openBook(book, opener, requestedPage = null) {", start);
 assert(start > 0 && end > start, "isolated bridge block exists in Reader");
 const bridgeSource = app.slice(start, end);
-const factory = new Function("$", "window", "dialog", "state", "closeMobileToc",
+const factory = new Function("$", "window", "document", "dialog", "state", "closeMobileToc",
   "closeReaderSubpanels", "jumpTo", "URLSearchParams", bridgeSource +
     "\nreturn { eligibleFlipbook, flipChoice, flipDialog, flipFrame, getSession: () => flipSession };\n");
 function node() {
@@ -33,6 +35,8 @@ function setup(search = "?flip05=1", online = true) {
   const win = {
     location: {search, origin:"https://infobwd.github.io"},
     navigator: {onLine: online},
+    WD_BOOKS_VERSION: version,
+    matchMedia: () => ({matches:false}),
     addEventListener(type, cb) { (handlers[type] ||= []).push(cb); }
   };
   const book = {
@@ -43,7 +47,8 @@ function setup(search = "?flip05=1", online = true) {
   const dialog = node();
   dialog.open = true;
   const calls = {toc:0,panels:0,jumps:[]};
-  const bridge = factory(id => elements[id], win, dialog, state,
+  const doc = {documentElement:{classList:{contains:()=>false}}};
+  const bridge = factory(id => elements[id], win, doc, dialog, state,
     () => { calls.toc++; },
     () => { calls.panels++; },
     page => { calls.jumps.push(page); state.page=page; }, URLSearchParams);
@@ -57,6 +62,8 @@ pilot.bridge.flipChoice.fire("click");
 assert.equal(pilot.bridge.flipDialog.open, true, "flip modal opens");
 assert.match(pilot.bridge.flipFrame.src, /corner\.html\?/, "loads isolated same-origin preview");
 assert.match(pilot.bridge.flipFrame.src, /start=3/, "starts at existing reader chapter");
+assert.equal(new URLSearchParams(pilot.bridge.flipFrame.src.split("?")[1]).get("v"),version,
+  "iframe receives current PWA release for cache busting");
 assert.equal(pilot.calls.toc, 1);
 assert.equal(pilot.calls.panels, 1);
 const winFrame = pilot.bridge.flipFrame.contentWindow;
