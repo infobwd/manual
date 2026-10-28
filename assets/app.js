@@ -368,9 +368,58 @@
   dialog.addEventListener("cancel", event => {
     if (isTocOpen()) { event.preventDefault(); closeMobileToc(); }
   });
+  // FLIP-05: the original Reader remains the owner of reading state and audio.
+  // Enable only for explicit device QA (?flip05=1) and the single tested public book.
+  const FLIP05_BOOK = "ai-five-questions-speaker-cheatsheet-25691026";
+  const flip05Enabled = new URLSearchParams(window.location.search).get("flip05") === "1";
+  const flipChoice = $("readerFlipbookChoice");
+  const flipDialog = $("wdFlipbookDialog"), flipFrame = $("wdFlipbookFrame");
+  const flipClose = $("wdFlipbookClose");
+  let flipSession = null;
+  flipChoice.hidden = true;
+  const eligibleFlipbook = book => flip05Enabled && book?.id === FLIP05_BOOK &&
+    book.status === "published" && Boolean(book.pages?.length);
+  flipChoice.addEventListener("click", () => {
+    const book = state.manual;
+    if (!dialog.open || !eligibleFlipbook(book) || flipDialog.open) return;
+    closeMobileToc(false);
+    closeReaderSubpanels();
+    const startPage = state.page;
+    flipSession = {bookId: book.id, originalPage: startPage, lastChapter: null};
+    const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1"});
+    flipFrame.src = "./experiments/flipbook-pilot/corner.html?" + params.toString();
+    flipDialog.showModal();
+    flipClose.focus();
+  });
+  window.addEventListener("message", event => {
+    if (!flipDialog.open || !flipSession || event.origin !== window.location.origin ||
+        event.source !== flipFrame.contentWindow) return;
+    const data = event.data;
+    if (!data || data.type !== "wd:flip05:chapter" || data.bookId !== flipSession.bookId ||
+        !Number.isInteger(data.chapter)) return;
+    if (data.chapter >= 0 && data.chapter < (state.manual?.pages?.length || 0))
+      flipSession.lastChapter = data.chapter;
+  });
+  flipClose.addEventListener("click", () => flipDialog.close());
+  flipDialog.addEventListener("close", () => {
+    const pending = flipSession;
+    flipSession = null;
+    // Avoid retaining another copy of the book in a hidden iframe.
+    flipFrame.src = "about:blank";
+    if (pending && dialog.open && state.manual?.id === pending.bookId) {
+      if (pending.lastChapter !== null && pending.lastChapter !== state.page)
+        jumpTo(pending.lastChapter);
+      flipChoice.focus();
+    }
+  });
+  dialog.addEventListener("close", () => {
+    if (flipDialog.open) flipDialog.close();
+  });
+
   function openBook(book, opener, requestedPage = null) {
     if (book.status !== "published" || !book.pages?.length) return;
     state.manual = book;
+    flipChoice.hidden = !eligibleFlipbook(book);
     searchInput.value = "";
     closeReaderSearch();
     closeBookmarks(false);
