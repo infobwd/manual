@@ -8,6 +8,8 @@
     Number(query.get("start")) : null;
   if (query.get("embed") === "1" && window.parent !== window)
     document.body.classList.add("flip-embedded");
+  const inlineBookTitle = value => String(value ?? "")
+    .replace(/\\n|\/n|\r?\n/g, " ").replace(/\s{2,}/g," ").trim();
   const el = id => document.getElementById(id);
   const requestedBook = (window.WD_LIBRARY_DATA?.manuals || []).find(item =>
     item.id === requestedId);
@@ -57,7 +59,7 @@
       paper.append(
         element("div", "cover-top", "WD BOOKS  /  SCHOOL LEARNING LIBRARY"),
         element("div", "cover-design", "W"),
-        (() => { const body = element("div"); body.append(element("div", "cover-title", book.title), element("div", "cover-desc", book.subtitle || "")); return body; })(),
+        (() => { const body = element("div"); body.append(element("div", "cover-title", inlineBookTitle(book.title)), element("div", "cover-desc", book.subtitle || "")); return body; })(),
         element("div", "cover-line", "โรงเรียนบ้านวังด้ง  ·  ฉบับเผยแพร่สาธารณะ")
       );
       return paper;
@@ -386,6 +388,17 @@
       chapter
     }, window.location.origin);
   }
+  function requestClassicReader() {
+    if (!book || !document.body.classList.contains("flip-embedded") || window.parent === window) return;
+    const chapter = currentReadingChapter();
+    try {
+      if (typeof window.parent.WD_BOOKS_FLIP_CLASSIC === "function" &&
+          window.parent.WD_BOOKS_FLIP_CLASSIC(window, book.id, chapter)) return;
+    } catch (error) { /* The parent may still be on an older version. */ }
+    window.parent.postMessage({
+      type:"wd:flip13:classic",bookId:book.id,chapter
+    }, window.location.origin);
+  }
   // FLIP-10: native-reader-style TOC and settings sheets inside the same iframe.
   // The parent owns the header; no duplicate scrollable toolbar on mobile/tablet.
   function notifyReaderSheet(toc,tools) {
@@ -448,7 +461,7 @@
   }
   function init() {
     if (!book || !book.pages.length) return fail("หนังสือเล่มนี้ยังไม่เปิดให้ทดลองโหมดพลิกกระดาษ");
-    el("bookTitle").textContent = book.title;
+    el("bookTitle").textContent = inlineBookTitle(book.title);
     chapterSelect.append(element("option", "", "หน้าปก"));
     chapterSelect.lastElementChild.value = "-1";
     book.pages.forEach((item, index) => {
@@ -463,6 +476,7 @@
     el("reopenBackCover").addEventListener("click", () => move(-1));
     el("next").addEventListener("click", () => move(1));
     el("returnToReader").addEventListener("click", requestReturnToReader);
+    el("flipClassicMode").addEventListener("click", requestClassicReader);
     chapterSelect.addEventListener("change", () => navigateToChapter(Number(chapterSelect.value)));
     const tocItems = el("flipTocItems");
     book.pages.forEach((item,index) => {

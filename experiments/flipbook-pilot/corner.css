@@ -642,3 +642,14 @@ body[data-flip-theme="sepia"] .corner-sheet .paper:not(.cover):not(.blank){
   .closed-back-mark{font-size:clamp(58px,9vh,100px)}
   .closed-back-reopen{bottom:57px;font-size:12px}
 }
+
+/* FLIP-13: mode switch is a choice in the mobile/tablet tools sheet only. */
+.flip-classic-mode{display:none}
+@media(max-width:1100px){
+  body.flip-embedded.flip-tools-open .flip-classic-mode{
+    display:block;width:100%;min-height:44px;padding:9px 14px;
+    background:#e2ede4;color:#174936;border:1px solid #8ea998;
+    border-radius:11px;font:700 14px "Sarabun",Tahoma,sans-serif;
+    touch-action:manipulation;cursor:pointer
+  }
+}

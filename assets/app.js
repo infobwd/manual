@@ -10,6 +10,10 @@
     if (value !== undefined) el.textContent = value;
     return el;
   };
+  // Normalize real/newline-escape characters only for display, not stored data.
+  const bookLabel = (value, multiline = false) => String(value ?? "")
+    .replace(/\\n|\/n|\r?\n/g, multiline ? "\n" : " ")
+    .replace(multiline ? /[ \t]+/g : /\s+/g, " ").trim();
   const state = { category: "all", availability: "all", sort: "default", query: "", manual: null, page: 0, scale: 1, opener: null, readingMode: "paged" };
   // Reader single-page threshold includes portrait tablets and narrow Split View.
   const isMobile = window.matchMedia("(max-width: 1100px)");
@@ -88,11 +92,11 @@
     }
     const cover = create("div", "book-cover cover-" + (book.color || "forest"));
     cover.append(create("span", "cover-eyebrow", book.coverTop || "MANUAL"));
-    cover.append(create("strong", "", book.coverTitle || book.title));
+    cover.append(create("strong", "", bookLabel(book.coverTitle || book.title, true)));
     cover.append(create("span", "cover-subtitle", book.subtitle));
     const body = create("div", "card-body");
     body.append(create("span", "card-category", lookup[book.category]?.label || "คู่มือ"));
-    body.append(create("h3", "", book.title));
+    body.append(create("h3", "", bookLabel(book.title)));
     body.append(create("p", "", book.description));
     const foot = create("div", "card-footer");
     foot.append(create("span", "card-meta", book.edition + (book.readTime !== "—" ? " · " + book.readTime : "")));
@@ -172,10 +176,10 @@
       const card = create("div", "resume-feature-card");
       const cover = create("div", "resume-feature-cover");
       cover.append(create("span", "resume-feature-cover-kicker", book.coverTop || "WD BOOKS"));
-      cover.append(create("strong", "", book.coverTitle || book.title));
+      cover.append(create("strong", "", bookLabel(book.coverTitle || book.title, true)));
       const copy = create("div", "resume-feature-copy");
       const label = create("span", "resume-feature-label", "หนังสือที่อ่านล่าสุด");
-      const title = create("h3", "", book.title);
+      const title = create("h3", "", bookLabel(book.title));
       const subtitle = create("p", "", book.subtitle || lookup[book.category]?.label || "คู่มือ");
       const progressText = create("span", "resume-feature-progress");
       const track = create("div", "resume-feature-track");
@@ -387,12 +391,15 @@
   // The legacy Reader stays underneath for offline, narration and unsupported content.
   const flipChoice = $("readerFlipbookChoice");
   const flipDialog = $("wdFlipbookDialog"), flipFrame = $("wdFlipbookFrame");
-  const flipClose = $("wdFlipbookClose"), flipReturnBottom = $("wdFlipbookReturnBottom");
+  const flipClose = $("wdFlipbookClose"), flipDismiss = $("wdFlipbookDismiss");
+  const flipReturnBottom = $("wdFlipbookReturnBottom");
   const flipTocTrigger = $("wdFlipbookTocTrigger");
   const flipToolsTrigger = $("wdFlipbookToolsTrigger");
   const flipAudioTrigger = $("wdFlipbookAudioTrigger");
   const flipMobileTitle = $("wdFlipbookMobileTitle");
   let flipAudioRequested = false;
+  // A book-close and a mode switch are distinct actions.
+  let flipExitIntent = "close";
   let flipSession = null;
   flipChoice.hidden = true;
   const eligibleFlipbook = book => window.WD_FLIP_CAPABILITY?.supports?.(book) === true;
@@ -414,13 +421,15 @@
     closeReaderSubpanels();
     const startPage = state.page;
     flipSession = {bookId: book.id, originalPage: startPage, lastChapter: null};
-    flipMobileTitle.textContent = book.title;
-    flipMobileTitle.title = book.title;
+    flipExitIntent = "close";
+    flipAudioRequested = false;
+    flipMobileTitle.textContent = bookLabel(book.title);
+    flipMobileTitle.title = bookLabel(book.title);
     flipTocTrigger.disabled = true;
     flipToolsTrigger.disabled = true;
     flipTocTrigger.setAttribute("aria-expanded","false");
     flipToolsTrigger.setAttribute("aria-expanded","false");
-    const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1", v: String(window.WD_BOOKS_VERSION || "1.3.67"), theme: document.body?.dataset?.theme || "light"});
+    const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1", v: String(window.WD_BOOKS_VERSION || "1.3.68"), theme: document.body?.dataset?.theme || "light"});
     // The flipbook runs in an iframe whose width may not match the host desktop.
     if (document.documentElement.classList.contains("wd-google-sans") &&
         window.matchMedia("(min-width: 1101px) and (hover: hover) and (pointer: fine)").matches)
@@ -442,6 +451,14 @@
         window.WD_EXPERIENCE?.setTheme?.(data.theme);
       return;
     }
+    if (data.type === "wd:flip13:classic") {
+      flipExitIntent = "classic";
+      if (Number.isInteger(data.chapter) && data.chapter >= 0 &&
+          data.chapter < (state.manual?.pages?.length || 0))
+        flipSession.lastChapter = data.chapter;
+      flipDialog.close();
+      return;
+    }
     if (data.type === "wd:flip08b:exit") {
       // The active same-origin iframe may request return, never an unrelated page.
       if (Number.isInteger(data.chapter) && data.chapter >= 0 &&
@@ -451,7 +468,8 @@
       return;
     }
     if (data.type === "wd:flip11:unavailable") {
-      // A renderer error must return to the usable Reader, never trap the user.
+      // A renderer error leaves the usable Reader visible, not a blank overlay.
+      flipExitIntent = "classic";
       flipDialog.close();
       return;
     }
@@ -502,6 +520,7 @@
   flipAudioTrigger.addEventListener("click", () => {
     if (!flipDialog.open || !flipSession) return;
     flipAudioRequested = true;
+    flipExitIntent = "classic";
     returnFromParentButton();
   });
   // FLIP-09: a synchronous same-origin return avoids a lost postMessage when
@@ -518,6 +537,12 @@
     return true;
   };
   window.WD_BOOKS_FLIP_EXIT = closeFlipbook;
+  window.WD_BOOKS_FLIP_CLASSIC = (sourceWindow, bookId, chapter = null) => {
+    if (!flipDialog.open || !flipSession ||
+        sourceWindow !== flipFrame.contentWindow || bookId !== flipSession.bookId) return false;
+    flipExitIntent = "classic";
+    return closeFlipbook(sourceWindow, bookId, chapter);
+  };
   const returnFromParentButton = () => {
     if (!flipDialog.open || !flipSession) return;
     let chapter = null;
@@ -528,12 +553,32 @@
     }
     closeFlipbook(flipFrame.contentWindow, flipSession.bookId, chapter);
   };
-  flipClose.addEventListener("click", returnFromParentButton);
-  flipReturnBottom.addEventListener("click", returnFromParentButton);
+  flipClose.addEventListener("click", () => {
+    flipExitIntent = "classic";
+    returnFromParentButton();
+  });
+  flipDismiss.addEventListener("click", () => {
+    flipExitIntent = "close";
+    returnFromParentButton();
+  });
+  flipReturnBottom.addEventListener("click", () => {
+    flipExitIntent = "close";
+    returnFromParentButton();
+  });
   flipDialog.addEventListener("close", () => {
     const pending = flipSession;
+    const intent = flipExitIntent;
     flipSession = null;
-    // Avoid retaining another copy of the book in a hidden iframe.
+    // If Escape or native dialog dismissal fires first, retain the last valid
+    // source chapter before unloading the iframe.
+    if (pending && pending.lastChapter === null) {
+      try {
+        const chapter = flipFrame.contentWindow?.WD_BOOKS_FLIP_CURRENT_CHAPTER?.();
+        if (Number.isInteger(chapter) && chapter >= 0 &&
+            chapter < (state.manual?.pages?.length || 0))
+          pending.lastChapter = chapter;
+      } catch (error) { /* Child may be unavailable. */ }
+    }
     flipFrame.src = "about:blank";
     flipTocTrigger.disabled = true;
     flipToolsTrigger.disabled = true;
@@ -542,12 +587,17 @@
     if (pending && dialog.open && state.manual?.id === pending.bookId) {
       if (pending.lastChapter !== null && pending.lastChapter !== state.page)
         jumpTo(pending.lastChapter);
-      if (flipAudioRequested) {
-        // Open the real audio panel; never autoplay or duplicate TTS in iframe.
+      if (intent === "close") {
+        // User exited the book, not merely the Flipbook mode.
+        dialog.close();
+      } else if (flipAudioRequested) {
         $("readerAudioToggle")?.click();
-      } else flipChoice.focus();
+      } else {
+        flipChoice.focus();
+      }
     }
     flipAudioRequested = false;
+    flipExitIntent = "close";
   });
   dialog.addEventListener("close", () => {
     if (flipDialog.open) flipDialog.close();
@@ -567,10 +617,10 @@
     state.scale = window.WD_EXPERIENCE?.getScale?.() || 1;
     state.opener = opener;
     $("bookSpread").style.setProperty("--readerScale", String(state.scale));
-    $("readerTitle").textContent = book.title;
-    $("readerMobileBookTitle").textContent = book.title;
-    $("readerMobileBookTitle").title = book.title;
-    $("readerBookmarksBookTitle").textContent = book.title;
+    $("readerTitle").textContent = bookLabel(book.title);
+    $("readerMobileBookTitle").textContent = bookLabel(book.title);
+    $("readerMobileBookTitle").title = bookLabel(book.title);
+    $("readerBookmarksBookTitle").textContent = bookLabel(book.title);
     $("readerCategory").textContent = (lookup[book.category]?.label || "คู่มือ") + " · " + book.edition;
     const prompterButton = $("readerTeleprompterOpen");
     if (prompterButton) {

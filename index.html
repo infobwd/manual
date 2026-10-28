@@ -56,7 +56,7 @@
     <h1>WD Books</h1>
     <p>คลังคู่มือโรงเรียนบ้านวังด้ง</p>
     <div class="splash-track"><span></span></div>
-    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.3.67</small>
+    <small id="splashVersion" class="splash-version">เวอร์ชัน 1.3.68</small>
   </div>
 </div>
 <div id="pullRefresh" class="pull-refresh" role="status" aria-live="polite" aria-hidden="true"><span class="pull-refresh-icon">↻</span><span id="pullRefreshText">ดึงลงเพื่อรีเฟรช</span></div>
@@ -360,10 +360,13 @@
         <button id="wdFlipbookAudioTrigger" class="wd-flip-mobile-button" type="button" aria-label="กลับไป Reader ปกติและเปิดแผงฟังหนังสือ" title="ฟังหนังสือในโหมดปกติ">🎧</button>
         <button id="wdFlipbookToolsTrigger" class="wd-flip-mobile-button" type="button" aria-label="เครื่องมืออ่านเพิ่มเติม" aria-expanded="false" disabled>⋯</button>
       </div>
-      <button id="wdFlipbookClose" type="button" aria-label="ปิดโหมดพลิกกระดาษและกลับไปอ่านแบบเดิม"><span aria-hidden="true">✕</span><span class="wd-flip-close-label"> อ่านแบบปกติ</span></button>
+      <div class="wd-flip-desktop-actions">
+        <button id="wdFlipbookClose" type="button" aria-label="สลับไปอ่านแบบปกติ">อ่านแบบปกติ</button>
+        <button id="wdFlipbookDismiss" type="button" aria-label="ปิดหนังสือและกลับชั้นหนังสือ">✕ ปิดหนังสือ</button>
+      </div>
     </header>
     <iframe id="wdFlipbookFrame" title="ทดลองพลิกหน้าคู่มือ WD Books" src="about:blank" loading="eager" referrerpolicy="same-origin"></iframe>
-    <button id="wdFlipbookReturnBottom" class="wd-flip-return-overlay" type="button" aria-label="ปิดโหมดพลิกกระดาษและกลับไปอ่านแบบเดิม" title="กลับไปอ่าน">✕</button>
+    <button id="wdFlipbookReturnBottom" class="wd-flip-return-overlay" type="button" aria-label="ปิดหนังสือและกลับชั้นหนังสือ" title="ปิดหนังสือ">✕</button>
   </div>
 </dialog>
 

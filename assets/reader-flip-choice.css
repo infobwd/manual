@@ -207,3 +207,15 @@ body[data-theme="night"] .wd-flip-dialog #wdFlipbookClose{background:#335e4c;col
     right:calc(clamp(14px,4vw,30px) + env(safe-area-inset-right,0px));
   }
 }
+
+/* FLIP-13 — Closing a book is distinct from switching reading modes. */
+.wd-flip-desktop-actions{display:flex;flex:0 0 auto;align-items:center;gap:9px}
+#wdFlipbookDismiss{
+  min-height:44px;padding:9px 14px;border-radius:11px;border:1px solid #174c45;
+  background:#174c45;color:#fff;font:700 13px "Sarabun",Tahoma,sans-serif;cursor:pointer
+}
+.wd-flip-desktop-actions #wdFlipbookClose{
+  background:#f0f6f0;color:#164c40;border:1px solid #bbd0c2
+}
+#wdFlipbookDismiss:focus-visible{outline:3px solid #e8bd64;outline-offset:3px}
+@media(max-width:1100px){.wd-flip-desktop-actions{display:none}}

@@ -8,6 +8,18 @@
 **กลุ่มใช้งานหลัก:** ครู/บุคลากรโรงเรียนบน iPhone และ iPad, รองลงมาคือ Android และ Desktop  
 **Source of truth:** เอกสารนี้ใช้กำหนดลำดับงาน, acceptance และ rollout ของการปรับ UX ใน repo นี้ ไม่แก้เนื้อหาวิชาการหรือระบบ WD Growth ต้นทาง
 
+## FLIP-13 — ปิดหนังสือสู่ชั้นหนังสือ + ชื่อไม่หลุด /n (28 ต.ค. 2569)
+
+**Status:** implemented, automated/device gates apply. [รายละเอียดและการตรวจรับ](WD_BOOKS_FLIP13_CLOSE_AND_TITLE_2569.md).
+
+- ปุ่ม ✕ บนคอม/มือถือ/iPad = **ปิดทั้ง Flipbook และ Reader** แล้วคืนสู่ชั้นหนังสือโดยบันทึกบทล่าสุด; Escape ทำงานสอดคล้องกัน
+- **อ่านแบบปกติ** เป็นอีกคำสั่ง (Desktop button, มือถือ/แท็บเล็ตใน ⋯); 🎧 ยังใช้ Reader เดิมและระบบเสียงเดิม
+- ชื่อหนังสือ/หน้าปกแปลง `/n`, literal `\\n` และ newline สำหรับแสดงผลอย่างเหมาะสม ไม่เปลี่ยนข้อมูล canonical
+- ข้อจำกัด 13/15 published Flipbook ยังอยู่: SAR 2 เล่มมี chart/insight ห้ามละทิ้งข้อมูลเพื่อบังคับ Flipbook; 6 รายการยังไม่เผยแพร่
+- PWA 1.3.68; ยังต้องตรวจการปิดจากเครื่องจริง และทดสอบชื่อปกหลายเล่มก่อนเปิดรองรับกราฟ
+
+---
+
 ## FLIP-12 — ปกหลังปิดเล่มเดียว + Category Result Visibility บน Desktop (28 ต.ค. 2569)
 
 **Status:** scoped implementation; device visual QA pending. [แผน/Acceptance](WD_BOOKS_FLIP12_CLOSED_BACK_CATEGORY_2569.md).
