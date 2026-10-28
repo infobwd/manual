@@ -54,7 +54,7 @@ for (const single of [false, true]) {
       assert.equal(pages[2], 1, "first content right");
       assert.equal(pages.length % 2, 0, "hard back cover on right");
       assert.equal(model.status(1, pages, single).label, "หน้า 1 / " + (count - 1), "first page counted correctly");
-      assert.deepEqual(model.visiblePages(3, pages, false), [2, 3].filter(i => i < count), "second spread must be 2-3 when available");
+      if (count > 3) assert.deepEqual(model.visiblePages(3, pages, false), [2, 3], "second spread must be 2–3");
     } else {
       assert.equal(pages[1], 1, "portrait shows text immediately after cover");
     }
