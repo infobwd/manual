@@ -37,3 +37,21 @@
 @media(prefers-reduced-motion:reduce){
   .corner-hint{transition:none}
 }
+
+/* FLIP-05: embedded full-reader presentation, keeping the standalone preview unchanged. */
+body.flip-embedded .topbar,
+body.flip-embedded .intro,
+body.flip-embedded .site-note{display:none}
+body.flip-embedded .workspace{padding:8px;max-width:none}
+body.flip-embedded .reading-surface{border-radius:15px}
+body.flip-embedded .toolbar{padding:10px 13px}
+body.flip-embedded .book-stage{padding-top:15px;padding-bottom:12px}
+body.flip-embedded .corner-hint{padding-bottom:12px}
+@media(max-width:690px){
+ body.flip-embedded{--page-h:clamp(390px,calc(100dvh - 245px),660px)}
+ body.flip-embedded .workspace{padding:3px}
+ body.flip-embedded .reading-surface{border-radius:8px}
+ body.flip-embedded .toolbar{padding:10px}
+ body.flip-embedded .book-stage{padding:10px 7px;min-height:calc(var(--page-h) + 20px)}
+ body.flip-embedded .navigator{padding:10px}
+}
