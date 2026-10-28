@@ -33,7 +33,7 @@ assert.ok(html.includes('<script defer src="./assets/bwd-term2-supervision-readi
 assert.ok(html.indexOf('src="./assets/manuals-data.js"') < html.indexOf('src="./assets/bwd-term2-supervision-readiness-2569.js"'));
 assert.ok(html.indexOf('src="./assets/bwd-term2-supervision-readiness-2569.js"') < html.indexOf('src="./assets/app.js"'));
 assert.ok(sw.includes('"./assets/bwd-term2-supervision-readiness-2569.js"'));
-assert.match(version,/1\\.3\\.61/);
+assert.ok(version.includes('"1.3.61"'));
 assert.ok(html.includes("1.3.61"));
 assert.ok(!/ชื่อ(นักเรียน|เด็กจริง)|เลขประจำตัวนักเรียน|PIN 6/.test(combined));
 console.log("PASS WD Books term 2 supervision guide: 15 pages, 17 checklist items, registration, PWA shell.");
