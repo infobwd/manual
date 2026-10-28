@@ -79,6 +79,32 @@ for (const single of [false, true]) {
   }
 }
 
+/* FLIP-14: a visible two-page spread may contain two different source chapters.
+   The TOC remains anchored to the left page; a display-only hint names both. */
+const desktopSpread = model.order(28, false);
+const pair = model.crossChapterSpread(9, desktopSpread, false,
+  source => source === 8 ? 1 : source === 9 ? 2 : 0);
+assert(pair && pair.left === 1 && pair.right === 2,
+  "a spread crossing RT/NT labels left and right source chapters");
+assert.equal(model.crossChapterSpread(9, desktopSpread, false, () => 2), null,
+  "same chapter across both pages must not display a misleading pair");
+assert.equal(model.crossChapterSpread(0, desktopSpread, false, () => 2), null,
+  "closed/front cover has no cross-chapter hint");
+assert.equal(model.crossChapterSpread(9, desktopSpread, false, () => -1), null,
+  "unknown chapter is ignored");
+assert.equal(model.crossChapterSpread(8, model.order(28,true), true,
+  source => source), null, "portrait must not imply facing chapters");
+assert(html.includes('id="spreadChapterHint"') &&
+  app.includes("cornerModel.crossChapterSpread(") &&
+  app.includes('spreadHint.hidden = !boundary'),
+  "live renderer must show a chapter pair only on a mixed desktop spread");
+assert(css.includes(".spread-chapter-hint[hidden]") &&
+  css.includes('body[data-flip-theme="night"] .spread-chapter-hint') &&
+  css.includes("@media(max-width:1100px){.spread-chapter-hint{display:none!important}}"),
+  "hint must be hidden by default and in portrait with night contrast");
+assert(app.includes('chapterSelect.value = chapter === undefined ? "-1" : String(chapter);'),
+  "chapter selection and reading progress stay anchored to existing left-page logic");
+
 /* FLIP-04: never reset a reader to the beginning of a long chapter on font/rotation changes. */
 const before = [{ page: 1 }, { page: 5 }, { page: 10 }];
 const after = [{ page: 1 }, { page: 8 }, { page: 16 }];
@@ -111,4 +137,4 @@ assert(css.includes("touch-action:pan-y"), "vertical page scroll remains availab
 assert(app.includes("finally {") && app.includes("state.rebuilding = false"),
   "failed engine rebuild cannot leave the app in a permanent busy state");
 
-console.log("FLIP-03/04 smoke PASS: browser bundle parses, source public, MIT, real HTML engine, no runtime CDN/SW/storage changes; 14 book layout cases.");
+console.log("FLIP-03/04 smoke PASS: browser bundle parses, source public, MIT, real HTML engine, no runtime CDN/SW/storage changes; 14 book layout cases and mixed-chapter desktop hints.");
