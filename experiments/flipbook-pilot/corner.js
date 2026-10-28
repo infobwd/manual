@@ -17,7 +17,8 @@
   const positionModel = window.WD_CORNER_POSITION;
   const bookNode = el("cornerFrame");
   const measure = el("measure");
-  const chapterSelect = el("chapter"), fontSelect = el("fontSize"), motionButton = el("motionButton");
+  const chapterSelect = el("chapter"), fontSelect = el("fontSize"), motionButton = el("motionButton"), themeButton = el("themeButton");
+  const savedTheme = ["light", "sepia", "night"].includes(query.get("theme")) ? query.get("theme") : "light";
   const reducedSystem = window.matchMedia("(prefers-reduced-motion: reduce)");
   const mobileQuery = window.matchMedia("(max-width: 1100px)");
   const state = { pages: [], chapters: [], current: 0, motionOff: reducedSystem.matches, font: 100,
@@ -333,6 +334,19 @@
       fail("จัดหน้ากระดาษไม่สำเร็จ กรุณากดกลับไปอ่าน แล้วลองเปิดใหม่");
     }
   }
+  // The flipbook starts in the Reader's selected theme. Theme changes travel
+  // only to the same-origin parent and are stored by WD_EXPERIENCE there.
+  function applyTheme(theme, notifyParent = false) {
+    if (!["light", "sepia", "night"].includes(theme)) return;
+    document.body.dataset.flipTheme = theme;
+    const isNight = theme === "night";
+    themeButton.setAttribute("aria-pressed", String(isNight));
+    themeButton.setAttribute("aria-label", isNight ? "เปลี่ยนเป็นโหมดสว่าง" : "เปิดโหมดมืด");
+    themeButton.title = isNight ? "เปลี่ยนเป็นโหมดสว่าง" : "เปิดโหมดมืด";
+    themeButton.querySelector("span").textContent = isNight ? "☀" : "☾";
+    if (notifyParent && window.parent !== window && document.body.classList.contains("flip-embedded"))
+      window.parent.postMessage({ type: "wd:flip08a:theme", bookId: book.id, theme }, window.location.origin);
+  }
   function init() {
     if (!book || !book.pages.length) return fail("หนังสือเล่มนี้ยังไม่เปิดให้ทดลองโหมดพลิกกระดาษ");
     el("bookTitle").textContent = book.title;
@@ -344,6 +358,8 @@
     });
     chapterSelect.value = "-1";
     motionButton.setAttribute("aria-pressed", String(state.motionOff));
+    applyTheme(savedTheme);
+    themeButton.addEventListener("click", () => applyTheme(document.body.dataset.flipTheme === "night" ? "light" : "night", true));
     el("prev").addEventListener("click", () => move(-1));
     el("next").addEventListener("click", () => move(1));
     chapterSelect.addEventListener("change", () => {
