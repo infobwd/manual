@@ -28,6 +28,28 @@ npm run test:catalog
 
 **Evidence boundary:** This is a local execution of the pure helper and its test file, not `npm ci`, `npm run build`, React rendering, installed PWA or iPhone/iPad QA. Full React Gate 2 remains OPEN. This candidate's tests can run without fetching packages, but the full app build still requires a committed lockfile and installable npm dependencies.
 
+## UI-MIG-02R2: category-first visual candidate (stacked branch)
+
+Branch `feat/ui-mig02-category-first-r1-25691029` builds on TDD PR #207 / source PR #173, **not** `main`. This is a sample-data-only **React candidate** to evaluate against UI-MIG-01R2 static design in Draft PR #206:
+
+- Desktop ≥1000px: sticky category rail left and searchable/favorites-filtered cards right (no scroll jump after choosing a category).
+- Phone/iPad: category chips above results, with 44px+ targets and flexible content.
+- Home search: submit via Enter or Search; typing does not navigate away. Search field gets focus on Bookshelf after submit.
+- Click Home category: reset old query/favorites; show that category.
+- Preserve theme modes, font size sample, bottom navigation, `aria-pressed`, live count and empty-state status.
+- `src/main.tsx` was refactored for readable React source; `filterCatalog` stays a pure helper.
+
+### Tests
+
+```powershell
+cd docs\previews\ui-react
+npm run test:preview
+```
+
+The command runs native Node 22 tests for catalog search and UI source contracts **without additional npm dependencies**. In this chat, V8 execution of the five new source-contract test bodies passed 5/5; actual local Node catalog tests from the parent branch passed 8/8. The tests do not assert rendered React DOM or CSS screenshots.
+
+**Explicitly NOT TESTED:** `npm ci` / `npm run build` (missing dependency lockfile and registry connectivity), React runtime/TypeScript full-project build, nested-path preview, real iPhone/iPad/desktop and accessibility checks. Gate 0/1/2 remain OPEN; NO MERGE to main or production. Test React visually against [UI-MIG-01R2 preview](../ui-next/index.html) after those gates.
+
 ## Gates
 
 - Source review: isolated root, no service worker, no localStorage writes, relative Vite base, static sample catalog.
