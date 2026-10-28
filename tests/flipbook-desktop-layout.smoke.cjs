@@ -35,9 +35,9 @@ assert(child.includes('window.parent.WD_BOOKS_FLIP_EXIT(window, book.id, chapter
   "child uses direct path, keeps postMessage compatibility fallback");
 assert(host.includes('sourceWindow !== flipFrame.contentWindow') &&
   host.includes('bookId !== flipSession.bookId'),"direct return checks frame and book");
-assert(page.includes("เวอร์ชัน 1.3.67") &&
-  /WD_BOOKS_VERSION = "1\.3\.67"/.test(version) &&
-  shell.includes("Update 1.3.67:"),"app/SW/splash release synchronized");
+assert(page.includes("เวอร์ชัน 1.3.68") &&
+  /WD_BOOKS_VERSION = "1\.3\.68"/.test(version) &&
+  shell.includes("Update 1.3.68:"),"app/SW/splash release synchronized");
 assert(!shell.includes('"./experiments/flipbook-pilot/corner.js"'),
   "heavy preview is not pre-cached for all users");
 console.log("FLIP-09 layout PASS: responsive spreads, Sarabun, trusted parent return, version/cache.");
