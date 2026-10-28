@@ -228,8 +228,8 @@
     const info = cornerModel.status(index, state.engineMap, state.renderSingle);
     el("progress").textContent = info.label;
     el("progressFill").style.width = Math.round(100 * info.shown / Math.max(1, state.pages.length - 1)) + "%";
-    el("prev").disabled = index === 0;
-    el("next").disabled = cornerModel.spreadStart(index, state.renderSingle) >= total - (state.renderSingle ? 1 : 2);
+    el("prev").disabled = cornerModel.adjacent(index, -1, total, state.renderSingle) === null;
+    el("next").disabled = cornerModel.adjacent(index, 1, total, state.renderSingle) === null;
     const chapter = state.pages[readable] && readable > 0 ? state.pages[readable].dataset.chapter : "-1";
     chapterSelect.value = chapter === undefined ? "-1" : String(chapter);
     stage.dataset.dragState = "ready";
@@ -302,16 +302,15 @@
   function move(direction) {
     const engine = state.engine;
     if (!engine || state.rebuilding) return;
+    const target = cornerModel.adjacent(engine.getCurrentPageIndex(), direction,
+      engine.getPageCount(), state.renderSingle);
+    if (target === null) return;
     state.hasInteracted = true;
     stage.classList.add("has-interacted");
-    if (direction > 0) {
-      if (state.motionOff) engine.turnToNextPage();
-      else engine.flipNext("bottom");
-    } else {
-      if (state.motionOff) engine.turnToPrevPage();
-      else engine.flipPrev("bottom");
-    }
-    // flip event updates controls when the sheet settles.
+    // Direct index navigation avoids intermittent flipPrev no-ops in portrait
+    // PWA dialogs. The sheet still folds when the reader drags a page corner.
+    engine.turnToPage(target);
+    renderStatus(); // Do not depend only on an asynchronous "flip" event.
   }
   function repaginate() {
     if (state.rebuilding) return;
