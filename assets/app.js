@@ -368,9 +368,8 @@
   dialog.addEventListener("cancel", event => {
     if (isTocOpen()) { event.preventDefault(); closeMobileToc(); }
   });
-  // FLIP-06: PWA launches do not preserve ?flip05=1. Show this opt-in tool
-  // for the single verified public book, but keep the legacy reader as default.
-  const FLIP05_BOOK = "ai-five-questions-speaker-cheatsheet-25691026";
+  // FLIP-11: a supported published book opens as a real Flipbook by default.
+  // The legacy Reader stays underneath for offline, narration and unsupported content.
   const flipChoice = $("readerFlipbookChoice");
   const flipDialog = $("wdFlipbookDialog"), flipFrame = $("wdFlipbookFrame");
   const flipClose = $("wdFlipbookClose"), flipReturnBottom = $("wdFlipbookReturnBottom");
@@ -381,15 +380,14 @@
   let flipAudioRequested = false;
   let flipSession = null;
   flipChoice.hidden = true;
-  const eligibleFlipbook = book => book?.id === FLIP05_BOOK &&
-    book.status === "published" && Boolean(book.pages?.length);
+  const eligibleFlipbook = book => window.WD_FLIP_CAPABILITY?.supports?.(book) === true;
   const isFlipOnline = () => window.navigator?.onLine !== false;
   const syncFlipConnectivity = () => {
     const disabled = !isFlipOnline();
     flipChoice.disabled = disabled;
     flipChoice.title = disabled ?
       "โหมดพลิกกระดาษต้องใช้อินเทอร์เน็ต · อ่านแบบเดิมต่อได้" :
-      "ทดลองพลิกมุมกระดาษ (ออนไลน์)";
+      "อ่านแบบพลิกกระดาษ (ออนไลน์)";
   };
   window.addEventListener("online", syncFlipConnectivity);
   window.addEventListener("offline", syncFlipConnectivity);
@@ -407,7 +405,7 @@
     flipToolsTrigger.disabled = true;
     flipTocTrigger.setAttribute("aria-expanded","false");
     flipToolsTrigger.setAttribute("aria-expanded","false");
-    const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1", v: String(window.WD_BOOKS_VERSION || "1.3.65"), theme: document.body?.dataset?.theme || "light"});
+    const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1", v: String(window.WD_BOOKS_VERSION || "1.3.66"), theme: document.body?.dataset?.theme || "light"});
     // The flipbook runs in an iframe whose width may not match the host desktop.
     if (document.documentElement.classList.contains("wd-google-sans") &&
         window.matchMedia("(min-width: 1101px) and (hover: hover) and (pointer: fine)").matches)
@@ -435,6 +433,11 @@
           data.chapter < (state.manual?.pages?.length || 0))
         flipSession.lastChapter = data.chapter;
       flipDialog.close(); // Existing close handler restores Reader/focus/progress.
+      return;
+    }
+    if (data.type === "wd:flip11:unavailable") {
+      // A renderer error must return to the usable Reader, never trap the user.
+      flipDialog.close();
       return;
     }
     if (data.type === "wd:flip10:sheet") {
@@ -524,7 +527,7 @@
     if (flipDialog.open) flipDialog.close();
   });
 
-  function openBook(book, opener, requestedPage = null) {
+  function openBook(book, opener, requestedPage = null, options = {}) {
     if (book.status !== "published" || !book.pages?.length) return;
     state.manual = book;
     flipChoice.hidden = !eligibleFlipbook(book);
@@ -556,13 +559,22 @@
     document.body.classList.add("reader-open");
     window.WD_AUDIO_READER?.selectBook?.(book, state.page);
     $("readerClose").focus();
+    // Normal shelf / resume / contents opens Flipbook when supported and online.
+    // Never auto-reopen after closing it; this runs only on a fresh openBook().
+    // The Audio Mini deep link explicitly requests legacy Reader.
+    if (!options.legacy && eligibleFlipbook(book) && isFlipOnline()) {
+      requestAnimationFrame(() => {
+        if (dialog.open && state.manual?.id === book.id && !flipDialog.open &&
+            isFlipOnline() && eligibleFlipbook(book)) flipChoice.click();
+      });
+    }
   }
   // The audio mini-player opens the exact chapter currently being narrated.
   window.addEventListener("wd:audio-open-current-page", event => {
     const { bookId, chapter } = event.detail || {};
     const target = data.manuals.find(item => item.id === bookId);
     if (!target) return;
-    if (!dialog.open || state.manual?.id !== bookId) openBook(target, document.getElementById("wdAudioMini"), chapter);
+    if (!dialog.open || state.manual?.id !== bookId) openBook(target, document.getElementById("wdAudioMini"), chapter, {legacy:true});
     else jumpTo(chapter);
   });
   const toolsToggle = $("readerToolsToggle"), extraTools = $("readerExtraTools");
