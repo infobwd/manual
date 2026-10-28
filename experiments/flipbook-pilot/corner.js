@@ -5,6 +5,7 @@
   const book = (window.WD_LIBRARY_DATA?.manuals || []).find(item =>
     item.id === BOOK_ID && item.status === "published" && Array.isArray(item.pages));
   const stage = el("bookStage");
+  const cornerModel = window.WD_CORNER_MODEL;
   const bookNode = el("cornerFrame");
   const measure = el("measure");
   const chapterSelect = el("chapter"), fontSelect = el("fontSize"), motionButton = el("motionButton");
@@ -182,44 +183,29 @@
     return paper;
   }
   function buildSheets() {
-    const sheets = [makeSheet(state.pages[0], 0, "hard")];
-    const single = isSingle();
-    // A physical front cover opens to a blank inside-left and content page 1 on the right.
-    // In portrait mode omit the inside cover, so the first swipe reveals text immediately.
-    if (!single) sheets.push(makeSheet(blank(), -1));
-    for (let i = 1; i < state.pages.length; i++) sheets.push(makeSheet(state.pages[i], i));
-    // Ensure the back cover is the final single hard sheet.
-    if (!single && sheets.length % 2 === 0) sheets.push(makeSheet(blank(), -1));
-    sheets.push(makeSheet(makeBackCover(), -2, "hard"));
-    return sheets;
+    const order = cornerModel.order(state.pages.length, isSingle());
+    state.engineMap = order;
+    return order.map(index => {
+      if (index === -2) return makeSheet(makeBackCover(), -2, "hard");
+      if (index === -1) return makeSheet(blank(), -1);
+      return makeSheet(state.pages[index], index, index === 0 ? "hard" : undefined);
+    });
   }
   function visibleSourceIndex() {
     if (!state.engine) return 0;
-    const n = state.engine.getCurrentPageIndex();
-    const indices = isSingle() ? [n] : (n === 0 ? [0] : [n, n + 1]);
-    const mapped = indices.map(i => state.engineMap[i]).filter(i => i != null && i >= 0);
-    return mapped.length ? mapped[0] : -2;
+    return cornerModel.firstReadable(state.engine.getCurrentPageIndex(), state.engineMap, isSingle());
   }
   function renderStatus() {
     if (!state.engine) return;
     const index = state.engine.getCurrentPageIndex();
     const total = state.engine.getPageCount();
-    const source = visibleSourceIndex();
-    const last = isSingle() ? index : Math.min(total - 1, index + 1);
-    const visible = isSingle() ? [index] : (index === 0 ? [0] : [index, last]);
-    const contentIndices = visible.map(i => state.engineMap[i]).filter(i => Number.isInteger(i) && i > 0);
-    let label;
-    if (index === 0) label = "หน้าปก";
-    else if (!contentIndices.length) label = "ปกหลัง";
-    else label = "หน้า " + contentIndices[0] +
-      (contentIndices.length > 1 ? "–" + contentIndices[contentIndices.length - 1] : "") +
-      " / " + (state.pages.length - 1);
-    el("progress").textContent = label;
-    const shown = contentIndices.length ? contentIndices[contentIndices.length - 1] : (index === 0 ? 0 : state.pages.length - 1);
-    el("progressFill").style.width = Math.round(100 * shown / Math.max(1, state.pages.length - 1)) + "%";
+    const readable = visibleSourceIndex();
+    const info = cornerModel.status(index, state.engineMap, isSingle());
+    el("progress").textContent = info.label;
+    el("progressFill").style.width = Math.round(100 * info.shown / Math.max(1, state.pages.length - 1)) + "%";
     el("prev").disabled = index === 0;
-    el("next").disabled = index >= total - (isSingle() ? 1 : 2);
-    const chapter = state.pages[source] && source > 0 ? state.pages[source].dataset.chapter : "-1";
+    el("next").disabled = cornerModel.spreadStart(index, isSingle()) >= total - (isSingle() ? 1 : 2);
+    const chapter = state.pages[readable] && readable > 0 ? state.pages[readable].dataset.chapter : "-1";
     chapterSelect.value = chapter === undefined ? "-1" : String(chapter);
     stage.dataset.dragState = "ready";
   }
@@ -237,7 +223,6 @@
     const root = element("div", "corner-book");
     bookNode.append(root);
     const sheets = buildSheets();
-    state.engineMap = sheets.map(node => Number(node.dataset.sourceIndex));
     root.replaceChildren(...sheets);
     const bounds = bookNode.getBoundingClientRect();
     const width = Math.round(bounds.width / step()), height = Math.round(bounds.height);
@@ -255,7 +240,7 @@
     engine.on("flip", update);
     engine.on("changeOrientation", update);
     engine.loadFromHTML(sheets);
-    const target = sourcePage === 0 ? 0 : (isSingle() ? sourcePage : sourcePage + 1);
+    const target = cornerModel.sourceToEngine(sourcePage, isSingle());
     engine.turnToPage(Math.min(sheets.length - 1, target));
     state.rebuilding = false;
     renderStatus();
@@ -295,7 +280,7 @@
     chapterSelect.addEventListener("change", () => {
       const i = Number(chapterSelect.value);
       const sourcePage = i < 0 ? 0 : (state.chapters[i]?.page || 0);
-      const enginePage = isSingle() ? sourcePage : sourcePage === 0 ? 0 : sourcePage + 1;
+      const enginePage = cornerModel.sourceToEngine(sourcePage, isSingle());
       state.engine?.turnToPage(enginePage);
       renderStatus();
     });
