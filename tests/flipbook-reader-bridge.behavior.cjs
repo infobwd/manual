@@ -12,7 +12,7 @@ new Function("window",capabilitySource)(capabilityScope);
 const version = fs.readFileSync(path.join(__dirname, "..", "assets/app-version.js"), "utf8").match(/WD_BOOKS_VERSION = "([^"]+)"/)?.[1];
 assert(version, "central PWA version exists");
 const start = app.indexOf("  // FLIP-11: a supported published book opens as a real Flipbook by default.");
-const end = app.indexOf("  function openBook(book, opener, requestedPage = null) {", start);
+const end = app.indexOf("  function openBook(book, opener, requestedPage = null, options = {}) {", start);
 assert(start > 0 && end > start, "isolated bridge block exists in Reader");
 const bridgeSource = app.slice(start, end);
 const factory = new Function("$", "window", "document", "dialog", "state", "closeMobileToc",
