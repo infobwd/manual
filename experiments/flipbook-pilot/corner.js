@@ -6,13 +6,15 @@
     item.id === BOOK_ID && item.status === "published" && Array.isArray(item.pages));
   const stage = el("bookStage");
   const cornerModel = window.WD_CORNER_MODEL;
+  const positionModel = window.WD_CORNER_POSITION;
   const bookNode = el("cornerFrame");
   const measure = el("measure");
   const chapterSelect = el("chapter"), fontSelect = el("fontSize"), motionButton = el("motionButton");
   const reducedSystem = window.matchMedia("(prefers-reduced-motion: reduce)");
   const mobileQuery = window.matchMedia("(max-width: 1100px)");
   const state = { pages: [], chapters: [], current: 0, motionOff: reducedSystem.matches, font: 100,
-    engine: null, engineMap: [], rebuilding: false, resizeTimer: 0 };
+    engine: null, engineMap: [], renderSingle: null, hasInteracted: false,
+    rebuilding: false, resizeTimer: 0 };
   const element = (tag, className, value) => {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -84,8 +86,10 @@
   }
 
   function paginate() {
-    // A two-page spread is anchored to the RIGHT page, including the cover.
-    const oldChapter = Number(chapterSelect.value || "-1");
+    // Capture the current relative page within its chapter before changing font/viewport.
+    const oldSource = visibleSourceIndex();
+    const oldChapter = Number(state.pages[oldSource]?.dataset.chapter ?? -1);
+    const anchor = positionModel.capture(state.chapters, state.pages.length, oldSource, oldChapter);
     measure.replaceChildren();
     const w = bookNode.getBoundingClientRect().width;
     const h = bookNode.getBoundingClientRect().height;
@@ -160,10 +164,9 @@
       const folio = paper.querySelector(".folio");
       if (folio) folio.textContent = String(index).padStart(2, "0");
     });
-    // Preserve the chapter, not the numeric index, when typography changes page count.
-    let target = state.chapters.find(ch => ch.page > 0 && Number(state.pages[ch.page].dataset.chapter) === oldChapter);
-    if (oldChapter === -1) target = { page: 0 };
-    mountEngine(target ? target.page : 0);
+    // Preserve approximate reading progress within the current chapter.
+    const target = positionModel.restore(state.chapters, state.pages.length, anchor);
+    mountEngine(target);
   }
 
 
@@ -183,7 +186,7 @@
     return paper;
   }
   function buildSheets() {
-    const order = cornerModel.order(state.pages.length, isSingle());
+    const order = cornerModel.order(state.pages.length, state.renderSingle);
     state.engineMap = order;
     return order.map(index => {
       if (index === -2) return makeSheet(makeBackCover(), -2, "hard");
@@ -193,18 +196,18 @@
   }
   function visibleSourceIndex() {
     if (!state.engine) return 0;
-    return cornerModel.firstReadable(state.engine.getCurrentPageIndex(), state.engineMap, isSingle());
+    return cornerModel.firstReadable(state.engine.getCurrentPageIndex(), state.engineMap, state.renderSingle);
   }
   function renderStatus() {
     if (!state.engine) return;
     const index = state.engine.getCurrentPageIndex();
     const total = state.engine.getPageCount();
     const readable = visibleSourceIndex();
-    const info = cornerModel.status(index, state.engineMap, isSingle());
+    const info = cornerModel.status(index, state.engineMap, state.renderSingle);
     el("progress").textContent = info.label;
     el("progressFill").style.width = Math.round(100 * info.shown / Math.max(1, state.pages.length - 1)) + "%";
     el("prev").disabled = index === 0;
-    el("next").disabled = cornerModel.spreadStart(index, isSingle()) >= total - (isSingle() ? 1 : 2);
+    el("next").disabled = cornerModel.spreadStart(index, state.renderSingle) >= total - (state.renderSingle ? 1 : 2);
     const chapter = state.pages[readable] && readable > 0 ? state.pages[readable].dataset.chapter : "-1";
     chapterSelect.value = chapter === undefined ? "-1" : String(chapter);
     stage.dataset.dragState = "ready";
@@ -215,39 +218,63 @@
       return;
     }
     state.rebuilding = true;
-    if (state.engine) {
-      try { state.engine.destroy(); } catch (error) { console.warn("FLIP-03 engine destroy", error); }
-      state.engine = null;
+    try {
+      if (state.engine) {
+        try { state.engine.destroy(); }
+        catch (error) { console.warn("FLIP-04 engine destroy", error); }
+        state.engine = null;
+      }
+      bookNode.replaceChildren();
+      state.renderSingle = isSingle();
+      const root = element("div", "corner-book");
+      bookNode.append(root);
+      const sheets = buildSheets();
+      root.replaceChildren(...sheets);
+      const bounds = bookNode.getBoundingClientRect();
+      const width = Math.round(bounds.width / (state.renderSingle ? 1 : 2));
+      const height = Math.round(bounds.height);
+      if (width < 120 || height < 240) throw new Error("พื้นที่หนังสือเล็กเกินไป");
+      const engine = new window.St.PageFlip(root, {
+        width, height, size: "fixed", autoSize: false, showCover: true,
+        usePortrait: state.renderSingle, drawShadow: !state.motionOff,
+        flippingTime: state.motionOff ? 1 : 750, maxShadowOpacity: 0.45,
+        mobileScrollSupport: false, useMouseEvents: !state.motionOff,
+        disableFlipByClick: true, swipeDistance: 35,
+        startPage: 0
+      });
+      state.engine = engine;
+      engine.on("flip", event => {
+        if (event.data !== 0) {
+          state.hasInteracted = true;
+          stage.classList.add("has-interacted");
+        }
+        renderStatus();
+      });
+      engine.on("changeOrientation", renderStatus);
+      engine.on("changeState", event => {
+        if (["user_fold", "fold_corner", "flipping"].includes(event.data)) {
+          state.hasInteracted = true;
+          stage.classList.add("has-interacted");
+        }
+      });
+      engine.loadFromHTML(sheets);
+      const target = sourcePage === -2 ? sheets.length - 1 :
+        cornerModel.sourceToEngine(sourcePage, state.renderSingle);
+      engine.turnToPage(Math.min(sheets.length - 1, target));
+      if (state.hasInteracted) stage.classList.add("has-interacted");
+      renderStatus();
+    } catch (error) {
+      console.error("FLIP-04 mount:", error);
+      fail("เปิดระบบพลิกหน้าไม่สำเร็จ กรุณาลองรีเฟรชหน้า");
+    } finally {
+      state.rebuilding = false;
     }
-    bookNode.replaceChildren();
-    const root = element("div", "corner-book");
-    bookNode.append(root);
-    const sheets = buildSheets();
-    root.replaceChildren(...sheets);
-    const bounds = bookNode.getBoundingClientRect();
-    const width = Math.round(bounds.width / step()), height = Math.round(bounds.height);
-    if (width < 120 || height < 240) throw new Error("พื้นที่หนังสือเล็กเกินไป");
-    const engine = new window.St.PageFlip(root, {
-      width, height, size: "fixed", autoSize: false, showCover: true,
-      usePortrait: isSingle(), drawShadow: !state.motionOff,
-      flippingTime: state.motionOff ? 1 : 750, maxShadowOpacity: 0.45,
-      mobileScrollSupport: false, useMouseEvents: !state.motionOff,
-      disableFlipByClick: true, swipeDistance: 35,
-      startPage: 0
-    });
-    state.engine = engine;
-    const update = () => renderStatus();
-    engine.on("flip", update);
-    engine.on("changeOrientation", update);
-    engine.loadFromHTML(sheets);
-    const target = cornerModel.sourceToEngine(sourcePage, isSingle());
-    engine.turnToPage(Math.min(sheets.length - 1, target));
-    state.rebuilding = false;
-    renderStatus();
   }
   function move(direction) {
     const engine = state.engine;
     if (!engine || state.rebuilding) return;
+    state.hasInteracted = true;
+    stage.classList.add("has-interacted");
     if (direction > 0) {
       if (state.motionOff) engine.turnToNextPage();
       else engine.flipNext("bottom");
@@ -280,8 +307,10 @@
     chapterSelect.addEventListener("change", () => {
       const i = Number(chapterSelect.value);
       const sourcePage = i < 0 ? 0 : (state.chapters[i]?.page || 0);
-      const enginePage = cornerModel.sourceToEngine(sourcePage, isSingle());
+      const enginePage = cornerModel.sourceToEngine(sourcePage, state.renderSingle);
       state.engine?.turnToPage(enginePage);
+      state.hasInteracted = true;
+      stage.classList.add("has-interacted");
       renderStatus();
     });
     fontSelect.addEventListener("change", () => {

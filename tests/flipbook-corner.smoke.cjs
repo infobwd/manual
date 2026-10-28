@@ -11,6 +11,7 @@ const html = read(prefix + "corner.html");
 const css = read(prefix + "corner.css");
 const app = read(prefix + "corner.js");
 const modelSource = read(prefix + "corner-model.js");
+const positionSource = read(prefix + "position-model.js");
 const vendor = read(prefix + "vendor/page-flip.browser.min.js");
 const license = read(prefix + "vendor/LICENSE-StPageFlip.txt");
 const catalog = read("assets/manuals-data.js");
@@ -19,6 +20,11 @@ new vm.Script(vendor, { filename: "page-flip.browser.min.js" });
 const scope = { window: {} };
 vm.runInNewContext(modelSource, scope, { timeout: 2000 });
 const model = scope.window.WD_CORNER_MODEL;
+vm.runInNewContext(positionSource, scope, { timeout: 2000 });
+const position = scope.window.WD_CORNER_POSITION;
+assert(position && typeof position.capture === "function" && typeof position.restore === "function",
+  "pure reading-position adapter exists");
+
 assert(model, "physical sheet adapter must load");
 const data = { window: {} };
 vm.runInNewContext(catalog, data, { timeout: 3000 });
@@ -27,6 +33,7 @@ assert(book && book.status === "published" && book.pages.length === 12, "only pu
 assert(html.indexOf("assets/manuals-data.js") < html.indexOf("vendor/page-flip.browser.min.js"), "public catalog first");
 assert(html.indexOf("page-flip.browser.min.js") < html.indexOf("corner-model.js"), "engine before model");
 assert(html.indexOf("corner-model.js") < html.indexOf("corner.js"), "model before adapter");
+assert(html.indexOf("corner-model.js") < html.indexOf("position-model.js") && html.indexOf("position-model.js") < html.indexOf("corner.js"), "reading anchor loads before adapter");
 assert(!/<script[^>]+src=["']https?:/i.test(html), "no CDN dependencies");
 assert(!/<link[^>]+href=["']https?:/i.test(html), "no runtime CDN CSS");
 assert(vendor.includes("St={}") && vendor.includes("PageFlip"), "StPageFlip browser UMD bundle");
@@ -65,4 +72,37 @@ for (const single of [false, true]) {
     assert.equal(model.status(0, pages, single).label, "หน้าปก", "cover label");
   }
 }
-console.log("FLIP-03 smoke PASS: browser bundle parses, source public, MIT, real HTML engine, no runtime CDN/SW/storage changes; 14 book layout cases.");
+
+/* FLIP-04: never reset a reader to the beginning of a long chapter on font/rotation changes. */
+const before = [{ page: 1 }, { page: 5 }, { page: 10 }];
+const after = [{ page: 1 }, { page: 8 }, { page: 16 }];
+for (const [page, chapter] of [[1, 0], [2, 0], [4, 0], [5, 1], [9, 1], [10, 2], [12, 2]]) {
+  const anchor = position.capture(before, 13, page, chapter);
+  assert.equal(position.restore(before, 13, anchor), page, "identical layout must preserve page " + page);
+  const nextPage = position.restore(after, 20, anchor);
+  const chapterStart = after[chapter].page;
+  const chapterEnd = (after[chapter + 1]?.page ?? 20) - 1;
+  assert(nextPage >= chapterStart && nextPage <= chapterEnd,
+    "reflow must keep the reader inside the same chapter");
+}
+assert.equal(position.restore(after, 20, position.capture(before, 13, 0, -1)), 0,
+  "front cover stays front cover");
+assert.equal(position.restore(after, 20, position.capture(before, 13, -2, -1)), -2,
+  "back cover stays back cover");
+assert.equal(position.restore(after, 20, position.capture(before, 13, 4, 0)), 7,
+  "last old page in a chapter maps to its new last page");
+assert.equal(position.restore(after, 20, position.capture(before, 13, 6, 1)), 10,
+  "chapter fraction maps inside enlarged chapter");
+assert(app.includes("positionModel.capture(") && app.includes("positionModel.restore("),
+  "live pagination uses the tested anchor, not chapter-start reset");
+assert(app.includes("state.renderSingle") && app.includes("state.renderSingle = isSingle()"),
+  "read page using the last mounted orientation before a responsive resize");
+assert(app.includes('engine.on("changeState"') && app.includes('stage.classList.add("has-interacted")'),
+  "reader dismisses touch hints on gesture");
+assert(css.includes(".book-stage.has-interacted .corner-hint"),
+  "gesture labels cannot cover reading area after the first interaction");
+assert(css.includes("touch-action:pan-y"), "vertical page scroll remains available on touch screens");
+assert(app.includes("finally {") && app.includes("state.rebuilding = false"),
+  "failed engine rebuild cannot leave the app in a permanent busy state");
+
+console.log("FLIP-03/04 smoke PASS: browser bundle parses, source public, MIT, real HTML engine, no runtime CDN/SW/storage changes; 14 book layout cases.");
