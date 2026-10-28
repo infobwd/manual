@@ -6,7 +6,7 @@ const text=fs.readFileSync(path.join(__dirname,"../docs/previews/ui-next/index.h
 const script=/<script>([\s\S]*?)<\/script>/.exec(text)?.[1];
 assert(script,"preview inline script is present");
 new vm.Script(script);
-for (const id of ["home","books","settings","homeGrid","bookGrid","bookSearch",
+for (const id of ["home","books","settings","homeGrid","bookGrid","bookSearch","homeSearch",
   "categoryChoices","bookResultsCount","bookEmpty","fontSize"]) {
   assert(text.includes('id="'+id+'"'),id+" preserved");
 }
@@ -66,7 +66,11 @@ elements.bookSearch.value=""; elements.bookSearch.input();
 assert.equal(elements.bookGrid.children.length,2,"clearing query restores results");
 shortcuts[2].click();
 assert.equal(elements.books.hidden,false,"home category shortcut changes view");
-assert.equal(elements.bookGrid.children.length,1,"category shortcut preserves favorite filter");
+assert.equal(elements.bookGrid.children.length,2,"category shortcut clears unrelated old favorites filter");
+assert.equal(filters[0].attributes["aria-pressed"],"true","all-books filter selected");
+elements.homeSearch.value="แนวทาง"; elements.homeSearch.input();
+assert.equal(elements.bookGrid.children.length,1,"home search opens relevant bookshelf result");
+assert.equal(elements.bookGrid.children[0].children[1].textContent,"แนวทาง WD Growth");
 views[2].click();
 assert.equal(elements.settings.hidden,false,"settings view works");
 themes[2].click();
@@ -74,4 +78,4 @@ assert.equal(document.documentElement.className,"night","night theme works");
 elements.fontSize.value="140"; elements.fontSize.input();
 assert.equal(elements.fontOutput.textContent,"140%");
 assert.equal(elements.sampleText.style.fontSize,"140%");
-console.log("UI-MIG-01R2 PASS: static contracts and 13 mock DOM interaction assertions (no browser/device claim).");
+console.log("UI-MIG-01R2 PASS: static contracts and 15 mock DOM interaction assertions (no browser/device claim).");
