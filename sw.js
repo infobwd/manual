@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.60: FLIP-08 iPhone PWA embedded mobile nav and viewport layout;
+   Update 1.3.61: add supervision readiness ebook to the offline app shell;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");
@@ -9,7 +9,7 @@ const CACHE_PREFIX = "wd-manual-public-";
 const APP_SHELL = [
   "./", "./index.html", "./manifest.webmanifest",
   "./assets/app-version.js", "./assets/audio-reader.css", "./assets/audio-reader-core.js", "./assets/audio-reader.js", "./assets/audio-listening-lock.js", "./assets/styles.css", "./assets/app-experience.css", "./assets/mobile-reader.css", "./assets/google-sans-platform.css", "./assets/home-p0a.css", "./assets/toc-p0b.css",
-  "./assets/reader-flip-choice.css", "./assets/home-load-guard.js", "./assets/teleprompter-core.js", "./assets/teleprompter.js", "./assets/teleprompter.css", "./assets/manuals-data.js", "./assets/wd-growth-individual-guide.js", "./assets/wd-growth-plc-information-guide.js", "./assets/experience.js", "./assets/catalog-core.js", "./assets/catalog-ui.js", "./assets/mybooks-selectors.js", "./assets/reader-coordinator.js", "./assets/app.js", "./assets/app-zoom-guard.js",
+  "./assets/reader-flip-choice.css", "./assets/home-load-guard.js", "./assets/teleprompter-core.js", "./assets/teleprompter.js", "./assets/teleprompter.css", "./assets/manuals-data.js", "./assets/wd-growth-individual-guide.js", "./assets/wd-growth-plc-information-guide.js", "./assets/bwd-term2-supervision-readiness-2569.js", "./assets/experience.js", "./assets/catalog-core.js", "./assets/catalog-ui.js", "./assets/mybooks-selectors.js", "./assets/reader-coordinator.js", "./assets/app.js", "./assets/app-zoom-guard.js",
   "./icons/icon-192.png", "./icons/icon-512.png"
 ];
 self.addEventListener("install", event => {
