@@ -28,7 +28,7 @@ function node() {
   };
 }
 function setup(search = "?flip05=1", online = true) {
-  const ids = ["readerFlipbookChoice", "wdFlipbookDialog", "wdFlipbookFrame", "wdFlipbookClose"];
+  const ids = ["readerFlipbookChoice", "wdFlipbookDialog", "wdFlipbookFrame", "wdFlipbookClose", "wdFlipbookReturnBottom"];
   const elements = Object.fromEntries(ids.map(id => [id, node()]));
   elements.wdFlipbookFrame.src = "about:blank";
   const handlers = {};
@@ -142,6 +142,33 @@ const badSource=badChapter.elements.wdFlipbookFrame.contentWindow;
 }));
 assert.equal(badChapter.bridge.flipDialog.open,false,"valid exit with invalid chapter still returns");
 assert.deepEqual(badChapter.calls.jumps,[],"invalid exit chapter cannot alter Reader position");
+
+// FLIP-09: the exit button owned by the parent must not rely on postMessage.
+const direct = setup("");
+direct.bridge.flipChoice.fire("click");
+const directFrame = direct.elements.wdFlipbookFrame.contentWindow;
+directFrame.WD_BOOKS_FLIP_CURRENT_CHAPTER = () => 6;
+assert.equal(direct.win.WD_BOOKS_FLIP_EXIT({}, direct.book.id, 6),false,
+  "unrelated iframe cannot invoke direct close");
+assert.equal(direct.win.WD_BOOKS_FLIP_EXIT(directFrame, "another-book", 6),false,
+  "unapproved book cannot invoke direct close");
+assert.equal(direct.bridge.flipDialog.open,true,"untrusted direct request leaves modal open");
+direct.elements.wdFlipbookReturnBottom.fire("click");
+assert.equal(direct.bridge.flipDialog.open,false,"parent-owned bottom button closes the modal");
+assert.deepEqual(direct.calls.jumps,[6],"parent return syncs the last validated chapter");
+assert.equal(direct.bridge.flipFrame.src,"about:blank","return unloads child iframe");
+assert.equal(direct.bridge.flipChoice.focused,true,"return restores focus to Reader");
+const noChapter = setup("");
+noChapter.bridge.flipChoice.fire("click");
+noChapter.elements.wdFlipbookReturnBottom.fire("click");
+assert.equal(noChapter.bridge.flipDialog.open,false,"exit always works even without a loaded child");
+assert.deepEqual(noChapter.calls.jumps,[],"no child data cannot reset the Reader position");
+const directFrameRequest=setup("");
+directFrameRequest.bridge.flipChoice.fire("click");
+const activeFrame=directFrameRequest.elements.wdFlipbookFrame.contentWindow;
+assert.equal(directFrameRequest.win.WD_BOOKS_FLIP_EXIT(activeFrame,directFrameRequest.book.id,4),true,
+  "a trusted synchronous iframe exit closes immediately");
+assert.deepEqual(directFrameRequest.calls.jumps,[4],"trusted exit carries last chapter");
 
 const homeScreen=setup("");
 assert.equal(homeScreen.bridge.eligibleFlipbook(homeScreen.book),true,
