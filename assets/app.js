@@ -34,6 +34,9 @@
           block:"start",
           behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth"
         });
+        // Sidebar buttons are rebuilt when filtering; move keyboard/screen-reader
+        // focus to the result announcement without causing a second scroll jump.
+        $("resultsText")?.focus({preventScroll:true});
       });
     }
   }
