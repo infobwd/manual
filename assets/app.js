@@ -429,7 +429,7 @@
     flipToolsTrigger.disabled = true;
     flipTocTrigger.setAttribute("aria-expanded","false");
     flipToolsTrigger.setAttribute("aria-expanded","false");
-    const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1", v: String(window.WD_BOOKS_VERSION || "1.3.67"), theme: document.body?.dataset?.theme || "light"});
+    const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1", v: String(window.WD_BOOKS_VERSION || "1.3.68"), theme: document.body?.dataset?.theme || "light"});
     // The flipbook runs in an iframe whose width may not match the host desktop.
     if (document.documentElement.classList.contains("wd-google-sans") &&
         window.matchMedia("(min-width: 1101px) and (hover: hover) and (pointer: fine)").matches)
