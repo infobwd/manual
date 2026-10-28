@@ -30,3 +30,7 @@
 .sar-insight-primary{margin:.55rem 0 .2rem;font-weight:650;font-size:.92em}
 .sar-insight-detail{margin:.2rem 0 0;opacity:.86;font-size:.84em}
 @media(max-width:400px){.sar-insight{padding:.8rem .85rem}}
+
+/* FLIP-12: keep the library heading visible under the sticky desktop header
+   when a sidebar category moves the user to the filtered bookshelf. */
+@media(min-width:1001px){#library{scroll-margin-top:90px}}

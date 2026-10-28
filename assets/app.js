@@ -20,10 +20,25 @@
   function totalFor(id) {
     return data.manuals.filter((book) => id === "all" || book.category === id).length;
   }
-  function selectCategory(id) {
+  function selectCategory(id, origin = "chips") {
     state.category = id;
     renderCategories();
     renderCatalog();
+    // FLIP-12: desktop sidebar results live below the discovery/hero panels.
+    // Move them into view after filtering; mobile chips keep their scroll position.
+    // Full desktop catalog layout remains in the UI migration roadmap.
+    if (origin === "nav" && window.matchMedia("(min-width:1001px)").matches) {
+      const library = $("library");
+      requestAnimationFrame(() => {
+        library?.scrollIntoView({
+          block:"start",
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth"
+        });
+        // Sidebar buttons are rebuilt when filtering; move keyboard/screen-reader
+        // focus to the result announcement without causing a second scroll jump.
+        $("resultsText")?.focus({preventScroll:true});
+      });
+    }
   }
   function categoryButton(cat, kind) {
     const label = cat.id === "all" ? "ทั้งหมด" : cat.label;
@@ -38,7 +53,7 @@
     } else {
       button.textContent = label;
     }
-    button.addEventListener("click", () => selectCategory(cat.id));
+    button.addEventListener("click", () => selectCategory(cat.id, kind));
     return button;
   }
   function renderCategories() {
@@ -405,7 +420,7 @@
     flipToolsTrigger.disabled = true;
     flipTocTrigger.setAttribute("aria-expanded","false");
     flipToolsTrigger.setAttribute("aria-expanded","false");
-    const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1", v: String(window.WD_BOOKS_VERSION || "1.3.66"), theme: document.body?.dataset?.theme || "light"});
+    const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1", v: String(window.WD_BOOKS_VERSION || "1.3.67"), theme: document.body?.dataset?.theme || "light"});
     // The flipbook runs in an iframe whose width may not match the host desktop.
     if (document.documentElement.classList.contains("wd-google-sans") &&
         window.matchMedia("(min-width: 1101px) and (hover: hover) and (pointer: fine)").matches)

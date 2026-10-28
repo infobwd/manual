@@ -569,3 +569,76 @@ body[data-flip-theme="sepia"] .corner-sheet .paper:not(.cover):not(.blank){
 @media(prefers-reduced-motion:reduce){
   .corner-frame::before{box-shadow:0 3px 0 #c4c0b7,0 10px 22px #14322d2b}
 }
+
+/* FLIP-12 — A closed book has ONE visible back cover. Do not fake an open spread.
+   Keep the real StPageFlip frame in layout (visibility, not display) so iOS can
+   re-enter the preceding page without a geometry/layout rebuild. */
+.book-stage{position:relative}
+.book-stage[data-closed-back="true"] .corner-frame,
+.book-stage[data-closed-back="true"] .corner-hint,
+.book-stage[data-closed-back="true"] .ambient-shadow{visibility:hidden}
+.closed-back-cover[hidden]{display:none!important}
+.closed-back-cover{
+  position:absolute;inset:12px auto 12px 50%;transform:translateX(-50%);
+  width:min(44%,650px);height:calc(100% - 24px);max-height:100%;
+  display:flex;flex-direction:column;justify-content:stretch;
+  z-index:6;isolation:isolate;
+  border:1px solid #1b5146;border-radius:4px 8px 8px 4px;
+  background:linear-gradient(110deg,#17443d 0%,#24675d 35%,#17564d 75%,#103d37 100%);
+  color:#f1eccc;
+  box-shadow:inset 7px 0 11px #001f2240,inset -2px 0 8px #001e1b36,
+    0 4px 0 #d5d0bd,0 6px 0 #aaa697,0 15px 26px #092e2940,
+    0 28px 55px #092b2952;
+  overflow:visible;
+  font-family:"Sarabun","TH Sarabun New",Tahoma,sans-serif;
+}
+.closed-back-cover::before{
+  content:"";position:absolute;z-index:-1;pointer-events:none;
+  inset:0;border-radius:inherit;
+  background:repeating-linear-gradient(90deg,#ffffff06 0,#ffffff06 1px,transparent 1px,transparent 7px);
+}
+.closed-back-cover-inner{
+  flex:1;min-height:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:space-between;
+  padding:clamp(23px,4vh,48px) clamp(18px,3vw,42px);
+  text-align:center;gap:12px;
+}
+.closed-back-brand{
+  font-size:clamp(8px,.75vw,11px);letter-spacing:.18em;
+  font-weight:700;opacity:.83;
+}
+.closed-back-mark{
+  margin:auto;font-family:Georgia,serif;
+  font-size:clamp(72px,11vh,145px);line-height:1;
+  color:#efd48b;text-shadow:4px 6px 0 #0929234d;
+}
+.closed-back-message{display:flex;flex-direction:column;gap:9px;align-items:center}
+.closed-back-message strong{font-size:clamp(21px,2.2vw,30px);font-weight:700;color:#fff8e4}
+.closed-back-message span{font-size:clamp(16px,1.4vw,20px);color:#f3edcf}
+.closed-back-publisher{
+  width:100%;padding-top:14px;border-top:1px solid #fdf8db50;
+  font-size:clamp(10px,1vw,13px);color:#e4e8d3;
+}
+.closed-back-reopen{
+  position:absolute;z-index:2;left:50%;bottom:clamp(68px,10vh,110px);
+  transform:translateX(-50%);
+  padding:10px 13px;min-height:44px;
+  border-radius:11px;border:1px solid #fff5d15c;
+  background:#f8f4e8;color:#164c40;
+  font:700 13px/1.2 "Sarabun",Tahoma,sans-serif;
+  white-space:nowrap;touch-action:manipulation;cursor:pointer;
+}
+.closed-back-reopen:focus-visible{outline:3px solid #f6d77d;outline-offset:3px}
+@media(max-width:1100px){
+  .closed-back-cover{
+    inset:7px auto 7px 50%;
+    width:min(93%,490px);
+    height:calc(100% - 14px);
+  }
+  .closed-back-reopen{bottom:clamp(55px,8vh,90px)}
+}
+@media(max-width:380px){
+  .closed-back-cover-inner{padding:19px 17px}
+  .closed-back-mark{font-size:clamp(58px,9vh,100px)}
+  .closed-back-reopen{bottom:57px;font-size:12px}
+}

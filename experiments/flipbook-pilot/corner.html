@@ -21,13 +21,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&amp;display=swap">
   <link rel="stylesheet" href="./pilot.css">
-  <link rel="stylesheet" href="./corner.css?v=1.3.66">
+  <link rel="stylesheet" href="./corner.css?v=1.3.67">
   <script defer src="../../assets/manuals-data.js"></script>
   <script defer src="../../assets/flipbook-capability.js"></script>
   <script defer src="./vendor/page-flip.browser.min.js"></script>
-  <script defer src="./corner-model.js?v=1.3.66"></script>
+  <script defer src="./corner-model.js?v=1.3.67"></script>
   <script defer src="./position-model.js"></script>
-  <script defer src="./corner.js?v=1.3.66"></script>
+  <script defer src="./corner.js?v=1.3.67"></script>
 </head>
 <body>
   <a class="skip" href="#bookStage">ข้ามไปยังหนังสือ</a>
@@ -78,6 +78,18 @@
       <div class="book-stage" id="bookStage" tabindex="0" aria-label="พื้นที่อ่านคู่มือ ลากมุมกระดาษหรือใช้ปุ่มลูกศรเพื่อเปลี่ยนหน้า" aria-describedby="readerHelp">
         <div class="ambient-shadow" aria-hidden="true"></div>
         <div id="cornerFrame" class="corner-frame"><div id="cornerBook" class="corner-book" aria-live="off"></div></div>
+        <div id="closedBackCover" class="closed-back-cover" hidden aria-label="ปกหลัง หนังสือปิดแล้ว">
+          <div class="closed-back-cover-inner">
+            <span class="closed-back-brand">WD BOOKS / SCHOOL LEARNING LIBRARY</span>
+            <span class="closed-back-mark" aria-hidden="true">W</span>
+            <div class="closed-back-message">
+              <strong>จบเล่มแล้ว</strong>
+              <span>ขอบคุณที่อ่าน</span>
+            </div>
+            <span class="closed-back-publisher">โรงเรียนบ้านวังด้ง</span>
+          </div>
+          <button id="reopenBackCover" class="closed-back-reopen" type="button" aria-label="เปิดหนังสือกลับไปหน้าสุดท้าย">↶ เปิดกลับหน้าสุดท้าย</button>
+        </div>
         <div class="corner-hint" aria-hidden="true"><span class="hint-left">↖ จับมุม</span><span class="hint-right">จับมุม ↙</span></div>
       </div>
       <div class="navigator">

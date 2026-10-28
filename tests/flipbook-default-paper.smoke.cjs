@@ -56,7 +56,7 @@ assert(css.includes(".corner-frame::before") &&
 assert(!css.includes("url("),"no external image texture to slow page turns");
 assert(!host.includes('state.readingMode = "flipbook"'),"original stored Reader schema preserved");
 assert(!child.includes("localStorage.setItem("),"no parallel reading-progress database");
-assert(/WD_BOOKS_VERSION = "1\.3\.66"/.test(version) &&
-  html.includes("เวอร์ชัน 1.3.66") && sw.includes("Update 1.3.66:"),
+assert(/WD_BOOKS_VERSION = "1\.3\.67"/.test(version) &&
+  html.includes("เวอร์ชัน 1.3.67") && sw.includes("Update 1.3.67:"),
   "PWA version, splash, and Service Worker synchronized");
-console.log("FLIP-11 PASS: 13/15 default physical books, 2 chart-safe fallbacks, audio/offline preservation, paper material, release 1.3.66.");
+console.log("FLIP-11 PASS: 13/15 default physical books, 2 chart-safe fallbacks, audio/offline preservation, paper material, release 1.3.67.");
