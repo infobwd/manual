@@ -233,6 +233,11 @@
     const total = state.engine.getPageCount();
     const readable = visibleSourceIndex();
     const info = cornerModel.status(index, state.engineMap, state.renderSingle);
+    // FLIP-12: the back cover is one closed book, never a facing-page spread.
+    // Keep the underlying engine measurable so Previous can reopen it.
+    const closedBack = info.label === "ปกหลัง";
+    stage.dataset.closedBack = String(closedBack);
+    el("closedBackCover").hidden = !closedBack;
     el("progress").textContent = info.label;
     el("progressFill").style.width = Math.round(100 * info.shown / Math.max(1, state.pages.length - 1)) + "%";
     el("prev").disabled = cornerModel.adjacent(index, -1, total, state.renderSingle) === null;
@@ -455,6 +460,7 @@
     applyTheme(savedTheme);
     themeButton.addEventListener("click", () => applyTheme(document.body.dataset.flipTheme === "night" ? "light" : "night", true));
     el("prev").addEventListener("click", () => move(-1));
+    el("reopenBackCover").addEventListener("click", () => move(-1));
     el("next").addEventListener("click", () => move(1));
     el("returnToReader").addEventListener("click", requestReturnToReader);
     chapterSelect.addEventListener("change", () => navigateToChapter(Number(chapterSelect.value)));
