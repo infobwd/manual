@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.58: FLIP-07 iOS nested flipbook layout and Sarabun typography;
+   Update 1.3.59: desktop-only Google Sans inside WD Books reader content;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");

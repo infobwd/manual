@@ -6,6 +6,17 @@
   <meta name="theme-color" content="#123e41">
   <meta name="description" content="WD Books Flipbook Pilot — ทดลองพลิกหน้าคู่มือจริงในพื้นที่แยก ไม่เปลี่ยนแอปหลัก">
   <title>WD Books · Corner Drag Pilot (FLIP-03)</title>
+  <!-- The iframe has its own document; inherit desktop eligibility explicitly from WD Books. -->
+  <script>
+    if (new URLSearchParams(location.search).get("desktopFont") === "1" &&
+        new URLSearchParams(location.search).get("embed") === "1" && window.parent !== window) {
+      document.documentElement.classList.add("wd-flip-desktop-font");
+      const fontStylesheet = document.createElement("link");
+      fontStylesheet.rel = "stylesheet";
+      fontStylesheet.href = "https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Sarabun:wght@400;500;600;700&display=swap";
+      document.head.appendChild(fontStylesheet);
+    }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&amp;display=swap">

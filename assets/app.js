@@ -397,6 +397,10 @@
     const startPage = state.page;
     flipSession = {bookId: book.id, originalPage: startPage, lastChapter: null};
     const params = new URLSearchParams({book: book.id, start: String(startPage), embed: "1"});
+    // The flipbook runs in an iframe whose width may not match the host desktop.
+    if (document.documentElement.classList.contains("wd-google-sans") &&
+        window.matchMedia("(min-width: 1101px) and (hover: hover) and (pointer: fine)").matches)
+      params.set("desktopFont", "1");
     // Give WebKit a visible dialog before navigating the nested reading iframe.
     flipDialog.showModal();
     flipFrame.src = "./experiments/flipbook-pilot/corner.html?" + params.toString();

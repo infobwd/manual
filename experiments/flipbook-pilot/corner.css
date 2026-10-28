@@ -96,3 +96,9 @@ body.flip-embedded .corner-frame{flex-shrink:0}
 
 /* Keep a measurable frame available for retry after a recoverable layout error. */
 .reading-surface[data-error=true] .corner-frame{display:flex}
+
+/* Flipbook pages + pagination measurement must use the same font.
+   This never changes the cover, toolbar or mobile standalone pilot. */
+html.wd-flip-desktop-font .paper:not(.cover) {
+  font-family:"Google Sans","Sarabun",Tahoma,system-ui,sans-serif;
+}
