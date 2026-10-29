@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.68: FLIP-13 close-book semantics and clean title line breaks;
+   Update 1.3.69: WD Growth review insights books added to offline shell;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");
@@ -9,7 +9,7 @@ const CACHE_PREFIX = "wd-manual-public-";
 const APP_SHELL = [
   "./", "./index.html", "./manifest.webmanifest",
   "./assets/app-version.js", "./assets/audio-reader.css", "./assets/audio-reader-core.js", "./assets/audio-reader.js", "./assets/audio-listening-lock.js", "./assets/styles.css", "./assets/app-experience.css", "./assets/mobile-reader.css", "./assets/google-sans-platform.css", "./assets/home-p0a.css", "./assets/toc-p0b.css",
-  "./assets/reader-flip-choice.css", "./assets/home-load-guard.js", "./assets/teleprompter-core.js", "./assets/teleprompter.js", "./assets/teleprompter.css", "./assets/flipbook-capability.js", "./assets/manuals-data.js", "./assets/wd-growth-individual-guide.js", "./assets/wd-growth-plc-information-guide.js", "./assets/bwd-term2-supervision-readiness-2569.js", "./assets/experience.js", "./assets/catalog-core.js", "./assets/catalog-ui.js", "./assets/mybooks-selectors.js", "./assets/reader-coordinator.js", "./assets/app.js", "./assets/app-zoom-guard.js",
+  "./assets/reader-flip-choice.css", "./assets/home-load-guard.js", "./assets/teleprompter-core.js", "./assets/teleprompter.js", "./assets/teleprompter.css", "./assets/flipbook-capability.js", "./assets/manuals-data.js", "./assets/wd-growth-insights-review-2569.js", "./assets/wd-growth-individual-guide.js", "./assets/wd-growth-plc-information-guide.js", "./assets/bwd-term2-supervision-readiness-2569.js", "./assets/experience.js", "./assets/catalog-core.js", "./assets/catalog-ui.js", "./assets/mybooks-selectors.js", "./assets/reader-coordinator.js", "./assets/app.js", "./assets/app-zoom-guard.js",
   "./icons/icon-192.png", "./icons/icon-512.png"
 ];
 self.addEventListener("install", event => {
