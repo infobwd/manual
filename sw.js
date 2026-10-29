@@ -1,5 +1,5 @@
 /* WD Books — static public-only offline app shell.
-   Update 1.3.71: add F01-P/F01-E/F02 teacher review books to offline shell;
+   Update 1.3.72: add F01-P/F01-E/F02 teacher review books to offline shell;
    release version imported without stale HTTP cache reuse;
    Scope is limited to /manual/ by the SW registration in experience.js. */
 importScripts("./assets/app-version.js");
