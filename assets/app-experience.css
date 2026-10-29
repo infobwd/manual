@@ -215,3 +215,10 @@ body[data-theme="night"] .reader-identity strong,body[data-theme="night"] .setti
 .app-update-actions button{border:1px solid #aac8b6;border-radius:10px;padding:10px 12px;min-height:44px;background:white;color:#285c49;font-weight:750}
 .app-update-actions #applyAppUpdate{background:#205748;color:white;border-color:#205748}
 @media(max-width:520px){.app-update-notice{align-items:stretch;flex-direction:column;bottom:calc(70px + env(safe-area-inset-bottom))}.app-update-actions{flex-direction:row}.app-update-actions button{flex:1}}
+
+/* TG-REVIEW: keep final bookshelf cards and buttons clear of fixed bottom navigation. */
+@media(max-width:1000px){
+  #library{scroll-margin-bottom:calc(110px + env(safe-area-inset-bottom))}
+  .main{padding-bottom:max(150px,calc(120px + env(safe-area-inset-bottom)))}
+  .manual-grid{margin-bottom:calc(30px + env(safe-area-inset-bottom))}
+}
