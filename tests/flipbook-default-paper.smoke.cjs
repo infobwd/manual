@@ -19,9 +19,9 @@ const publicBooks=context.window.WD_LIBRARY_DATA.manuals.filter(b=>b.status==="p
 const yes=publicBooks.filter(supported);
 const no=publicBooks.filter(b=>!supported(b));
 assert.equal(publicBooks.length,15,"published public catalog count");
-assert.equal(yes.length,13,"13 text-compatible books should use Flipbook by default");
-assert.equal(no.length,2,"two chart/insight books must use original Reader");
-assert(no.every(b=>b.pages.some(p=>p.chart||p.insight)),"no loss of chart/insight content");
+assert.equal(yes.length,15,"all 15 catalog public books should qualify after SAR parity");
+assert.equal(no.length,0,"all present catalog published schemas are supported");
+assert.equal(publicBooks.filter(b=>b.pages.some(p=>p.chart||p.insight)).length,2,"both SAR chart books must remain present");
 assert(yes.some(b=>b.id==="ai-five-questions-speaking-handbook-25691026"),
   "speaking handbook now qualifies");
 assert(supported({...yes[0],status:"planned"})===false,"unpublished blocked");
@@ -56,7 +56,5 @@ assert(css.includes(".corner-frame::before") &&
 assert(!css.includes("url("),"no external image texture to slow page turns");
 assert(!host.includes('state.readingMode = "flipbook"'),"original stored Reader schema preserved");
 assert(!child.includes("localStorage.setItem("),"no parallel reading-progress database");
-assert(/WD_BOOKS_VERSION = "1\.3\.68"/.test(version) &&
-  html.includes("เวอร์ชัน 1.3.68") && sw.includes("Update 1.3.68:"),
-  "PWA version, splash, and Service Worker synchronized");
-console.log("FLIP-11 PASS: 13/15 default physical books, 2 chart-safe fallbacks, audio/offline preservation, paper material, release 1.3.68.");
+require("./flipbook-release-contract.cjs").assertFlipbookRelease({version,html,sw,childHtml:preview});
+console.log("FLIP-11/14 PASS: 15/15 default physical books, SAR data-safe rendering, audio/offline preservation, paper material, canonical release verified.");

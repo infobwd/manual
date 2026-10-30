@@ -20,6 +20,8 @@ new vm.Script(vendor, { filename: "page-flip.browser.min.js" });
 const scope = { window: {} };
 vm.runInNewContext(modelSource, scope, { timeout: 2000 });
 const model = scope.window.WD_CORNER_MODEL;
+// Values returned by vm contexts use a foreign Array prototype; normalise the
+// container before assert/strict without weakening actual page/order checks.
 vm.runInNewContext(positionSource, scope, { timeout: 2000 });
 const position = scope.window.WD_CORNER_POSITION;
 assert(position && typeof position.capture === "function" && typeof position.restore === "function",
@@ -59,13 +61,13 @@ for (const single of [false, true]) {
     assert.equal(pages[0], 0, "front cover first");
     assert.equal(pages.at(-1), -2, "back cover last");
     const content = pages.filter(i => i > 0);
-    assert.deepEqual(content, Array.from({ length: count - 1 }, (_, i) => i + 1), "every source page exactly once");
+    assert.deepEqual(Array.from(content), Array.from({ length: count - 1 }, (_, i) => i + 1), "every source page exactly once");
     if (!single) {
       assert.equal(pages[1], -1, "inside cover blank left");
       assert.equal(pages[2], 1, "first content right");
       assert.equal(pages.length % 2, 0, "hard back cover on right");
       assert.equal(model.status(1, pages, single).label, "หน้า 1 / " + (count - 1), "first page counted correctly");
-      if (count > 3) assert.deepEqual(model.visiblePages(3, pages, false), [2, 3], "second spread must be 2–3");
+      if (count > 3) assert.deepEqual(Array.from(model.visiblePages(3, pages, false)), [2, 3], "second spread must be 2–3");
     } else {
       assert.equal(pages[1], 1, "portrait shows text immediately after cover");
     }
@@ -76,6 +78,32 @@ for (const single of [false, true]) {
     assert.equal(model.status(0, pages, single).label, "หน้าปก", "cover label");
   }
 }
+
+/* FLIP-14: a visible two-page spread may contain two different source chapters.
+   The TOC remains anchored to the left page; a display-only hint names both. */
+const desktopSpread = model.order(28, false);
+const pair = model.crossChapterSpread(9, desktopSpread, false,
+  source => source === 8 ? 1 : source === 9 ? 2 : 0);
+assert(pair && pair.left === 1 && pair.right === 2,
+  "a spread crossing RT/NT labels left and right source chapters");
+assert.equal(model.crossChapterSpread(9, desktopSpread, false, () => 2), null,
+  "same chapter across both pages must not display a misleading pair");
+assert.equal(model.crossChapterSpread(0, desktopSpread, false, () => 2), null,
+  "closed/front cover has no cross-chapter hint");
+assert.equal(model.crossChapterSpread(9, desktopSpread, false, () => -1), null,
+  "unknown chapter is ignored");
+assert.equal(model.crossChapterSpread(8, model.order(28,true), true,
+  source => source), null, "portrait must not imply facing chapters");
+assert(html.includes('id="spreadChapterHint"') &&
+  app.includes("cornerModel.crossChapterSpread(") &&
+  app.includes('spreadHint.hidden = !boundary'),
+  "live renderer must show a chapter pair only on a mixed desktop spread");
+assert(css.includes(".spread-chapter-hint[hidden]") &&
+  css.includes('body[data-flip-theme="night"] .spread-chapter-hint') &&
+  css.includes("@media(max-width:1100px){.spread-chapter-hint{display:none!important}}"),
+  "hint must be hidden by default and in portrait with night contrast");
+assert(app.includes('chapterSelect.value = chapter === undefined ? "-1" : String(chapter);'),
+  "chapter selection and reading progress stay anchored to existing left-page logic");
 
 /* FLIP-04: never reset a reader to the beginning of a long chapter on font/rotation changes. */
 const before = [{ page: 1 }, { page: 5 }, { page: 10 }];
@@ -109,4 +137,4 @@ assert(css.includes("touch-action:pan-y"), "vertical page scroll remains availab
 assert(app.includes("finally {") && app.includes("state.rebuilding = false"),
   "failed engine rebuild cannot leave the app in a permanent busy state");
 
-console.log("FLIP-03/04 smoke PASS: browser bundle parses, source public, MIT, real HTML engine, no runtime CDN/SW/storage changes; 14 book layout cases.");
+console.log("FLIP-03/04 smoke PASS: browser bundle parses, source public, MIT, real HTML engine, no runtime CDN/SW/storage changes; 14 book layout cases and mixed-chapter desktop hints.");

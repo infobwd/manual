@@ -63,7 +63,12 @@ assert.match(css,/\.reader-dialog \.wd-audio-panel\s*\{/);
 assert.match(core,/function listeningProgress\(/);
 assert.match(player,/remoteAudio\.addEventListener\("timeupdate"/);
 assert.match(css,/@media\(max-width:600px\)/);
-assert.match(version,/WD_BOOKS_VERSION = "1\.3\.42"/);
+// Keep the test release-agnostic: the PWA must share one version source.
+const release=version.match(/WD_BOOKS_VERSION\s*=\s*"(\d+\.\d+\.\d+)"/);
+assert.ok(release,"app-version.js must declare a valid release");
+assert.ok(html.includes('src="./assets/app-version.js"'),"HTML loads shared release version");
+assert.ok(sw.includes('importScripts("./assets/app-version.js")'),"SW imports same version");
+assert.ok(sw.includes("self.WD_BOOKS_VERSION"),"SW uses imported version");
 for(const asset of ["./assets/audio-reader.css","./assets/audio-reader-core.js","./assets/audio-reader.js","./assets/audio-listening-lock.js"]){
   assert.ok(sw.includes('"'+asset+'"'),"New static PWA shell asset missing: "+asset);
 }

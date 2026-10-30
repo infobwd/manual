@@ -175,6 +175,72 @@
       }
     }
 
+    // Chart rows are measured atomically, so changing font or orientation never
+    // clips a comparison or silently drops its values. Each row remains readable
+    // even when a chapter's chart must continue onto a new physical page.
+    function appendAtomic(node) {
+      if (tryAppend(node)) return;
+      freshPage(section);
+      if (!tryAppend(node)) throw new Error("แถวกราฟสูงเกินพื้นที่หน้ากระดาษ");
+    }
+    // Keep section labels with their first content item when both fit.
+    // Measurements use the same hidden page as the visible Flipbook. If an
+    // oversized pair cannot fit even on a blank sheet, fall back to the
+    // existing split-safe text/atomic-row functions; never discard content.
+    function appendPaired(first, second) {
+      const area = current.querySelector(".page-content");
+      area.append(first, second);
+      if (contentFits(current)) return true;
+      first.remove();
+      second.remove();
+      if (!area.children.length) return false;
+      freshPage(section);
+      const next = current.querySelector(".page-content");
+      next.append(first, second);
+      if (contentFits(current)) return true;
+      first.remove();
+      second.remove();
+      return false;
+    }
+    function appendChart(chart) {
+      const headingText = chart.title || "เปรียบเทียบข้อมูล";
+      const labels = chart.labels || ["เป้าหมาย", "ผลประเมิน"];
+      chart.rows.forEach((row, index) => {
+        const figure = element("figure", "flip-sar-chart");
+        figure.setAttribute("role", "group");
+        figure.setAttribute("aria-label", row.label);
+        figure.append(element("figcaption", "flip-sar-label", row.label));
+        [["target", labels[0], row.target], ["result", labels[1], row.result]].forEach(([kind, label, value]) => {
+          const line = element("div", "flip-sar-line");
+          line.append(element("span", "flip-sar-legend", label));
+          const track = element("span", "flip-sar-track");
+          track.setAttribute("aria-hidden", "true");
+          const bar = element("span", "flip-sar-bar flip-sar-" + kind);
+          bar.style.width = value + "%";
+          track.append(bar);
+          line.append(track, element("strong", "flip-sar-value", value + "%"));
+          figure.append(line);
+        });
+        if (index === 0) {
+          const heading = contentBlock(headingText, "chart-heading");
+          if (!appendPaired(heading, figure)) {
+            appendWhole(headingText, "chart-heading");
+            appendAtomic(figure);
+          }
+        } else appendAtomic(figure);
+      });
+    }
+    function appendInsight(insight) {
+      const label = contentBlock("สรุปสารสนเทศ", "insight-label");
+      const headline = contentBlock(insight.headline, "insight-headline");
+      if (!appendPaired(label, headline)) {
+        appendWhole("สรุปสารสนเทศ", "insight-label");
+        appendWhole(insight.headline, "insight-headline");
+      }
+      if (insight.primary) appendWhole(insight.primary, "insight-primary");
+      if (insight.detail) appendWhole(insight.detail, "insight-detail");
+    }
+
     book.pages.forEach((source, index) => {
       section = index;
       freshPage(section);
@@ -182,6 +248,8 @@
       if (source.kicker) appendWhole(source.kicker, "chapter-label");
       if (source.title) appendWhole(source.title, "title");
       (source.paragraphs || []).forEach(text => appendWhole(text, "paragraph"));
+      if (source.chart) appendChart(source.chart);
+      if (source.insight) appendInsight(source.insight);
       (source.bullets || []).forEach(text => appendWhole(text, "bullet"));
       if (source.tip) appendWhole(source.tip, "tip");
       // This schema is verified for every supported public book before rendering.
@@ -246,6 +314,28 @@
     el("next").disabled = cornerModel.adjacent(index, 1, total, state.renderSingle) === null;
     const chapter = state.pages[readable] && readable > 0 ? state.pages[readable].dataset.chapter : "-1";
     chapterSelect.value = chapter === undefined ? "-1" : String(chapter);
+    // A desktop spread can display the end of one chapter on the left and
+    // the next chapter's opening on the right. Clarify this without changing
+    // the TOC selection (left/first readable), Reader bridge or saved progress.
+    const spreadHint = el("spreadChapterHint");
+    const boundary = cornerModel.crossChapterSpread(
+      index, state.engineMap, state.renderSingle,
+      source => Number(state.pages[source]?.dataset.chapter ?? -1)
+    );
+    if (spreadHint) {
+      spreadHint.hidden = !boundary;
+      if (boundary) {
+        spreadHint.textContent = "ซ้าย: บท " + (boundary.left + 1) +
+          " · ขวา: บท " + (boundary.right + 1);
+        spreadHint.title = "หน้าซ้าย: " + (book.pages[boundary.left]?.title || "บท " + (boundary.left + 1)) +
+          " / หน้าขวา: " + (book.pages[boundary.right]?.title || "บท " + (boundary.right + 1));
+        spreadHint.setAttribute("aria-label", spreadHint.title);
+      } else {
+        spreadHint.textContent = "";
+        spreadHint.removeAttribute("aria-label");
+        spreadHint.removeAttribute("title");
+      }
+    }
     el("flipTocItems").querySelectorAll(".flip-toc-item").forEach(button => {
       if (button.dataset.chapter === String(chapter)) button.setAttribute("aria-current","true");
       else button.removeAttribute("aria-current");

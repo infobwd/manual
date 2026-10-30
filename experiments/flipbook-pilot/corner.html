@@ -21,13 +21,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&amp;display=swap">
   <link rel="stylesheet" href="./pilot.css">
-  <link rel="stylesheet" href="./corner.css?v=1.3.68">
+  <link rel="stylesheet" href="./corner.css?v=1.3.73">
   <script defer src="../../assets/manuals-data.js"></script>
+  <!-- Keep the child book modules in the same order as the parent WD Books shell. -->
+  <script defer src="../../assets/bwd-teacher-growth-draft-review-2569.js"></script>
+  <script defer src="../../assets/wd-growth-insights-review-2569.js"></script>
+  <script defer src="../../assets/wd-growth-individual-guide.js"></script>
+  <script defer src="../../assets/wd-growth-plc-information-guide.js"></script>
+  <script defer src="../../assets/bwd-term2-supervision-readiness-2569.js"></script>
   <script defer src="../../assets/flipbook-capability.js"></script>
   <script defer src="./vendor/page-flip.browser.min.js"></script>
-  <script defer src="./corner-model.js?v=1.3.68"></script>
+  <script defer src="./corner-model.js?v=1.3.73"></script>
   <script defer src="./position-model.js"></script>
-  <script defer src="./corner.js?v=1.3.68"></script>
+  <script defer src="./corner.js?v=1.3.73"></script>
 </head>
 <body>
   <a class="skip" href="#bookStage">ข้ามไปยังหนังสือ</a>
@@ -97,6 +103,7 @@
         <button id="prev" class="nav-button" type="button" aria-label="หน้าก่อนหน้า"><span aria-hidden="true">←</span> ก่อนหน้า</button>
         <div class="progress-wrap">
           <p id="progress" class="progress-text" role="status" aria-live="polite">กำลังเตรียมหน้า…</p>
+          <span id="spreadChapterHint" class="spread-chapter-hint" role="note" hidden></span>
           <span class="flip-mode-status">พลิกทีละหน้า</span>
           <div class="track" aria-hidden="true"><div id="progressFill" class="fill"></div></div>
         </div>

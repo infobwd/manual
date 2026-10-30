@@ -44,9 +44,8 @@ const context={window:{}};vm.runInNewContext(catalog,context);vm.runInNewContext
 const manuals=context.window.WD_LIBRARY_DATA.manuals;
 const published=manuals.filter(b=>b.status==="published");
 assert.equal(published.length,15);
-assert.equal(published.filter(context.window.WD_FLIP_CAPABILITY.supports).length,13);
-assert.equal(published.filter(b=>!context.window.WD_FLIP_CAPABILITY.supports(b)).length,2,
- "chart books remain in lossless Reader until special layout supported");
-assert(/WD_BOOKS_VERSION = "1\.3\.68"/.test(v)&&html.includes("เวอร์ชัน 1.3.68")&&
-  sw.includes("Update 1.3.68:"),"PWA release version synchronized");
-console.log("FLIP-13 PASS: close vs classic separated; safe 13/15 gate; escaped /n and \\n normalized on display; release 1.3.68.");
+assert.equal(published.filter(context.window.WD_FLIP_CAPABILITY.supports).length,15);
+assert.equal(published.filter(b=>!context.window.WD_FLIP_CAPABILITY.supports(b)).length,0,
+ "both SAR charts and insights qualify after renderer parity");
+require("./flipbook-release-contract.cjs").assertFlipbookRelease({version:v,html,sw,childHtml});
+console.log("FLIP-13 PASS: close vs classic separated; safe 15/15 gate; escaped /n and \\n normalized on display; canonical release verified.");

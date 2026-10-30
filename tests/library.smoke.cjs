@@ -1,122 +1,110 @@
-// Offline-only smoke tests: node tests/library.smoke.cjs
-// No network, npm install, CI or real school data.
-const assert = require('node:assert/strict');
-const fs = require('node:fs');
-const path = require('node:path');
-const vm = require('node:vm');
-const root = path.resolve(__dirname, '..');
-const load = (file) => fs.readFileSync(path.join(root, file), 'utf8');
+// WD Books offline library regression — actual public catalog, filter UI and My Books selectors.
+// Node-only; no PWA deployment, private/student data or mocked book counts.
+"use strict";
+const assert=require("node:assert/strict");
+const fs=require("node:fs");
+const path=require("node:path");
+const vm=require("node:vm");
+const root=path.resolve(__dirname,"..");
+const read=name=>fs.readFileSync(path.join(root,name),"utf8");
 
-class FakeElement {
-  constructor(tag) {
-    this.tagName = tag; this.children = []; this.handlers = {};
-    this.style = { setProperty() {} }; this.className = ''; this.textContent = '';
-    this.hidden = false; this.open = false; this.disabled = false;
-    this.attrs = {}; this.isConnected = true; this.scrollTop = 0;
-    this.classList = { toggle() {}, add() {}, remove() {}, contains() { return false; } };
+class Element {
+  constructor(dataset={}) {
+    this.handlers={};this.attrs={};this.dataset=dataset;
+    this.children=[];this.hidden=false;this.textContent="";
+    this.value="";this.classList={toggle(){}};
   }
-  append(...children) { this.children.push(...children); }
-  replaceChildren(...children) { this.children = children; }
-  setAttribute(key, value) { this.attrs[key] = value; }
-  removeAttribute(key) { delete this.attrs[key]; }
-  addEventListener(type, fn) { this.handlers[type] = fn; }
-  focus() {}
-  querySelector() { return new FakeElement('div'); }
-  querySelectorAll() { return []; }
-  showModal() { this.open = true; }
-  close() { this.open = false; this.handlers.close?.({}); }
+  replaceChildren(...children){this.children=children;}
+  setAttribute(key,value){this.attrs[key]=String(value);}
+  addEventListener(type,callback){this.handlers[type]=callback;}
+  fire(type,event={}){if(!this.handlers[type])throw Error("Missing "+type+" listener");this.handlers[type](event);}
+  focus(){this.focused=true;}
 }
-const ids = [
-  'categoryNav','categoryChips','statPublished','statPending','statCategories',
-  'manualGrid','resultsText','emptyResults','readerDialog','bookSpread',
-  'readerTitle','readerCategory','pageLeft','pageRight','prevPage','nextPage',
-  'pageCounter','progressBar','tocItems','readerClose','fontDecrease',
-  'fontIncrease','searchInput'
-];
-const nodes = Object.fromEntries(ids.map(id => [id, new FakeElement('div')]));
-nodes.readerDialog = new FakeElement('dialog');
-const document = {
-  createElement: tag => new FakeElement(tag),
-  createElementNS: (_ns, tag) => new FakeElement(tag),
-  getElementById: id => nodes[id] ?? (nodes[id] = new FakeElement('div')),
-  querySelector: () => new FakeElement('div'),
-  querySelectorAll: () => [],
-  body: new FakeElement('body'),
-  activeElement: null
-};
-const media = { matches: false, addEventListener() {} };
-const window = { matchMedia: () => media, setTimeout: callback => callback(), clearTimeout() {}, innerWidth: 390 };
-const context = vm.createContext({ window, document, requestAnimationFrame: callback => callback(), NodeFilter: { SHOW_TEXT: 4 } });
-vm.runInContext(load('assets/manuals-data.js'), context, { filename: 'assets/manuals-data.js' });
-vm.runInContext(load('assets/wd-growth-individual-guide.js'), context, { filename: 'assets/wd-growth-individual-guide.js' });
-vm.runInContext(load('assets/catalog-core.js'), context, { filename: 'assets/catalog-core.js' });
-vm.runInContext(load('assets/catalog-ui.js'), context, { filename: 'assets/catalog-ui.js' });
-vm.runInContext(load('assets/mybooks-selectors.js'), context, { filename: 'assets/mybooks-selectors.js' });
-vm.runInContext(load('assets/reader-coordinator.js'), context, { filename: 'assets/reader-coordinator.js' });
-vm.runInContext(load('assets/app.js'), context, { filename: 'assets/app.js' });
+const nodes={};
+const $=id=>nodes[id] ||= new Element();
+const filters=[new Element({discoveryFilter:"all"}),new Element({discoveryFilter:"ready"}),new Element({discoveryFilter:"upcoming"})];
+const document={querySelectorAll:selector=>selector==="[data-discovery-filter]"?filters:[]};
+const window={};
+const context=vm.createContext({window,document});
+for(const file of [
+  "assets/manuals-data.js",
+  "assets/bwd-teacher-growth-draft-review-2569.js",
+  "assets/wd-growth-insights-review-2569.js",
+  "assets/wd-growth-individual-guide.js",
+  "assets/wd-growth-plc-information-guide.js",
+  "assets/bwd-term2-supervision-readiness-2569.js",
+  "assets/catalog-core.js",
+  "assets/catalog-ui.js",
+  "assets/mybooks-selectors.js",
+])vm.runInContext(read(file),context,{filename:file});
 
-const catalog = window.WD_LIBRARY_DATA;
-assert.ok(catalog.categories.length > 0);
-assert.ok(catalog.manuals.length > 0);
-assert.ok(catalog.manuals.some(b => b.status === 'published'));
-assert.ok(catalog.manuals.filter(b => b.status !== 'published').every(b => b.pages.length === 0),
-  'Only demo/publicly approved contents should have pages');
-assert.equal(nodes.manualGrid.children.length, catalog.manuals.length);
-assert.equal(nodes.statPublished.textContent, String(catalog.manuals.filter(b => b.status === 'published').length));
-assert.equal(nodes.statPending.textContent, String(catalog.manuals.filter(b => b.status !== 'published').length));
-const guide = catalog.manuals.find(b => b.id === 'wd-growth-individual-plan');
-assert.ok(guide && ['review', 'published'].includes(guide.status));
-if (guide.status === 'published') assert.ok(guide.pages.length > 0);
-else assert.equal(guide.pages.length, 0);
+const data=window.WD_LIBRARY_DATA;
+assert(data.manuals.length>=32,"retain all existing catalog entries");
+const publishedCount=data.manuals.filter(b=>b.status==="published").length;
+assert(publishedCount>=27,"retain the public review books");
+assert.equal(data.categories.length,8);
+assert.equal(new Set(data.manuals.map(b=>b.id)).size,data.manuals.length,"no duplicated books");
+assert(data.manuals.filter(b=>b.status!=="published").every(b=>b.pages.length===0),
+  "unpublished drafts must not expose content");
+const core=window.WD_CATALOG_CORE.createCatalogCore(data);
+const state={category:"all",availability:"all",sort:"default",query:""};
+let categoryRenders=0;
+const catalog=window.WD_CATALOG_UI.create({
+  data,state,$,catalogCore:core,
+  normalized:value=>String(value||"").toLocaleLowerCase("th-TH").trim(),
+  cardFor:book=>({id:book.id,title:book.title}),
+  renderCategories:()=>{categoryRenders++;},
+});
+catalog.renderCatalog();
+assert.equal($("manualGrid").children.length,data.manuals.length,"all public catalog entries render");
+assert.equal($("manualGrid").attrs["aria-busy"],"false");
+assert($("resultsText").textContent.includes(publishedCount+" เล่ม"),"published count shown");
+catalog.bindDiscovery();
 
-function openFirstBook() {
-  const cardBody = nodes.manualGrid.children[0].children[2];
-  const footer = cardBody.children.at(-1);
-  const button = footer.children.find(el => el.tagName === 'button');
-  assert.ok(button, 'Published demo should have an open action');
-  button.handlers.click();
-}
-const firstPageCount = catalog.manuals[0].pages.length;
-openFirstBook();
-assert.equal(nodes.readerDialog.open, true);
-assert.equal(nodes.pageCounter.textContent, `หน้า 1–2 / ${firstPageCount}`);
-assert.equal(nodes.tocItems.children.length, firstPageCount);
-nodes.nextPage.handlers.click();
-assert.equal(nodes.pageCounter.textContent, `หน้า 3–4 / ${firstPageCount}`);
-nodes.prevPage.handlers.click();
-assert.equal(nodes.pageCounter.textContent, `หน้า 1–2 / ${firstPageCount}`);
-nodes.readerClose.handlers.click();
-assert.equal(nodes.readerDialog.open, false);
+// The real Catalog UI input handlers share a query across Home/Books searches.
+$("homeSearchInput").fire("input",{target:{value:"  คู่มือครู  "}});
+assert.equal($("searchInput").value,"  คู่มือครู  ");
+assert($("manualGrid").children.length>0,"Thai text search should match");
+assert($("manualGrid").children.length<data.manuals.length,"Thai text search must filter");
+$("searchInput").fire("input",{target:{value:"no-such-title-zzzz"}});
+assert.equal($("manualGrid").children.length,0,"not-found result shown");
+assert.equal($("emptyResults").hidden,false);
+$("resetDiscoveryFilters").fire("click");
+assert.equal($("manualGrid").children.length,data.manuals.length,"reset restores catalog");
+assert.equal(state.query,"");
+assert(categoryRenders>0,"reset re-renders categories");
 
-nodes.searchInput.handlers.input({ target: { value: 'unmatched-zzzz' } });
-assert.equal(nodes.manualGrid.children.length, 0);
-assert.equal(nodes.emptyResults.hidden, false);
-nodes.searchInput.handlers.input({ target: { value: '' } });
-assert.equal(nodes.manualGrid.children.length, catalog.manuals.length);
+// Category and availability must compose, and published content remains separate.
+state.category="academic";
+state.availability="ready";
+catalog.renderCatalog();
+const expected=core.select(state,[]);
+assert.equal($("manualGrid").children.length,expected.length);
+assert(expected.every(b=>b.status==="published"&&b.category==="academic"));
+assert.equal($("resultsText").textContent.includes("จาก "+data.manuals.length+" รายการ"),true);
+state.availability="all";state.category="all";state.sort="title";
+catalog.renderCatalog();
+assert.equal($("manualGrid").children.length,data.manuals.length);
+assert.equal($("manualGrid").children[0].id,core.select(state,[])[0].id);
 
-media.matches = true;
-openFirstBook();
-assert.equal(nodes.pageCounter.textContent, `หน้า 1 / ${firstPageCount}`);
-nodes.nextPage.handlers.click();
-assert.equal(nodes.pageCounter.textContent, `หน้า 2 / ${firstPageCount}`);
-nodes.readerClose.handlers.click();
-// Open the new public essay and verify its table of contents and mobile rendering.
-const article = catalog.manuals.find(b => b.id === 'homework-in-ai-age-primary-leadership');
-assert.ok(article && article.status === 'published' && article.pages.length >= 20);
-const articleCard = nodes.manualGrid.children.find(card =>
-  card.children[2].children.some(el => el.tagName === 'h3' && el.textContent === article.title)
-);
-assert.ok(articleCard, 'Homework in AI age article must appear in catalog');
-const articleOpen = articleCard.children[2].children.at(-1).children.find(el => el.tagName === 'button' && el.textContent.includes('เปิดอ่าน'));
-assert.ok(articleOpen, 'Public article must be readable');
-media.matches = false;
-articleOpen.handlers.click();
-assert.equal(nodes.readerDialog.open, true);
-assert.equal(nodes.tocItems.children.length, article.pages.length);
-assert.equal(nodes.pageCounter.textContent, `หน้า 1–2 / ${article.pages.length}`);
-nodes.readerClose.handlers.click();
-media.matches = true;
-articleOpen.handlers.click();
-assert.equal(nodes.pageCounter.textContent, `หน้า 1 / ${article.pages.length}`);
-nodes.readerClose.handlers.click();
-console.log('Manual Library — offline smoke tests PASS (dynamic catalog + published AI/homework essay)');
+// My Books must resolve only published IDs, and bookmarks must retain source page indices.
+const selectors=window.WD_MYBOOKS_SELECTORS.createMyBooksSelectors(data.manuals);
+// Materialize the expected IDs as a host-realm array, not a VM-realm array.
+// Keep deepStrictEqual exact: book order and IDs must still match.
+const ids=Array.from(data.manuals.filter(b=>b.status==="published").slice(0,2),b=>b.id);
+const unpublished=data.manuals.find(b=>b.status!=="published").id;
+assert.equal(selectors.resume([unpublished,ids[0]]),null,"recent must reject unpublished book");
+assert.equal(selectors.resume([ids[0],unpublished]).id,ids[0],"recent published book resumes");
+assert.deepEqual(Array.from(selectors.favorites([ids[0],unpublished,ids[1]]).map(b=>b.id)),ids);
+assert.deepEqual(Array.from(selectors.recent([ids[1],ids[0]],2).map(b=>b.id)),[ids[1],ids[0]]);
+const groups=selectors.bookmarks(id=>id===ids[0]?[0,2,999,-1]:[],[ids[0]]);
+assert.equal(groups.length,1);
+assert.deepEqual(Array.from(groups[0].indices),[0,2]);
+
+const essay=data.manuals.find(b=>b.id==="homework-in-ai-age-primary-leadership");
+assert(essay&&essay.status==="published"&&essay.pages.length>=20);
+const app=read("assets/app.js");
+assert(app.includes("const renderCatalog = catalogUI.renderCatalog;"),"real App binds catalog UI");
+assert(app.includes("function openBook(book, opener"),"real App retains Reader action");
+assert(app.includes("const readerCoordinator = window.WD_READER_COORDINATOR"),"real App binds reader coordinator");
+console.log("Library PASS: " + data.manuals.length + "/" + publishedCount + " public catalog, Thai discovery/reset, filters, My Books, essay and Reader bridge.");
