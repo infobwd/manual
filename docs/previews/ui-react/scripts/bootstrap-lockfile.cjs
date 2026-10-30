@@ -18,14 +18,20 @@ if(fs.existsSync(lockPath)){
   console.error("Review the existing lockfile or remove it deliberately in the isolated preview before regenerating.");
   process.exit(2);
 }
-const npm=process.platform==="win32"?"npm.cmd":"npm";
+// On Windows, pass a fixed command string (no argv) to cmd.exe.
+ // Node 24 deprecates shell:true together with a separate argv array (DEP0190).
+const isWindows=process.platform==="win32";
+const command=isWindows
+  ? "npm install --package-lock-only --ignore-scripts --no-audit --no-fund"
+  : "npm";
+const args=isWindows?[]:[
+  "install","--package-lock-only","--ignore-scripts","--no-audit","--no-fund",
+];
 const now=Date.now();
 console.log("Generating package-lock.json from the REAL npm registry and package.json in:",root);
-const result=spawnSync(npm,[
-  "install","--package-lock-only","--ignore-scripts","--no-audit","--no-fund",
-],{
+const result=spawnSync(command,args,{
   cwd:root,encoding:"utf8",timeout:180000,maxBuffer:1024*1024,
-  shell:process.platform==="win32",env:{...process.env,CI:"false"}
+  shell:isWindows,env:{...process.env,CI:"false"}
 });
 if(result.stdout)process.stdout.write(result.stdout);
 if(result.stderr)process.stderr.write(result.stderr);
