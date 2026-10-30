@@ -1,6 +1,45 @@
 # UI-MIG-02 isolated framework spike
 
-This is **source-only** React 19 / TypeScript / Vite / Tailwind v4 and locally copied shadcn-style Button/Card primitives. It is not a built or deployed preview. No real catalog, storage, Reader, Audio, SW or PWA integration.
+This is an **isolated React 19 / TypeScript / Vite / Tailwind v4 preview**, using shadcn-style Button/Card primitives. User-reported Windows `npm ci`, `npm run build`, built-path checks and initial Chrome screenshots **PASS on 30 Oct 2026**. Later source changes (Bookshelf direct QA links and seven-view capture) need a new local build/screenshot run before visual acceptance. No real catalog, storage, Reader, Audio, SW or PWA integration; **not merged or deployed**.
+
+## Windows Gate 2 evidence — confirmed 30 Oct 2026
+
+The user supplied Windows Terminal screenshots from `D:\wd-books-manual\docs\previews\ui-react` confirming:
+
+| Item | User terminal outcome |
+|---|---|
+| `node scripts/gate2-evidence.cjs` native source tests | PASS |
+| `node scripts/bootstrap-lockfile.cjs` | PASS — genuine npm lockfile with **166 entries** |
+| `node scripts/gate2-evidence.cjs --install-build` | `npm ci` **PASS**, TypeScript/Vite **PASS**, Vite dist nested-path contracts **PASS** |
+| Initial `node scripts/capture-responsive.cjs` | `CAPTURED` **4/4**: phone 390×844, tablet 1024×768, desktop 1366×768, desktop 1920×1080 |
+| Real iPhone/iPad and visual inspection of PNGs | **NOT TESTED** — the terminal screenshots do not contain the captured UI images |
+
+**Important:** The first screenshot script captured the **Home** view at four viewports, not the Category-first Bookshelf. This branch now includes a second-pass capture script (seven cases) and a QA-only URL state parser in the React sample. **The new seven-case script has not been run on Windows yet.** Do not call Visual Gate PASS until actual new PNGs are inspected. Source contracts for the updated preview and screenshot matrix passed **7/7 in a JavaScript harness**, not a fresh Windows Vite build.
+
+Node.js v24 printed `DEP0190` because of shell commands with separate arguments; the updated npm wrappers now pass **fixed commands without a separate arguments array** on Windows, but this adjustment awaits a Windows rerun. Original `package-lock.json` exists **only in the user's local checkout** (not yet committed to Draft PR #208).
+
+### Second-pass Windows QA (existing local `test/react-category`)
+
+```powershell
+cd D:\wd-books-manual
+git switch test/react-category
+git status --short
+git pull --ff-only
+cd docs\previews\ui-react
+# Lockfile already generated locally — DO NOT run bootstrap-lockfile again.
+node scripts\gate2-evidence.cjs --install-build
+node scripts\capture-responsive.cjs
+```
+
+Expected new captures under `%TEMP%\wd-books-ui-mig02-captures` include `phone-books-390x844.png`, `tablet-books-1024x768.png`, `desktop-books-1366x768.png`, `desktop-books-night-1366x768.png`, and `desktop-category-1920x1080.png`. The script verifies React's Bookshelf is mounted before capture, and reports actual PNG dimensions alongside requested sizes; `CAPTURED_SIZE_REVIEW` means the browser produced a different image size. **Capturing images is not visual acceptance.**
+
+For manual review after a successful Build, run `npm run preview`, open the local URL printed by Vite and use preview-only URLs:
+- `/?view=books` — category-first Bookshelf
+- `/?view=books&theme=night` — Bookshelf night theme
+- `/?view=books&category=งานบริหาร` — category filtering
+- `/?view=settings&theme=sepia` — sample typography/sepia
+
+None of these URL parameters store state or access production. The tracked `docs/previews/ui-react/.gitignore` excludes `node_modules/` and `dist/`; it deliberately does **not** ignore `package-lock.json`.
 
 ## Windows workflow from the existing WD Books clone — 30 Oct 2026
 
