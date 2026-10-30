@@ -119,6 +119,8 @@ test("R3 keyboard Enter vs mouse submit diagnostic must never hide a failed step
     'record("favorite_filter",favorites)',
     'record("theme_switching",night)',
     'status:"NOT_TESTED"',
+    'report.interaction={status:"FAIL",checks:[],snapshots:[]}',
+    'report.interaction.error=String(error)',
     'evidence.checks.every(x=>x.status==="PASS")?"PASS":"FAIL"'
   ]) assert.ok(capture.includes(token),token);
   assert.doesNotMatch(capture,/if\s*\(!enterSubmitted\)\s*throw/,
