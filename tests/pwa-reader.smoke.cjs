@@ -66,6 +66,8 @@ function launch() {
   const context = vm.createContext({window,document,localStorage,sessionStorage,navigator,location});
   for(const file of [
     "assets/manuals-data.js",
+    "assets/bwd-teacher-growth-draft-review-2569.js",
+    "assets/wd-growth-insights-review-2569.js",
     "assets/wd-growth-individual-guide.js",
     "assets/wd-growth-plc-information-guide.js",
     "assets/bwd-term2-supervision-readiness-2569.js",
@@ -83,8 +85,8 @@ function launch() {
 const a=launch(), exp=a.window.WD_EXPERIENCE;
 const books=a.window.WD_LIBRARY_DATA.manuals;
 const published=books.filter(book=>book.status==="published");
-assert.equal(books.length,23,"all four public catalog modules must load");
-assert.equal(published.length,18,"public published books present");
+assert.equal(books.length,32,"all six public catalog modules must load");
+assert.equal(published.length,27,"public published books present");
 assert.equal(a.get("appSplash").hidden,true,"splash dismisses");
 const first=published[0], id=first.id;
 const draft=books.find(book=>book.status!=="published");
@@ -133,4 +135,4 @@ const app=read("assets/app.js");
 assert(app.includes("window.WD_EXPERIENCE?.bindReader?.("));
 assert(app.includes('dialog.addEventListener("close"'));
 assert(app.includes('$("readerClose").addEventListener("click"'));
-console.log("PWA reader PASS: 23/18 catalog, favorites/bookmarks/history/progress, resume and pull-refresh blocked in Reader.");
+console.log("PWA reader PASS: 32/27 catalog, favorites/bookmarks/history/progress, resume and pull-refresh blocked in Reader.");
