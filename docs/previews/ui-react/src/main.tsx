@@ -43,10 +43,10 @@ function initialPreviewState() {
 const previewStart = initialPreviewState();
 
 function BookCards({ items }: { items: CatalogBook[] }) {
-  return <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-    {items.map(book => <Card key={book.id} className="p-3">
+  return <div className="book-grid">
+    {items.map(book => <Card key={book.id} className="min-w-0 p-3">
       <div className="book-cover text-sm font-bold">{book.category}</div>
-      <h3 className="mt-3 font-semibold">{book.title}</h3>
+      <h3 className="book-title mt-3 font-semibold">{book.title}</h3>
       <p className="mt-1 text-xs opacity-70">{book.category}</p>
     </Card>)}
   </div>;
@@ -86,8 +86,8 @@ function App() {
   return <div data-theme={theme} className="min-h-screen bg-[var(--paper)] text-[var(--ink)]">
     <div className="shell">
       <header className="flex flex-wrap items-center justify-between gap-3">
-        <strong className="text-2xl">✳ WD Books</strong>
-        <span className="text-xs opacity-70">UI-MIG-02 · Isolated React preview</span>
+        <strong className="brand text-2xl">✳ WD Books</strong>
+        <span className="preview-label text-xs opacity-70">UI-MIG-02 · Isolated React preview</span>
       </header>
       <p className="mt-5 border-l-4 border-[var(--primary)] bg-[var(--hover)] p-3 text-sm">
         ข้อมูลตัวอย่างเท่านั้น · ไม่เชื่อมต่อ Reader, Audio, PWA หรือข้อมูลบนเครื่อง
@@ -195,7 +195,7 @@ function App() {
       ] as const).map(({ id, label, icon: Icon }) =>
         <Button key={id} variant={view === id ? "default" : "ghost"}
           aria-current={view === id ? "page" : undefined}
-          onClick={() => navigate(id)} className="flex flex-col gap-0 px-3 text-xs">
+          onClick={() => navigate(id)} className="nav-item flex min-w-0 flex-col gap-0 px-2 text-xs">
           <Icon aria-hidden="true" size={19} />{label}
         </Button>)}
     </nav>
