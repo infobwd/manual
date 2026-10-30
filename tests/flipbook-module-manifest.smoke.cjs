@@ -35,9 +35,10 @@ for(const file of bookSources)vm.runInNewContext(read("assets/"+file),scope,{tim
 vm.runInNewContext(read("assets/flipbook-capability.js"),scope,{timeout:3000});
 const books=scope.window.WD_LIBRARY_DATA?.manuals||[];
 const published=books.filter(book=>book.status==="published");
+assert.equal(books.length,32,"current full public catalog includes new review books");
 assert.equal(new Set(books.map(book=>book.id)).size,books.length,"public catalog must have unique IDs");
-assert.equal(published.length,18,"current published catalog must include all enrichments");
-assert.equal(published.filter(book=>scope.window.WD_FLIP_CAPABILITY.supports(book)).length,18,
+assert.equal(published.length,27,"current published catalog must include all enrichments");
+assert.equal(published.filter(book=>scope.window.WD_FLIP_CAPABILITY.supports(book)).length,27,
  "all current published books have data-safe Flipbook support");
 console.log("FLIP-14 modules PASS: parent/iframe/SW share "+bookSources.length+
  " ordered book sources; "+books.length+" titles, "+published.length+" published, all eligible.");
