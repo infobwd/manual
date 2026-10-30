@@ -11,6 +11,8 @@ const flipCss = read("experiments/flipbook-pilot/corner.css");
 const gateSource = read("assets/flipbook-capability.js");
 const modules = [
   "assets/manuals-data.js",
+  "assets/bwd-teacher-growth-draft-review-2569.js",
+  "assets/wd-growth-insights-review-2569.js",
   "assets/wd-growth-individual-guide.js",
   "assets/wd-growth-plc-information-guide.js",
   "assets/bwd-term2-supervision-readiness-2569.js"
@@ -31,8 +33,8 @@ vm.runInNewContext(gateSource, scope);
 const books = scope.window.WD_LIBRARY_DATA.manuals;
 const publicBooks = books.filter(book => book.status === "published");
 const supports = scope.window.WD_FLIP_CAPABILITY.supports;
-assert.equal(publicBooks.length, 18, "full public catalog includes module-loaded guides");
-assert.equal(publicBooks.filter(supports).length, 18, "all published public schemas supported");
+assert.equal(publicBooks.length, 27, "full public catalog includes module-loaded guides");
+assert.equal(publicBooks.filter(supports).length, 27, "all published public schemas supported");
 for (const id of ["wd-growth-individual-plan", "wd-growth-plc-information-to-action-2569",
   "bwd-term2-supervision-readiness-2569"]) {
   assert(publicBooks.some(book => book.id === id && supports(book)), id + " must open Flipbook");
@@ -142,4 +144,4 @@ assert(flipJs.includes("if (!appendPaired(label, headline))") &&
   "insight heading pairs with its first headline and retains fallback");
 
 assert(!flipJs.includes("localStorage.setItem("), "no duplicated reader storage");
-console.log("FLIP-14 PASS: 18/18 manuals, 4 SAR charts, 5 insights, page-fit keep-with-next measured fixtures, strict fallback.");
+console.log("FLIP-14 PASS: 27/27 manuals, 4 SAR charts, 5 insights, page-fit keep-with-next measured fixtures, strict fallback.");
