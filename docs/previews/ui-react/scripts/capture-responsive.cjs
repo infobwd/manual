@@ -260,9 +260,16 @@ async function main() {
       await delay(100);
     }
     assert(debugPort,"Chrome did not create DevToolsActivePort");
-    const targets=await getJson("http://127.0.0.1:"+debugPort+"/json/list");
-    const page=targets.find(t=>t.type==="page"&&t.webSocketDebuggerUrl);
-    assert(page,"Chrome CDP page target missing");
+    let page=null;
+    for(let i=0;i<30;i++) {
+      try {
+        const targets=await getJson("http://127.0.0.1:"+debugPort+"/json/list");
+        page=targets.find(t=>t.type==="page"&&t.webSocketDebuggerUrl);
+        if(page) break;
+      } catch { /* Chrome DevTools startup race; bounded retry. */ }
+      await delay(100);
+    }
+    assert(page,"Chrome CDP page target missing after startup retries");
     cdp=await connectCdp(page.webSocketDebuggerUrl);
     await cdp.call("Page.enable");
     await cdp.call("Runtime.enable");
