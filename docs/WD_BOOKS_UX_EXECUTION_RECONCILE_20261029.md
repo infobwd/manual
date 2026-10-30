@@ -1,3 +1,8 @@
+# WD Books — Execution Reconciliation & UI-MIG-01R2 (29 ต.ค. 2569)
+
+**Parent:** [Master Reader UX Roadmap](WD_BOOKS_READER_UX_ROADMAP_2569.md).
+**Baseline:** `main` at `ce57717e26b46a6ba219807b0b501f70531c5b21`, Production PWA source v1.3.68.
+**Status:** Read-only reconciliation + *isolated* responsive desktop preview. **No Production cutover.**
 
 ## 30 ต.ค. 2569 — งานต่อหลัง FLIP-14 Node Gate
 
@@ -5,12 +10,6 @@
 - **UI-MIG-01R2 PR #206:** Design preview Category-first และอุปกรณ์ภาพในเครื่องยัง Draft; การตรวจรับภาพหลายอุปกรณ์ยัง OPEN.
 - **UI-MIG-02R2 PR #208:** React/TS/Vite/Tailwind candidate บน PR #207 → #173; เพิ่มเครื่องมือสร้าง npm-generated lockfile, built-dist relative-path checks และรายงาน Gate2 แบบ PASS/FAIL/NOT_RUN เพื่อรันทดสอบบนเครื่อง Windows จาก Clone เดิม.
 - **ลำดับต่อไป:** ให้ผ่าน React source tests → npm-generated lockfile → `npm ci`/TypeScript/Vite build → built subpath contract → browser/keyboard/Responsive ก่อนตัดสินใจย้าย UI. ห้ามย้าย Reader/Audio/PWA ในรอบ React Prototype. ไม่มีผลเปลี่ยน Production v1.3.68.
-
-# WD Books — Execution Reconciliation & UI-MIG-01R2 (29 ต.ค. 2569)
-
-**Parent:** [Master Reader UX Roadmap](WD_BOOKS_READER_UX_ROADMAP_2569.md).
-**Baseline:** `main` at `ce57717e26b46a6ba219807b0b501f70531c5b21`, Production PWA source v1.3.68.
-**Status:** Read-only reconciliation + *isolated* responsive desktop preview. **No Production cutover.**
 
 ## 1. Reconciled status — never confuse MERGED with QA PASS
 
