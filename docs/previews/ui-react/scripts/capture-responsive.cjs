@@ -190,42 +190,129 @@ async function navigate(cdp,base,scene) {
   await delay(80);
 }
 const { checkScene } = require("./responsive-checks.cjs");
+// Capture diagnostic state from this STATIC sample only; never include user records.
+async function interactionSnapshot(cdp,stage) {
+  const state=await evaluate(cdp,"JSON.stringify((function(){"+
+    "const h=document.getElementById('reactHomeSearch');"+
+    "const b=document.getElementById('reactBookSearch');"+
+    "return {url:location.search,activeId:document.activeElement?.id||null,"+
+    "homeInput:h?.value??null,booksInput:b?.value??null,"+
+    "homeHeading:!!document.querySelector('main .home-search'),"+
+    "bookshelfHeading:!!document.getElementById('bookshelfTitle'),"+
+    "cardCount:document.querySelectorAll('.book-grid > *').length,"+
+    "theme:document.querySelector('[data-theme]')?.getAttribute('data-theme')};})())");
+  return {stage,...JSON.parse(state)};
+}
+async function maybeReach(cdp,expression,description) {
+  try {await until(cdp,expression,description);return true;}
+  catch {return false;}
+}
+async function clickWithMouse(cdp,selector) {
+  const rect=JSON.parse(await evaluate(cdp,
+    "JSON.stringify((function(){const e=document.querySelector("+JSON.stringify(selector)+");"+
+    "if(!e)return null;const b=e.getBoundingClientRect();"+
+    "return {x:b.x+b.width/2,y:b.y+b.height/2};})())"));
+  if(!rect)throw new Error("Click target missing: "+selector);
+  await cdp.call("Input.dispatchMouseEvent",{type:"mouseMoved",x:rect.x,y:rect.y});
+  await cdp.call("Input.dispatchMouseEvent",{type:"mousePressed",x:rect.x,y:rect.y,
+    button:"left",clickCount:1});
+  await cdp.call("Input.dispatchMouseEvent",{type:"mouseReleased",x:rect.x,y:rect.y,
+    button:"left",clickCount:1});
+}
 async function interactions(cdp,base) {
-  const evidence={status:"FAIL",checks:[]};
+  const evidence={status:"FAIL",checks:[],snapshots:[]};
   const record=(name,ok)=>{evidence.checks.push({name,status:ok?"PASS":"FAIL"});};
-  await navigate(cdp,base,{name:"interaction-home",width:390,height:844,view:"home",theme:"light"});
-  // Genuine CDP Tab keyboard event: first focusable control is the Home search.
+  const note=async stage=>evidence.snapshots.push(await interactionSnapshot(cdp,stage));
+  const home={name:"interaction-home",width:390,height:844,view:"home",theme:"light"};
+  await navigate(cdp,base,home);
+  // Test keyboard Tab WITHOUT silently replacing it with programmatic focus.
   await cdp.call("Input.dispatchKeyEvent",{type:"keyDown",key:"Tab",code:"Tab",windowsVirtualKeyCode:9});
   await cdp.call("Input.dispatchKeyEvent",{type:"keyUp",key:"Tab",code:"Tab",windowsVirtualKeyCode:9});
-  record("keyboard_tab_home_search",await evaluate(cdp,
-    "document.activeElement?.id==='reactHomeSearch'"));
-  record("keyboard_focus_visible",await evaluate(cdp,
+  const focused=await evaluate(cdp,"document.activeElement?.id==='reactHomeSearch'");
+  record("keyboard_tab_home_search",focused);
+  record("keyboard_focus_visible",focused&&await evaluate(cdp,
     "getComputedStyle(document.activeElement).outlineStyle!=='none'"));
+  await note("after_tab");
+  // If the Tab simulation missed its target, preserve that FAIL but continue
+  // with an explicit focus, allowing Enter-vs-React to be isolated.
+  if(!focused)await evaluate(cdp,"document.getElementById('reactHomeSearch').focus()");
   await cdp.call("Input.insertText",{text:"ครู"});
-  await cdp.call("Input.dispatchKeyEvent",{type:"keyDown",key:"Enter",code:"Enter",windowsVirtualKeyCode:13});
-  await cdp.call("Input.dispatchKeyEvent",{type:"keyUp",key:"Enter",code:"Enter",windowsVirtualKeyCode:13});
-  await until(cdp,"!!document.getElementById('bookshelfTitle')","Thai Home search submit");
-  record("thai_search",await evaluate(cdp,
+  const typed=await maybeReach(cdp,
+    "document.getElementById('reactHomeSearch')?.value==='ครู'","Thai home typing");
+  record("thai_home_input",typed);
+  await note("before_enter");
+  // Chrome dispatches Enter as rawKeyDown + char + keyUp, not keyDown alone.
+  // The char event is needed for native default form submission in Chromium.
+  await cdp.call("Input.dispatchKeyEvent",{type:"rawKeyDown",key:"Enter",code:"Enter",
+    windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});
+  await cdp.call("Input.dispatchKeyEvent",{type:"char",text:"\r",unmodifiedText:"\r",
+    key:"Enter",code:"Enter",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});
+  await cdp.call("Input.dispatchKeyEvent",{type:"keyUp",key:"Enter",code:"Enter",
+    windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});
+  const enterSubmitted=await maybeReach(cdp,
+    "!!document.getElementById('bookshelfTitle')","Thai Home Enter submit");
+  record("thai_enter_submit",enterSubmitted);
+  await note("after_enter");
+  if(enterSubmitted)record("thai_enter_filtered_result",await evaluate(cdp,
     "document.querySelectorAll('.book-grid > *').length===1"));
-  // Clear search through native value setter + input event (React controlled input).
-  await evaluate(cdp,"(function(){const e=document.getElementById('reactBookSearch');" +
-    "Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(e,'');" +
+  else evidence.checks.push({name:"thai_enter_filtered_result",status:"NOT_TESTED",
+    reason:"Enter did not navigate to Bookshelf"});
+  // Independent mouse path distinguishes a broken submit handler from a
+  // synthetic keyboard event defect. A mouse success cannot mask Enter FAIL.
+  await navigate(cdp,base,home);
+  await evaluate(cdp,"document.getElementById('reactHomeSearch').focus()");
+  await cdp.call("Input.insertText",{text:"ครู"});
+  const mouseTyped=await maybeReach(cdp,
+    "document.getElementById('reactHomeSearch')?.value==='ครู'","Thai click typing");
+  record("thai_mouse_input",mouseTyped);
+  await note("before_mouse_submit");
+  await clickWithMouse(cdp,".home-search button[type=submit]");
+  const clickSubmitted=await maybeReach(cdp,
+    "!!document.getElementById('bookshelfTitle')","Thai Home mouse submit");
+  record("thai_mouse_submit",clickSubmitted);
+  await note("after_mouse_submit");
+  if(!clickSubmitted){
+    for(const name of ["thai_mouse_filtered_result","clear_query",
+      "favorite_filter","category_and_favorite_intersection","theme_switching"]){
+      evidence.checks.push({name,status:"NOT_TESTED",
+        reason:"Bookshelf never rendered after independent mouse submit"});
+    }
+    return evidence;
+  }
+  record("thai_mouse_filtered_result",await evaluate(cdp,
+    "document.querySelectorAll('.book-grid > *').length===1"));
+  // Native setter+input dispatch is the React controlled-input path.
+  await evaluate(cdp,"(function(){const e=document.getElementById('reactBookSearch');"+
+    "Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(e,'');"+
     "e.dispatchEvent(new Event('input',{bubbles:true}));return true;})()");
-  await until(cdp,"document.querySelectorAll('.book-grid > *').length===4","clear query");
-  await evaluate(cdp,"[...document.querySelectorAll('.catalog-tools button')].find(b=>b.textContent.trim()==='รายการโปรด').click()");
-  await until(cdp,"document.querySelectorAll('.book-grid > *').length===2","favorites selected");
-  record("favorite_filter",await evaluate(cdp,
-    "document.querySelectorAll('.book-grid > *').length===2"));
-  await evaluate(cdp,"[...document.querySelectorAll('.catalog-category')].find(b=>b.textContent.trim()==='งานบริหาร').click()");
-  await until(cdp,"document.querySelector('.catalog-empty')!==null","favorite/category empty state");
-  record("category_and_favorite_intersection",await evaluate(cdp,
-    "document.querySelectorAll('.book-grid > *').length===0"));
-  await evaluate(cdp,"[...document.querySelectorAll('.bottom-nav button')].find(b=>b.textContent.trim()==='ตั้งค่า').click()");
-  await until(cdp,"document.querySelector('h1')?.textContent==='ตั้งค่าการอ่าน'","settings navigation");
-  await evaluate(cdp,"[...document.querySelectorAll('main button')].find(b=>b.textContent.trim()==='กลางคืน').click()");
-  await until(cdp,"document.querySelector('[data-theme]')?.getAttribute('data-theme')==='night'","night theme");
-  record("theme_switching",await evaluate(cdp,
-    "document.querySelector('[data-theme]')?.getAttribute('data-theme')==='night'"));
+  const queryCleared=await maybeReach(cdp,
+    "document.querySelectorAll('.book-grid > *').length===4","clear query");
+  record("clear_query",queryCleared);
+  if(!queryCleared){await note("after_clear_fail");return evidence;}
+  await evaluate(cdp,
+    "[...document.querySelectorAll('.catalog-tools button')].find(b=>b.textContent.trim()==='รายการโปรด').click()");
+  const favorites=await maybeReach(cdp,
+    "document.querySelectorAll('.book-grid > *').length===2","favorites selected");
+  record("favorite_filter",favorites);
+  if(!favorites){await note("after_favorites_fail");return evidence;}
+  await evaluate(cdp,
+    "[...document.querySelectorAll('.catalog-category')].find(b=>b.textContent.trim()==='งานบริหาร').click()");
+  const empty=await maybeReach(cdp,
+    "document.querySelector('.catalog-empty')!==null","favorite/category empty state");
+  record("category_and_favorite_intersection",empty);
+  if(!empty){await note("after_category_fail");return evidence;}
+  await evaluate(cdp,
+    "[...document.querySelectorAll('.bottom-nav button')].find(b=>b.textContent.trim()==='ตั้งค่า').click()");
+  const settings=await maybeReach(cdp,
+    "document.querySelector('h1')?.textContent==='ตั้งค่าการอ่าน'","settings navigation");
+  record("settings_navigation",settings);
+  if(!settings){await note("after_settings_fail");return evidence;}
+  await evaluate(cdp,
+    "[...document.querySelectorAll('main button')].find(b=>b.textContent.trim()==='กลางคืน').click()");
+  const night=await maybeReach(cdp,
+    "document.querySelector('[data-theme]')?.getAttribute('data-theme')==='night'","night theme");
+  record("theme_switching",night);
+  await note("final");
   evidence.status=evidence.checks.every(x=>x.status==="PASS")?"PASS":"FAIL";
   return evidence;
 }
