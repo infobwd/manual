@@ -46,6 +46,8 @@ The run also exercises Thai Home search via CDP text input and Enter, filter fav
 | Synthetic pure responsive tests | PASS 7/7 (in-process JS) | Correct PASS fixture and deliberate FAIL fixtures |
 | UI source contract suite | PASS 8/8 (in-process JS) | Updated content asserted without React DOM |
 | Chrome CDP script syntax | PASS (V8 compilation) | Parses as JavaScript, no actual browser executed |
+| Standalone CDP protocol smoke | PASS (Chromium 144 / Node 22 test container) | Minimal HTML with viewport meta: CSS innerWidth/clientWidth/visual viewport 390px and PNG 390×844. **Not the built React app.** |
+| Theme text/button/focus token contrast | PASS (numeric token comparison) | White/primary button ratio ≥5.57:1; focus ring against light surface 5.32:1, sepia surface 6.44:1, night surface 7.45:1. Actual rendered UI/keyboard still OPEN. |
 | Native Node 24 full source suite | **NOT TESTED** | Re-run on Windows |
 | `npm ci` / TypeScript / Vite latest R3 build | **NOT TESTED** | Re-run on Windows |
 | CDP browser PNG/viewport metrics | **NOT TESTED** | No live browser result yet; original PNGs were from R2 |
