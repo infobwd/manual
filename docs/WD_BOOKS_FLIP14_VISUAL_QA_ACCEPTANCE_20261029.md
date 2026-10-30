@@ -128,6 +128,19 @@
 
 **Gate สำคัญ:** `18/18 PASS` จากผู้ใช้หมายถึง **18 ชุดทดสอบ Node** ก่อนอัปเดตต้นทางนี้ ไม่ใช่จำนวนหนังสือ และใช้ยืนยัน Node Gate ของเวอร์ชันเก่าเท่านั้น. **Windows 18/18 หลังซิงก์ main v1.3.73 และ 27 เล่มยัง NOT TESTED**. อย่าปิด Gate หรือ Merge/Deploy จนกว่าจะรันอีกครั้ง และตรวจภาพ/เสียง/PWA ตามแผน. เวอร์ชันที่ใช้เผยแพร่ในอนาคตต้องสูงกว่า v1.3.73 และสอดคล้องทั้งไฟล์อัปเดต PWA
 
+## Windows Node v24.13.1 retest on main v1.3.73 — 13/18 → corrected candidate
+
+ผู้ใช้รัน `node tests/wd-books-flip14-gate.cjs` หลังดึง `main` v1.3.73 และหนังสือ 32/27 เข้าสาขาแล้ว พบ **13 PASS / 5 FAIL** บน Windows Node v24.13.1. ภาพ Error ชี้ไปที่ `flipbook-default-paper`, `flipbook-close-book-label`, `flipbook-native-mobile-controls`, `flipbook-desktop-layout` และ `flipbook-closed-cover-category`. เหตุคือ assert/ค่าการอ้างอิงเลขเวอร์ชันเก่า **1.3.68** ไม่ตรงกับแหล่ง `assets/app-version.js` และ `sw.js` ที่เป็น **1.3.73**. พบความคลาดเคลื่อนจริงของข้อความเริ่มต้น Splash และ query cache-busting ของ `corner.html` ที่ยังเป็น **1.3.68**.
+
+**แก้ใน Draft PR #205 (ยังไม่เปลี่ยน Production):**
+- ซิงก์ข้อความเริ่มต้น `index.html#splashVersion` เป็น 1.3.73
+- ซิงก์ `corner.html` ทั้ง `corner.css`, `corner-model.js`, `corner.js` เป็น `?v=1.3.73`
+- เพิ่ม `tests/flipbook-release-contract.cjs` ตรวจจากเวอร์ชันมาตรฐานใน `app-version.js` แล้วเทียบกับ Splash, SW header/การ import เวอร์ชัน/การตั้งชื่อ Cache และ asset query ทั้ง 3; ไม่กำหนดเลข 1.3.73 ตายตัวใน tests
+- ปรับ Regression ทั้ง **5** ชุดให้เรียกสัญญาเดียวกัน แทนเงื่อนไข 1.3.68 ที่ล้าสมัย โดยคง Assertions ฟังก์ชันเดิมทั้งหมด
+- ตรวจรันตัวข้อทดสอบ 5 ชุดกับไฟล์สาขาล่าสุดใน **JavaScript compatibility harness PASS 5/5**; ทดสอบด้านลบพบว่าการเปลี่ยน Splash/SW/iframe ให้เป็นเวอร์ชันเก่าถูกปฏิเสธทุกกรณี
+
+**ขอบเขตหลักฐาน:** ยัง **NOT TESTED** Windows Node `18/18` หลังแก้ไฟล์เวอร์ชันชุดนี้ — ผู้ใช้ต้องดึงใหม่และรันซ้ำอีกครั้ง. เวอร์ชัน 1.3.73 เป็นเวอร์ชันของ `main` ปัจจุบัน ไม่ใช่เลขเวอร์ชันใหม่สำหรับการ Deploy FLIP-14 ในอนาคต; การ Merge/Release ต้องบัมป์เวอร์ชันตามเลขล่าสุดและเช็ก PWA อีกรอบ.
+
 ## A. เริ่มตรวจภาพบนเครื่อง Windows โดยไม่ Merge
 
 เครื่อง Windows มี repo ที่ `D:\wd-books-manual`, branch `test/flip14`. เปิด PowerShell:
