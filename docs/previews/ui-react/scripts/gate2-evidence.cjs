@@ -13,10 +13,22 @@ const full=process.argv.includes("--install-build");
 const entries=[];
 function run(label,command,args,timeout=60000){
   const now=Date.now();
-  const result=spawnSync(command,args,{
+  // Node 24 warns (DEP0190) when shell:true receives a separate argv array.
+  // Only the two fixed npm commands below may run through Windows cmd.exe.
+  const windowsNpm=process.platform==="win32"&&command===npm;
+  const key=args.join(" ");
+  const allowed={
+    "ci --no-audit --no-fund":"npm ci --no-audit --no-fund",
+    "run build":"npm run build",
+  };
+  if(windowsNpm&&!Object.hasOwn(allowed,key)){
+    throw new Error("Unsupported npm shell command in Gate 2 runner: "+key);
+  }
+  const invoked=windowsNpm?allowed[key]:command;
+  const invokedArgs=windowsNpm?[]:args;
+  const result=spawnSync(invoked,invokedArgs,{
     cwd:root,encoding:"utf8",timeout,maxBuffer:512*1024,
-    // npm.cmd is a batch wrapper on Windows; only fixed npm commands use a shell.
-    shell:process.platform==="win32"&&command===npm,
+    shell:windowsNpm,
     env:{...process.env,CI:"1"}
   });
   const status=result.status===0&&!result.error?"PASS":"FAIL";
