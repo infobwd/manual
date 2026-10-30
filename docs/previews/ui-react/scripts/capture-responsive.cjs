@@ -123,6 +123,10 @@ const matrix = [
   {name:"phone-books-430x932",width:430,height:932,view:"books",theme:"light"},
   {name:"tablet-books-768x1024",width:768,height:1024,view:"books",theme:"light"},
   {name:"tablet-books-1024x768",width:1024,height:768,view:"books",theme:"light"},
+  // CSS-width proxies for 1366px at 125/150/200% zoom; NOT real Chrome zoom.
+  {name:"zoom125-layout-proxy-1093x614",width:1093,height:614,view:"books",theme:"light",zoomLayoutProxy:1.25},
+  {name:"zoom150-layout-proxy-911x512",width:911,height:512,view:"books",theme:"light",zoomLayoutProxy:1.5},
+  {name:"zoom200-layout-proxy-683x384",width:683,height:384,view:"books",theme:"light",zoomLayoutProxy:2},
   {name:"desktop-books-1366x768",width:1366,height:768,view:"books",theme:"light"},
   {name:"desktop-books-night-1366x768",width:1366,height:768,view:"books",theme:"night"},
   {name:"desktop-category-1920x1080",width:1920,height:1080,view:"books",
@@ -280,7 +284,7 @@ async function main() {
         const status=problems.length ? "FAIL" : "PASS";
         report.cases.push({
           name:scene.name,view:scene.view,theme:scene.theme,
-          category:scene.category||"all",requested:{width:scene.width,height:scene.height},
+          category:scene.category||"all",zoom_layout_proxy_only:scene.zoomLayoutProxy||null,requested:{width:scene.width,height:scene.height},
           css_metrics:metrics,png:pngSize,checks:problems,status,file:filename
         });
         console.log(status,scene.name,"CSS",metrics.innerWidth+"/"+metrics.clientWidth+
