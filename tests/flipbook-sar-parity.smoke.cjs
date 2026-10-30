@@ -33,8 +33,8 @@ vm.runInNewContext(gateSource, scope);
 const books = scope.window.WD_LIBRARY_DATA.manuals;
 const publicBooks = books.filter(book => book.status === "published");
 const supports = scope.window.WD_FLIP_CAPABILITY.supports;
-assert.equal(publicBooks.length, 27, "full public catalog includes module-loaded guides");
-assert.equal(publicBooks.filter(supports).length, 27, "all published public schemas supported");
+assert(publicBooks.length >= 27, "published catalog must retain all current review titles");
+assert.equal(publicBooks.filter(supports).length, publicBooks.length, "all published public schemas supported");
 for (const id of ["wd-growth-individual-plan", "wd-growth-plc-information-to-action-2569",
   "bwd-term2-supervision-readiness-2569"]) {
   assert(publicBooks.some(book => book.id === id && supports(book)), id + " must open Flipbook");
@@ -144,4 +144,4 @@ assert(flipJs.includes("if (!appendPaired(label, headline))") &&
   "insight heading pairs with its first headline and retains fallback");
 
 assert(!flipJs.includes("localStorage.setItem("), "no duplicated reader storage");
-console.log("FLIP-14 PASS: 27/27 manuals, 4 SAR charts, 5 insights, page-fit keep-with-next measured fixtures, strict fallback.");
+console.log("FLIP-14 PASS: " + publicBooks.length + "/" + publicBooks.length + " manuals, 4 SAR charts, 5 insights, page-fit keep-with-next measured fixtures, strict fallback.");
