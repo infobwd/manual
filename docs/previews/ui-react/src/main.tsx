@@ -23,6 +23,25 @@ const books: CatalogBook[] = [
   { id: "sample-4", title: "คู่มือบริหารโรงเรียน", category: "งานบริหาร", favorite: false },
 ];
 
+// Visual QA only: deterministic screenshots can open the Bookshelf directly.
+// URL parameters never persist data and cannot select anything outside the
+// static preview's allowed views/themes/categories.
+function initialPreviewState() {
+  const params = new URLSearchParams(window.location.search);
+  const requestedView = params.get("view");
+  const view: View = requestedView === "books" || requestedView === "settings"
+    ? requestedView : "home";
+  const requestedTheme = params.get("theme");
+  const theme: Theme = requestedTheme === "sepia" || requestedTheme === "night"
+    ? requestedTheme : "light";
+  const requestedCategory = params.get("category");
+  const category = categories.some(item => item.id === requestedCategory)
+    ? requestedCategory! : "all";
+  const query = (params.get("query") || "").trim().slice(0, 120);
+  return {view, theme, category, query};
+}
+const previewStart = initialPreviewState();
+
 function BookCards({ items }: { items: CatalogBook[] }) {
   return <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
     {items.map(book => <Card key={book.id} className="p-3">
@@ -34,11 +53,11 @@ function BookCards({ items }: { items: CatalogBook[] }) {
 }
 
 function App() {
-  const [view, setView] = useState<View>("home");
-  const [theme, setTheme] = useState<Theme>("light");
-  const [query, setQuery] = useState("");
+  const [view, setView] = useState<View>(previewStart.view);
+  const [theme, setTheme] = useState<Theme>(previewStart.theme);
+  const [query, setQuery] = useState(previewStart.query);
   const [homeQuery, setHomeQuery] = useState("");
-  const [category, setCategory] = useState("all");
+  const [category, setCategory] = useState(previewStart.category);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [font, setFont] = useState(100);
   const bookshelfSearch = useRef<HTMLInputElement>(null);
