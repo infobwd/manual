@@ -115,6 +115,19 @@
 
 ดังนั้นสถานะ **FLIP-14 Node Regression Gate = PASS (user-confirmed)**. ภาพ Desktop SAR 160% ที่ได้รับหลังแก้ยืนยันการจัดกราฟและสรุปเฉพาะ spread นั้น ขณะที่ iPhone/iPad, NT/O-NET หน้าแสดงกราฟจริง, PWA/Offline/Audio และ full-device Visual Gate ยังคง **OPEN**. การรับรอง Node ไม่ใช่ใบอนุญาตให้ Merge/Deploy โดยอัตโนมัติ
 
+## การซิงก์ต้นทางล่าสุด 30 ต.ค. 2569 — เพิ่มหนังสือเป็น 27 เล่ม
+
+หลังผล Node Regression **18/18 PASS** ที่ผู้ใช้ยืนยันบนสาขาเก่า ตรวจพบว่ามีการเพิ่มหนังสือบน `main` ผ่านระบบอีกสาย และ `assets/app-version.js` เปลี่ยนเป็น **v1.3.73**. ได้ซิงก์ `main` เข้า **Draft PR #205** ด้วย merge commit ที่มีสอง parent โดยตรวจยืนยันว่าไฟล์แก้ไขของสองสาขา **ไม่ทับซ้อนกัน** (ไม่มีการ Merge PR เข้า Production)
+
+**ฐานข้อมูลปัจจุบัน (ประเมินจาก 6 public data modules บนสาขาที่ซิงก์แล้ว):**
+- Catalog ทั้งหมด **32 รายการ**, เผยแพร่ **27 เล่ม**
+- Flipbook eligibility **27/27** หลังใช้ capability renderer ของ PR #205
+- Parent `index.html` และ iframe `corner.html` โหลดทั้ง **6 public book sources** (manuals, F01/F02 review, WD Growth insights review, individual guide, PLC, term 2 supervision) โดยตรวจแหล่งข้อมูลครบถ้วน
+- แก้ QA `flipbook-module-manifest`, `flipbook-sar-parity`, `pwa-reader`, `library` ให้ตรวจ **32/27** และโมดูลใหม่ทั้งหมด
+- ใน JavaScript source harness ชุด module manifest, SAR renderer, PWA Experience และ Library filters **ผ่านทั้ง 4 ชุดที่ตรวจ** หลังการซิงก์; **ไม่ใช่ผลรัน Node 18 ชุดจริงบน Windows**
+
+**Gate สำคัญ:** `18/18 PASS` จากผู้ใช้หมายถึง **18 ชุดทดสอบ Node** ก่อนอัปเดตต้นทางนี้ ไม่ใช่จำนวนหนังสือ และใช้ยืนยัน Node Gate ของเวอร์ชันเก่าเท่านั้น. **Windows 18/18 หลังซิงก์ main v1.3.73 และ 27 เล่มยัง NOT TESTED**. อย่าปิด Gate หรือ Merge/Deploy จนกว่าจะรันอีกครั้ง และตรวจภาพ/เสียง/PWA ตามแผน. เวอร์ชันที่ใช้เผยแพร่ในอนาคตต้องสูงกว่า v1.3.73 และสอดคล้องทั้งไฟล์อัปเดต PWA
+
 ## A. เริ่มตรวจภาพบนเครื่อง Windows โดยไม่ Merge
 
 เครื่อง Windows มี repo ที่ `D:\wd-books-manual`, branch `test/flip14`. เปิด PowerShell:
