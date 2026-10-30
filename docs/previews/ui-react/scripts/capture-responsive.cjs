@@ -219,8 +219,7 @@ async function clickWithMouse(cdp,selector) {
   await cdp.call("Input.dispatchMouseEvent",{type:"mouseReleased",x:rect.x,y:rect.y,
     button:"left",clickCount:1});
 }
-async function interactions(cdp,base) {
-  const evidence={status:"FAIL",checks:[],snapshots:[]};
+async function interactions(cdp,base,evidence) {
   const record=(name,ok)=>{evidence.checks.push({name,status:ok?"PASS":"FAIL"});};
   const note=async stage=>evidence.snapshots.push(await interactionSnapshot(cdp,stage));
   const home={name:"interaction-home",width:390,height:844,view:"home",theme:"light"};
@@ -389,8 +388,9 @@ async function main() {
         console.error("FAIL",scene.name,String(error));
       }
     }
-    try { report.interaction=await interactions(cdp,url); }
-    catch(error) { report.interaction={status:"FAIL",error:String(error)}; }
+    report.interaction={status:"FAIL",checks:[],snapshots:[]};
+    try { await interactions(cdp,url,report.interaction); }
+    catch(error) { report.interaction.status="FAIL";report.interaction.error=String(error); }
     report.status=report.cases.length===matrix.length &&
       report.cases.every(x=>x.status==="PASS")&&report.interaction.status==="PASS"
       ? "PASS_BROWSER_SIMULATION_ONLY" : "FAIL";
