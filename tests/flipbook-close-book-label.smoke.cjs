@@ -47,6 +47,5 @@ assert.equal(published.length,15);
 assert.equal(published.filter(context.window.WD_FLIP_CAPABILITY.supports).length,15);
 assert.equal(published.filter(b=>!context.window.WD_FLIP_CAPABILITY.supports(b)).length,0,
  "both SAR charts and insights qualify after renderer parity");
-assert(/WD_BOOKS_VERSION = "1\.3\.68"/.test(v)&&html.includes("เวอร์ชัน 1.3.68")&&
-  sw.includes("Update 1.3.68:"),"PWA release version synchronized");
-console.log("FLIP-13 PASS: close vs classic separated; safe 15/15 gate; escaped /n and \\n normalized on display; release 1.3.68.");
+require("./flipbook-release-contract.cjs").assertFlipbookRelease({version:v,html,sw,childHtml});
+console.log("FLIP-13 PASS: close vs classic separated; safe 15/15 gate; escaped /n and \\n normalized on display; canonical release verified.");
