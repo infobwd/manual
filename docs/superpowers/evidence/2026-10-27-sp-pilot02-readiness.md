@@ -77,3 +77,14 @@ SP-PILOT-02 = BLOCKED FOR EXECUTION in this runtime due to GitHub DNS access. So
 - A corresponding FLIP-14 PR #205 now includes a **four-script book-source parity test** and a one-command **18-test Node regression collector**; the collector is source-validated but NOT EXECUTED against a full checkout due to GitHub DNS. Device QA remains independent.
 
 **Next required local evidence:** Reproducible lockfile + `npm ci`/build on network-enabled Windows worktree; review JSON reports and inspect iPhone/iPad/desktop visual screenshots; only then consider Gate 0/1/2 acceptance and merge sequencing. Production v1.3.68 remains unchanged.
+
+---
+
+## 30 Oct 2026 — SP-PILOT-06 Windows UI-MIG-02 Gate 2 preparation
+
+- User confirmed **WD Books FLIP-14 Windows Node 18/18 PASS again after keep-with-next**; this is the Flipbook workstream, not a React build approval. Production `main` remains v1.3.68, PR #205 still Draft, mobile/PWA acceptance outstanding.
+- Next independent track PR #208 (stacked on #207 → #173) has a new **genuine Windows npm lockfile bootstrap** (`scripts/bootstrap-lockfile.cjs`) for the isolated React preview, plus `tests/vite-dist-contract.test.mjs` for `./assets/` bundling and absence of a Service Worker.
+- Gate runner now executes source tests, optional clean npm `ci`, Vite build and built-path contract in sequence, exporting a structured report under the OS temp directory. Run only after real npm lockfile has been generated; never handcraft a lockfile.
+- Syntax and mocked outcome paths verified: no-lockfile fails when Build requested, success dispatches dist tests, failed Build blocks dependent checks. **Actual npm install/Vite Build on Windows is NOT YET RUN**. The execution container cannot resolve registry.npmjs.org (`EAI_AGAIN`).
+- Windows commands, isolated Git branch and evidence boundaries are detailed in PR #208's `docs/previews/ui-react/README.md`. No production source/read progress/Reader/PWA affected.
+
