@@ -45,3 +45,36 @@ test("Settings/themes and sample-data-only boundaries remain", () => {
   assert.doesNotMatch(main, /localStorage|sessionStorage|navigator\.serviceWorker|\bfetch\s*\(/);
   assert.doesNotMatch(main, /window\.WD_LIBRARY_DATA|wd-manual-reader-v2/);
 });
+
+test("QA-only deep links select the actual Bookshelf and validate allowed themes/categories", () => {
+  for (const token of [
+    'function initialPreviewState()',
+    'new URLSearchParams(window.location.search)',
+    'requestedView === "books" || requestedView === "settings"',
+    'requestedTheme === "sepia" || requestedTheme === "night"',
+    'categories.some(item => item.id === requestedCategory)',
+    '(params.get("query") || "").trim().slice(0, 120)',
+    'const previewStart = initialPreviewState();',
+    'useState<View>(previewStart.view)',
+    'useState<Theme>(previewStart.theme)',
+    'useState(previewStart.category)'
+  ]) assert.ok(main.includes(token), token);
+  assert.doesNotMatch(main, /localStorage|sessionStorage|navigator\.serviceWorker/);
+});
+test("Chrome viewport capture checks the Bookshelf, not Home alone", () => {
+  const capture = read("../scripts/capture-responsive.cjs");
+  for (const token of [
+    'name:"phone-books-390x844"',
+    'name:"tablet-books-1024x768"',
+    'name:"desktop-books-1366x768"',
+    'name:"desktop-books-night-1366x768"',
+    'name:"desktop-category-1920x1080"',
+    'target.searchParams.set("view",view)',
+    'target.searchParams.set("theme",theme)',
+    'png.readUInt32BE(16)',
+    'png.readUInt32BE(20)',
+    'SCREENSHOTS_CAPTURED_VIEWPORT_REVIEW'
+  ]) assert.ok(capture.includes(token), token);
+  assert.ok(capture.includes('id="bookshelfTitle"'),
+    "React Bookshelf DOM must be validated before taking screenshot");
+});
