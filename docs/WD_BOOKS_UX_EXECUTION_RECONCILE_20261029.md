@@ -1,3 +1,11 @@
+
+## 30 ต.ค. 2569 — งานต่อหลัง FLIP-14 Node Gate
+
+- **FLIP-14 PR #205:** ผู้ใช้ยืนยัน Windows Node Regression 18/18 PASS รอบล่าสุดหลังแก้ `keep-with-next`; Desktop SAR 160% ตามภาพเฉพาะ spread ผ่าน แต่ iPhone/iPad/audio/PWA/NT/O-NET ครบชุดยังไม่ผ่าน Visual/Device gate. PR #205 ยัง Draft และยังไม่มีการ Release.
+- **UI-MIG-01R2 PR #206:** Design preview Category-first และอุปกรณ์ภาพในเครื่องยัง Draft; การตรวจรับภาพหลายอุปกรณ์ยัง OPEN.
+- **UI-MIG-02R2 PR #208:** React/TS/Vite/Tailwind candidate บน PR #207 → #173; เพิ่มเครื่องมือสร้าง npm-generated lockfile, built-dist relative-path checks และรายงาน Gate2 แบบ PASS/FAIL/NOT_RUN เพื่อรันทดสอบบนเครื่อง Windows จาก Clone เดิม.
+- **ลำดับต่อไป:** ให้ผ่าน React source tests → npm-generated lockfile → `npm ci`/TypeScript/Vite build → built subpath contract → browser/keyboard/Responsive ก่อนตัดสินใจย้าย UI. ห้ามย้าย Reader/Audio/PWA ในรอบ React Prototype. ไม่มีผลเปลี่ยน Production v1.3.68.
+
 # WD Books — Execution Reconciliation & UI-MIG-01R2 (29 ต.ค. 2569)
 
 **Parent:** [Master Reader UX Roadmap](WD_BOOKS_READER_UX_ROADMAP_2569.md).
