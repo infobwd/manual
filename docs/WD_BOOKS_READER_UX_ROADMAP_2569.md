@@ -3,10 +3,22 @@
 **Plan ID:** WD-BOOKS-UX-2569  
 **Version:** 1.1 · 23 ตุลาคม 2569 (Master Roadmap reconciliation)  
 **Repository:** infobwd/manual (Public)  
-**Status:** WD Books 1.3.3 merged (PR #41); QA-DEVICE-GATE เปิดเตรียมตรวจรับ ยังไม่มีหลักฐานอุปกรณ์จริงครบ  
+**Status:** อ้างอิงสถานะ 29 ต.ค. ด้านล่าง: main v1.3.68 (PR #204), FLIP-14 Draft PR #205, UI-MIG Gate 0–2 ยังเปิด, QA ข้ามอุปกรณ์ยังไม่ครบ  
 **Product:** https://infobwd.github.io/manual/  
 **กลุ่มใช้งานหลัก:** ครู/บุคลากรโรงเรียนบน iPhone และ iPad, รองลงมาคือ Android และ Desktop  
 **Source of truth:** เอกสารนี้ใช้กำหนดลำดับงาน, acceptance และ rollout ของการปรับ UX ใน repo นี้ ไม่แก้เนื้อหาวิชาการหรือระบบ WD Growth ต้นทาง
+
+## สถานะดำเนินงานล่าสุด — 29 ตุลาคม 2569 (อ่านส่วนนี้ก่อนตารางเก่า)
+
+เอกสารนี้เป็น Master Roadmap เดียวต่อไป แต่รายการสถานะปี 23–26 ต.ค. ด้านล่างบางส่วนเป็น historical baseline: **UX-SEARCH-HIGHLIGHT, UX-DISCOVERY และ ARCH-01 บางส่วน Merge แล้ว** ไม่ใช่ TODO ใหม่. ใช้ [Execution Reconciliation 29 ต.ค.](WD_BOOKS_UX_EXECUTION_RECONCILE_20261029.md) เป็นทะเบียนสถานะล่าสุดก่อนดำเนินการ.
+
+- **Production source:** main v1.3.68 ผ่าน FLIP-13 (PR #204); Device QA บางส่วนยังค้าง ห้ามถือว่า Merge = Accepted.
+- **FLIP-14:** Draft PR #205 แก้ iframe ที่ขาดสคริปต์คู่มือเสริม และ SAR chart/insight; runtime public catalog จริงหลัง enrichment มี **23 รายการ / 18 published**. การรองรับ 18/18 เป็นผล *candidate logic check* เท่านั้น ยังไม่ผ่าน QA หน้ากระดาษจริงและยังไม่ Merge.
+- **UI-MIG-00/01:** เอกสาร baseline, design tokens และ preview Merge PR #170–172; **Gate 0/1 OPEN**, งาน Desktop category-first รอบ R2 เป็น prototype แยก ไม่แก้ Production.
+- **UI-MIG-02:** React/Tailwind/shadcn source spike PR #173 และ Superpowers Pilot PR #180 **ยังเปิดอยู่**. Build/Node/device/accessibility ยังไม่ผ่าน Gate 2; UI-MIG-03–06 ยังไม่ทำ Production.
+- **ลำดับถัดไป:** FLIP-14 QA → UI-MIG-01R2 visual review → Gate 0/1 → UI-MIG-02 build/security/a11y → UI-MIG-03–06 parity/controlled cutover; CAT-01 lazy-loading ต้องมี ARCH-01E measurements ก่อน.
+
+---
 
 ## FLIP-13 — ปิดหนังสือสู่ชั้นหนังสือ + ชื่อไม่หลุด /n (28 ต.ค. 2569)
 
