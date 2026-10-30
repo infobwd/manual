@@ -141,6 +141,12 @@
 
 **ขอบเขตหลักฐาน:** ยัง **NOT TESTED** Windows Node `18/18` หลังแก้ไฟล์เวอร์ชันชุดนี้ — ผู้ใช้ต้องดึงใหม่และรันซ้ำอีกครั้ง. เวอร์ชัน 1.3.73 เป็นเวอร์ชันของ `main` ปัจจุบัน ไม่ใช่เลขเวอร์ชันใหม่สำหรับการ Deploy FLIP-14 ในอนาคต; การ Merge/Release ต้องบัมป์เวอร์ชันตามเลขล่าสุดและเช็ก PWA อีกรอบ.
 
+## 30 ต.ค. 2569 — Windows recheck after main v1.3.73 sync
+
+The user confirmed another complete run of `node tests/wd-books-flip14-gate.cjs` on the Windows checkout **PASS 18/18** after updating the five stale release-version smoke tests. This is a **user-confirmed result**; final JSON evidence was not uploaded/read in this conversation.
+
+The updated candidate checks 32 catalog entries, 27 published books, and a single 1.3.73 release contract across `assets/app-version.js`, Splash, Service Worker, and Flipbook iframe assets. No claim is made about actual iPhone/iPad visual QA, PWA installation/offline, audio/screen lock, or merged production behavior. The Node Gate is **PASS for this commit line**; **overall release Gate remains OPEN** pending device tests and deliberate release version planning.
+
 ## A. เริ่มตรวจภาพบนเครื่อง Windows โดยไม่ Merge
 
 เครื่อง Windows มี repo ที่ `D:\wd-books-manual`, branch `test/flip14`. เปิด PowerShell:
