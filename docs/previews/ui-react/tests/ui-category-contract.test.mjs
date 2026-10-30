@@ -102,3 +102,25 @@ test("R3 uses CDP CSS pixel viewport and reports browser metrics, not window PNG
   assert.doesNotMatch(capture, /--window-size=/,
     "Screenshot-only window size is not an actual CSS viewport guarantee");
 });
+
+
+test("R3 keyboard Enter vs mouse submit diagnostic must never hide a failed step", () => {
+  const capture=read("../scripts/capture-responsive.cjs");
+  for(const token of [
+    'type:"rawKeyDown",key:"Enter"',
+    'type:"char",text:"\\r"',
+    'type:"keyUp",key:"Enter"',
+    'async function interactionSnapshot',
+    'async function clickWithMouse',
+    'Input.dispatchMouseEvent',
+    'record("thai_home_input",typed)',
+    'record("thai_enter_submit",enterSubmitted)',
+    'record("thai_mouse_submit",clickSubmitted)',
+    'record("favorite_filter",favorites)',
+    'record("theme_switching",night)',
+    'status:"NOT_TESTED"',
+    'evidence.checks.every(x=>x.status==="PASS")?"PASS":"FAIL"'
+  ]) assert.ok(capture.includes(token),token);
+  assert.doesNotMatch(capture,/if\s*\(!enterSubmitted\)\s*throw/,
+    "Enter failure must preserve diagnostics and independently test the actual button");
+});
