@@ -109,6 +109,12 @@
 
 **Disposition:** ปิดเฉพาะปัญหา `orphaned chart heading` และ `orphaned insight label` ใน Desktop spread ที่เห็นเป็น **VISUAL PASS**; ไม่ปิด FLIP-14 Visual Gate ทั้งระบบ. ปัญหาหน้าว่างท้ายบทเป็นรายการปรับปรุง UX แยกต่างหาก.
 
+## Windows regression recheck after keep-with-next — PASS
+
+ผู้ใช้ยืนยันวันที่ **30 ต.ค. 2569** ว่า `node tests/wd-books-flip14-gate.cjs` รอบล่าสุด **ผ่านครบ 18/18** หลังการแก้การจัดหน้ากราฟและหัวข้อสรุป (Commit ในชุด FLIP-14 ก่อนหน้าคือ `22d2927b`). เป็น **ผลผู้ใช้ยืนยันจากเครื่อง Windows** ไม่ใช่การอ่านรายงาน JSON รอบสุดท้ายโดยระบบนี้เอง
+
+ดังนั้นสถานะ **FLIP-14 Node Regression Gate = PASS (user-confirmed)**. ภาพ Desktop SAR 160% ที่ได้รับหลังแก้ยืนยันการจัดกราฟและสรุปเฉพาะ spread นั้น ขณะที่ iPhone/iPad, NT/O-NET หน้าแสดงกราฟจริง, PWA/Offline/Audio และ full-device Visual Gate ยังคง **OPEN**. การรับรอง Node ไม่ใช่ใบอนุญาตให้ Merge/Deploy โดยอัตโนมัติ
+
 ## A. เริ่มตรวจภาพบนเครื่อง Windows โดยไม่ Merge
 
 เครื่อง Windows มี repo ที่ `D:\wd-books-manual`, branch `test/flip14`. เปิด PowerShell:
