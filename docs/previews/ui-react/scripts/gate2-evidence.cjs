@@ -26,6 +26,12 @@ function run(label,command,args,timeout=60000){
     stderr:(result.stderr||"").slice(-3000)};
   entries.push(item);
   console.log(status,label);
+  if(status==="FAIL"){
+    const detail=[item.error,item.stderr,item.stdout].filter(Boolean).join("\n").trim();
+    console.error("----- "+label+" failure detail -----");
+    console.error(detail ? detail.slice(-3200) : "No stdout/stderr available");
+    console.error("----- end -----");
+  }
   return status==="PASS";
 }
 function skip(label,reason){
