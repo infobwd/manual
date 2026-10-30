@@ -77,11 +77,18 @@ function headless(args){
     });
   });
 }
+// Include the actual Category-first Bookshelf, not just Home screenshots.
+// These query parameters only change the isolated sample React preview state.
 const matrix=[
-  {name:"phone-390x844",width:390,height:844},
-  {name:"tablet-1024x768",width:1024,height:768},
-  {name:"desktop-1366x768",width:1366,height:768},
-  {name:"desktop-1920x1080",width:1920,height:1080},
+  {name:"phone-home-390x844",width:390,height:844,view:"home",theme:"light"},
+  {name:"phone-books-390x844",width:390,height:844,view:"books",theme:"light"},
+  {name:"tablet-books-1024x768",width:1024,height:768,view:"books",theme:"light"},
+  {name:"desktop-books-1366x768",width:1366,height:768,view:"books",theme:"light"},
+  {name:"desktop-books-night-1366x768",width:1366,height:768,view:"books",theme:"night"},
+  {name:"desktop-category-1920x1080",width:1920,height:1080,view:"books",
+    theme:"light",category:"งานบริหาร"},
+  {name:"desktop-settings-sepia-1366x768",width:1366,height:768,
+    view:"settings",theme:"sepia"},
 ];
 function openServer(){
   return new Promise((resolve,reject)=>{
@@ -103,22 +110,47 @@ async function capture(){
     "--user-data-dir="+profile
   ];
   try{
-    for(const {name,width,height} of matrix){
+    for(const {name,width,height,view,theme,category} of matrix){
       const args=[...flags,"--window-size="+width+","+height];
-      // First prove React actually mounted; HTML alone is not a UI acceptance.
-      const dom=await headless([...args,"--dump-dom",url]);
-      assert(dom.stdout.includes("หนังสือดี ๆ อ่านต่อได้ทุกวัน") &&
-        dom.stdout.includes("WD Books") &&
-        dom.stdout.includes("คู่มือครู"),
-        "React preview failed to mount for "+name+"; check the browser console");
+      const target=new URL(url);
+      target.searchParams.set("view",view);
+      target.searchParams.set("theme",theme);
+      if(category) target.searchParams.set("category",category);
+      // Validate that the requested React screen actually mounted before capture.
+      const dom=await headless([...args,"--dump-dom",target.href]);
+      assert(dom.stdout.includes("WD Books"),"React preview brand missing on "+name);
+      const expected=view==="home"
+        ? ["หนังสือดี ๆ อ่านต่อได้ทุกวัน","คู่มือครู"]
+        : view==="books"
+          ? ['id="bookshelfTitle"',"หมวดหมู่หนังสือ","พบ"]
+          : ["ตั้งค่าการอ่าน","ขนาดตัวอักษร"];
+      for(const token of expected){
+        assert(dom.stdout.includes(token),
+          "React "+view+" did not mount expected content "+token+" on "+name);
+      }
+      if(category){
+        assert(dom.stdout.includes("คู่มือบริหารโรงเรียน"),
+          "selected category not present in Bookshelf on "+name);
+      }
       const image=path.join(out,name+".png");
-      await headless([...args,"--screenshot="+image,url]);
+      await headless([...args,"--screenshot="+image,target.href]);
       assert(fs.existsSync(image)&&fs.statSync(image).size>5000,
         "Missing/empty screenshot "+name);
-      report.cases.push({name,width,height,status:"CAPTURED",file:image});
-      console.log("CAPTURED",name,image);
+      const png=fs.readFileSync(image);
+      assert(png.subarray(1,4).toString()==="PNG","invalid PNG "+name);
+      const actualWidth=png.readUInt32BE(16),actualHeight=png.readUInt32BE(20);
+      const sizeMatches=actualWidth===width&&actualHeight===height;
+      report.cases.push({
+        name,view,theme,category:category||"all",
+        requested:{width,height},actual:{width:actualWidth,height:actualHeight},
+        sizeMatches,status:sizeMatches?"CAPTURED":"CAPTURED_SIZE_REVIEW",file:image
+      });
+      console.log(sizeMatches?"CAPTURED":"CAPTURED (viewport size differs)",
+        name,actualWidth+"x"+actualHeight,image);
     }
-    report.status="SCREENSHOTS_CAPTURED_NOT_DEVICE_QA_PASS";
+    report.status=report.cases.some(item=>!item.sizeMatches)
+      ? "SCREENSHOTS_CAPTURED_VIEWPORT_REVIEW"
+      : "SCREENSHOTS_CAPTURED_NOT_DEVICE_QA_PASS";
   }catch(error){
     report.status="FAIL";
     report.error=String(error);
