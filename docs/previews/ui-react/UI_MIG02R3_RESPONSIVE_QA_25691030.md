@@ -4,7 +4,7 @@
 **Implementation branch:** `fix/ui-mig02r3-mobile-responsive-25691030`  
 **Parent:** Draft PR #208 / `feat/ui-mig02-category-first-r1-25691029` at `3a5dba551edfcb36bfc51cdaf56ea5ed5eb6a4b2`.  
 **Production baseline:** main `2c1592085910b47c400ca5eb0b5733b1d3915774` / WD Books 1.3.73.  
-**Status:** SOURCE REVIEW COMPLETE; BROWSER/BUILD/REAL DEVICE ACCEPTANCE OPEN. **NO MERGE / NO PRODUCTION CHANGE.**
+**Status (30 Oct 2026 after Windows report):** 16/16 CDP Responsive scenes PASS; keyboard/search Interaction FAIL on original runner. **Overall Browser Gate remains FAIL**, updated diagnostic runner unverified on Windows. Real iPhone/iPad OPEN. **NO MERGE / NO PRODUCTION CHANGE.**
 
 ## 1. Root-cause investigation / evidence boundary
 
@@ -12,7 +12,7 @@ User-provided PNGs measured **390×844 (mobile Home/Bookshelf), 1024×768 (table
 
 **Proven harness defect in previous revision:** the legacy `capture-responsive.cjs` ran Chrome with `--window-size=390,844`, checked only PNG dimensions and React text, and never measured `window.innerWidth`, `document.documentElement.clientWidth`, `scrollWidth`, `visualViewport.width`, or element bounding rectangles. Chrome headless may clamp or modify the requested layout viewport independently of the PNG size. Thus the earlier `CAPTURED` marker was not a Visual QA PASS.
 
-**Preventative layout improvements, not retroactive proof:** the prior `BookCards` always started with Tailwind `grid-cols-2` on small screens. It could produce very narrow cards at 320–390px and long Thai-title wraps. The R3 grid now uses 1 column below 420px, 2 at 420–759, 3 at 760–1199, and 4 at 1200px+, all `minmax(0,1fr)`. We additionally add `min-width:0`, `overflow-wrap:anywhere`, three equal mobile nav tracks, touch height and bottom/side safe-area padding. The debug preview label is hidden below 768px. **Whether the original screenshot defect was exclusively capture-clamping or also a genuine CSS overflow remains UNCONFIRMED until R3 CDP metrics are collected on Windows.**
+**Preventative layout improvements, not retroactive proof:** the prior `BookCards` always started with Tailwind `grid-cols-2` on small screens. It could produce very narrow cards at 320–390px and long Thai-title wraps. The R3 grid now uses 1 column below 420px, 2 at 420–759, 3 at 760–1199, and 4 at 1200px+, all `minmax(0,1fr)`. We additionally add `min-width:0`, `overflow-wrap:anywhere`, three equal mobile nav tracks, touch height and bottom/side safe-area padding. The debug preview label is hidden below 768px. **Follow-up evidence:** R3 Windows Chrome CDP metrics now show no horizontal overflow across all 16 measured CSS viewport cases; the original R2 screenshots alone still cannot isolate the historical share of capture clamping versus old CSS sizing.
 
 ## 2. CDP evidence gate
 
@@ -26,7 +26,7 @@ Each scene uses `Emulation.setDeviceMetricsOverride` (CSS width/height, DPR=1), 
 - debug label hidden on mobile, theme correct, Category-first sidebar on desktop, selected sample category count
 - PNG width/height match **CSS viewport**, not only `--window-size`
 
-The run also exercises Thai Home search via CDP text input and Enter, filter favorites, category+favorite empty intersection, theme switching, and basic keyboard Tab/focus-visible.
+The interaction runner now independently exercises Thai Home search using both CDP keyboard Enter (rawKeyDown + char + keyUp) and CDP mouse click. It retains per-stage snapshots and explicit PASS/FAIL/NOT_TESTED for keyboard focus, Thai input, Enter submission, mouse submission, favorites, category intersection and theme. **A passing mouse test never masks a failed Enter test.**
 
 **Scenes:** 320×720 (Home/Books), 360×800 (Books), 390×844 (Home/Books/Settings), 430×932 (Books), 768×1024 (Books), 1024×768 (Books), 1366×768 (Books light/night and Settings sepia), 1920×1080 (Books filtered). Three **CSS-width proxies** at 1093×614, 911×512, 683×384 approximate layout reflow under desktop zoom 125/150/200%; these are explicitly not browser-zoom verification.
 
@@ -44,17 +44,50 @@ The run also exercises Thai Home search via CDP text input and Enter, filter fav
 | GitHub base / PR #208 | PASS (metadata) | #208 Draft/open, branch created directly from its HEAD |
 | Desktop category-first source contract | PASS (in-process source check) | Source assertions against updated React/CSS |
 | Synthetic pure responsive tests | PASS 7/7 (in-process JS) | Correct PASS fixture and deliberate FAIL fixtures |
-| UI source contract suite | PASS 8/8 (in-process JS) | Updated content asserted without React DOM |
+| UI source contract suite | PASS 9/9 (in-process JS after interaction patch) | Source assertions without React DOM |
 | Chrome CDP script syntax | PASS (V8 compilation) | Parses as JavaScript, no actual browser executed |
 | Standalone CDP protocol smoke | PASS (Chromium 144 / Node 22 test container) | Minimal HTML with viewport meta: CSS innerWidth/clientWidth/visual viewport 390px and PNG 390×844. **Not the built React app.** |
 | Theme text/button/focus token contrast | PASS (numeric token comparison) | White/primary button ratio ≥5.57:1; focus ring against light surface 5.32:1, sepia surface 6.44:1, night surface 7.45:1. Actual rendered UI/keyboard still OPEN. |
 | Native Node 24 full source suite | **NOT TESTED** | Re-run on Windows |
 | `npm ci` / TypeScript / Vite latest R3 build | **NOT TESTED** | Re-run on Windows |
-| CDP browser PNG/viewport metrics | **NOT TESTED** | No live browser result yet; original PNGs were from R2 |
+| CDP browser PNG/viewport metrics | **PASS 16/16 (user-supplied Windows Chrome report)** | Genuine CSS widths and PNG dimensions match; all layout checks pass; no horizontal overflow on tested scenes |
 | Real browser zoom at 125/150/200% | **NOT TESTED** | CSS-width proxy does not replace this |
 | iPhone/iPad Safari/PWA real-device QA | **NOT TESTED** | Owner acceptance required |
 
 The locally npm-generated `package-lock.json` (166 entries, previously user-confirmed) **has not been committed to this branch**; do not generate a fake lockfile or claim a reproducible clean checkout until the real npm lockfile is committed to an appropriate isolated PR.
+
+
+## 3A. Windows CDP first-run results and repair (30 Oct 2026)
+
+Owner provided `capture-report.json` dated **2026-10-30T10:37:21.463Z**, browser `C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe`, and real PNGs `phone-books-390x844` and `phone-home-320x720`.
+
+- **16 of 16 viewport scenes PASS** (320/360/390/430 mobile, 768/1024 tablet, desktop 1366/1920, light/night/sepia, and three CSS-width zoom proxies).
+- **All cases:** `innerWidth === clientWidth === scrollWidth === bodyScrollWidth === visualViewportWidth`, PNG size equals requested CSS dimensions, `checks: []`, `offenders: []`.
+- **390px Bookshelf:** viewport 390, document scrollWidth 390, card/grid right edge 370, bottom navigation right edge 390, all 3 nav items within viewport; debug label hidden. This resolves the measurable clipping complaint in the R3 preview.
+- **320px Home:** viewport and scrollWidth both 320; first book card right edge 300; 3 nav items each around 97px wide and 56.6px tall. Long heading wraps without a cropped horizontal edge.
+- **Important:** all 16 layout checks passed but `interaction.status=FAIL` and `report.status=FAIL`: `Error: Page did not reach state: Thai Home search submit`. Original runner aborted before logging Tab/input state or testing the mouse button independently. No basis yet to claim React Home search itself is broken (or working).
+
+### Follow-up code (PR #217; later commit)
+
+Changed `scripts/capture-responsive.cjs` to retain diagnostic snapshots (active element ID, sample input value, current view, card count), test Tab/focus, type Thai text, press Enter with CDP `rawKeyDown` → `char` (\`\\r\`) → `keyUp`, then reset the sample page and independently mouse-click the submit button. If Enter fails but mouse works, Enter stays FAIL. If mouse fails, dependent filters are reported NOT_TESTED instead of PASS. Failure details remain in JSON. Added a new source contract test for these guarantees.
+
+**Rerun status of this follow-up interaction fix:** **NOT TESTED in Windows Chrome**. Source-contract checks 9/9 and synthetic regression 7/7 passed in-process JavaScript execution; Node CLI, actual browser interaction, and full build evidence for this new revision still require verification.
+
+### Minimal repeat on existing R3 checkout
+
+```powershell
+cd D:\\wd-books-manual
+git status --short
+git fetch origin --prune
+git switch test/react-responsive-r3
+git pull --ff-only
+cd docs\\previews\\ui-react
+node scripts\\gate2-evidence.cjs
+node scripts\\gate2-evidence.cjs --install-build
+node scripts\\capture-responsive.cjs
+```
+
+Check `interaction.checks` and `interaction.snapshots` in `%TEMP%\\wd-books-ui-mig02r3-captures\\capture-report.json`. The overall browser gate can only become `PASS_BROWSER_SIMULATION_ONLY` if **all scenes and every required interaction** pass. No real iPhone/iPad acceptance yet.
 
 ## 4. Windows runbook (no Production change)
 
