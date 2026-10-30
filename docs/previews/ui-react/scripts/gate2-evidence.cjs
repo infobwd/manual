@@ -42,12 +42,19 @@ const locked=fs.existsSync(path.join(root,"package-lock.json"));
 if(!full){
   skip("npm ci",locked?"use --install-build after review":"no committed package-lock.json");
   skip("npm run build","use --install-build only when lockfile and deps are available");
+  skip("Vite dist nested-path contracts","build has not run");
 }else if(!locked){
   entries.push({label:"npm ci",status:"FAIL",reason:"package-lock.json missing — cannot reproduce dependency resolution"});
   skip("npm run build","blocked by missing lockfile");
+  skip("Vite dist nested-path contracts","blocked by missing lockfile");
 }else if(run("npm ci",npm,["ci","--no-audit","--no-fund"],120000)){
-  run("npm run build",npm,["run","build"],120000);
-}else skip("npm run build","npm ci failed");
+  if(run("npm run build",npm,["run","build"],120000)){
+    run("Vite dist nested-path contracts",process.execPath,["--test","tests/vite-dist-contract.test.mjs"]);
+  }else skip("Vite dist nested-path contracts","build failed");
+}else {
+  skip("npm run build","npm ci failed");
+  skip("Vite dist nested-path contracts","npm ci failed");
+}
 skip("nested-path browser verification","requires locally served dist and screenshot evidence");
 skip("iPhone/iPad real-device QA","requires device and owner acceptance");
 const report={
