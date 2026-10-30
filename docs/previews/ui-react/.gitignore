@@ -1,0 +1,8 @@
+# Build outputs are regenerated in the isolated React preview.
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+# The npm-generated package-lock.json is intentionally NOT ignored:
+# it must be reviewed and committed separately for a reproducible Gate 2 build.
