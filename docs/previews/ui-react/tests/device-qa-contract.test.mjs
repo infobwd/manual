@@ -40,7 +40,6 @@ test("R4 server avoids public tunnels, telemetry, data APIs and persistent file 
     '"Referrer-Policy": "no-referrer"',
     "connect-src 'none'",
     'relative==="index.html"',
-    'relative=',
     'Ctrl+C'
   ])assert.ok(server.includes(t),t);
   assert.doesNotMatch(server,/writeFile|writeFileSync|POST.*accept|cloudflared|ngrok|localStorage/);
