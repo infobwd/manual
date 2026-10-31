@@ -2,7 +2,7 @@
 // All answers remain in React memory. Export is a user gesture, never an upload.
 import React, { useEffect, useRef, useState } from "react";
 
-type Verdict = "PASS" | "FAIL" | "NOT_TESTED";
+type Verdict = "PASS" | "FAIL" | "NOT_TESTED" | "NOT_APPLICABLE";
 type Measurement = {
   label: string; utc: string; viewportWidth: number; clientWidth: number;
   scrollWidth: number; bodyScrollWidth: number; visualWidth: number | null;
@@ -86,7 +86,7 @@ export function DeviceQA(){
         minVisualViewportHeight:minVisualHeight.current
       },
       checks:statuses, measurements:[...shots,measure("export")],
-      note:"Manual answers are not independent device acceptance. No personal data or text input values are collected. Review screenshot and QA evidence before signing."
+      note:"N/A applies only to unsupported device-specific checks. Manual answers are not independent device acceptance. No personal data or text input values are collected. Review screenshot and QA evidence before signing."
     };
     const bytes=new Blob([JSON.stringify(data,null,2)+"\n"],{type:"application/json"});
     const url=URL.createObjectURL(bytes);
@@ -124,6 +124,7 @@ export function DeviceQA(){
               <option value="NOT_TESTED">ยังไม่ทดสอบ</option>
               <option value="PASS">PASS — ผ่านจริง</option>
               <option value="FAIL">FAIL — พบปัญหา</option>
+              <option value="NOT_APPLICABLE">N/A — ไม่เกี่ยวกับอุปกรณ์นี้</option>
             </select>
           </label>)}
         </div>
