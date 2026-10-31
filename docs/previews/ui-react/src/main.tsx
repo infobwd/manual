@@ -4,6 +4,7 @@ import { BookOpen, Library, Settings, Search } from "lucide-react";
 import { Button } from "./components/ui/button";
 import { Card } from "./components/ui/card";
 import { filterCatalog, type CatalogBook } from "./catalog-filter.ts";
+import { DeviceQA } from "./device-qa";
 import "./style.css";
 
 type View = "home" | "books" | "settings";
@@ -199,6 +200,7 @@ function App() {
           <Icon aria-hidden="true" size={19} />{label}
         </Button>)}
     </nav>
+    <DeviceQA />
   </div>;
 }
 
