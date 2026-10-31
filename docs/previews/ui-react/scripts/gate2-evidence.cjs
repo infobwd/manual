@@ -55,7 +55,8 @@ assert(nodeMajor>=22,"Node >=22 required for native TypeScript test runner");
 run("native catalog + UI source tests",process.execPath,[
   "--experimental-strip-types","--test",
   "tests/catalog-filter.test.mjs","tests/ui-category-contract.test.mjs",
-  "tests/responsive-checks.test.mjs"
+  "tests/responsive-checks.test.mjs",
+  "tests/device-qa-contract.test.mjs","tests/device-preview.test.mjs"
 ]);
 const locked=fs.existsSync(path.join(root,"package-lock.json"));
 if(!full){
