@@ -1,5 +1,25 @@
 # UI-MIG-02 isolated framework spike
 
+> **Current R3 branch (30 Oct 2026):** [Mobile Responsive & CDP Visual QA runbook](UI_MIG02R3_RESPONSIVE_QA_25691030.md) supersedes the legacy screenshot-gate instructions below. The legacy `--window-size` screenshots do **not** prove a 390px CSS viewport or responsive PASS. R3 adds a CDP geometry/PNG/interaction gate and 7 synthetic negative/positive responsive checks; **Browser Simulation Gate PASS: 16/16 viewport scenes + 13/13 interactions (1 Nov 2026); actual iPhone/iPad and browser zoom NOT TESTED**. Branch `fix/ui-mig02r3-mobile-responsive-25691030` is stacked on **Draft #208**; do not merge or deploy.
+
+> **Evidence boundary:** The latest user-supplied Chrome/Windows report has `PASS_BROWSER_SIMULATION_ONLY`; no horizontal overflow or missing mobile navigation was found in the measured scenes. The earlier CDP Enter failure is resolved by the corrected keyboard event sequence and verified by independent mouse click. Only the simulation gate is closed. The real-device Safari/landscape/safe-area gate, actual browser zoom, and proof of clean reproducible build from a committed authentic lockfile remain open. See the [QA record](UI_MIG02R3_RESPONSIVE_QA_25691030.md) for the evidence fingerprint and remaining work.
+
+## R3 Windows recheck (use your genuine local npm lockfile)
+
+```powershell
+cd D:\wd-books-manual
+git status --short
+git fetch origin --prune
+git switch -c test/react-responsive-r3 --track origin/fix/ui-mig02r3-mobile-responsive-25691030
+cd docs\previews\ui-react
+node scripts\gate2-evidence.cjs
+node scripts\gate2-evidence.cjs --install-build
+node scripts\capture-responsive.cjs
+```
+
+The R3 browser report is `%TEMP%\wd-books-ui-mig02r3-captures\capture-report.json`, with per-scene CSS/visual viewport measurements, scroll widths, bounding rectangles, PNG dimensions and interaction PASS/FAIL. It captures mobile 320/360/390/430, tablet, desktop, themes and explicitly marked **CSS zoom-layout proxies only**; manually verify actual browser zoom and iPhone/iPad afterward. The `package-lock.json` was created on the owner's Windows checkout and is **not** yet in GitHub. The `--install-build` step must not be considered reproducible on a fresh clone until the genuine lockfile is committed.
+
+
 This is an **isolated React 19 / TypeScript / Vite / Tailwind v4 preview**, using shadcn-style Button/Card primitives. User-reported Windows `npm ci`, `npm run build`, built-path checks and initial Chrome screenshots **PASS on 30 Oct 2026**. Later source changes (Bookshelf direct QA links and seven-view capture) need a new local build/screenshot run before visual acceptance. No real catalog, storage, Reader, Audio, SW or PWA integration; **not merged or deployed**.
 
 ## Windows Gate 2 evidence — confirmed 30 Oct 2026

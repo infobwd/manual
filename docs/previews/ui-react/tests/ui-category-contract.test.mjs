@@ -61,20 +61,68 @@ test("QA-only deep links select the actual Bookshelf and validate allowed themes
   ]) assert.ok(main.includes(token), token);
   assert.doesNotMatch(main, /localStorage|sessionStorage|navigator\.serviceWorker/);
 });
-test("Chrome viewport capture checks the Bookshelf, not Home alone", () => {
-  const capture = read("../scripts/capture-responsive.cjs");
+test("R3 responsive layout keeps the desktop rail but never forces two phone columns", () => {
   for (const token of [
-    'name:"phone-books-390x844"',
-    'name:"tablet-books-1024x768"',
-    'name:"desktop-books-1366x768"',
-    'name:"desktop-books-night-1366x768"',
+    'className="book-grid"', 'className="preview-label',
+    'className="nav-item', 'min-w-0 p-3', 'className="book-title',
+  ]) assert.ok(main.includes(token), token);
+  for (const token of [
+    'grid-template-columns: minmax(0, 1fr)',
+    'grid-template-columns: repeat(2,minmax(0,1fr))',
+    'grid-template-columns: repeat(3,minmax(0,1fr))',
+    'grid-template-columns: repeat(4,minmax(0,1fr))',
+    'grid-template-columns: repeat(3,minmax(0,1fr))',
+    'env(safe-area-inset-bottom,0px)', '.preview-label { display: none; }',
+    'min-height: 52px'
+  ]) assert.ok(styles.includes(token), token);
+  assert.doesNotMatch(styles, /overflow-x:\s*hidden/);
+});
+test("R3 uses CDP CSS pixel viewport and reports browser metrics, not window PNG alone", () => {
+  const capture = read("../scripts/capture-responsive.cjs");
+  const checker = read("../scripts/responsive-checks.cjs");
+  for (const token of [
+    'name:"phone-books-320x720"', 'name:"phone-books-360x800"',
+    'name:"phone-books-390x844"', 'name:"phone-books-430x932"',
+    'name:"tablet-books-768x1024"', 'name:"tablet-books-1024x768"',
+    'name:"desktop-books-1366x768"', 'name:"desktop-books-night-1366x768"',
     'name:"desktop-category-1920x1080"',
-    'target.searchParams.set("view",view)',
-    'target.searchParams.set("theme",theme)',
-    'png.readUInt32BE(16)',
-    'png.readUInt32BE(20)',
-    'SCREENSHOTS_CAPTURED_VIEWPORT_REVIEW'
-  ]) assert.ok(capture.includes(token), token);
-  assert.ok(capture.includes('id="bookshelfTitle"'),
-    "React Bookshelf DOM must be validated before taking screenshot");
+    'Emulation.setDeviceMetricsOverride', 'Page.captureScreenshot',
+    'document.documentElement.clientWidth', 'document.documentElement.scrollWidth',
+    'visualViewport?.width', 'devicePixelRatio',
+    'getBoundingClientRect()', 'BOTTOM_NAV', 'PASS_BROWSER_SIMULATION_ONLY',
+    'actual_browser_zoom:"NOT_TESTED"', 'real_iphone_ipad:"NOT_TESTED"',
+    'const { checkScene } = require("./responsive-checks.cjs")'
+  ]) assert.ok((capture+checker).includes(token), token);
+  assert.ok(capture.includes('document.getElementById("+JSON.stringify(heading)+")'),
+    "React view must be validated before screenshot");
+  for(const token of ["HORIZONTAL_OVERFLOW","CSS_VIEWPORT_MISMATCH",
+    "BOTTOM_NAV_ITEMS_MISSING","BOTTOM_NAV_NOT_TOUCH_VISIBLE"]) {
+    assert.ok(checker.includes(token),token);
+  }
+  assert.doesNotMatch(capture, /--window-size=/,
+    "Screenshot-only window size is not an actual CSS viewport guarantee");
+});
+
+
+test("R3 keyboard Enter vs mouse submit diagnostic must never hide a failed step", () => {
+  const capture=read("../scripts/capture-responsive.cjs");
+  for(const token of [
+    'type:"rawKeyDown",key:"Enter"',
+    'type:"char",text:"\\r"',
+    'type:"keyUp",key:"Enter"',
+    'async function interactionSnapshot',
+    'async function clickWithMouse',
+    'Input.dispatchMouseEvent',
+    'record("thai_home_input",typed)',
+    'record("thai_enter_submit",enterSubmitted)',
+    'record("thai_mouse_submit",clickSubmitted)',
+    'record("favorite_filter",favorites)',
+    'record("theme_switching",night)',
+    'status:"NOT_TESTED"',
+    'report.interaction={status:"FAIL",checks:[],snapshots:[]}',
+    'report.interaction.error=String(error)',
+    'evidence.checks.every(x=>x.status==="PASS")?"PASS":"FAIL"'
+  ]) assert.ok(capture.includes(token),token);
+  assert.doesNotMatch(capture,/if\s*\(!enterSubmitted\)\s*throw/,
+    "Enter failure must preserve diagnostics and independently test the actual button");
 });

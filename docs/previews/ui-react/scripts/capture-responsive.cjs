@@ -1,165 +1,410 @@
-// UI-MIG-02 local browser screenshot matrix after an ACTUAL Vite Build.
-// node scripts/capture-responsive.cjs
-// Uses only Node built-ins + installed Chrome/Edge. Does not touch Production.
+// UI-MIG-02R3 local-only browser visual QA. Requires Node 24 and Chrome/Edge.
+// CDP Emulation.setDeviceMetricsOverride sets the CSS viewport, unlike --window-size.
+// Reported PASS means simulated browser QA only; never iPhone/iPad acceptance.
 "use strict";
-const assert=require("node:assert/strict");
-const fs=require("node:fs");
-const os=require("node:os");
-const path=require("node:path");
-const http=require("node:http");
-const {spawn,spawnSync}=require("node:child_process");
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const os = require("node:os");
+const path = require("node:path");
+const http = require("node:http");
+const { spawn, spawnSync } = require("node:child_process");
 
-const root=path.resolve(__dirname,"..");
-const dist=path.join(root,"dist");
-assert(fs.existsSync(path.join(dist,"index.html")),
-  "dist/index.html missing: first run node scripts/gate2-evidence.cjs --install-build");
-const out=path.resolve(process.env.WD_UI_CAPTURE_DIR ||
-  path.join(os.tmpdir(),"wd-books-ui-mig02-captures"));
-fs.mkdirSync(out,{recursive:true});
-const candidates=[
+const root = path.resolve(__dirname, "..");
+const dist = path.join(root, "dist");
+assert(fs.existsSync(path.join(dist, "index.html")),
+  "dist/index.html missing: run node scripts/gate2-evidence.cjs --install-build");
+assert(typeof WebSocket === "function",
+  "Node 24+ global WebSocket required for built-in CDP (no npm browser dependencies)");
+const out = path.resolve(process.env.WD_UI_CAPTURE_DIR ||
+  path.join(os.tmpdir(), "wd-books-ui-mig02r3-captures"));
+fs.mkdirSync(out, { recursive: true });
+const browsers = [
   process.env.CHROME_BIN,
   process.env.PROGRAMFILES && path.join(process.env.PROGRAMFILES,"Google","Chrome","Application","chrome.exe"),
   process.env["PROGRAMFILES(X86)"] && path.join(process.env["PROGRAMFILES(X86)"],"Microsoft","Edge","Application","msedge.exe"),
   process.env.LOCALAPPDATA && path.join(process.env.LOCALAPPDATA,"Google","Chrome","Application","chrome.exe"),
-  "chrome","msedge","chromium","chromium-browser","google-chrome",
+  "chrome", "msedge", "chromium", "chromium-browser", "google-chrome"
 ].filter(Boolean);
-const browser=candidates.find(file=>{
-  if((file.includes("/") || file.includes("\\")) && !fs.existsSync(file))return false;
-  const r=spawnSync(file,["--version"],{encoding:"utf8",timeout:5000,windowsHide:true});
-  return r.status===0&&!r.error;
+const browser = browsers.find(file => {
+  if ((file.includes("/") || file.includes("\\") ) && !fs.existsSync(file)) return false;
+  const test = spawnSync(file, ["--version"], { encoding:"utf8", timeout:5000, windowsHide:true });
+  return test.status === 0 && !test.error;
 });
-assert(browser,"Chrome/Edge not found; set CHROME_BIN to the browser executable");
+assert(browser, "Chrome/Edge not found; set CHROME_BIN to full chrome.exe or msedge.exe path");
 
-const mime={
-  ".html":"text/html; charset=utf-8",
-  ".js":"text/javascript; charset=utf-8",
-  ".css":"text/css; charset=utf-8",
-  ".png":"image/png",".svg":"image/svg+xml",
-  ".ico":"image/x-icon",".woff2":"font/woff2",".json":"application/json; charset=utf-8"
+const mime = {
+  ".html":"text/html; charset=utf-8", ".js":"text/javascript; charset=utf-8",
+  ".css":"text/css; charset=utf-8", ".png":"image/png", ".svg":"image/svg+xml",
+  ".ico":"image/x-icon", ".woff2":"font/woff2", ".json":"application/json; charset=utf-8"
 };
-const server=http.createServer((req,res)=>{
-  if(req.method!=="GET"){res.writeHead(405);res.end();return;}
-  let url;try{url=new URL(req.url,"http://localhost");}
-  catch{res.writeHead(400);res.end();return;}
-  let parts;
-  try{parts=decodeURIComponent(url.pathname).split("/").filter(Boolean);}
-  catch{res.writeHead(400);res.end();return;}
-  if(parts.some(part=>part===".."||part==="."||part.startsWith("."))){
-    res.writeHead(404);res.end();return;
+const server = http.createServer((req,res) => {
+  if (req.method !== "GET") { res.writeHead(405).end(); return; }
+  let url, parts;
+  try {
+    url = new URL(req.url,"http://localhost");
+    parts = decodeURIComponent(url.pathname).split("/").filter(Boolean);
+  } catch { res.writeHead(400).end(); return; }
+  if (parts.some(part => part === "." || part === ".." || part.startsWith("."))) {
+    res.writeHead(404).end(); return;
   }
-  const filename=path.resolve(dist,...(parts.length?parts:["index.html"]));
-  if(!filename.startsWith(dist+path.sep)){res.writeHead(404);res.end();return;}
-  const type=mime[path.extname(filename).toLowerCase()];
-  if(!type){res.writeHead(404);res.end();return;}
-  fs.stat(filename,(err,stat)=>{
-    if(err || !stat.isFile()){res.writeHead(404);res.end();return;}
-    res.writeHead(200,{"Content-Type":type,"Cache-Control":"no-store",
-      "Content-Length":stat.size,"X-Content-Type-Options":"nosniff"});
-    fs.createReadStream(filename).on("error",()=>res.destroy()).pipe(res);
+  const filename = path.resolve(dist,...(parts.length ? parts : ["index.html"]));
+  if (!filename.startsWith(dist + path.sep) || !mime[path.extname(filename).toLowerCase()]) {
+    res.writeHead(404).end(); return;
+  }
+  fs.stat(filename, (err,stat) => {
+    if (err || !stat.isFile()) { res.writeHead(404).end(); return; }
+    res.writeHead(200, {
+      "Content-Type":mime[path.extname(filename).toLowerCase()],
+      "Cache-Control":"no-store", "X-Content-Type-Options":"nosniff",
+      "Content-Length":stat.size
+    });
+    fs.createReadStream(filename).on("error",() => res.destroy()).pipe(res);
   });
 });
-function headless(args){
-  return new Promise((resolve,reject)=>{
-    const child=spawn(browser,args,{windowsHide:true,
-      env:{...process.env},stdio:["ignore","pipe","pipe"]});
-    let stdout="",stderr="",done=false;
-    const timer=setTimeout(()=>{
-      if(done)return;done=true;child.kill();
-      reject(new Error("Browser timeout: "+stderr.slice(-600)));
-    },30000);
-    child.stdout.on("data",d=>{if(stdout.length<2_000_000)stdout+=String(d)});
-    child.stderr.on("data",d=>{if(stderr.length<250_000)stderr+=String(d)});
-    child.on("error",e=>{if(done)return;done=true;clearTimeout(timer);reject(e)});
-    child.on("close",code=>{
-      if(done)return;done=true;clearTimeout(timer);
-      if(code!==0)reject(new Error("Chrome exit "+code+": "+stderr.slice(-1400)));
-      else resolve({stdout,stderr});
+const delay = ms => new Promise(resolve => setTimeout(resolve,ms));
+function getJson(url) {
+  return new Promise((resolve,reject) => {
+    http.get(url,res => {
+      let body = "";
+      res.setEncoding("utf8");
+      res.on("data",chunk => { if (body.length < 200000) body += chunk; });
+      res.on("end",() => {
+        try { assert.equal(res.statusCode,200); resolve(JSON.parse(body)); }
+        catch (error) { reject(error); }
+      });
+    }).on("error",reject);
+  });
+}
+function connectCdp(wsUrl) {
+  return new Promise((resolve,reject) => {
+    const socket = new WebSocket(wsUrl);
+    const pending = new Map();
+    let nextId = 0;
+    socket.addEventListener("message",event => {
+      let msg;
+      try { msg = JSON.parse(String(event.data)); } catch { return; }
+      const request = pending.get(msg.id);
+      if (!request) return;
+      pending.delete(msg.id); clearTimeout(request.timer);
+      if (msg.error) request.reject(new Error(request.method+": "+JSON.stringify(msg.error)));
+      else request.resolve(msg.result || {});
+    });
+    socket.addEventListener("open",() => resolve({
+      call(method,params = {},timeout = 12000) {
+        return new Promise((resolveCall,rejectCall) => {
+          const id = ++nextId;
+          const timer = setTimeout(() => {
+            pending.delete(id); rejectCall(new Error("CDP timeout: "+method));
+          },timeout);
+          pending.set(id,{method,resolve:resolveCall,reject:rejectCall,timer});
+          socket.send(JSON.stringify({id,method,params}));
+        });
+      },
+      close() { socket.close(); }
+    }));
+    socket.addEventListener("error",reject);
+    socket.addEventListener("close",() => {
+      for(const request of pending.values()) {
+        clearTimeout(request.timer);
+        request.reject(new Error("CDP socket closed: "+request.method));
+      }
+      pending.clear();
     });
   });
 }
-// Include the actual Category-first Bookshelf, not just Home screenshots.
-// These query parameters only change the isolated sample React preview state.
-const matrix=[
+// All widths are CSS pixels. Real desktop browser zoom is a separate manual gate.
+const matrix = [
+  {name:"phone-home-320x720",width:320,height:720,view:"home",theme:"light"},
+  {name:"phone-books-320x720",width:320,height:720,view:"books",theme:"light"},
+  {name:"phone-books-360x800",width:360,height:800,view:"books",theme:"light"},
   {name:"phone-home-390x844",width:390,height:844,view:"home",theme:"light"},
   {name:"phone-books-390x844",width:390,height:844,view:"books",theme:"light"},
+  {name:"phone-settings-390x844",width:390,height:844,view:"settings",theme:"light"},
+  {name:"phone-books-430x932",width:430,height:932,view:"books",theme:"light"},
+  {name:"tablet-books-768x1024",width:768,height:1024,view:"books",theme:"light"},
   {name:"tablet-books-1024x768",width:1024,height:768,view:"books",theme:"light"},
+  // CSS-width proxies for 1366px at 125/150/200% zoom; NOT real Chrome zoom.
+  {name:"zoom125-layout-proxy-1093x614",width:1093,height:614,view:"books",theme:"light",zoomLayoutProxy:1.25},
+  {name:"zoom150-layout-proxy-911x512",width:911,height:512,view:"books",theme:"light",zoomLayoutProxy:1.5},
+  {name:"zoom200-layout-proxy-683x384",width:683,height:384,view:"books",theme:"light",zoomLayoutProxy:2},
   {name:"desktop-books-1366x768",width:1366,height:768,view:"books",theme:"light"},
   {name:"desktop-books-night-1366x768",width:1366,height:768,view:"books",theme:"night"},
   {name:"desktop-category-1920x1080",width:1920,height:1080,view:"books",
     theme:"light",category:"งานบริหาร"},
-  {name:"desktop-settings-sepia-1366x768",width:1366,height:768,
-    view:"settings",theme:"sepia"},
+  {name:"desktop-settings-sepia-1366x768",width:1366,height:768,view:"settings",theme:"sepia"}
 ];
-function openServer(){
-  return new Promise((resolve,reject)=>{
-    server.once("error",reject);
-    server.listen(0,"127.0.0.1",()=>resolve(server.address().port));
+const metricsExpression = "JSON.stringify((function(){" +
+  "const r=s=>{const e=document.querySelector(s);if(!e)return null;" +
+  "const b=e.getBoundingClientRect();return {left:b.left,top:b.top,right:b.right,bottom:b.bottom,width:b.width,height:b.height};};" +
+  "const nav=[...document.querySelectorAll('.bottom-nav button')].map(e=>{" +
+  "const b=e.getBoundingClientRect();return {label:e.innerText.trim(),left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height};});" +
+  "const over=[...document.querySelectorAll('body *')].filter(e=>{" +
+  "const s=getComputedStyle(e),b=e.getBoundingClientRect();" +
+  "return s.display!=='none'&&s.visibility!=='hidden'&&b.width>1&&" +
+  "(b.left < -1||b.right>document.documentElement.clientWidth+1);}).slice(0,12)" +
+  ".map(e=>({tag:e.tagName,cls:String(e.className).slice(0,90),text:(e.innerText||'').slice(0,45)}));" +
+  "return {location:location.search,innerWidth:innerWidth,clientWidth:document.documentElement.clientWidth," +
+  "scrollWidth:document.documentElement.scrollWidth,bodyScrollWidth:document.body.scrollWidth," +
+  "visualViewportWidth:visualViewport?.width??null,devicePixelRatio:devicePixelRatio," +
+  "rects:{root:r('#root'),shell:r('.shell'),header:r('header'),brand:r('.brand')," +
+  "main:r('main'),layout:r('.catalog-layout'),sidebar:r('.catalog-sidebar')," +
+  "bookshelf:r('#bookshelfTitle'),search:r('.catalog-search'),grid:r('.book-grid')," +
+  "firstCard:r('.book-grid > *'),bottomNav:r('.bottom-nav')}," +
+  "nav:nav,visibleCards:document.querySelectorAll('.book-grid > *').length," +
+  "debugLabelVisible:!!document.querySelector('.preview-label')&&" +
+  "getComputedStyle(document.querySelector('.preview-label')).display!=='none'," +
+  "theme:document.querySelector('[data-theme]')?.getAttribute('data-theme')," +
+  "offenders:over};})())";
+async function evaluate(cdp,expression) {
+  const response = await cdp.call("Runtime.evaluate",{
+    expression,returnByValue:true,awaitPromise:true
   });
+  if (response.exceptionDetails) throw new Error("JS evaluation error: "+JSON.stringify(response.exceptionDetails));
+  return response.result?.value;
 }
-async function capture(){
-  const port=await openServer();
-  const url="http://127.0.0.1:"+port+"/";
-  const report={date:new Date().toISOString(),browser,preview_url:url,
-    chrome_viewports_not_real_mobile_devices:true,cases:[]};
-  const profile=path.join(out,"chrome-test-profile");
-  const flags=[
-    "--headless=new","--disable-gpu","--no-first-run",
-    "--no-default-browser-check","--disable-extensions",
-    "--hide-scrollbars","--force-device-scale-factor=1",
-    "--disable-dev-shm-usage","--virtual-time-budget=1800",
-    "--user-data-dir="+profile
-  ];
-  try{
-    for(const {name,width,height,view,theme,category} of matrix){
-      const args=[...flags,"--window-size="+width+","+height];
-      const target=new URL(url);
-      target.searchParams.set("view",view);
-      target.searchParams.set("theme",theme);
-      if(category) target.searchParams.set("category",category);
-      // Validate that the requested React screen actually mounted before capture.
-      const dom=await headless([...args,"--dump-dom",target.href]);
-      assert(dom.stdout.includes("WD Books"),"React preview brand missing on "+name);
-      const expected=view==="home"
-        ? ["หนังสือดี ๆ อ่านต่อได้ทุกวัน","คู่มือครู"]
-        : view==="books"
-          ? ['id="bookshelfTitle"',"หมวดหมู่หนังสือ","พบ"]
-          : ["ตั้งค่าการอ่าน","ขนาดตัวอักษร"];
-      for(const token of expected){
-        assert(dom.stdout.includes(token),
-          "React "+view+" did not mount expected content "+token+" on "+name);
-      }
-      if(category){
-        assert(dom.stdout.includes("คู่มือบริหารโรงเรียน"),
-          "selected category not present in Bookshelf on "+name);
-      }
-      const image=path.join(out,name+".png");
-      await headless([...args,"--screenshot="+image,target.href]);
-      assert(fs.existsSync(image)&&fs.statSync(image).size>5000,
-        "Missing/empty screenshot "+name);
-      const png=fs.readFileSync(image);
-      assert(png.subarray(1,4).toString()==="PNG","invalid PNG "+name);
-      const actualWidth=png.readUInt32BE(16),actualHeight=png.readUInt32BE(20);
-      const sizeMatches=actualWidth===width&&actualHeight===height;
-      report.cases.push({
-        name,view,theme,category:category||"all",
-        requested:{width,height},actual:{width:actualWidth,height:actualHeight},
-        sizeMatches,status:sizeMatches?"CAPTURED":"CAPTURED_SIZE_REVIEW",file:image
-      });
-      console.log(sizeMatches?"CAPTURED":"CAPTURED (viewport size differs)",
-        name,actualWidth+"x"+actualHeight,image);
+async function until(cdp,condition,description) {
+  for(let i=0;i<100;i++) {
+    try { if(await evaluate(cdp,condition)) return; } catch {}
+    await delay(100);
+  }
+  throw new Error("Page did not reach state: "+description);
+}
+async function navigate(cdp,base,scene) {
+  await cdp.call("Emulation.setDeviceMetricsOverride",{
+    width:scene.width,height:scene.height,deviceScaleFactor:1,
+    mobile:scene.width<768,screenWidth:scene.width,screenHeight:scene.height
+  });
+  const target = new URL(base);
+  target.searchParams.set("view",scene.view);
+  target.searchParams.set("theme",scene.theme);
+  if(scene.category) target.searchParams.set("category",scene.category);
+  await cdp.call("Page.navigate",{url:target.href});
+  const heading=scene.view==="books" ? "bookshelfTitle" : null;
+  const checks="location.search==="+JSON.stringify(target.search)+
+    "&&!!document.querySelector('#root .shell')"+
+    (heading ? "&&!!document.getElementById("+JSON.stringify(heading)+")" :
+      scene.view==="settings" ? "&&document.querySelector('h1')?.textContent==='ตั้งค่าการอ่าน'" :
+      "&&document.querySelector('h1')?.textContent==='หนังสือดี ๆ อ่านต่อได้ทุกวัน'");
+  await until(cdp,checks,"React "+scene.view+" "+scene.name);
+  await evaluate(cdp,"document.fonts.ready.then(()=>true)");
+  await delay(80);
+}
+const { checkScene } = require("./responsive-checks.cjs");
+// Capture diagnostic state from this STATIC sample only; never include user records.
+async function interactionSnapshot(cdp,stage) {
+  const state=await evaluate(cdp,"JSON.stringify((function(){"+
+    "const h=document.getElementById('reactHomeSearch');"+
+    "const b=document.getElementById('reactBookSearch');"+
+    "return {url:location.search,activeId:document.activeElement?.id||null,"+
+    "homeInput:h?.value??null,booksInput:b?.value??null,"+
+    "homeHeading:!!document.querySelector('main .home-search'),"+
+    "bookshelfHeading:!!document.getElementById('bookshelfTitle'),"+
+    "cardCount:document.querySelectorAll('.book-grid > *').length,"+
+    "theme:document.querySelector('[data-theme]')?.getAttribute('data-theme')};})())");
+  return {stage,...JSON.parse(state)};
+}
+async function maybeReach(cdp,expression,description) {
+  try {await until(cdp,expression,description);return true;}
+  catch {return false;}
+}
+async function clickWithMouse(cdp,selector) {
+  const rect=JSON.parse(await evaluate(cdp,
+    "JSON.stringify((function(){const e=document.querySelector("+JSON.stringify(selector)+");"+
+    "if(!e)return null;const b=e.getBoundingClientRect();"+
+    "return {x:b.x+b.width/2,y:b.y+b.height/2};})())"));
+  if(!rect)throw new Error("Click target missing: "+selector);
+  await cdp.call("Input.dispatchMouseEvent",{type:"mouseMoved",x:rect.x,y:rect.y});
+  await cdp.call("Input.dispatchMouseEvent",{type:"mousePressed",x:rect.x,y:rect.y,
+    button:"left",clickCount:1});
+  await cdp.call("Input.dispatchMouseEvent",{type:"mouseReleased",x:rect.x,y:rect.y,
+    button:"left",clickCount:1});
+}
+async function interactions(cdp,base,evidence) {
+  const record=(name,ok)=>{evidence.checks.push({name,status:ok?"PASS":"FAIL"});};
+  const note=async stage=>evidence.snapshots.push(await interactionSnapshot(cdp,stage));
+  const home={name:"interaction-home",width:390,height:844,view:"home",theme:"light"};
+  await navigate(cdp,base,home);
+  // Test keyboard Tab WITHOUT silently replacing it with programmatic focus.
+  await cdp.call("Input.dispatchKeyEvent",{type:"keyDown",key:"Tab",code:"Tab",windowsVirtualKeyCode:9});
+  await cdp.call("Input.dispatchKeyEvent",{type:"keyUp",key:"Tab",code:"Tab",windowsVirtualKeyCode:9});
+  const focused=await evaluate(cdp,"document.activeElement?.id==='reactHomeSearch'");
+  record("keyboard_tab_home_search",focused);
+  record("keyboard_focus_visible",focused&&await evaluate(cdp,
+    "getComputedStyle(document.activeElement).outlineStyle!=='none'"));
+  await note("after_tab");
+  // If the Tab simulation missed its target, preserve that FAIL but continue
+  // with an explicit focus, allowing Enter-vs-React to be isolated.
+  if(!focused)await evaluate(cdp,"document.getElementById('reactHomeSearch').focus()");
+  await cdp.call("Input.insertText",{text:"ครู"});
+  const typed=await maybeReach(cdp,
+    "document.getElementById('reactHomeSearch')?.value==='ครู'","Thai home typing");
+  record("thai_home_input",typed);
+  await note("before_enter");
+  // Chrome dispatches Enter as rawKeyDown + char + keyUp, not keyDown alone.
+  // The char event is needed for native default form submission in Chromium.
+  await cdp.call("Input.dispatchKeyEvent",{type:"rawKeyDown",key:"Enter",code:"Enter",
+    windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});
+  await cdp.call("Input.dispatchKeyEvent",{type:"char",text:"\r",unmodifiedText:"\r",
+    key:"Enter",code:"Enter",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});
+  await cdp.call("Input.dispatchKeyEvent",{type:"keyUp",key:"Enter",code:"Enter",
+    windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});
+  const enterSubmitted=await maybeReach(cdp,
+    "!!document.getElementById('bookshelfTitle')","Thai Home Enter submit");
+  record("thai_enter_submit",enterSubmitted);
+  await note("after_enter");
+  if(enterSubmitted)record("thai_enter_filtered_result",await evaluate(cdp,
+    "document.querySelectorAll('.book-grid > *').length===1"));
+  else evidence.checks.push({name:"thai_enter_filtered_result",status:"NOT_TESTED",
+    reason:"Enter did not navigate to Bookshelf"});
+  // Independent mouse path distinguishes a broken submit handler from a
+  // synthetic keyboard event defect. A mouse success cannot mask Enter FAIL.
+  await navigate(cdp,base,home);
+  await evaluate(cdp,"document.getElementById('reactHomeSearch').focus()");
+  await cdp.call("Input.insertText",{text:"ครู"});
+  const mouseTyped=await maybeReach(cdp,
+    "document.getElementById('reactHomeSearch')?.value==='ครู'","Thai click typing");
+  record("thai_mouse_input",mouseTyped);
+  await note("before_mouse_submit");
+  await clickWithMouse(cdp,".home-search button[type=submit]");
+  const clickSubmitted=await maybeReach(cdp,
+    "!!document.getElementById('bookshelfTitle')","Thai Home mouse submit");
+  record("thai_mouse_submit",clickSubmitted);
+  await note("after_mouse_submit");
+  if(!clickSubmitted){
+    for(const name of ["thai_mouse_filtered_result","clear_query",
+      "favorite_filter","category_and_favorite_intersection","theme_switching"]){
+      evidence.checks.push({name,status:"NOT_TESTED",
+        reason:"Bookshelf never rendered after independent mouse submit"});
     }
-    report.status=report.cases.some(item=>!item.sizeMatches)
-      ? "SCREENSHOTS_CAPTURED_VIEWPORT_REVIEW"
-      : "SCREENSHOTS_CAPTURED_NOT_DEVICE_QA_PASS";
-  }catch(error){
-    report.status="FAIL";
-    report.error=String(error);
-    throw error;
-  }finally{
-    const reportFile=path.join(out,"capture-report.json");
-    fs.writeFileSync(reportFile,JSON.stringify(report,null,2)+"\n","utf8");
-    console.log("QA report:",reportFile);
-    await new Promise(resolve=>server.close(resolve));
+    return evidence;
+  }
+  record("thai_mouse_filtered_result",await evaluate(cdp,
+    "document.querySelectorAll('.book-grid > *').length===1"));
+  // Native setter+input dispatch is the React controlled-input path.
+  await evaluate(cdp,"(function(){const e=document.getElementById('reactBookSearch');"+
+    "Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(e,'');"+
+    "e.dispatchEvent(new Event('input',{bubbles:true}));return true;})()");
+  const queryCleared=await maybeReach(cdp,
+    "document.querySelectorAll('.book-grid > *').length===4","clear query");
+  record("clear_query",queryCleared);
+  if(!queryCleared){await note("after_clear_fail");return evidence;}
+  await evaluate(cdp,
+    "[...document.querySelectorAll('.catalog-tools button')].find(b=>b.textContent.trim()==='รายการโปรด').click()");
+  const favorites=await maybeReach(cdp,
+    "document.querySelectorAll('.book-grid > *').length===2","favorites selected");
+  record("favorite_filter",favorites);
+  if(!favorites){await note("after_favorites_fail");return evidence;}
+  await evaluate(cdp,
+    "[...document.querySelectorAll('.catalog-category')].find(b=>b.textContent.trim()==='งานบริหาร').click()");
+  const empty=await maybeReach(cdp,
+    "document.querySelector('.catalog-empty')!==null","favorite/category empty state");
+  record("category_and_favorite_intersection",empty);
+  if(!empty){await note("after_category_fail");return evidence;}
+  await evaluate(cdp,
+    "[...document.querySelectorAll('.bottom-nav button')].find(b=>b.textContent.trim()==='ตั้งค่า').click()");
+  const settings=await maybeReach(cdp,
+    "document.querySelector('h1')?.textContent==='ตั้งค่าการอ่าน'","settings navigation");
+  record("settings_navigation",settings);
+  if(!settings){await note("after_settings_fail");return evidence;}
+  await evaluate(cdp,
+    "[...document.querySelectorAll('main button')].find(b=>b.textContent.trim()==='กลางคืน').click()");
+  const night=await maybeReach(cdp,
+    "document.querySelector('[data-theme]')?.getAttribute('data-theme')==='night'","night theme");
+  record("theme_switching",night);
+  await note("final");
+  evidence.status=evidence.checks.every(x=>x.status==="PASS")?"PASS":"FAIL";
+  return evidence;
+}
+async function main() {
+  const report={
+    gate:"UI-MIG-02R3_BROWSER_CDP_SIMULATION",date:new Date().toISOString(),
+    browser,chrome_viewports_not_real_mobile_devices:true,
+    actual_browser_zoom:"NOT_TESTED",real_iphone_ipad:"NOT_TESTED",
+    no_production_integration:true,cases:[],interaction:{status:"NOT_TESTED"}
+  };
+  let child,cdp,profile;
+  try {
+    await new Promise((resolve,reject) => server.listen(0,"127.0.0.1",
+      error=>error?reject(error):resolve()));
+    const port=server.address().port;
+    const url="http://127.0.0.1:"+port+"/";
+    profile=fs.mkdtempSync(path.join(os.tmpdir(),"wd-ui-r3-chrome-"));
+    child=spawn(browser,[
+      "--headless=new","--remote-debugging-port=0","--user-data-dir="+profile,
+      "--no-first-run","--no-default-browser-check","--disable-extensions",
+      "--disable-gpu","--disable-dev-shm-usage","--no-sandbox",
+      "--hide-scrollbars","about:blank"
+    ],{windowsHide:true,stdio:"ignore"});
+    const active=path.join(profile,"DevToolsActivePort");
+    let debugPort=null;
+    for(let i=0;i<150;i++) {
+      if(fs.existsSync(active)) {
+        debugPort=Number(fs.readFileSync(active,"utf8").split(/\r?\n/)[0]);
+        if(Number.isInteger(debugPort)&&debugPort>0) break;
+      }
+      if(child.exitCode!==null) throw new Error("Chrome exited before CDP opened");
+      await delay(100);
+    }
+    assert(debugPort,"Chrome did not create DevToolsActivePort");
+    let page=null;
+    for(let i=0;i<30;i++) {
+      try {
+        const targets=await getJson("http://127.0.0.1:"+debugPort+"/json/list");
+        page=targets.find(t=>t.type==="page"&&t.webSocketDebuggerUrl);
+        if(page) break;
+      } catch { /* Chrome DevTools startup race; bounded retry. */ }
+      await delay(100);
+    }
+    assert(page,"Chrome CDP page target missing after startup retries");
+    cdp=await connectCdp(page.webSocketDebuggerUrl);
+    await cdp.call("Page.enable");
+    await cdp.call("Runtime.enable");
+    for(const scene of matrix) {
+      try {
+        await navigate(cdp,url,scene);
+        const metrics=JSON.parse(await evaluate(cdp,metricsExpression));
+        const problems=checkScene(scene,metrics);
+        const screenshot=await cdp.call("Page.captureScreenshot",{
+          format:"png",fromSurface:true,captureBeyondViewport:false
+        });
+        const filename=path.join(out,scene.name+".png");
+        const png=Buffer.from(screenshot.data,"base64");
+        assert.equal(png.subarray(1,4).toString(),"PNG");
+        fs.writeFileSync(filename,png);
+        const pngSize={width:png.readUInt32BE(16),height:png.readUInt32BE(20)};
+        if(pngSize.width!==scene.width || pngSize.height!==scene.height)
+          problems.push("PNG_DIMENSION_MISMATCH");
+        const status=problems.length ? "FAIL" : "PASS";
+        report.cases.push({
+          name:scene.name,view:scene.view,theme:scene.theme,
+          category:scene.category||"all",zoom_layout_proxy_only:scene.zoomLayoutProxy||null,requested:{width:scene.width,height:scene.height},
+          css_metrics:metrics,png:pngSize,checks:problems,status,file:filename
+        });
+        console.log(status,scene.name,"CSS",metrics.innerWidth+"/"+metrics.clientWidth+
+          "/"+metrics.scrollWidth,"PNG",pngSize.width+"x"+pngSize.height,
+          problems.join(","));
+      } catch(error) {
+        report.cases.push({name:scene.name,status:"FAIL",error:String(error)});
+        console.error("FAIL",scene.name,String(error));
+      }
+    }
+    report.interaction={status:"FAIL",checks:[],snapshots:[]};
+    try { await interactions(cdp,url,report.interaction); }
+    catch(error) { report.interaction.status="FAIL";report.interaction.error=String(error); }
+    report.status=report.cases.length===matrix.length &&
+      report.cases.every(x=>x.status==="PASS")&&report.interaction.status==="PASS"
+      ? "PASS_BROWSER_SIMULATION_ONLY" : "FAIL";
+  } catch(error) {
+    report.status="FAIL";report.error=String(error);console.error("CDP FAIL:",String(error));
+  } finally {
+    const destination=path.join(out,"capture-report.json");
+    fs.writeFileSync(destination,JSON.stringify(report,null,2)+"\n","utf8");
+    console.log("Browser QA report:",destination,"status:",report.status);
+    if(cdp) { try {await cdp.call("Browser.close",{},1500);}catch{} cdp.close(); }
+    if(child) child.kill();
+    if(server.listening) await new Promise(resolve=>server.close(resolve));
+    if(profile) {try{fs.rmSync(profile,{recursive:true,force:true});}catch{}}
+    if(report.status!=="PASS_BROWSER_SIMULATION_ONLY")process.exitCode=1;
   }
 }
-capture().catch(error=>{console.error("UI-MIG-02 browser capture FAIL:",error.message);process.exitCode=1;});
+main().catch(error=>{console.error(error);process.exitCode=1;});
