@@ -16,7 +16,7 @@ test("Device QA appears only for explicit ?qa=1 and does not mutate normal previ
 });
 test("Manual verdicts remain NOT_TESTED until actual device operator marks them",()=>{
   for(const t of [
-    'type Verdict = "PASS" | "FAIL" | "NOT_TESTED"',
+    'type Verdict = "PASS" | "FAIL" | "NOT_TESTED" | "NOT_APPLICABLE"',
     'answers[item.id]??"NOT_TESTED"',
     'assessment:complete?"SELF_REPORTED_COMPLETE_REVIEW_REQUIRED":"INCOMPLETE_NOT_TESTED"',
     'upload_performed:false',
