@@ -70,7 +70,7 @@ Owner provided `capture-report.json` dated **2026-10-30T10:37:21.463Z**, browser
 
 ### Follow-up code (PR #217; later commit)
 
-Changed `scripts/capture-responsive.cjs` to retain diagnostic snapshots (active element ID, sample input value, current view, card count), test Tab/focus, type Thai text, press Enter with CDP `rawKeyDown` → `char` (\`\\r\`) → `keyUp`, then reset the sample page and independently mouse-click the submit button. If Enter fails but mouse works, Enter stays FAIL. If mouse fails, dependent filters are reported NOT_TESTED instead of PASS. Failure details remain in JSON. Added a new source contract test for these guarantees.
+Changed `scripts/capture-responsive.cjs` to retain diagnostic snapshots (active element ID, sample input value, current view, card count), test Tab/focus, type Thai text, press Enter with CDP `rawKeyDown` → `char` (`\\r`) → `keyUp`, then reset the sample page and independently mouse-click the submit button. If Enter fails but mouse works, Enter stays FAIL. If mouse fails, dependent filters are reported NOT_TESTED instead of PASS. Failure details remain in JSON. Added a new source contract test for these guarantees.
 
 **Rerun status of this follow-up interaction fix:** **NOT TESTED in Windows Chrome**. Source-contract checks 9/9 and synthetic regression 7/7 passed in-process JavaScript execution; Node CLI, actual browser interaction, and full build evidence for this new revision still require verification.
 
@@ -92,26 +92,26 @@ Check `interaction.checks` and `interaction.snapshots` in `%TEMP%\\wd-books-ui-m
 
 ## 3B. Browser simulation acceptance — repeat evidence (1 Nov 2026, ICT)
 
-The user supplied an updated local \`capture-report(1).json\`, with report timestamp \`2026-10-31T21:15:36.711Z\` (1 Nov 2026, 04:15 Bangkok time) and Chrome for Windows. This is the **first full Browser Simulation Gate PASS** after the interaction diagnostics repair.
+The user supplied an updated local `capture-report(1).json`, with report timestamp `2026-10-31T21:15:36.711Z` (1 Nov 2026, 04:15 Bangkok time) and Chrome for Windows. This is the **first full Browser Simulation Gate PASS** after the interaction diagnostics repair.
 
-**Integrity fingerprint of the supplied JSON (SHA-256, raw file bytes):** \`5520da0a37e66a1a6a0731df58d7502b190de021267c6b47c327a3d7cc4d3a49\`. Only a summary/fingerprint is stored in public GitHub; not the raw local report, local user paths, or browser profiles.
+**Integrity fingerprint of the supplied JSON (SHA-256, raw file bytes):** `5520da0a37e66a1a6a0731df58d7502b190de021267c6b47c327a3d7cc4d3a49`. Only a summary/fingerprint is stored in public GitHub; not the raw local report, local user paths, or browser profiles.
 
 | Verification | Actual report evidence | Status |
 |---|---|---|
-| CSS responsive scene matrix | 16/16 cases, every \`cases[].status=PASS\` and \`checks=[]\` | **PASS** |
-| CSS horizontal overflow | Every scene has \`scrollWidth=bodyScrollWidth=clientWidth=innerWidth=visualViewportWidth\`, \`offenders=[]\` | **PASS** |
+| CSS responsive scene matrix | 16/16 cases, every `cases[].status=PASS` and `checks=[]` | **PASS** |
+| CSS horizontal overflow | Every scene has `scrollWidth=bodyScrollWidth=clientWidth=innerWidth=visualViewportWidth`, `offenders=[]` | **PASS** |
 | PNG output | Every scene PNG dimensions match requested CSS dimensions; DPR 1 | **PASS** |
 | Bottom navigation | Three distinct items within viewport, touch target metrics accepted | **PASS** |
-| Keyboard Tab + visible focus | \`keyboard_tab_home_search\`, \`keyboard_focus_visible\` | **PASS** |
-| Thai input + Enter | \`thai_home_input\`, \`thai_enter_submit\`, \`thai_enter_filtered_result\` | **PASS** |
-| Independent mouse submit | \`thai_mouse_input\`, \`thai_mouse_submit\`, \`thai_mouse_filtered_result\` | **PASS** |
-| Bookshelf interactions | \`clear_query\`, \`favorite_filter\`, \`category_and_favorite_intersection\` | **PASS** |
-| Settings and theme | \`settings_navigation\`, \`theme_switching\` | **PASS** |
-| Aggregate browser simulation status | \`interaction.status=PASS\`, \`report.status=PASS_BROWSER_SIMULATION_ONLY\` | **PASS** |
+| Keyboard Tab + visible focus | `keyboard_tab_home_search`, `keyboard_focus_visible` | **PASS** |
+| Thai input + Enter | `thai_home_input`, `thai_enter_submit`, `thai_enter_filtered_result` | **PASS** |
+| Independent mouse submit | `thai_mouse_input`, `thai_mouse_submit`, `thai_mouse_filtered_result` | **PASS** |
+| Bookshelf interactions | `clear_query`, `favorite_filter`, `category_and_favorite_intersection` | **PASS** |
+| Settings and theme | `settings_navigation`, `theme_switching` | **PASS** |
+| Aggregate browser simulation status | `interaction.status=PASS`, `report.status=PASS_BROWSER_SIMULATION_ONLY` | **PASS** |
 
-Diagnostic snapshots confirm that after entering \`ครู\` via keyboard and pressing Enter, focus moved to \`reactBookSearch\`, that search input contained \`ครู\`, \`bookshelfHeading=true\`, and the rendered sample catalog contained **1 card**. The independent mouse button path produced the same result. The previous \`Thai Home search submit\` failure was therefore a problem with **the old simulated Enter event sequence**, not a proven React application defect. The corrected event sequence was tested successfully on Windows Chrome.
+Diagnostic snapshots confirm that after entering `ครู` via keyboard and pressing Enter, focus moved to `reactBookSearch`, that search input contained `ครู`, `bookshelfHeading=true`, and the rendered sample catalog contained **1 card**. The independent mouse button path produced the same result. The previous `Thai Home search submit` failure was therefore a problem with **the old simulated Enter event sequence**, not a proven React application defect. The corrected event sequence was tested successfully on Windows Chrome.
 
-**Gate boundary:** The 16 scenes include **three CSS-width zoom proxies** (1093×614, 911×512, 683×384); they do not test actual browser zoom 125%/150%/200%. No evidence of real iPhone/iPad Safari keyboard, viewport movement, dynamic browser chrome, landscape, Split View, or home-indicator safe areas is present. The existence of built assets during Chrome capture is not by itself evidence of a newly clean \`npm ci\` + TypeScript/Vite build with the current HEAD, nor does this test Reader/Audio/PWA/real books. Keep the PR **Draft**.
+**Gate boundary:** The 16 scenes include **three CSS-width zoom proxies** (1093×614, 911×512, 683×384); they do not test actual browser zoom 125%/150%/200%. No evidence of real iPhone/iPad Safari keyboard, viewport movement, dynamic browser chrome, landscape, Split View, or home-indicator safe areas is present. The existence of built assets during Chrome capture is not by itself evidence of a newly clean `npm ci` + TypeScript/Vite build with the current HEAD, nor does this test Reader/Audio/PWA/real books. Keep the PR **Draft**.
 
 **Next acceptance sequence:** Preserve the simulated browser PASS as closed; verify clean Windows build/lockfile provenance separately; perform actual Chrome/Edge zoom and iPhone/iPad device acceptance; only then consider an explicit owner Go/No-Go for downstream integration, with separate PRs/approval. No production deployment or automatic merge.
 
