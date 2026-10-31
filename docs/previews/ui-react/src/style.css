@@ -126,3 +126,59 @@ button:focus-visible, input:focus-visible {
 @media (prefers-reduced-motion:reduce) {
   *,*::before,*::after { transition: none !important; animation: none !important; }
 }
+
+
+/* R4 opt-in evidence panel (?qa=1) — never visible in ordinary preview. */
+.qa-safe-probe {
+  position: fixed; pointer-events: none; visibility: hidden;
+  inset: auto auto 0 0; width: 0; height: 0;
+  padding-bottom: env(safe-area-inset-bottom,0px);
+}
+.qa-launch {
+  position: fixed; z-index: 99; top: 82px; right: 12px;
+  border: 2px solid var(--ink); background: var(--surface); color: var(--ink);
+  min-height: 44px; border-radius: 999px; padding: 6px 14px;
+  font-size: .85rem; font-weight: 700; box-shadow: 0 2px 14px #0002;
+}
+.qa-screen {
+  position: fixed; z-index: 100; inset: 0; background: #0009;
+  display: flex; justify-content: flex-end; align-items: stretch;
+}
+.qa-panel {
+  width: min(100%,420px); min-width: 0; height: 100dvh;
+  overflow: auto; overscroll-behavior: contain;
+  padding: max(16px,env(safe-area-inset-top,0px)) 16px
+    calc(24px + env(safe-area-inset-bottom,0px));
+  color: var(--ink); background: var(--surface);
+  box-shadow: -8px 0 24px #0003;
+}
+.qa-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; position: sticky; top: 0; padding-block: 8px;
+  background: var(--surface); z-index: 1;
+}
+.qa-header strong { font-size: 1.1rem; overflow-wrap: anywhere; }
+.qa-header button, .qa-actions button, .qa-export, .qa-close {
+  border: 1px solid var(--line); color: var(--ink); background: var(--hover);
+  min-height: 44px; border-radius: 12px; padding: 9px 12px;
+}
+.qa-help { font-size: .86rem; line-height: 1.6; margin-block: 12px; }
+.qa-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.qa-readout { display: block; font-size: .85rem; margin-block: 12px; }
+.qa-checks { display: grid; gap: 10px; }
+.qa-check {
+  display: grid; gap: 6px; border: 1px solid var(--line);
+  border-radius: 14px; padding: 12px; line-height: 1.45;
+}
+.qa-check span { overflow-wrap: anywhere; }
+.qa-check select {
+  width: 100%; min-width: 0; min-height: 44px;
+  border: 1px solid var(--line); border-radius: 10px;
+  background: var(--surface); color: var(--ink); padding: 8px;
+}
+.qa-export, .qa-close { width: 100%; margin-top: 12px; }
+.qa-export { background: var(--primary); color: #fff; font-weight: 700; }
+@media (max-width:360px) {
+  .qa-panel { padding-inline: 12px; }
+  .qa-actions { grid-template-columns: minmax(0,1fr); }
+}
