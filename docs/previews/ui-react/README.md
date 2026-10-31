@@ -1,6 +1,8 @@
 # UI-MIG-02 isolated framework spike
 
-> **Current R3 branch (30 Oct 2026):** [Mobile Responsive & CDP Visual QA runbook](UI_MIG02R3_RESPONSIVE_QA_25691030.md) supersedes the legacy screenshot-gate instructions below. The legacy `--window-size` screenshots do **not** prove a 390px CSS viewport or responsive PASS. R3 adds a CDP geometry/PNG/interaction gate and 7 synthetic negative/positive responsive checks; **Node/Browser/real device rerun remains NOT TESTED**. Branch `fix/ui-mig02r3-mobile-responsive-25691030` is stacked on **Draft #208**; do not merge or deploy.
+> **Current R3 branch (30 Oct 2026):** [Mobile Responsive & CDP Visual QA runbook](UI_MIG02R3_RESPONSIVE_QA_25691030.md) supersedes the legacy screenshot-gate instructions below. The legacy `--window-size` screenshots do **not** prove a 390px CSS viewport or responsive PASS. R3 adds a CDP geometry/PNG/interaction gate and 7 synthetic negative/positive responsive checks; **Browser Simulation Gate PASS: 16/16 viewport scenes + 13/13 interactions (1 Nov 2026); actual iPhone/iPad and browser zoom NOT TESTED**. Branch `fix/ui-mig02r3-mobile-responsive-25691030` is stacked on **Draft #208**; do not merge or deploy.
+
+> **Evidence boundary:** The latest user-supplied Chrome/Windows report has `PASS_BROWSER_SIMULATION_ONLY`; no horizontal overflow or missing mobile navigation was found in the measured scenes. The earlier CDP Enter failure is resolved by the corrected keyboard event sequence and verified by independent mouse click. Only the simulation gate is closed. The real-device Safari/landscape/safe-area gate, actual browser zoom, and proof of clean reproducible build from a committed authentic lockfile remain open. See the [QA record](UI_MIG02R3_RESPONSIVE_QA_25691030.md) for the evidence fingerprint and remaining work.
 
 ## R3 Windows recheck (use your genuine local npm lockfile)
 
