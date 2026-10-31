@@ -4,7 +4,7 @@
 **Implementation branch:** `fix/ui-mig02r3-mobile-responsive-25691030`  
 **Parent:** Draft PR #208 / `feat/ui-mig02-category-first-r1-25691029` at `3a5dba551edfcb36bfc51cdaf56ea5ed5eb6a4b2`.  
 **Production baseline:** main `2c1592085910b47c400ca5eb0b5733b1d3915774` / WD Books 1.3.73.  
-**Status (30 Oct 2026 after Windows report):** 16/16 CDP Responsive scenes PASS; keyboard/search Interaction FAIL on original runner. **Overall Browser Gate remains FAIL**, updated diagnostic runner unverified on Windows. Real iPhone/iPad OPEN. **NO MERGE / NO PRODUCTION CHANGE.**
+**Latest status (1 Nov 2026):** **Chrome CDP Browser Simulation Gate PASS** — 16/16 viewport scenes and 13/13 interaction assertions PASS in owner-provided rerun. Actual Chrome browser zoom, native iPhone/iPad Safari/safe-area, full clean rebuild evidence, and production integration remain **NOT TESTED / OPEN**. **NO MERGE / NO PRODUCTION CHANGE.**
 
 ## 1. Root-cause investigation / evidence boundary
 
@@ -51,6 +51,7 @@ The interaction runner now independently exercises Thai Home search using both C
 | Native Node 24 full source suite | **NOT TESTED** | Re-run on Windows |
 | `npm ci` / TypeScript / Vite latest R3 build | **NOT TESTED** | Re-run on Windows |
 | CDP browser PNG/viewport metrics | **PASS 16/16 (user-supplied Windows Chrome report)** | Genuine CSS widths and PNG dimensions match; all layout checks pass; no horizontal overflow on tested scenes |
+| CDP browser Interaction (repeat run) | **PASS 13/13 (1 Nov 2026, owner-supplied report)** | Keyboard Tab/focus, Thai input, Enter submit, mouse submit, 1-result filter, clear, favorites, category intersection, settings, theme |
 | Real browser zoom at 125/150/200% | **NOT TESTED** | CSS-width proxy does not replace this |
 | iPhone/iPad Safari/PWA real-device QA | **NOT TESTED** | Owner acceptance required |
 
@@ -89,6 +90,31 @@ node scripts\\capture-responsive.cjs
 
 Check `interaction.checks` and `interaction.snapshots` in `%TEMP%\\wd-books-ui-mig02r3-captures\\capture-report.json`. The overall browser gate can only become `PASS_BROWSER_SIMULATION_ONLY` if **all scenes and every required interaction** pass. No real iPhone/iPad acceptance yet.
 
+## 3B. Browser simulation acceptance — repeat evidence (1 Nov 2026, ICT)
+
+The user supplied an updated local \`capture-report(1).json\`, with report timestamp \`2026-10-31T21:15:36.711Z\` (1 Nov 2026, 04:15 Bangkok time) and Chrome for Windows. This is the **first full Browser Simulation Gate PASS** after the interaction diagnostics repair.
+
+**Integrity fingerprint of the supplied JSON (SHA-256, raw file bytes):** \`5520da0a37e66a1a6a0731df58d7502b190de021267c6b47c327a3d7cc4d3a49\`. Only a summary/fingerprint is stored in public GitHub; not the raw local report, local user paths, or browser profiles.
+
+| Verification | Actual report evidence | Status |
+|---|---|---|
+| CSS responsive scene matrix | 16/16 cases, every \`cases[].status=PASS\` and \`checks=[]\` | **PASS** |
+| CSS horizontal overflow | Every scene has \`scrollWidth=bodyScrollWidth=clientWidth=innerWidth=visualViewportWidth\`, \`offenders=[]\` | **PASS** |
+| PNG output | Every scene PNG dimensions match requested CSS dimensions; DPR 1 | **PASS** |
+| Bottom navigation | Three distinct items within viewport, touch target metrics accepted | **PASS** |
+| Keyboard Tab + visible focus | \`keyboard_tab_home_search\`, \`keyboard_focus_visible\` | **PASS** |
+| Thai input + Enter | \`thai_home_input\`, \`thai_enter_submit\`, \`thai_enter_filtered_result\` | **PASS** |
+| Independent mouse submit | \`thai_mouse_input\`, \`thai_mouse_submit\`, \`thai_mouse_filtered_result\` | **PASS** |
+| Bookshelf interactions | \`clear_query\`, \`favorite_filter\`, \`category_and_favorite_intersection\` | **PASS** |
+| Settings and theme | \`settings_navigation\`, \`theme_switching\` | **PASS** |
+| Aggregate browser simulation status | \`interaction.status=PASS\`, \`report.status=PASS_BROWSER_SIMULATION_ONLY\` | **PASS** |
+
+Diagnostic snapshots confirm that after entering \`ครู\` via keyboard and pressing Enter, focus moved to \`reactBookSearch\`, that search input contained \`ครู\`, \`bookshelfHeading=true\`, and the rendered sample catalog contained **1 card**. The independent mouse button path produced the same result. The previous \`Thai Home search submit\` failure was therefore a problem with **the old simulated Enter event sequence**, not a proven React application defect. The corrected event sequence was tested successfully on Windows Chrome.
+
+**Gate boundary:** The 16 scenes include **three CSS-width zoom proxies** (1093×614, 911×512, 683×384); they do not test actual browser zoom 125%/150%/200%. No evidence of real iPhone/iPad Safari keyboard, viewport movement, dynamic browser chrome, landscape, Split View, or home-indicator safe areas is present. The existence of built assets during Chrome capture is not by itself evidence of a newly clean \`npm ci\` + TypeScript/Vite build with the current HEAD, nor does this test Reader/Audio/PWA/real books. Keep the PR **Draft**.
+
+**Next acceptance sequence:** Preserve the simulated browser PASS as closed; verify clean Windows build/lockfile provenance separately; perform actual Chrome/Edge zoom and iPhone/iPad device acceptance; only then consider an explicit owner Go/No-Go for downstream integration, with separate PRs/approval. No production deployment or automatic merge.
+
 ## 4. Windows runbook (no Production change)
 
 ```powershell
@@ -124,4 +150,4 @@ If the script exits 1, use the preserved JSON failures and the relevant PNG. Do 
 
 ## 6. Merge dependency & continuation
 
-Stack: **#173 → #207 → #208 → R3 Draft PR**. Do not retarget R3 to main or merge while R3's Browser and Real Device Gates remain OPEN. Keep production 1.3.73 unchanged. After Windows browser results, review JSON and screenshots first; adjust CSS/harness only against measurable failures and repeat the full matrix. Any subsequent catalog integration or production migration needs a separate approved workstream per [UI Stack Migration Plan](../../WD_BOOKS_UI_STACK_MIGRATION_TAILWIND_SHADCN_2569.md) and [Master UX Roadmap](../../WD_BOOKS_READER_UX_ROADMAP_2569.md).
+Stack: **#173 → #207 → #208 → R3 Draft PR #217**. **The simulated browser gate is now PASS**; real device, actual browser zoom, reproducible clean build/lockfile and production integration gates remain OPEN. Do not retarget R3 to main or merge until later acceptance and explicit approval. Keep production 1.3.73 unchanged. Review device/zoom results before changing CSS further. Any subsequent catalog integration or production migration needs a separate approved workstream per [UI Stack Migration Plan](../../WD_BOOKS_UI_STACK_MIGRATION_TAILWIND_SHADCN_2569.md) and [Master UX Roadmap](../../WD_BOOKS_READER_UX_ROADMAP_2569.md).
