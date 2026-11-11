@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>WD Books · Markdown & Podcast QA</title>
+<style>
+:root{font-family:system-ui,"Noto Sans Thai",sans-serif;color-scheme:dark;background:#14271f;color:#f2f5ed}
+*{box-sizing:border-box}body{margin:0;padding:20px;max-width:920px;margin-inline:auto;line-height:1.65}
+h1{font-size:1.65rem;margin-bottom:4px}h2{font-size:1.1rem}p{margin:8px 0}small,.muted{color:#b8c9bf}
+section{background:#213b30;border:1px solid #426250;border-radius:18px;padding:16px;margin:16px 0}
+button,select{font:inherit;border:1px solid #739580;background:#315441;color:white;padding:10px 14px;border-radius:12px;cursor:pointer}
+button:focus-visible,select:focus-visible{outline:3px solid #e3bb66}button:disabled{opacity:.5}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#14291f;border-radius:10px;padding:12px;font:inherit}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.good{color:#b6edbc}.bad{color:#ffb7a8}label{display:block;margin:10px 0}
+a{color:#bde6cd}.status{font-weight:700}textarea{width:100%;min-height:100px;background:#14291f;color:white;border:1px solid #739580;border-radius:10px;padding:12px;font:inherit}
+</style>
+<script defer src="./assets/markdown-text.js"></script>
+<script defer src="./assets/manuals-data.js"></script>
+<script defer src="./assets/audio-reader-core.js"></script>
+<script defer src="./assets/teleprompter-core.js"></script>
+<script defer src="./assets/markdown-qa.js"></script>
+</head><body>
+<header><h1>WD Books · หน้าตรวจ Markdown และเสียงอ่าน</h1>
+<p class="muted">หน้าทดลองสำหรับ PR #181 · ไม่แก้หนังสือต้นฉบับ · ไม่ส่งข้อความไปบริการภายนอก</p>
+<p><a href="./index.html">กลับไปหน้า WD Books</a></p></header>
+<section><h2>1. ตรวจอัตโนมัติ</h2><p id="summary" class="status" aria-live="polite">กำลังตรวจ…</p><div id="cases"></div></section>
+<section><h2>2. เปรียบเทียบข้อความจริง</h2>
+<label>เลือกหน้าหนังสือ <select id="chapter"></select></label>
+<div class="grid"><div><strong>ต้นฉบับ</strong><pre id="raw"></pre></div><div><strong>ข้อความที่ส่งให้อ่านเสียง</strong><pre id="clean"></pre></div></div>
+<p class="muted" id="sourceInfo"></p></section>
+<section><h2>3. ทดลองเสียงในเครื่อง</h2><p class="muted">ใช้เสียงจากเบราว์เซอร์บนอุปกรณ์นี้ ไม่ใช่เสียงไทยออนไลน์ของโรงเรียน จึงไม่ยืนยันผลฝั่งเซิร์ฟเวอร์</p>
+<label for="sample">ข้อความสำหรับทดลอง</label><textarea id="sample">**ถ้าวันนี้โรงเรียนของเรามี AI ให้ครูใช้ทุกคน**</textarea>
+<p><button id="listen">▶ ทดลองอ่าน</button> <button id="stop">■ หยุดเสียง</button></p>
+<p id="speechStatus" role="status" aria-live="polite"></p></section>
+<section><h2>4. ตรวจด้วยตนเองบน iPhone/iPad</h2>
+<label><input type="checkbox"> หน้า 7/19 ไม่มีดอกจัน</label>
+<label><input type="checkbox"> เสียงในเครื่องไม่อ่านคำว่า “ดอกจัน”</label>
+<label><input type="checkbox"> เสียงไทยออนไลน์ของโรงเรียนไม่อ่าน “ดอกจัน” (ตรวจบนหน้าอ่านจริง)</label>
+<label><input type="checkbox"> Teleprompter และหนังสืออื่นยังทำงาน</label>
+<label><input type="checkbox"> ล็อกหน้าจอ/เล่นต่อ/ออฟไลน์ยังทำงานตามข้อจำกัดอุปกรณ์</label>
+<p class="muted">เครื่องหมายถูกนี้เป็นบันทึกเฉพาะบนหน้าจอ ไม่ถูกส่งหรือบันทึกเป็นผล QA ของโครงการ</p></section>
+</body></html>
